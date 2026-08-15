@@ -46,9 +46,9 @@ struct TimerMonitorTests {
         let monitor = TimerMonitor(source: source)
         monitor.start()
 
-        source.send(.running(timer()))
+        source.send(.running([timer()]))
 
-        #expect(monitor.reading == .running(timer()))
+        #expect(monitor.reading == .running([timer()]))
     }
 
     @Test func aTimerStoppingLeavesIdleRatherThanUnknown() {
@@ -56,7 +56,7 @@ struct TimerMonitorTests {
         let monitor = TimerMonitor(source: source)
         monitor.start()
 
-        source.send(.running(timer()))
+        source.send(.running([timer()]))
         source.send(.idle)
 
         #expect(monitor.reading == .idle)

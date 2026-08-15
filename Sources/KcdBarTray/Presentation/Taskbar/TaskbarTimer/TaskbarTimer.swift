@@ -3,43 +3,55 @@ import SwiftUI
 
 package struct TaskbarTimer: View {
     package let monitor: TimerMonitor
+    package let onOpen: () -> Void
 
     @State private var isHovered = false
 
-    package init(monitor: TimerMonitor) {
+    package init(monitor: TimerMonitor, onOpen: @escaping () -> Void) {
         self.monitor = monitor
+        self.onOpen = onOpen
     }
 
     package var body: some View {
-        if let timer = monitor.reading.timer {
-            readout(for: timer)
+        let running = monitor.reading.timers
+
+        if !running.isEmpty {
+            readout(for: running)
         }
     }
 
-    private func readout(for timer: RunningTimer) -> some View {
-        TimelineView(.periodic(from: timer.startedAt, by: TimerReadoutMetrics.tick)) { context in
+    private func readout(for timers: [RunningTimer]) -> some View {
+        TimelineView(.periodic(from: anchor(of: timers), by: TimerReadoutMetrics.tick)) { context in
             HStack(spacing: KbSpacing.s2) {
                 Image(systemName: TimerReadoutMetrics.glyphSymbol)
                     .foregroundStyle(KbColors.brand)
-                Text(TimerFormatting.label(for: timer))
-                    .font(KbTypography.clockTime)
-                    .foregroundStyle(KbColors.onSurface)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                    .frame(maxWidth: TimerReadoutMetrics.labelWidth, alignment: .leading)
-                Text(TimerFormatting.elapsed(since: timer.startedAt, at: context.date))
-                    .font(KbTypography.clockTime)
+                if let only = monitor.reading.only {
+                    Text(TimerFormatting.label(for: only))
+                        .foregroundStyle(KbColors.onSurface)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                        .frame(maxWidth: TimerReadoutMetrics.labelWidth, alignment: .leading)
+                } else {
+                    Text("\(timers.count)")
+                        .foregroundStyle(KbColors.onSurface)
+                }
+                Text(TimerFormatting.duration(TimerTotals.elapsed(of: timers, at: context.date)))
                     .foregroundStyle(KbColors.onSurfaceMuted)
                     .monospacedDigit()
             }
+            .font(KbTypography.clockTime)
             .padding(.horizontal, KbSpacing.s4)
             .padding(.vertical, KbSpacing.s1)
         }
-        .help(timer.detail)
         .contentShape(shape)
+        .onTapGesture(perform: onOpen)
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }
+    }
+
+    private func anchor(of timers: [RunningTimer]) -> Date {
+        TimerTotals.earliest(of: timers) ?? .now
     }
 
     private var shape: AnyShape {

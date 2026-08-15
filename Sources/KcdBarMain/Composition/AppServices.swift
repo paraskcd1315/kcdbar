@@ -223,6 +223,21 @@ package final class AppServices {
         Task { await battery.sampleEnergy() }
     }
 
+    package func openTimerPanel() {
+        guard !popover.isPresenting(.timer) else {
+            popover.dismiss()
+            return
+        }
+
+        popover.present(.timer, anchor: popoverAnchor()) { [timer] presentation, arrowX in
+            TimerPanelPresentation.content(
+                monitor: timer,
+                presentation: presentation,
+                arrowX: arrowX
+            )
+        }
+    }
+
     package func openControlCentre() {
         guard !popover.isPresenting(.controlCentre) else {
             popover.dismiss()
@@ -318,7 +333,8 @@ package final class AppServices {
             },
             onOpenBattery: { [weak self] in self?.openBatteryPanel() },
             onOpenNotifications: {},
-            onOpenControlCentre: { [weak self] in self?.openControlCentre() }
+            onOpenControlCentre: { [weak self] in self?.openControlCentre() },
+            onOpenTimer: { [weak self] in self?.openTimerPanel() }
         )
         host.present(preset: preset)
         bar = host

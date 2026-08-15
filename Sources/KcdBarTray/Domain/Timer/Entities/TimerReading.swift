@@ -1,12 +1,18 @@
-/** What the timer channel says about this project. */
+/** What the timer channel says is running. */
 package enum TimerReading: Equatable, Sendable {
     case unknown
     case idle
-    case running(RunningTimer)
+    case running([RunningTimer])
 
-    package var timer: RunningTimer? {
-        guard case let .running(timer) = self else { return nil }
+    package var timers: [RunningTimer] {
+        guard case let .running(timers) = self else { return [] }
 
-        return timer
+        return timers
+    }
+
+    package var only: RunningTimer? {
+        let running = timers
+
+        return running.count == 1 ? running.first : nil
     }
 }
