@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct KbBarSurface<Content: View>: View {
+struct KbBarFill<Content: View>: View {
     let material: BarMaterial
     let shape: AnyShape
     @ViewBuilder let content: () -> Content

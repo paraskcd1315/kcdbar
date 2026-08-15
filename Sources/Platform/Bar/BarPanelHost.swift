@@ -5,8 +5,14 @@ import SwiftUI
 final class BarPanelHost: BarPanelHostPort {
     private var panels: [Int: BarPanel] = [:]
     private var screenObserver: NSObjectProtocol?
+    private var pointerMonitor: Any?
+    private var hiddenDisplays: Set<Int> = []
+    private var revealedDisplays: Set<Int> = []
+    private var shown: [Int: Bool] = [:]
+    private var activePreset = BarPresetCatalogue.default
 
     private let registry: WindowRegistry
+    private let battery: BatteryMonitor
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -19,9 +25,13 @@ final class BarPanelHost: BarPanelHostPort {
     private let onDropPin: (String, TaskbarEntryModel) -> Void
     private let onToggleDesktop: () -> Void
     private let onMiddleClick: (TaskbarEntryModel, Int) -> Void
+    private let onOpenBattery: () -> Void
+    private let onOpenNotifications: () -> Void
+    private let onOpenControlCentre: () -> Void
 
     init(
         registry: WindowRegistry,
+        battery: BatteryMonitor,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -33,12 +43,19 @@ final class BarPanelHost: BarPanelHostPort {
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
         onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
         onToggleDesktop: @escaping () -> Void,
-        onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void
+        onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void,
+        onOpenBattery: @escaping () -> Void,
+        onOpenNotifications: @escaping () -> Void,
+        onOpenControlCentre: @escaping () -> Void
     ) {
+        self.onOpenNotifications = onOpenNotifications
+        self.onOpenControlCentre = onOpenControlCentre
         self.onDropPin = onDropPin
         self.onToggleDesktop = onToggleDesktop
         self.onMiddleClick = onMiddleClick
+        self.onOpenBattery = onOpenBattery
         self.registry = registry
+        self.battery = battery
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -51,6 +68,7 @@ final class BarPanelHost: BarPanelHostPort {
     }
 
     func present(preset: BarPreset) {
+        activePreset = preset
         rebuild(preset: preset)
         screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
@@ -61,7 +79,112 @@ final class BarPanelHost: BarPanelHostPort {
         }
     }
 
+    func syncVisibility() {
+        hiddenDisplays = Set(
+            panels.keys.filter { id in
+                BarVisibilityPolicy.isHidden(
+                    onDisplay: id,
+                    windows: registry.windows,
+                    displays: registry.displays
+                )
+            }
+        )
+        revealedDisplays.formIntersection(hiddenDisplays)
+
+        for id in panels.keys {
+            apply(showing: !hiddenDisplays.contains(id) || revealedDisplays.contains(id), to: id)
+        }
+        updatePointerMonitor()
+    }
+
+    private func apply(showing: Bool, to id: Int) {
+        guard shown[id] != showing else { return }
+        guard let panel = panels[id],
+              let display = registry.displays.first(where: { $0.id == id })
+        else {
+            return
+        }
+        shown[id] = showing
+
+        let settled = BarFrameCalculator.panelFrame(for: activePreset, on: display)
+        let offEdge = BarRevealPolicy.concealedFrame(settled, edge: activePreset.edge)
+
+        if showing {
+            panel.setFrame(offEdge, display: false)
+            panel.alphaValue = 0
+            panel.orderFrontRegardless()
+        }
+        animate(panel, to: showing ? settled : offEdge, alpha: showing ? 1 : 0) {
+            guard !showing else { return }
+            panel.orderOut(nil)
+            panel.setFrame(settled, display: false)
+            panel.alphaValue = 1
+        }
+    }
+
+    private func animate(
+        _ panel: BarPanel,
+        to frame: NSRect,
+        alpha: CGFloat,
+        completion: @escaping () -> Void
+    ) {
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = KbMotion.standardDuration
+            context.timingFunction = CAMediaTimingFunction(
+                controlPoints: KbMotion.curve.x1, KbMotion.curve.y1, KbMotion.curve.x2, KbMotion.curve.y2
+            )
+            panel.animator().setFrame(frame, display: true)
+            panel.animator().alphaValue = alpha
+        } completionHandler: {
+            MainActor.assumeIsolated(completion)
+        }
+    }
+
+    private func updatePointerMonitor() {
+        if hiddenDisplays.isEmpty {
+            stopPointerMonitor()
+            return
+        }
+        guard pointerMonitor == nil else { return }
+
+        pointerMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { [weak self] _ in
+            MainActor.assumeIsolated { self?.pointerMoved(to: NSEvent.mouseLocation) }
+        }
+    }
+
+    private func stopPointerMonitor() {
+        if let pointerMonitor {
+            NSEvent.removeMonitor(pointerMonitor)
+        }
+        pointerMonitor = nil
+    }
+
+    private func pointerMoved(to location: NSPoint) {
+        for id in hiddenDisplays {
+            guard let display = registry.displays.first(where: { $0.id == id }) else { continue }
+
+            let reveal = BarRevealPolicy.shouldReveal(
+                pointer: location,
+                barFrame: BarFrameCalculator.panelFrame(for: activePreset, on: display),
+                display: display,
+                edge: activePreset.edge
+            )
+            guard reveal != revealedDisplays.contains(id) else { continue }
+
+            if reveal {
+                revealedDisplays.insert(id)
+            } else {
+                revealedDisplays.remove(id)
+            }
+            apply(showing: reveal, to: id)
+        }
+    }
+
     func dismiss() {
+        stopPointerMonitor()
+        hiddenDisplays = []
+        revealedDisplays = []
+        shown = [:]
         panels.values.forEach { $0.orderOut(nil) }
         panels = [:]
         if let screenObserver {
@@ -77,6 +200,7 @@ final class BarPanelHost: BarPanelHostPort {
         for (id, panel) in panels where !wanted.contains(id) {
             panel.orderOut(nil)
             panels.removeValue(forKey: id)
+            shown.removeValue(forKey: id)
         }
 
         for display in displays {
@@ -85,34 +209,35 @@ final class BarPanelHost: BarPanelHostPort {
                 existing.setFrame(frame, display: true)
                 continue
             }
-            let panel = BarPanel(contentRect: frame)
-            panel.contentView = BarHostingView(
-                rootView: taskbarRoot(for: display, preset: preset)
+            let root = TaskbarRootView(
+                registry: registry,
+                pins: pins,
+                order: order,
+                desktop: desktop,
+                preset: preset,
+                displayId: display.id,
+                icons: icons,
+                onActivate: { [onActivate] in onActivate($0, display.id) },
+                onRequestAccessibility: onRequestAccessibility,
+                onOpenStart: onOpenStart,
+                onTogglePin: onTogglePin,
+                onDropPin: onDropPin,
+                onToggleDesktop: onToggleDesktop,
+                onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) },
+                battery: battery,
+                onOpenBattery: onOpenBattery,
+                onOpenNotifications: onOpenNotifications,
+                onOpenControlCentre: onOpenControlCentre
             )
+            .environment(\.middleClickCatcher) { action in
+                AnyView(MiddleClickView(action: action))
+            }
+
+            let panel = BarPanel(contentRect: frame)
+            panel.contentView = BarHostingView(rootView: root)
             panel.orderFrontRegardless()
             panels[display.id] = panel
-        }
-    }
-
-    private func taskbarRoot(for display: DisplayGeometry, preset: BarPreset) -> some View {
-        TaskbarRootView(
-                    registry: registry,
-                    pins: pins,
-                    order: order,
-                    desktop: desktop,
-                    preset: preset,
-                    displayId: display.id,
-                    icons: icons,
-                    onActivate: { [onActivate] in onActivate($0, display.id) },
-                    onRequestAccessibility: onRequestAccessibility,
-                    onOpenStart: onOpenStart,
-                    onTogglePin: onTogglePin,
-                    onDropPin: onDropPin,
-                    onToggleDesktop: onToggleDesktop,
-                    onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) }
-        )
-        .environment(\.middleClickCatcher) { action in
-            AnyView(MiddleClickView(action: action))
+            shown[display.id] = true
         }
     }
 

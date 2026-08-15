@@ -7,7 +7,7 @@ enum BarPresetCatalogue {
         alignment: .centered,
         widthMode: .island,
         attachment: .edgeAttached,
-        entryContent: .iconAndTitle,
+        entryContent: .iconOnly,
         entrySizing: .fixed,
         grouping: .perWindow,
         material: .liquidGlass,

@@ -9,4 +9,19 @@ enum KbColors {
     static let onBrand = Color.white
     static let separator = Color.white.opacity(0.12)
     static let activeIndicator = Color.accentColor
+    static let glassEdgeBright = Color.white.opacity(0.65)
+    static let glassEdgeShade = Color.black.opacity(0.5)
+    static let batteryFull = Color(red: 0.30, green: 0.78, blue: 0.36)
+    static let batteryWarning = Color(red: 0.98, green: 0.71, blue: 0.20)
+    static let batteryCritical = Color(red: 0.94, green: 0.31, blue: 0.27)
+    static let batteryPowerSave = Color(red: 0.98, green: 0.82, blue: 0.16)
+
+    static func battery(_ tone: BatteryTone) -> Color {
+        switch tone {
+        case .full: batteryFull
+        case .warning: batteryWarning
+        case .critical: batteryCritical
+        case .powerSave: batteryPowerSave
+        }
+    }
 }

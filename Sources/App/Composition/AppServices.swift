@@ -1,4 +1,6 @@
+import AppKit
 import Foundation
+import SwiftUI
 
 /** The composition root, and the only place naming a concrete platform implementation. */
 @MainActor
@@ -8,6 +10,10 @@ final class AppServices {
     let authorization: any AccessibilityAuthorizationPort = AccessibilityAuthorization()
     let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     let registry: WindowRegistry
+    let battery = BatteryMonitor(source: IoKitBatterySource())
+    let batteryPanel = PopoverHost()
+    let controlCentrePanel = PopoverHost()
+    let wifi = WifiMonitor(source: CoreWlanSource())
     let pins: PinnedAppState
     let order = EntryOrderMemory()
     let desktop = ShowDesktopState()
@@ -33,6 +39,7 @@ final class AppServices {
 
     func refreshAndEnforce(now: Date = Date()) {
         registry.refresh()
+        battery.refresh()
         overlap.enforce(
             preset: activePreset,
             windows: registry.windows,
@@ -40,6 +47,7 @@ final class AppServices {
             now: now
         )
         order.note(keys: orderingKeys)
+        bar?.syncVisibility()
         geometry.observe(pids: observedPids) { [weak self] in
             self?.scheduleRefresh()
         }
@@ -56,16 +64,13 @@ final class AppServices {
     }
 
     private var orderingKeys: [String] {
-        let pinnedIdentifiers = Set(pins.apps.map(\.bundleIdentifier))
         let windowKeys = registry.taskbarEntries.map { window -> String in
-            let bundleIdentifier = registry.bundleIdentifiers[window.ownerPid]
-            return TaskbarOrdering.orderingKey(
-                bundleIdentifier: bundleIdentifier,
-                entryId: WindowEntryIdentifier.text(for: window.identity),
-                isPinned: bundleIdentifier.map(pinnedIdentifiers.contains) ?? false
+            TaskbarOrdering.orderingKey(
+                bundleIdentifier: registry.bundleIdentifiers[window.ownerPid],
+                entryId: WindowEntryIdentifier.text(for: window.identity)
             )
         }
-        let launcherKeys = pins.apps.map { "pin:\($0.bundleIdentifier)" }
+        let launcherKeys = pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) }
         let entryIds = registry.taskbarEntries.map { WindowEntryIdentifier.text(for: $0.identity) }
         let all = launcherKeys + windowKeys + entryIds
 
@@ -102,14 +107,14 @@ final class AppServices {
         desktop.clear()
     }
 
-    func reorder(draggedKey: String, before target: TaskbarEntryModel) {
-        order.move(key: draggedKey, before: target.orderingKey)
+    func reorder(draggedKey: String, onto target: TaskbarEntryModel) {
+        order.move(key: draggedKey, onto: target.orderingKey)
         persistPinnedOrder()
     }
 
     private func persistPinnedOrder() {
         let pinnedByKey = Dictionary(
-            uniqueKeysWithValues: pins.apps.map { ("pin:\($0.bundleIdentifier)", $0) }
+            uniqueKeysWithValues: pins.apps.map { (TaskbarOrdering.applicationKey($0.bundleIdentifier), $0) }
         )
         let ordered = order.keys.compactMap { pinnedByKey[$0] }
         guard ordered.count == pins.apps.count else { return }
@@ -143,6 +148,8 @@ final class AppServices {
 
     func loadPreferences() async {
         await pins.load()
+        order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
+        refreshAndEnforce()
     }
 
     func activate(entry: TaskbarEntryModel, onDisplay displayId: Int) {
@@ -194,6 +201,46 @@ final class AppServices {
         return opened
     }
 
+    func openBatteryPanel() {
+        guard !batteryPanel.isPresented else {
+            batteryPanel.dismiss()
+            return
+        }
+        let anchor = NSEvent.mouseLocation
+
+        Task {
+            await battery.sampleEnergy()
+            batteryPanel.present(anchor: anchor) { [battery] presentation, arrowX in
+                AnyView(
+                    BatteryPanelView(
+                        state: battery.state,
+                        energyUsers: battery.energyUsers,
+                        arrowX: arrowX,
+                        presentation: presentation
+                    )
+                )
+            }
+        }
+    }
+
+    func openControlCentre() {
+        guard !controlCentrePanel.isPresented else {
+            controlCentrePanel.dismiss()
+            return
+        }
+        wifi.refresh()
+        controlCentrePanel.present(anchor: NSEvent.mouseLocation) { [wifi] presentation, arrowX in
+            AnyView(
+                ControlCentrePanelView(
+                    wifi: wifi,
+                    arrowX: arrowX,
+                    presentation: presentation,
+                    onOpenSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) }
+                )
+            )
+        }
+    }
+
     func togglePin(entry: TaskbarEntryModel) {
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
         let name = entry.applicationName.isEmpty ? bundleIdentifier : entry.applicationName
@@ -207,16 +254,11 @@ final class AppServices {
         }
     }
 
-    func movePin(bundleIdentifier: String, before target: TaskbarEntryModel) {
-        Task {
-            await pins.move(bundleIdentifier: bundleIdentifier, before: target.bundleIdentifier)
-        }
-    }
-
     func startBar(preset: BarPreset) {
         activePreset = preset
         let host = BarPanelHost(
             registry: registry,
+            battery: battery,
             pins: pins,
             order: order,
             desktop: desktop,
@@ -229,12 +271,15 @@ final class AppServices {
             onOpenStart: {},
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onDropPin: { [weak self] dropped, target in
-                self?.reorder(draggedKey: dropped, before: target)
+                self?.reorder(draggedKey: dropped, onto: target)
             },
             onToggleDesktop: { [weak self] in self?.toggleShowDesktop() },
             onMiddleClick: { [weak self] entry, displayId in
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
-            }
+            },
+            onOpenBattery: { [weak self] in self?.openBatteryPanel() },
+            onOpenNotifications: {},
+            onOpenControlCentre: { [weak self] in self?.openControlCentre() }
         )
         host.present(preset: preset)
         bar = host

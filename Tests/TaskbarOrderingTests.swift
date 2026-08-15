@@ -20,7 +20,7 @@ struct TaskbarOrderingTests {
     @Test func windowsOfOnePinnedApplicationKeepTheirOrderAcrossRefreshes() {
         let first = entry(id: "cg:10", bundle: "com.example.app", pinned: true)
         let second = entry(id: "cg:11", bundle: "com.example.app", pinned: true)
-        let ranks = ["pin:com.example.app": 0, "cg:10": 1, "cg:11": 2]
+        let ranks = ["app:com.example.app": 0, "cg:10": 1, "cg:11": 2]
 
         let forwards = TaskbarOrdering.ordered(entries: [first, second], ranks: ranks)
         let backwards = TaskbarOrdering.ordered(entries: [second, first], ranks: ranks)
@@ -32,7 +32,7 @@ struct TaskbarOrderingTests {
     @Test func pinnedApplicationsLeadInTheirPinnedOrder() {
         let pinned = entry(id: "cg:10", bundle: "com.example.pinned", pinned: true)
         let loose = entry(id: "cg:11", bundle: "com.example.other", pinned: false)
-        let ranks = ["pin:com.example.pinned": 0, "cg:11": 1, "cg:10": 2]
+        let ranks = ["app:com.example.pinned": 0, "app:com.example.other": 1]
 
         let ordered = TaskbarOrdering.ordered(entries: [loose, pinned], ranks: ranks)
 
@@ -52,19 +52,17 @@ struct TaskbarOrderingTests {
         #expect(ordered.map(\.id) == ["cg:10", "cg:98", "cg:99"])
     }
 
-    @Test func orderingKeyGroupsAPinnedApplicationsWindows() {
-        let key = TaskbarOrdering.orderingKey(
-            bundleIdentifier: "com.example.app",
-            entryId: "cg:10",
-            isPinned: true
-        )
-        let loose = TaskbarOrdering.orderingKey(
-            bundleIdentifier: "com.example.app",
-            entryId: "cg:10",
-            isPinned: false
-        )
+    @Test func everyWindowOfOneApplicationSharesAnOrderingSlot() {
+        let first = TaskbarOrdering.orderingKey(bundleIdentifier: "com.example.app", entryId: "cg:10")
+        let second = TaskbarOrdering.orderingKey(bundleIdentifier: "com.example.app", entryId: "cg:11")
 
-        #expect(key == "pin:com.example.app")
-        #expect(loose == "cg:10")
+        #expect(first == "app:com.example.app")
+        #expect(first == second)
+    }
+
+    @Test func aWindowWithoutABundleIdentifierKeepsItsOwnSlot() {
+        let key = TaskbarOrdering.orderingKey(bundleIdentifier: nil, entryId: "cg:10")
+
+        #expect(key == "cg:10")
     }
 }

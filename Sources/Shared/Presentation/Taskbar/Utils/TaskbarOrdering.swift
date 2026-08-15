@@ -1,10 +1,14 @@
 import Foundation
 
 enum TaskbarOrdering {
-    static func orderingKey(bundleIdentifier: String?, entryId: String, isPinned: Bool) -> String {
-        guard isPinned, let bundleIdentifier else { return entryId }
+    static func applicationKey(_ bundleIdentifier: String) -> String {
+        "app:\(bundleIdentifier)"
+    }
 
-        return "pin:\(bundleIdentifier)"
+    static func orderingKey(bundleIdentifier: String?, entryId: String) -> String {
+        guard let bundleIdentifier else { return entryId }
+
+        return applicationKey(bundleIdentifier)
     }
 
     static func ordered(
