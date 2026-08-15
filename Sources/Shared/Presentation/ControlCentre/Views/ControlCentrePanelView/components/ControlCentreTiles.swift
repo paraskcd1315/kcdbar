@@ -8,13 +8,17 @@ struct ControlCentreTiles: View {
     let onExpandWifi: () -> Void
 
     var body: some View {
-        VStack(spacing: KbControlCentreMetrics.tileGap) {
-            SoundTile(monitor: sound)
-            if brightness.state.isAvailable {
-                BrightnessTile(monitor: brightness)
+        GlassEffectContainer(spacing: KbControlCentreMetrics.tileGap) {
+            VStack(spacing: KbControlCentreMetrics.tileGap) {
+                SoundTile(monitor: sound)
+                if brightness.state.isAvailable {
+                    BrightnessTile(monitor: brightness)
+                }
+                HStack(alignment: .top, spacing: KbControlCentreMetrics.tileGap) {
+                    WifiTile(monitor: wifi, onExpand: onExpandWifi)
+                    BluetoothTile(monitor: bluetooth)
+                }
             }
-            BluetoothTile(monitor: bluetooth)
-            WifiTile(monitor: wifi, onExpand: onExpandWifi)
         }
     }
 }
