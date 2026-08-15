@@ -1,6 +1,32 @@
 import CoreGraphics
 
 enum BarFrameCalculator {
+    static func panelFrame(for preset: BarPreset, on display: DisplayGeometry) -> CGRect {
+        let bar = frame(for: preset, on: display)
+        let allowance = TaskbarMetrics.tooltipAllowance
+
+        switch preset.edge {
+        case .bottom:
+            return CGRect(x: bar.minX, y: bar.minY, width: bar.width, height: bar.height + allowance)
+        case .top:
+            return CGRect(
+                x: bar.minX,
+                y: bar.minY - allowance,
+                width: bar.width,
+                height: bar.height + allowance
+            )
+        case .leading:
+            return CGRect(x: bar.minX, y: bar.minY, width: bar.width + allowance, height: bar.height)
+        case .trailing:
+            return CGRect(
+                x: bar.minX - allowance,
+                y: bar.minY,
+                width: bar.width + allowance,
+                height: bar.height
+            )
+        }
+    }
+
     static func frame(for preset: BarPreset, on display: DisplayGeometry) -> CGRect {
         let screen = display.frame
         let thickness = preset.thickness + (preset.attachment == .floating ? TaskbarMetrics.islandOutset * 2 : 0)

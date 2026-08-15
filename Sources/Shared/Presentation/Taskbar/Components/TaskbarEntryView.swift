@@ -9,6 +9,7 @@ struct TaskbarEntryView: View {
 
     @State private var isHovered = false
     @State private var isDropTarget = false
+    @State private var showsTooltip = false
 
     var body: some View {
         Button(action: onActivate) {
@@ -32,12 +33,28 @@ struct TaskbarEntryView: View {
             .contentShape(.capsule)
         }
         .buttonStyle(.plain)
-        .background(entryBackground)
+        .glassEffect(entryGlass, in: .capsule)
         .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
         .animation(KbMotion.quick, value: isHovered)
         .animation(KbMotion.quick, value: entry.isFrontmost)
+        .overlay(alignment: tooltipAlignment) {
+            if showsTooltip {
+                TaskbarTooltip(text: entry.title)
+                    .offset(tooltipOffset)
+                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
+            }
+        }
         .onHover { hovering in
             isHovered = hovering
+        }
+        .task(id: isHovered) {
+            guard isHovered, !entry.title.isEmpty else {
+                showsTooltip = false
+                return
+            }
+            try? await Task.sleep(for: TaskbarMetrics.tooltipDelay)
+            guard !Task.isCancelled else { return }
+            withAnimation(KbMotion.quick) { showsTooltip = true }
         }
         .overlay(alignment: .leading) {
             if isDropTarget {
@@ -61,21 +78,38 @@ struct TaskbarEntryView: View {
                 Button(entry.isPinned ? "taskbar.menu.unpin" : "taskbar.menu.pin", action: onTogglePin)
             }
         }
-        .help(entry.title)
+    }
+
+    private var tooltipAlignment: Alignment {
+        switch preset.edge {
+        case .bottom: .top
+        case .top: .bottom
+        case .leading: .trailing
+        case .trailing: .leading
+        }
+    }
+
+    private var tooltipOffset: CGSize {
+        let gap = TaskbarMetrics.tooltipGap
+        switch preset.edge {
+        case .bottom: return CGSize(width: 0, height: -(TaskbarMetrics.tooltipAllowance - gap))
+        case .top: return CGSize(width: 0, height: TaskbarMetrics.tooltipAllowance - gap)
+        case .leading: return CGSize(width: TaskbarMetrics.tooltipAllowance - gap, height: 0)
+        case .trailing: return CGSize(width: -(TaskbarMetrics.tooltipAllowance - gap), height: 0)
+        }
     }
 
     private var showsTitle: Bool {
         preset.entryContent != .iconOnly && !entry.isLauncher
     }
 
-    private var entryBackground: some View {
-        Capsule().fill(fill)
-    }
-
-    private var fill: Color {
+    private var entryGlass: Glass {
         if entry.isFrontmost {
-            return KbColors.onSurface.opacity(TaskbarMetrics.focusedFillOpacity)
+            return .regular.tint(KbColors.onSurface.opacity(TaskbarMetrics.focusedFillOpacity)).interactive()
         }
-        return KbColors.onSurface.opacity(isHovered ? TaskbarMetrics.hoverFillOpacity : 0)
+        if isHovered {
+            return .regular.interactive()
+        }
+        return .identity
     }
 }

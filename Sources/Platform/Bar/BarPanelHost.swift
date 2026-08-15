@@ -68,7 +68,7 @@ final class BarPanelHost: BarPanelHostPort {
         }
 
         for display in displays {
-            let frame = BarFrameCalculator.frame(for: preset, on: display)
+            let frame = BarFrameCalculator.panelFrame(for: preset, on: display)
             if let existing = panels[display.id] {
                 existing.setFrame(frame, display: true)
                 continue
