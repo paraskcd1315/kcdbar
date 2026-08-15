@@ -7,7 +7,7 @@ struct TaskbarClock: View {
                 Text(context.date, format: .dateTime.hour().minute())
                     .font(KbTypography.clockTime)
                     .foregroundStyle(KbColors.onSurface)
-                Text(context.date, format: .dateTime.day().month(.twoDigits).year())
+                Text(ClockFormatting.naturalDate(context.date))
                     .font(KbTypography.clockDate)
                     .foregroundStyle(KbColors.onSurfaceMuted)
             }
