@@ -54,6 +54,7 @@ targets:
       - path: Sources/Shared/Ui/Theme/KbSpacing.swift
       - path: Sources/Shared/Ui/Theme/KbRadii.swift
       - path: Sources/Shared/Presentation/Taskbar/Utils/TaskbarOrdering.swift
+      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragReorder.swift
       - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarEntryModel.swift
       - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarNotice.swift
     settings:

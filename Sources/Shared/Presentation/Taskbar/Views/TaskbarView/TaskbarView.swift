@@ -17,11 +17,9 @@ struct TaskbarView: View {
         GlassEffectContainer {
             KbBarSurface(
                 material: viewModel.preset.material,
-                shape: KbBarShape.shape(
-                    edge: viewModel.preset.edge,
-                    attachment: viewModel.preset.attachment,
-                    cornerRadius: viewModel.preset.cornerRadius
-                )
+                edge: viewModel.preset.edge,
+                attachment: viewModel.preset.attachment,
+                cornerRadius: viewModel.preset.cornerRadius
             ) {
                 TaskbarBody(
                     viewModel: viewModel,
