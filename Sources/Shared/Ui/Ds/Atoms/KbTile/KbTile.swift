@@ -1,19 +1,17 @@
 import SwiftUI
 
-/** A rounded plate inside a glass panel. */
+/** A floating glass tile. */
 struct KbTile<Content: View>: View {
     var cornerRadius: CGFloat = KbRadii.xl
-    var padding: CGFloat = KbSpacing.s3
-    var fill: Color = KbColors.tileFill
-    var edge: Color = KbColors.tileEdge
+    var padding: CGFloat = KbSpacing.s4
     @ViewBuilder let content: Content
 
     var body: some View {
         content
             .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(shape.fill(fill))
-            .overlay(shape.stroke(edge, lineWidth: KbTileMetrics.edgeWidth))
+            .glassEffect(.regular.interactive(), in: shape)
+            .overlay(KbTileEdge(cornerRadius: cornerRadius))
     }
 
     private var shape: RoundedRectangle {
