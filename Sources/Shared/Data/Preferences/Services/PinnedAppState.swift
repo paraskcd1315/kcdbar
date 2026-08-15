@@ -45,11 +45,4 @@ final class PinnedAppState {
         await store.reorder(renumbered)
         await load()
     }
-
-    func move(bundleIdentifier: String, before target: String?) async {
-        guard bundleIdentifier != target else { return }
-
-        await store.move(bundleIdentifier: bundleIdentifier, before: target)
-        await load()
-    }
 }

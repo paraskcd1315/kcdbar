@@ -7,12 +7,31 @@ set -euo pipefail
 # Accessibility is granted to /Applications/KCDBar.app and nothing else.
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CONFIG="${CONFIG:-Debug}"
+CONFIG="${CONFIG:-Release}"
 BUILT="$ROOT/build/Build/Products/$CONFIG/KCDBar.app"
 TARGET="/Applications/KCDBar.app"
 
+# Builds first, always. Installing a stale build looks identical to a fix that did
+# not work, and cost a whole round of "I still see no change".
+if [ "${SKIP_BUILD:-0}" != "1" ]; then
+  "$ROOT/deploy/build.sh"
+fi
+
 if [ ! -d "$BUILT" ]; then
   echo "no build at $BUILT — run deploy/build.sh first" >&2
+  exit 1
+fi
+
+# The build must be newer than every source it was made from. A failed compile
+# leaves the previous binary in place, and installing that reports success while
+# shipping the code the user already rejected.
+BINARY="$BUILT/Contents/MacOS/KCDBar"
+NEWEST=$(find "$ROOT/Sources" "$ROOT/Resources" -type f \
+  \( -name "*.swift" -o -name "*.xcstrings" -o -name "*.plist" \) \
+  -exec stat -f "%m" {} + | sort -rn | head -1)
+
+if [ "$(stat -f "%m" "$BINARY")" -lt "$NEWEST" ]; then
+  echo "the build is older than its sources — the compile did not land" >&2
   exit 1
 fi
 
@@ -29,5 +48,9 @@ ditto "$BUILT" "$TARGET"
 
 codesign --verify --deep --strict "$TARGET"
 
-echo "installed $TARGET"
+if [ "${LAUNCH:-1}" = "1" ]; then
+  open -a "$TARGET"
+fi
+
+echo "installed $TARGET  ($CONFIG, built $(stat -f '%Sm' "$TARGET/Contents/MacOS/KCDBar"))"
 codesign -d -r- "$TARGET" 2>&1 | grep designated || true

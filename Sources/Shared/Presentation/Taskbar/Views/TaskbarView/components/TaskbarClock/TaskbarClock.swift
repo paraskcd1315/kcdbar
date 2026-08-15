@@ -1,6 +1,10 @@
 import SwiftUI
 
 struct TaskbarClock: View {
+    let onOpen: () -> Void
+
+    @State private var isHovered = false
+
     var body: some View {
         TimelineView(.everyMinute) { context in
             VStack(alignment: .trailing, spacing: 0) {
@@ -13,6 +17,16 @@ struct TaskbarClock: View {
             }
             .monospacedDigit()
             .padding(.horizontal, KbSpacing.s4)
+            .padding(.vertical, KbSpacing.s1)
         }
+        .contentShape(shape)
+        .onTapGesture(perform: onOpen)
+        .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
+        .animation(KbMotion.quick, value: isHovered)
+        .onHover { isHovered = $0 }
+    }
+
+    private var shape: AnyShape {
+        AnyShape(RoundedRectangle(cornerRadius: KbRadii.sm))
     }
 }
