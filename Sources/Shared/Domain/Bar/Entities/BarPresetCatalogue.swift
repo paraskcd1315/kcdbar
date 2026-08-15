@@ -11,7 +11,7 @@ enum BarPresetCatalogue {
         entrySizing: .fixed,
         grouping: .perWindow,
         material: .liquidGlass,
-        startButton: .centered,
+        startButton: .leading,
         autoHide: .never,
         displays: .allDisplays,
         windowScope: .thisDisplay,

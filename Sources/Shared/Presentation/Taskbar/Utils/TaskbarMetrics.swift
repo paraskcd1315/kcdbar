@@ -16,4 +16,6 @@ enum TaskbarMetrics {
     static let hoverFillOpacity: Double = 0.10
     static let focusedFillOpacity: Double = 0.16
     static let insertionScale: CGFloat = 0.4
+    static let startGlyphSize: CGFloat = 15
+    static let startButtonWidth: CGFloat = 40
 }

@@ -7,12 +7,14 @@ struct TaskbarRootView: View {
     let icons: any ApplicationIconPort
     let onActivate: (TaskbarEntryModel) -> Void
     let onRequestAccessibility: () -> Void
+    let onOpenStart: () -> Void
 
     var body: some View {
         TaskbarView(
             viewModel: viewModel,
             onActivate: onActivate,
-            onRequestAccessibility: onRequestAccessibility
+            onRequestAccessibility: onRequestAccessibility,
+            onOpenStart: onOpenStart
         )
     }
 

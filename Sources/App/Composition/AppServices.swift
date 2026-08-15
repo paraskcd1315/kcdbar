@@ -76,7 +76,8 @@ final class AppServices {
             icons: icons,
             displaySource: displays,
             onActivate: onActivate,
-            onRequestAccessibility: { [authorization] in authorization.requestTrust() }
+            onRequestAccessibility: { [authorization] in authorization.requestTrust() },
+            onOpenStart: {}
         )
         host.present(preset: preset)
         bar = host

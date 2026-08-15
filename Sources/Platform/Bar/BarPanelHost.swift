@@ -11,19 +11,22 @@ final class BarPanelHost: BarPanelHostPort {
     private let displaySource: any DisplayGeometryPort
     private let onActivate: (TaskbarEntryModel) -> Void
     private let onRequestAccessibility: () -> Void
+    private let onOpenStart: () -> Void
 
     init(
         registry: WindowRegistry,
         icons: any ApplicationIconPort,
         displaySource: any DisplayGeometryPort,
         onActivate: @escaping (TaskbarEntryModel) -> Void,
-        onRequestAccessibility: @escaping () -> Void
+        onRequestAccessibility: @escaping () -> Void,
+        onOpenStart: @escaping () -> Void
     ) {
         self.registry = registry
         self.icons = icons
         self.displaySource = displaySource
         self.onActivate = onActivate
         self.onRequestAccessibility = onRequestAccessibility
+        self.onOpenStart = onOpenStart
     }
 
     func present(preset: BarPreset) {
@@ -69,7 +72,8 @@ final class BarPanelHost: BarPanelHostPort {
                     displayId: display.id,
                     icons: icons,
                     onActivate: onActivate,
-                    onRequestAccessibility: onRequestAccessibility
+                    onRequestAccessibility: onRequestAccessibility,
+                    onOpenStart: onOpenStart
                 )
             )
             panel.orderFrontRegardless()

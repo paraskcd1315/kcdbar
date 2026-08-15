@@ -4,6 +4,7 @@ struct TaskbarView: View {
     let viewModel: TaskbarViewModel
     let onActivate: (TaskbarEntryModel) -> Void
     let onRequestAccessibility: () -> Void
+    let onOpenStart: () -> Void
 
     @State private var hasAppeared = false
 
@@ -39,11 +40,7 @@ struct TaskbarView: View {
             if let notice = viewModel.notice {
                 TaskbarNoticeView(notice: notice, onAct: onRequestAccessibility)
             } else {
-                TaskbarEntryStrip(
-                    entries: viewModel.entries,
-                    preset: viewModel.preset,
-                    onActivate: onActivate
-                )
+                barContent
             }
         }
         .padding(viewModel.preset.contentPadding)
@@ -51,6 +48,39 @@ struct TaskbarView: View {
         .frame(
             maxWidth: fillsCrossAxis(.horizontal) ? .infinity : nil,
             maxHeight: fillsCrossAxis(.vertical) ? .infinity : nil
+        )
+    }
+
+    @ViewBuilder
+    private var barContent: some View {
+        if viewModel.preset.edge.isVertical {
+            VStack(spacing: viewModel.preset.entrySpacing) {
+                if viewModel.preset.startButton != .hidden {
+                    TaskbarStartButton(onOpen: onOpenStart)
+                }
+                entryStrip
+                if viewModel.preset.showsStatusArea {
+                    TaskbarClock()
+                }
+            }
+        } else {
+            HStack(spacing: viewModel.preset.entrySpacing) {
+                if viewModel.preset.startButton != .hidden {
+                    TaskbarStartButton(onOpen: onOpenStart)
+                }
+                entryStrip
+                if viewModel.preset.showsStatusArea {
+                    TaskbarClock()
+                }
+            }
+        }
+    }
+
+    private var entryStrip: some View {
+        TaskbarEntryStrip(
+            entries: viewModel.entries,
+            preset: viewModel.preset,
+            onActivate: onActivate
         )
     }
 
