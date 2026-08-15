@@ -209,6 +209,7 @@ final class BarPanelHost: BarPanelHostPort {
                 existing.setFrame(frame, display: true)
                 continue
             }
+            let hitRegion = BarHitRegion()
             let root = TaskbarRootView(
                 registry: registry,
                 pins: pins,
@@ -227,14 +228,15 @@ final class BarPanelHost: BarPanelHostPort {
                 battery: battery,
                 onOpenBattery: onOpenBattery,
                 onOpenNotifications: onOpenNotifications,
-                onOpenControlCentre: onOpenControlCentre
+                onOpenControlCentre: onOpenControlCentre,
+                onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
             )
             .environment(\.middleClickCatcher) { action in
                 AnyView(MiddleClickView(action: action))
             }
 
             let panel = BarPanel(contentRect: frame)
-            panel.contentView = BarHostingView(rootView: root)
+            panel.contentView = BarHostingView(rootView: root, hitRegion: hitRegion)
             panel.orderFrontRegardless()
             panels[display.id] = panel
             shown[display.id] = true

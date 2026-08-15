@@ -19,6 +19,7 @@ struct TaskbarRootView: View {
     let onOpenBattery: () -> Void
     let onOpenNotifications: () -> Void
     let onOpenControlCentre: () -> Void
+    let onBarFrameChange: (CGRect) -> Void
 
     var body: some View {
         TaskbarView(
@@ -34,7 +35,8 @@ struct TaskbarRootView: View {
             onOpenNotifications: onOpenNotifications,
             onOpenControlCentre: onOpenControlCentre,
             isShowingDesktop: desktop.isShowingDesktop,
-            onToggleDesktop: onToggleDesktop
+            onToggleDesktop: onToggleDesktop,
+            onBarFrameChange: onBarFrameChange
         )
     }
 

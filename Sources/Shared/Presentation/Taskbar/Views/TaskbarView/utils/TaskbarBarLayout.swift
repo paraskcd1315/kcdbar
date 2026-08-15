@@ -1,6 +1,8 @@
 import SwiftUI
 
 enum TaskbarBarLayout {
+    static let coordinateSpace = "kb.bar.panel"
+
     static func appearOffset(edge: BarEdge, thickness: CGFloat) -> CGSize {
         switch edge {
         case .bottom: CGSize(width: 0, height: thickness)

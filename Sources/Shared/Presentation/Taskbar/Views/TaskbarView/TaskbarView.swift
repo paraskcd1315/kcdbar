@@ -14,6 +14,7 @@ struct TaskbarView: View {
     let onOpenControlCentre: () -> Void
     let isShowingDesktop: Bool
     let onToggleDesktop: () -> Void
+    let onBarFrameChange: (CGRect) -> Void
 
     @State private var hasAppeared = false
 
@@ -47,11 +48,17 @@ struct TaskbarView: View {
         .padding(TaskbarBarLayout.outsetPadding(attachment: viewModel.preset.attachment))
         .offset(x: appearOffset.width, y: appearOffset.height)
         .opacity(hasAppeared ? 1 : 0)
+        .onGeometryChange(for: CGRect.self) { proxy in
+            proxy.frame(in: .named(TaskbarBarLayout.coordinateSpace))
+        } action: { frame in
+            onBarFrameChange(frame)
+        }
         .frame(
             maxWidth: .infinity,
             maxHeight: .infinity,
             alignment: TaskbarBarLayout.contentAlignment(preset: viewModel.preset)
         )
+        .coordinateSpace(.named(TaskbarBarLayout.coordinateSpace))
         .onAppear {
             withAnimation(KbMotion.slow) { hasAppeared = true }
         }

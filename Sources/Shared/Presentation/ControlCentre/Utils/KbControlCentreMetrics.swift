@@ -14,4 +14,5 @@ enum KbControlCentreMetrics {
     static let rowGlyphSize: CGFloat = 34
     static let chevronSymbol = "chevron.right"
     static let backSymbol = "chevron.left"
+    static let settingsRowHeight: CGFloat = 28
 }
