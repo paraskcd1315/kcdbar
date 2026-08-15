@@ -11,6 +11,8 @@ struct TaskbarBody: View {
     let onMiddleClick: (TaskbarEntryModel) -> Void
     let battery: BatteryState
     let onOpenBattery: () -> Void
+    let onOpenNotifications: () -> Void
+    let onOpenControlCentre: () -> Void
     let onToggleDesktop: () -> Void
 
     var body: some View {
@@ -25,6 +27,8 @@ struct TaskbarBody: View {
                 onMiddleClick: onMiddleClick,
                 battery: battery,
                 onOpenBattery: onOpenBattery,
+                onOpenNotifications: onOpenNotifications,
+                onOpenControlCentre: onOpenControlCentre,
             )
             if showsDesktopCap {
                 TaskbarDesktopCap(

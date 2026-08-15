@@ -10,6 +10,8 @@ struct TaskbarView: View {
     let onMiddleClick: (TaskbarEntryModel) -> Void
     let battery: BatteryState
     let onOpenBattery: () -> Void
+    let onOpenNotifications: () -> Void
+    let onOpenControlCentre: () -> Void
     let isShowingDesktop: Bool
     let onToggleDesktop: () -> Void
 
@@ -33,6 +35,8 @@ struct TaskbarView: View {
                 onMiddleClick: onMiddleClick,
                 battery: battery,
                 onOpenBattery: onOpenBattery,
+                onOpenNotifications: onOpenNotifications,
+                onOpenControlCentre: onOpenControlCentre,
                 onToggleDesktop: onToggleDesktop
             )
         }

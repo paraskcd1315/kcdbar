@@ -4,30 +4,45 @@ import SwiftUI
 @MainActor
 final class BatteryPanelHost {
     private var panel: NSPanel?
+    private var presentation: BatteryPanelPresentation?
     private var dismissMonitor: Any?
+    private var isClosing = false
+
+    var isPresented: Bool {
+        panel != nil && !isClosing
+    }
 
     func present(state: BatteryState, energyUsers: [EnergyUser], anchor: NSPoint) {
-        dismiss()
+        closeImmediately()
 
-        let panel = NSPanel(
-            contentRect: .zero,
-            styleMask: [.borderless, .nonactivatingPanel],
-            backing: .buffered,
-            defer: false
+        let presentation = BatteryPanelPresentation()
+        let sizing = NSHostingView(
+            rootView: BatteryPanelView(
+                state: state,
+                energyUsers: energyUsers,
+                arrowX: 0,
+                presentation: presentation
+            )
         )
-        panel.isOpaque = false
-        panel.backgroundColor = .clear
-        panel.hasShadow = true
-        panel.level = .popUpMenu
-        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
-        panel.hidesOnDeactivate = false
+        let size = sizing.fittingSize
+        let settled = origin(for: size, anchor: anchor)
+
+        let panel = makePanel()
         panel.contentView = NSHostingView(
-            rootView: BatteryPanelView(state: state, energyUsers: energyUsers)
+            rootView: BatteryPanelView(
+                state: state,
+                energyUsers: energyUsers,
+                arrowX: anchor.x - settled.x,
+                presentation: presentation
+            )
         )
-        panel.setContentSize(panel.contentView?.fittingSize ?? .zero)
-        panel.setFrameOrigin(origin(for: panel.frame.size, anchor: anchor))
+        panel.setContentSize(size)
+        panel.setFrameOrigin(settled)
         panel.orderFrontRegardless()
+
         self.panel = panel
+        self.presentation = presentation
+        withAnimation(KbMotion.standard) { presentation.isExpanded = true }
 
         dismissMonitor = NSEvent.addGlobalMonitorForEvents(
             matching: [.leftMouseDown, .rightMouseDown]
@@ -37,8 +52,48 @@ final class BatteryPanelHost {
     }
 
     func dismiss() {
+        guard let panel, let presentation, !isClosing else { return }
+
+        stopMonitor()
+        isClosing = true
+        withAnimation(KbMotion.standard) { presentation.isExpanded = false }
+
+        Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(BatteryMetrics.collapseMilliseconds))
+            panel.orderOut(nil)
+            guard let self, self.panel === panel else { return }
+            self.panel = nil
+            self.presentation = nil
+            self.isClosing = false
+        }
+    }
+
+    private func closeImmediately() {
+        stopMonitor()
         panel?.orderOut(nil)
         panel = nil
+        presentation = nil
+        isClosing = false
+    }
+
+    private func makePanel() -> NSPanel {
+        let panel = NSPanel(
+            contentRect: .zero,
+            styleMask: [.borderless, .nonactivatingPanel],
+            backing: .buffered,
+            defer: false
+        )
+        panel.isOpaque = false
+        panel.backgroundColor = .clear
+        panel.hasShadow = false
+        panel.level = .popUpMenu
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
+        panel.hidesOnDeactivate = false
+
+        return panel
+    }
+
+    private func stopMonitor() {
         if let dismissMonitor {
             NSEvent.removeMonitor(dismissMonitor)
         }

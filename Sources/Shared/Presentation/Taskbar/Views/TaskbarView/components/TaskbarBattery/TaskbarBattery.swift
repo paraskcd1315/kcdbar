@@ -26,8 +26,7 @@ struct TaskbarBattery: View {
 
     private var powerSymbol: String? {
         switch BatteryStyle.status(for: state) {
-        case .charging: "bolt.fill"
-        case .fullyCharged, .pluggedInNotCharging: "powerplug.fill"
+        case .charging, .fullyCharged, .pluggedInNotCharging: "bolt.fill"
         case .onBattery: state.isLowPower ? "leaf.fill" : nil
         }
     }

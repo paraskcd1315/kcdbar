@@ -4,15 +4,18 @@ struct BatteryPanelEnergyList: View {
     let users: [EnergyUser]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: KbSpacing.s2) {
+        VStack(alignment: .leading, spacing: KbSpacing.s3) {
             Text("battery.energy.heading")
                 .font(KbTypography.panelDetail)
                 .foregroundStyle(KbColors.onSurfaceMuted)
-            ForEach(users) { user in
-                Text(user.name)
-                    .font(KbTypography.panelDetail)
-                    .foregroundStyle(KbColors.onSurface)
-                    .lineLimit(1)
+            VStack(alignment: .leading, spacing: KbSpacing.s2) {
+                ForEach(users) { user in
+                    Text(user.name)
+                        .font(KbTypography.panelItem)
+                        .foregroundStyle(KbColors.onSurface)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                }
             }
         }
     }

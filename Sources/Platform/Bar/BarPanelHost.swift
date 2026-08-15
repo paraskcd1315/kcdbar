@@ -26,6 +26,8 @@ final class BarPanelHost: BarPanelHostPort {
     private let onToggleDesktop: () -> Void
     private let onMiddleClick: (TaskbarEntryModel, Int) -> Void
     private let onOpenBattery: () -> Void
+    private let onOpenNotifications: () -> Void
+    private let onOpenControlCentre: () -> Void
 
     init(
         registry: WindowRegistry,
@@ -42,8 +44,12 @@ final class BarPanelHost: BarPanelHostPort {
         onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
         onToggleDesktop: @escaping () -> Void,
         onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void,
-        onOpenBattery: @escaping () -> Void
+        onOpenBattery: @escaping () -> Void,
+        onOpenNotifications: @escaping () -> Void,
+        onOpenControlCentre: @escaping () -> Void
     ) {
+        self.onOpenNotifications = onOpenNotifications
+        self.onOpenControlCentre = onOpenControlCentre
         self.onDropPin = onDropPin
         self.onToggleDesktop = onToggleDesktop
         self.onMiddleClick = onMiddleClick
@@ -219,7 +225,9 @@ final class BarPanelHost: BarPanelHostPort {
                 onToggleDesktop: onToggleDesktop,
                 onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) },
                 battery: battery,
-                onOpenBattery: onOpenBattery
+                onOpenBattery: onOpenBattery,
+                onOpenNotifications: onOpenNotifications,
+                onOpenControlCentre: onOpenControlCentre
             )
             .environment(\.middleClickCatcher) { action in
                 AnyView(MiddleClickView(action: action))

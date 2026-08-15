@@ -11,4 +11,6 @@ enum KbTypography {
     static let batteryReadout = Font.system(size: 9, weight: .semibold)
     static let panelTitle = Font.system(size: 13, weight: .semibold)
     static let panelDetail = Font.system(size: 11, weight: .regular)
+    static let panelItem = Font.system(size: 12, weight: .regular)
+    static let controlCentreGlyph = Font.system(size: 14, weight: .regular)
 }
