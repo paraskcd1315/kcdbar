@@ -12,6 +12,7 @@ final class BarPanelHost: BarPanelHostPort {
     private var activePreset = BarPresetCatalogue.default
 
     private let registry: WindowRegistry
+    private let battery: BatteryMonitor
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -24,9 +25,11 @@ final class BarPanelHost: BarPanelHostPort {
     private let onDropPin: (String, TaskbarEntryModel) -> Void
     private let onToggleDesktop: () -> Void
     private let onMiddleClick: (TaskbarEntryModel, Int) -> Void
+    private let onOpenBattery: () -> Void
 
     init(
         registry: WindowRegistry,
+        battery: BatteryMonitor,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -38,12 +41,15 @@ final class BarPanelHost: BarPanelHostPort {
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
         onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
         onToggleDesktop: @escaping () -> Void,
-        onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void
+        onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void,
+        onOpenBattery: @escaping () -> Void
     ) {
         self.onDropPin = onDropPin
         self.onToggleDesktop = onToggleDesktop
         self.onMiddleClick = onMiddleClick
+        self.onOpenBattery = onOpenBattery
         self.registry = registry
+        self.battery = battery
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -211,7 +217,9 @@ final class BarPanelHost: BarPanelHostPort {
                 onTogglePin: onTogglePin,
                 onDropPin: onDropPin,
                 onToggleDesktop: onToggleDesktop,
-                onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) }
+                onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) },
+                battery: battery,
+                onOpenBattery: onOpenBattery
             )
             .environment(\.middleClickCatcher) { action in
                 AnyView(MiddleClickView(action: action))

@@ -8,6 +8,8 @@ struct TaskbarContentArea: View {
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
+    let battery: BatteryState
+    let onOpenBattery: () -> Void
 
     var body: some View {
         Group {
@@ -21,6 +23,8 @@ struct TaskbarContentArea: View {
                     onTogglePin: onTogglePin,
                     onDropPin: onDropPin,
                     onMiddleClick: onMiddleClick,
+                    battery: battery,
+                    onOpenBattery: onOpenBattery,
                 )
             }
         }

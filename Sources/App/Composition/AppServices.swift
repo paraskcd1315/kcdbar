@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 
 /** The composition root, and the only place naming a concrete platform implementation. */
@@ -8,6 +9,8 @@ final class AppServices {
     let authorization: any AccessibilityAuthorizationPort = AccessibilityAuthorization()
     let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     let registry: WindowRegistry
+    let battery = BatteryMonitor(source: IoKitBatterySource())
+    let batteryPanel = BatteryPanelHost()
     let pins: PinnedAppState
     let order = EntryOrderMemory()
     let desktop = ShowDesktopState()
@@ -33,6 +36,7 @@ final class AppServices {
 
     func refreshAndEnforce(now: Date = Date()) {
         registry.refresh()
+        battery.refresh()
         overlap.enforce(
             preset: activePreset,
             windows: registry.windows,
@@ -194,6 +198,19 @@ final class AppServices {
         return opened
     }
 
+    func openBatteryPanel() {
+        let anchor = NSEvent.mouseLocation
+
+        Task {
+            await battery.sampleEnergy()
+            batteryPanel.present(
+                state: battery.state,
+                energyUsers: battery.energyUsers,
+                anchor: anchor
+            )
+        }
+    }
+
     func togglePin(entry: TaskbarEntryModel) {
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
         let name = entry.applicationName.isEmpty ? bundleIdentifier : entry.applicationName
@@ -211,6 +228,7 @@ final class AppServices {
         activePreset = preset
         let host = BarPanelHost(
             registry: registry,
+            battery: battery,
             pins: pins,
             order: order,
             desktop: desktop,
@@ -228,7 +246,8 @@ final class AppServices {
             onToggleDesktop: { [weak self] in self?.toggleShowDesktop() },
             onMiddleClick: { [weak self] entry, displayId in
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
-            }
+            },
+            onOpenBattery: { [weak self] in self?.openBatteryPanel() }
         )
         host.present(preset: preset)
         bar = host

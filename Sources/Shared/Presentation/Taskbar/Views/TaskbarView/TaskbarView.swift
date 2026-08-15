@@ -8,6 +8,8 @@ struct TaskbarView: View {
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
+    let battery: BatteryState
+    let onOpenBattery: () -> Void
     let isShowingDesktop: Bool
     let onToggleDesktop: () -> Void
 
@@ -29,6 +31,8 @@ struct TaskbarView: View {
                 onTogglePin: onTogglePin,
                 onDropPin: onDropPin,
                 onMiddleClick: onMiddleClick,
+                battery: battery,
+                onOpenBattery: onOpenBattery,
                 onToggleDesktop: onToggleDesktop
             )
         }

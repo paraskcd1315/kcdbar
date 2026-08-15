@@ -8,4 +8,7 @@ enum KbTypography {
     static let menuHeading = Font.system(size: 13, weight: .semibold)
     static let menuItem = Font.system(size: 13, weight: .regular)
     static let probeLabel = Font.system(size: 13, weight: .medium)
+    static let batteryReadout = Font.system(size: 9, weight: .semibold)
+    static let panelTitle = Font.system(size: 13, weight: .semibold)
+    static let panelDetail = Font.system(size: 11, weight: .regular)
 }
