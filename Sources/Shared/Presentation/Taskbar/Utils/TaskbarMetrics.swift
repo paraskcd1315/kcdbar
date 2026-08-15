@@ -20,6 +20,8 @@ enum TaskbarMetrics {
     static let startButtonWidth: CGFloat = 40
     static let dropIndicatorWidth: CGFloat = 3
     static let dropGap: CGFloat = 26
+    static let showDesktopWidth: CGFloat = 10
+    static let showDesktopDividerWidth: CGFloat = 1
     static let draggingOpacity: Double = 0.35
     static let tooltipAllowance: CGFloat = 44
     static let tooltipGap: CGFloat = 8

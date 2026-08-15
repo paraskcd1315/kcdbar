@@ -21,4 +21,5 @@ struct BarPreset: Codable, Equatable, Sendable {
     var contentPadding: CGFloat
     var cornerRadius: CGFloat
     var showsStatusArea: Bool
+    var showsDesktopButton: Bool
 }

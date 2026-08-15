@@ -9,6 +9,7 @@ final class BarPanelHost: BarPanelHostPort {
     private let registry: WindowRegistry
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
+    private let desktop: ShowDesktopState
     private let icons: any ApplicationIconPort
     private let displaySource: any DisplayGeometryPort
     private let onActivate: (TaskbarEntryModel) -> Void
@@ -16,23 +17,28 @@ final class BarPanelHost: BarPanelHostPort {
     private let onOpenStart: () -> Void
     private let onTogglePin: (TaskbarEntryModel) -> Void
     private let onDropPin: (String, TaskbarEntryModel) -> Void
+    private let onToggleDesktop: () -> Void
 
     init(
         registry: WindowRegistry,
         pins: PinnedAppState,
         order: EntryOrderMemory,
+        desktop: ShowDesktopState,
         icons: any ApplicationIconPort,
         displaySource: any DisplayGeometryPort,
         onActivate: @escaping (TaskbarEntryModel) -> Void,
         onRequestAccessibility: @escaping () -> Void,
         onOpenStart: @escaping () -> Void,
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
-        onDropPin: @escaping (String, TaskbarEntryModel) -> Void
+        onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
+        onToggleDesktop: @escaping () -> Void
     ) {
         self.onDropPin = onDropPin
+        self.onToggleDesktop = onToggleDesktop
         self.registry = registry
         self.pins = pins
         self.order = order
+        self.desktop = desktop
         self.icons = icons
         self.onTogglePin = onTogglePin
         self.displaySource = displaySource
@@ -82,6 +88,7 @@ final class BarPanelHost: BarPanelHostPort {
                     registry: registry,
                     pins: pins,
                     order: order,
+                    desktop: desktop,
                     preset: preset,
                     displayId: display.id,
                     icons: icons,
@@ -89,7 +96,8 @@ final class BarPanelHost: BarPanelHostPort {
                     onRequestAccessibility: onRequestAccessibility,
                     onOpenStart: onOpenStart,
                     onTogglePin: onTogglePin,
-                    onDropPin: onDropPin
+                    onDropPin: onDropPin,
+                    onToggleDesktop: onToggleDesktop
                 )
             )
             panel.orderFrontRegardless()

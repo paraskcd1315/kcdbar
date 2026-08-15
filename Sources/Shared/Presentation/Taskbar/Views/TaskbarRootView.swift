@@ -4,6 +4,7 @@ struct TaskbarRootView: View {
     let registry: WindowRegistry
     let pins: PinnedAppState
     let order: EntryOrderMemory
+    let desktop: ShowDesktopState
     let preset: BarPreset
     let displayId: Int
     let icons: any ApplicationIconPort
@@ -12,6 +13,7 @@ struct TaskbarRootView: View {
     let onOpenStart: () -> Void
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
+    let onToggleDesktop: () -> Void
 
     var body: some View {
         TaskbarView(
@@ -20,7 +22,9 @@ struct TaskbarRootView: View {
             onRequestAccessibility: onRequestAccessibility,
             onOpenStart: onOpenStart,
             onTogglePin: onTogglePin,
-            onDropPin: onDropPin
+            onDropPin: onDropPin,
+            isShowingDesktop: desktop.isShowingDesktop,
+            onToggleDesktop: onToggleDesktop
         )
     }
 

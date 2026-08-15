@@ -10,6 +10,7 @@ final class AppServices {
     let registry: WindowRegistry
     let pins: PinnedAppState
     let order = EntryOrderMemory()
+    let desktop = ShowDesktopState()
     let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
 
     let control: any WindowControlPort = AccessibilityWindowControl()
@@ -65,6 +66,32 @@ final class AppServices {
         let launcherKeys = pins.apps.map { "pin:\($0.bundleIdentifier)" }
 
         return Array(NSOrderedSet(array: launcherKeys + windowKeys)) as? [String] ?? windowKeys
+    }
+
+    func toggleShowDesktop() {
+        if desktop.isShowingDesktop {
+            restoreFromDesktop()
+        } else {
+            hideToDesktop()
+        }
+        refreshAndEnforce()
+    }
+
+    private func hideToDesktop() {
+        let visible = registry.taskbarEntries.filter { !$0.isMinimized }
+        for window in visible {
+            _ = control.perform(.minimize, on: window)
+        }
+        desktop.remember(keys: visible.map { WindowEntryIdentifier.text(for: $0.identity) })
+    }
+
+    private func restoreFromDesktop() {
+        let wanted = Set(desktop.hiddenKeys)
+        for window in registry.windows
+        where wanted.contains(WindowEntryIdentifier.text(for: window.identity)) {
+            _ = control.perform(.restore, on: window)
+        }
+        desktop.clear()
     }
 
     func reorder(draggedKey: String, before target: TaskbarEntryModel) {
@@ -143,6 +170,7 @@ final class AppServices {
             registry: registry,
             pins: pins,
             order: order,
+            desktop: desktop,
             icons: icons,
             displaySource: displays,
             onActivate: { [weak self] entry in self?.activate(entry: entry) },
@@ -151,7 +179,8 @@ final class AppServices {
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onDropPin: { [weak self] dropped, target in
                 self?.reorder(draggedKey: dropped, before: target)
-            }
+            },
+            onToggleDesktop: { [weak self] in self?.toggleShowDesktop() }
         )
         host.present(preset: preset)
         bar = host

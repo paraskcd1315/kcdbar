@@ -7,6 +7,8 @@ struct TaskbarView: View {
     let onOpenStart: () -> Void
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
+    let isShowingDesktop: Bool
+    let onToggleDesktop: () -> Void
 
     @State private var hasAppeared = false
 
@@ -68,6 +70,12 @@ struct TaskbarView: View {
                 if viewModel.preset.showsStatusArea {
                     TaskbarClock()
                 }
+                if viewModel.preset.showsDesktopButton {
+                    TaskbarShowDesktopButton(
+                        isShowingDesktop: isShowingDesktop,
+                        onToggle: onToggleDesktop
+                    )
+                }
             }
         } else {
             HStack(spacing: viewModel.preset.entrySpacing) {
@@ -77,6 +85,12 @@ struct TaskbarView: View {
                 entryStrip
                 if viewModel.preset.showsStatusArea {
                     TaskbarClock()
+                }
+                if viewModel.preset.showsDesktopButton {
+                    TaskbarShowDesktopButton(
+                        isShowingDesktop: isShowingDesktop,
+                        onToggle: onToggleDesktop
+                    )
                 }
             }
         }

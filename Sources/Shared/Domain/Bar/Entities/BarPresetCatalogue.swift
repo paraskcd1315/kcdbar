@@ -21,7 +21,8 @@ enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
         cornerRadius: KbRadii.lg,
-        showsStatusArea: true
+        showsStatusArea: true,
+        showsDesktopButton: true
     )
 
     static let windows10 = BarPreset(
@@ -44,7 +45,8 @@ enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s1,
         contentPadding: KbSpacing.s2,
         cornerRadius: KbRadii.none,
-        showsStatusArea: true
+        showsStatusArea: true,
+        showsDesktopButton: true
     )
 
     static let dock = BarPreset(
@@ -67,7 +69,8 @@ enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s3,
         contentPadding: KbSpacing.s4,
         cornerRadius: KbRadii.xl,
-        showsStatusArea: false
+        showsStatusArea: false,
+        showsDesktopButton: false
     )
 
     static let minimal = BarPreset(
@@ -90,7 +93,8 @@ enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
         cornerRadius: KbRadii.lg,
-        showsStatusArea: false
+        showsStatusArea: false,
+        showsDesktopButton: false
     )
 
     static let all: [BarPreset] = [windows11, windows10, dock, minimal]
