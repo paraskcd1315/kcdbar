@@ -30,10 +30,10 @@ struct TaskbarEntryView: View {
                 minWidth: showsTitle ? TaskbarMetrics.entryCompactWidth : TaskbarMetrics.iconOnlyEntryWidth,
                 maxWidth: showsTitle ? TaskbarMetrics.entryMaxWidth : TaskbarMetrics.iconOnlyEntryWidth
             )
-            .contentShape(.capsule)
+            .contentShape(.rect(cornerRadius: KbRadii.md))
         }
         .buttonStyle(.plain)
-        .glassEffect(entryGlass, in: .capsule)
+        .glassEffect(entryGlass, in: .rect(cornerRadius: KbRadii.md))
         .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
         .animation(KbMotion.quick, value: isHovered)
         .animation(KbMotion.quick, value: entry.isFrontmost)
@@ -61,7 +61,7 @@ struct TaskbarEntryView: View {
         }
         .overlay(alignment: .leading) {
             if isDropTarget {
-                Capsule()
+                RoundedRectangle(cornerRadius: TaskbarMetrics.dropIndicatorWidth / 2)
                     .fill(KbColors.activeIndicator)
                     .frame(width: TaskbarMetrics.dropIndicatorWidth)
             }
