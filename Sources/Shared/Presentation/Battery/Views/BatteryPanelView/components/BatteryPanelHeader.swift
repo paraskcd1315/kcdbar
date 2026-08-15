@@ -4,27 +4,25 @@ struct BatteryPanelHeader: View {
     let state: BatteryState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: KbSpacing.s1) {
+        VStack(alignment: .leading, spacing: KbSpacing.s3) {
             HStack {
                 Text("battery.title")
                     .font(KbTypography.panelTitle)
                     .foregroundStyle(KbColors.onSurface)
-                Spacer(minLength: KbSpacing.s4)
+                Spacer(minLength: KbSpacing.s5)
                 Text("\(state.percentage)%")
                     .font(KbTypography.panelTitle)
-                    .foregroundStyle(KbColors.onSurface)
+                    .foregroundStyle(KbColors.battery(BatteryStyle.tone(for: state)))
             }
-            Text(sourceKey)
-                .font(KbTypography.panelDetail)
-                .foregroundStyle(KbColors.onSurfaceMuted)
-            Text(statusKey)
-                .font(KbTypography.panelDetail)
-                .foregroundStyle(KbColors.onSurfaceMuted)
-            if let remaining = state.minutesRemaining {
-                Text(BatteryFormatting.remaining(minutes: remaining))
-                    .font(KbTypography.panelDetail)
-                    .foregroundStyle(KbColors.onSurfaceMuted)
+            VStack(alignment: .leading, spacing: KbSpacing.s2) {
+                Text(sourceKey)
+                Text(statusKey)
+                if let remaining = state.minutesRemaining {
+                    Text(BatteryFormatting.remaining(minutes: remaining))
+                }
             }
+            .font(KbTypography.panelDetail)
+            .foregroundStyle(KbColors.onSurfaceMuted)
         }
     }
 

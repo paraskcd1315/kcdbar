@@ -9,6 +9,8 @@ struct TaskbarItems: View {
     let onMiddleClick: (TaskbarEntryModel) -> Void
     let battery: BatteryState
     let onOpenBattery: () -> Void
+    let onOpenNotifications: () -> Void
+    let onOpenControlCentre: () -> Void
 
     var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
@@ -24,10 +26,11 @@ struct TaskbarItems: View {
                 onMiddleClick: onMiddleClick
             )
             if viewModel.preset.showsStatusArea {
+                TaskbarControlCentreButton(onOpen: onOpenControlCentre)
                 if battery.isPresent {
                     TaskbarBattery(state: battery, onOpen: onOpenBattery)
                 }
-                TaskbarClock()
+                TaskbarClock(onOpen: onOpenNotifications)
             }
         }
     }

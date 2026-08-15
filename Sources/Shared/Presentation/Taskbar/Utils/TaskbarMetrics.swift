@@ -31,6 +31,7 @@ enum TaskbarMetrics {
     static let dragActivationDistance: CGFloat = 8
     static let bandSpacing: CGFloat = 2
     static let bandPadding: CGFloat = 4
+    static let controlCentreWidth: CGFloat = 24
     static let tooltipAllowance: CGFloat = 44
     static let tooltipGap: CGFloat = 8
     static let tooltipDelay: Duration = .milliseconds(400)

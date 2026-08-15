@@ -10,6 +10,8 @@ struct TaskbarContentArea: View {
     let onMiddleClick: (TaskbarEntryModel) -> Void
     let battery: BatteryState
     let onOpenBattery: () -> Void
+    let onOpenNotifications: () -> Void
+    let onOpenControlCentre: () -> Void
 
     var body: some View {
         Group {
@@ -25,6 +27,8 @@ struct TaskbarContentArea: View {
                     onMiddleClick: onMiddleClick,
                     battery: battery,
                     onOpenBattery: onOpenBattery,
+                    onOpenNotifications: onOpenNotifications,
+                    onOpenControlCentre: onOpenControlCentre,
                 )
             }
         }

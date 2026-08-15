@@ -18,6 +18,10 @@ enum BatteryMetrics {
     static let significantEnergyImpact = 20.0
     static let significantEnergyLimit = 5
     static let sampleInterval: TimeInterval = 60
-    static let panelWidth: CGFloat = 240
-    static let panelGap: CGFloat = 8
+    static let panelWidth: CGFloat = 300
+    static let panelGap: CGFloat = 6
+    static let arrowSize = CGSize(width: 18, height: 9)
+    static let dividerHeight: CGFloat = 1
+    static let collapsedScale: CGFloat = 0.55
+    static let collapseMilliseconds = 280
 }

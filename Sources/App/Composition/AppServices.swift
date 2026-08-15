@@ -11,6 +11,7 @@ final class AppServices {
     let registry: WindowRegistry
     let battery = BatteryMonitor(source: IoKitBatterySource())
     let batteryPanel = BatteryPanelHost()
+    let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
     let pins: PinnedAppState
     let order = EntryOrderMemory()
     let desktop = ShowDesktopState()
@@ -199,6 +200,10 @@ final class AppServices {
     }
 
     func openBatteryPanel() {
+        guard !batteryPanel.isPresented else {
+            batteryPanel.dismiss()
+            return
+        }
         let anchor = NSEvent.mouseLocation
 
         Task {
@@ -247,7 +252,13 @@ final class AppServices {
             onMiddleClick: { [weak self] entry, displayId in
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
             },
-            onOpenBattery: { [weak self] in self?.openBatteryPanel() }
+            onOpenBattery: { [weak self] in self?.openBatteryPanel() },
+            onOpenNotifications: { [menuExtras] in
+                _ = menuExtras.press(BarControlMetrics.clockIdentifier)
+            },
+            onOpenControlCentre: { [menuExtras] in
+                _ = menuExtras.press(BarControlMetrics.controlCentreIdentifier)
+            }
         )
         host.present(preset: preset)
         bar = host
