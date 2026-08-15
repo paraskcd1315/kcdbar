@@ -31,6 +31,7 @@ package final class AppServices {
     package let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
     package let terminator: any ApplicationTerminationPort = WorkspaceApplicationTerminator()
     package let spotlight: any SpotlightPort = CgEventSpotlight()
+    package let pasteboard: any PasteboardPort = AppKitPasteboard()
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
@@ -245,7 +246,7 @@ package final class AppServices {
         sound.refresh()
         brightness.refresh()
         controlCentrePanel.present(anchor: NSEvent.mouseLocation) {
-            [wifi, bluetooth, sound, brightness] presentation, _ in
+            [wifi, bluetooth, sound, brightness, pasteboard] presentation, _ in
             ControlCentrePresentation.content(
                 wifi: wifi,
                 bluetooth: bluetooth,
@@ -254,7 +255,8 @@ package final class AppServices {
                 presentation: presentation,
                 onOpenWifiSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) },
                 onOpenBluetoothSettings: { NSWorkspace.shared.open(BarSettingsLinks.bluetooth) },
-                onOpenNetworkSettings: { NSWorkspace.shared.open(BarSettingsLinks.network) }
+                onOpenNetworkSettings: { NSWorkspace.shared.open(BarSettingsLinks.network) },
+                onCopy: { [pasteboard] in pasteboard.copy($0) }
             )
         }
     }

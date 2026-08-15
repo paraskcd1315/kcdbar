@@ -34,6 +34,21 @@ package final class FileManagerTrashSource: TrashPort {
         NSWorkspace.shared.open(url)
     }
 
+    package func empty() {
+        guard let url = Self.trashUrl,
+              let items = try? FileManager.default.contentsOfDirectory(
+                  at: url,
+                  includingPropertiesForKeys: nil,
+                  options: []
+              )
+        else {
+            return
+        }
+        for item in items {
+            try? FileManager.default.removeItem(at: item)
+        }
+    }
+
     package func watch(_ onChange: @escaping () -> Void) {
         stopWatching()
         guard let url = Self.trashUrl else { return }

@@ -29,4 +29,9 @@ package final class TrashMonitor {
     package func open() {
         source.open()
     }
+
+    package func empty() {
+        source.empty()
+        refresh()
+    }
 }

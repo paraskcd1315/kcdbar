@@ -4,14 +4,16 @@ import SwiftUI
 package struct WifiDetail: View {
     package let monitor: WifiMonitor
     package let onBack: () -> Void
+    package let onCopy: (String) -> Void
     package let onOpenSettings: () -> Void
 
     @State private var showsOther = false
 
     package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
-            WifiDetailHeader(
-                isPowered: monitor.state.isPowered,
+            ControlCentreDetailHeader(
+                titleKey: "wifi.title",
+                isOn: monitor.state.isPowered,
                 onBack: onBack,
                 onSetPower: { monitor.setPower($0) }
             )
@@ -26,8 +28,13 @@ package struct WifiDetail: View {
                 if showsOther {
                     WifiOtherList(monitor: monitor)
                 }
+                if let detail = monitor.detail {
+                    ControlCentreAccordion(titleKey: "network.details") {
+                        NetworkDetailList(detail: detail, onCopy: onCopy)
+                    }
+                }
             }
-            WifiSettingsRow(onOpen: onOpenSettings)
+            ControlCentreSettingsRow(titleKey: "wifi.settings", onOpen: onOpenSettings)
         }
         .task { await monitor.scan() }
     }

@@ -1,4 +1,5 @@
 import CoreGraphics
+import Foundation
 
 package enum KbControlCentreMetrics {
     package static let glyphRatio: CGFloat = 0.55
@@ -13,6 +14,8 @@ package enum KbControlCentreMetrics {
     package static let tileGap: CGFloat = 8
     package static let rowGlyphSize: CGFloat = 34
     package static let rowHeight: CGFloat = 38
+    package static let detailLabelWidth: CGFloat = 108
+    package static let copiedDuration: TimeInterval = 1.2
     package static let chevronSymbol = "chevron.right"
     package static let backSymbol = "chevron.left"
     package static let settingsRowHeight: CGFloat = 28

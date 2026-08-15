@@ -11,6 +11,7 @@ package final class WifiMonitor {
     package private(set) var isScanning = false
 
     package private(set) var link: NetworkLink = .none
+    package private(set) var detail: NetworkDetail?
 
     private let source: any WifiPort
     private let links: any NetworkLinkPort
@@ -24,6 +25,7 @@ package final class WifiMonitor {
     package func refresh() {
         state = source.state()
         link = links.primaryLink()
+        detail = links.detail()
         if inRange.isEmpty {
             inRange = currentOnly
         }

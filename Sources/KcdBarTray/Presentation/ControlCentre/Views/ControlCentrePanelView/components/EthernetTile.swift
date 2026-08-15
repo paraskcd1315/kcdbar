@@ -3,11 +3,11 @@ import SwiftUI
 
 package struct EthernetTile: View {
     package let name: String
-    package let onOpenSettings: () -> Void
+    package let onOpen: () -> Void
 
-    package init(name: String, onOpenSettings: @escaping () -> Void) {
+    package init(name: String, onOpen: @escaping () -> Void) {
         self.name = name
-        self.onOpenSettings = onOpenSettings
+        self.onOpen = onOpen
     }
 
     package var body: some View {
@@ -16,8 +16,8 @@ package struct EthernetTile: View {
                 titleKey: "ethernet.title",
                 statusKey: LocalizedStringKey(name),
                 isOn: true,
-                onToggle: onOpenSettings,
-                onOpen: onOpenSettings
+                onToggle: onOpen,
+                onOpen: onOpen
             ) {
                 Image(systemName: NetworkLinkKeys.ethernetSymbol)
                     .font(
