@@ -37,6 +37,12 @@ package final class PopoverHost {
         let panel = makePanel()
         panel.setContentSize(size)
         panel.setFrameOrigin(settled)
+
+        self.anchor = anchor
+        self.panel = panel
+        self.presentation = presentation
+        self.presented = key
+
         let hosting = PopoverHostingView(
             rootView: content(presentation, anchor.x - settled.x)
         )
@@ -45,11 +51,6 @@ package final class PopoverHost {
         }
         panel.contentView = hosting
         panel.orderFrontRegardless()
-
-        self.anchor = anchor
-        self.panel = panel
-        self.presentation = presentation
-        self.presented = key
         withAnimation(KbMotion.standard) { presentation.isExpanded = true }
 
         dismissMonitor = NSEvent.addGlobalMonitorForEvents(
