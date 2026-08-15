@@ -1,6 +1,6 @@
 import Foundation
 import SwiftData
-import KcdBarBar
+import KcdBarTaskbar
 
 /** An application the user keeps in the bar whether or not it has a window open. */
 @Model

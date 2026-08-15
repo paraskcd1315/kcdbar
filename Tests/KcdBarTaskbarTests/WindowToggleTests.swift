@@ -1,6 +1,6 @@
 import CoreGraphics
 import Testing
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 struct WindowToggleTests {
     private func reconciled(

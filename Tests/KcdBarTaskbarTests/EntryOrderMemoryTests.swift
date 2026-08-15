@@ -1,5 +1,5 @@
 import Testing
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 @MainActor
 struct EntryOrderMemoryTests {

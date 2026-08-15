@@ -1,5 +1,5 @@
 import Foundation
-import KcdBarBar
+import KcdBarTaskbar
 import SwiftData
 
 /** Everything KCDBar remembers between launches. */

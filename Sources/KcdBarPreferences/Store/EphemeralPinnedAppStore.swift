@@ -1,4 +1,4 @@
-import KcdBarBar
+import KcdBarTaskbar
 
 /** Stands in when the store file cannot be opened, so the bar still runs. */
 package actor EphemeralPinnedAppStore: PinnedAppStorePort {

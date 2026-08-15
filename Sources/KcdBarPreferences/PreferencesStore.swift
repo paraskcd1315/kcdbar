@@ -1,4 +1,4 @@
-import KcdBarBar
+import KcdBarTaskbar
 
 /** Opens the app's SwiftData store, falling back to memory so the bar still runs. */
 package enum PreferencesStore {

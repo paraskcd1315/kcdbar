@@ -1,7 +1,7 @@
 import CoreGraphics
 import Testing
 
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 struct SoloWindowPolicyTests {
     private let left = DisplayGeometry(

@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
-import KcdBarBar
 import KcdBarPreferences
+import KcdBarTaskbar
 import KcdBarTray
 import SwiftUI
 

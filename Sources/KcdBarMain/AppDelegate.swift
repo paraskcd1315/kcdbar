@@ -1,5 +1,5 @@
 import AppKit
-import KcdBarBar
+import KcdBarTaskbar
 
 @MainActor
 package final class AppDelegate: NSObject, NSApplicationDelegate {

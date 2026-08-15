@@ -1,5 +1,5 @@
 import Testing
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 struct TaskbarOrderingTests {
     private func entry(id: String, bundle: String?, pinned: Bool) -> TaskbarEntryModel {

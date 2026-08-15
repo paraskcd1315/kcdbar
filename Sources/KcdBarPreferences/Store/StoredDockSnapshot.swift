@@ -1,6 +1,6 @@
 import Foundation
 import SwiftData
-import KcdBarBar
+import KcdBarTaskbar
 
 /** The Dock settings KCDBar found before it changed anything. */
 @Model

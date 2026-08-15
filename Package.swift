@@ -9,7 +9,7 @@ let package = Package(
         .library(name: "KcdBarDesignSystem", targets: ["KcdBarDesignSystem"]),
         .library(name: "KcdBarPreferences", targets: ["KcdBarPreferences"]),
         .library(name: "KcdBarTray", targets: ["KcdBarTray"]),
-        .library(name: "KcdBarBar", targets: ["KcdBarBar"]),
+        .library(name: "KcdBarTaskbar", targets: ["KcdBarTaskbar"]),
         .library(name: "KcdBarMain", targets: ["KcdBarMain"]),
     ],
     targets: [
@@ -23,25 +23,25 @@ let package = Package(
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .target(
-            name: "KcdBarBar",
+            name: "KcdBarTaskbar",
             dependencies: ["KcdBarDesignSystem", "KcdBarTray"],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .target(
             name: "KcdBarPreferences",
-            dependencies: ["KcdBarBar"],
+            dependencies: ["KcdBarTaskbar"],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .target(
             name: "KcdBarMain",
             dependencies: [
-                "KcdBarDesignSystem", "KcdBarPreferences", "KcdBarTray", "KcdBarBar",
+                "KcdBarDesignSystem", "KcdBarPreferences", "KcdBarTray", "KcdBarTaskbar",
             ],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .testTarget(
-            name: "KcdBarBarTests",
-            dependencies: ["KcdBarBar"],
+            name: "KcdBarTaskbarTests",
+            dependencies: ["KcdBarTaskbar"],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .testTarget(

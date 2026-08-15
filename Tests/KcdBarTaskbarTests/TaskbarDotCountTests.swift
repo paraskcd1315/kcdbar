@@ -1,6 +1,6 @@
 import Testing
 
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 struct TaskbarDotCountTests {
     @Test func anApplicationThatIsNotRunningHasNoDots() {

@@ -1,5 +1,5 @@
 import Testing
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 struct OrderedKeysTests {
     @Test func dedupeKeepsTheFirstSighting() {

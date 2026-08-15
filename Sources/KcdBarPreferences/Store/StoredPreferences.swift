@@ -1,6 +1,6 @@
 import Foundation
 import SwiftData
-import KcdBarBar
+import KcdBarTaskbar
 
 /** The one row holding what the app remembers between launches. */
 @Model

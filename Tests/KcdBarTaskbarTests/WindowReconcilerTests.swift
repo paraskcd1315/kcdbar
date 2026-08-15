@@ -1,6 +1,6 @@
 import CoreGraphics
 import Testing
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 struct WindowReconcilerTests {
     @Test func matchesByBridgedWindowIdAndReportsBothSources() {

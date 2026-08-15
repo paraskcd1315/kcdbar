@@ -1,6 +1,6 @@
 import Foundation
 import SwiftData
-import KcdBarBar
+import KcdBarTaskbar
 
 /** One saved bar preset, held as its encoded form so a new axis needs no schema change. */
 @Model

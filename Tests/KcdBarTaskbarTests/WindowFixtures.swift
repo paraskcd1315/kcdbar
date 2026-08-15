@@ -1,5 +1,5 @@
 import CoreGraphics
-@testable import KcdBarBar
+@testable import KcdBarTaskbar
 
 enum WindowFixtures {
     static let defaultBounds = CGRect(x: 0, y: 0, width: 800, height: 600)
