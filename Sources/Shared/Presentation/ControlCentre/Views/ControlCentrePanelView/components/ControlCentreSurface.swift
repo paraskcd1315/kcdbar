@@ -12,7 +12,11 @@ struct ControlCentreSurface: View {
         VStack(alignment: .leading, spacing: KbControlCentreMetrics.tileGap) {
             if isWifiExpanded {
                 KbTile {
-                    WifiDetail(monitor: wifi, onOpenSettings: onOpenSettings)
+                    WifiDetail(
+                        monitor: wifi,
+                        onBack: { withAnimation(KbMotion.standard) { isWifiExpanded = false } },
+                        onOpenSettings: onOpenSettings
+                    )
                 }
             } else {
                 ControlCentreTiles(
