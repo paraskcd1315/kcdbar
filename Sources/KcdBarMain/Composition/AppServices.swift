@@ -17,6 +17,7 @@ package final class AppServices {
     package let batteryPanel = PopoverHost()
     package let controlCentrePanel = PopoverHost()
     package let wifi = WifiMonitor(source: CoreWlanSource())
+    package let trash = TrashMonitor(source: FileManagerTrashSource())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
@@ -281,6 +282,7 @@ package final class AppServices {
         let host = BarPanelHost(
             registry: registry,
             battery: battery,
+            trash: trash,
             pins: pins,
             order: order,
             desktop: desktop,
