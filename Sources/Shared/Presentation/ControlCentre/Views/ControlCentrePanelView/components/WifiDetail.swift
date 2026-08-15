@@ -2,10 +2,12 @@ import SwiftUI
 
 struct WifiDetail: View {
     let monitor: WifiMonitor
-    @Binding var showsOtherNetworks: Bool
+
+    @State private var showsKnown = false
+    @State private var showsOther = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: KbSpacing.s4) {
+        VStack(alignment: .leading, spacing: KbSpacing.s2) {
             HStack {
                 Text("wifi.title")
                     .font(KbTypography.panelTitle)
@@ -13,18 +15,49 @@ struct WifiDetail: View {
                 Spacer(minLength: KbSpacing.s5)
                 WifiToggle(isOn: monitor.state.isPowered) { monitor.setPower($0) }
             }
+            .padding(.horizontal, KbSpacing.s4)
+
             if monitor.state.isPowered {
-                networks
+                sections
             }
         }
     }
 
-    @ViewBuilder
-    private var networks: some View {
-        if !monitor.known.isEmpty {
-            WifiSectionHeading(titleKey: "wifi.section.known")
-            ForEach(monitor.known) { WifiNetworkRow(network: $0) }
+    private var sections: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+                Section {
+                    if showsKnown {
+                        ForEach(monitor.known) { WifiNetworkRow(network: $0) }
+                    }
+                } header: {
+                    WifiSectionHeader(
+                        titleKey: "wifi.section.known",
+                        count: monitor.known.count,
+                        isExpanded: showsKnown
+                    ) {
+                        withAnimation(KbMotion.standard) { showsKnown.toggle() }
+                    }
+                }
+                Section {
+                    if showsOther {
+                        WifiNearbyList(monitor: monitor)
+                    }
+                } header: {
+                    WifiSectionHeader(
+                        titleKey: "wifi.section.other",
+                        count: monitor.nearby.count,
+                        isExpanded: showsOther
+                    ) {
+                        withAnimation(KbMotion.standard) { showsOther.toggle() }
+                        guard showsOther else { return }
+
+                        Task { await monitor.scan() }
+                    }
+                }
+            }
         }
-        WifiOtherNetworksSection(monitor: monitor, isExpanded: $showsOtherNetworks)
+        .frame(maxHeight: KbControlCentreMetrics.listMaxHeight)
+        .scrollBounceBehavior(.basedOnSize)
     }
 }
