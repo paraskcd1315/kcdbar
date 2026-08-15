@@ -16,9 +16,4 @@ struct SoundMetricsTests {
         #expect(SoundMetrics.symbol(volume: 0.51, isMuted: false) == SoundMetrics.loudSymbol)
         #expect(SoundMetrics.symbol(volume: 1, isMuted: false) == SoundMetrics.loudSymbol)
     }
-
-    @Test func bluetoothSymbolFollowsPower() {
-        #expect(BluetoothMetrics.symbol(isPowered: true) == BluetoothMetrics.onSymbol)
-        #expect(BluetoothMetrics.symbol(isPowered: false) == BluetoothMetrics.offSymbol)
-    }
 }

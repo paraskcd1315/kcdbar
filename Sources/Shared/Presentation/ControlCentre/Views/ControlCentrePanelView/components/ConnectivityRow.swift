@@ -1,17 +1,16 @@
 import SwiftUI
 
-struct ConnectivityRow: View {
-    let symbol: String
+struct ConnectivityRow<Glyph: View>: View {
     let titleKey: LocalizedStringKey
     let statusKey: LocalizedStringKey
     let isOn: Bool
     let onToggle: () -> Void
     let onOpen: (() -> Void)?
+    @ViewBuilder let glyph: Glyph
 
     var body: some View {
         HStack(spacing: KbSpacing.s5) {
-            Image(systemName: symbol)
-                .font(.system(size: KbControlCentreMetrics.rowGlyphSize * KbControlCentreMetrics.glyphRatio))
+            glyph
                 .foregroundStyle(isOn ? KbColors.onBrand : KbColors.onSurface)
                 .frame(
                     width: KbControlCentreMetrics.rowGlyphSize,
