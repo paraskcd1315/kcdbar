@@ -8,6 +8,8 @@ struct TaskbarEntryStrip: View {
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
 
+    @State private var slots: [String: CGRect] = [:]
+    @State private var dragSlots: [String: CGRect] = [:]
     @State private var dragging: String?
     @State private var over: String?
 
@@ -20,14 +22,18 @@ struct TaskbarEntryStrip: View {
                     isDragging: dragging == entry.orderingKey,
                     onActivate: { onActivate(entry) },
                     onTogglePin: { onTogglePin(entry) },
-                    onDragStart: { beginDrag(entry) },
-                    onTargeted: { targeted in retarget(entry, isTargeted: targeted) },
-                    onDropPin: { dropped in commit(dropped, on: entry) },
                     onMiddleClick: { onMiddleClick(entry) }
                 )
+                .onGeometryChange(for: CGRect.self) { proxy in
+                    proxy.frame(in: .named(TaskbarStripLayout.coordinateSpace))
+                } action: { frame in
+                    slots[entry.orderingKey] = frame
+                }
+                .gesture(reorderGesture(for: entry))
                 .transition(TaskbarStripLayout.insertion)
             }
         }
+        .coordinateSpace(.named(TaskbarStripLayout.coordinateSpace))
         .animation(KbMotion.standard, value: entries)
         .animation(KbMotion.standard, value: previewed.map(\.id))
         .frame(
@@ -45,23 +51,30 @@ struct TaskbarEntryStrip: View {
         TaskbarStripLayout.expandsAlongBar(preset: preset)
     }
 
-    private func beginDrag(_ entry: TaskbarEntryModel) {
-        dragging = entry.orderingKey
-        over = nil
+    private func reorderGesture(for entry: TaskbarEntryModel) -> some Gesture {
+        DragGesture(
+            minimumDistance: TaskbarMetrics.dragActivationDistance,
+            coordinateSpace: .named(TaskbarStripLayout.coordinateSpace)
+        )
+        .onChanged { value in
+            if dragging == nil {
+                dragging = entry.orderingKey
+                dragSlots = slots
+            }
+            over = TaskbarDragHitTest.key(at: value.location, in: dragSlots, dragging: dragging)
+        }
+        .onEnded { _ in commit() }
     }
 
-    private func retarget(_ entry: TaskbarEntryModel, isTargeted: Bool) {
-        guard isTargeted else {
-            if over == entry.orderingKey { over = nil }
+    private func commit() {
+        defer {
+            dragging = nil
+            over = nil
+            dragSlots = [:]
+        }
+        guard let dragging, let over, let target = entries.first(where: { $0.orderingKey == over }) else {
             return
         }
-        guard entry.orderingKey != dragging else { return }
-        over = entry.orderingKey
-    }
-
-    private func commit(_ dropped: String, on entry: TaskbarEntryModel) {
-        onDropPin(dropped, entry)
-        dragging = nil
-        over = nil
+        onDropPin(dragging, target)
     }
 }

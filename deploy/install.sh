@@ -11,6 +11,12 @@ CONFIG="${CONFIG:-Debug}"
 BUILT="$ROOT/build/Build/Products/$CONFIG/KCDBar.app"
 TARGET="/Applications/KCDBar.app"
 
+# Builds first, always. Installing a stale build looks identical to a fix that did
+# not work, and cost a whole round of "I still see no change".
+if [ "${SKIP_BUILD:-0}" != "1" ]; then
+  "$ROOT/deploy/build.sh"
+fi
+
 if [ ! -d "$BUILT" ]; then
   echo "no build at $BUILT — run deploy/build.sh first" >&2
   exit 1

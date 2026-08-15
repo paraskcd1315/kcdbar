@@ -14,25 +14,23 @@ struct TaskbarView: View {
     @State private var hasAppeared = false
 
     var body: some View {
-        GlassEffectContainer {
-            KbBarSurface(
-                material: viewModel.preset.material,
-                edge: viewModel.preset.edge,
-                attachment: viewModel.preset.attachment,
-                cornerRadius: viewModel.preset.cornerRadius
-            ) {
-                TaskbarBody(
-                    viewModel: viewModel,
-                    isShowingDesktop: isShowingDesktop,
-                    onActivate: onActivate,
-                    onRequestAccessibility: onRequestAccessibility,
-                    onOpenStart: onOpenStart,
-                    onTogglePin: onTogglePin,
-                    onDropPin: onDropPin,
-                    onMiddleClick: onMiddleClick,
-                    onToggleDesktop: onToggleDesktop
-                )
-            }
+        KbBarSurface(
+            material: viewModel.preset.material,
+            edge: viewModel.preset.edge,
+            attachment: viewModel.preset.attachment,
+            cornerRadius: viewModel.preset.cornerRadius
+        ) {
+            TaskbarBody(
+                viewModel: viewModel,
+                isShowingDesktop: isShowingDesktop,
+                onActivate: onActivate,
+                onRequestAccessibility: onRequestAccessibility,
+                onOpenStart: onOpenStart,
+                onTogglePin: onTogglePin,
+                onDropPin: onDropPin,
+                onMiddleClick: onMiddleClick,
+                onToggleDesktop: onToggleDesktop
+            )
         }
         .frame(
             width: viewModel.preset.edge.isVertical ? viewModel.preset.thickness : nil,

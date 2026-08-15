@@ -6,7 +6,7 @@ enum WindowOverlapPolicy {
         barFrame: CGRect,
         display: DisplayGeometry
     ) -> CGRect? {
-        guard let bounds = window.bounds, !window.isMinimized else { return nil }
+        guard let bounds = window.bounds, !window.isMinimized, !window.isFullScreen else { return nil }
         guard fillsDisplay(bounds, display: display) else { return nil }
         guard bounds.intersects(barFrame) else { return nil }
 

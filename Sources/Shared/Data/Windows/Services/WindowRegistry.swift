@@ -71,6 +71,7 @@ final class WindowRegistry {
                     title: window.title,
                     bounds: window.bounds,
                     isMinimized: window.isMinimized,
+                    isFullScreen: window.isFullScreen,
                     isOnScreen: window.isOnScreen,
                     zOrder: window.zOrder,
                     source: window.source

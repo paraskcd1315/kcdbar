@@ -1,6 +1,8 @@
 import SwiftUI
 
 enum TaskbarStripLayout {
+    static let coordinateSpace = "taskbar.strip"
+
     static func expandsAlongBar(preset: BarPreset) -> Bool {
         preset.widthMode == .fullEdge
     }
