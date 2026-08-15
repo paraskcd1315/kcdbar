@@ -7,25 +7,19 @@ struct TaskbarEntryView: View {
 
     var body: some View {
         Button(action: onActivate) {
-            VStack(spacing: KbSpacing.s1) {
-                HStack(spacing: KbSpacing.s3) {
-                    TaskbarEntryIcon(icon: entry.icon)
-                    if preset.entryContent != .iconOnly {
-                        Text(entry.title)
-                            .font(entry.isFrontmost ? KbTypography.entryTitleActive : KbTypography.entryTitle)
-                            .foregroundStyle(entry.isMinimized ? KbColors.onSurfaceMuted : KbColors.onSurface)
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
+            HStack(spacing: KbSpacing.s3) {
+                TaskbarEntryIcon(icon: entry.icon)
                 if preset.entryContent != .iconOnly {
-                    TaskbarEntryIndicator(isFrontmost: entry.isFrontmost, isMinimized: entry.isMinimized)
+                    Text(entry.title)
+                        .font(entry.isFrontmost ? KbTypography.entryTitleActive : KbTypography.entryTitle)
+                        .foregroundStyle(entry.isMinimized ? KbColors.onSurfaceMuted : KbColors.onSurface)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
             }
-            .padding(.horizontal, KbSpacing.s3)
-            .padding(.vertical, KbSpacing.s2)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, KbSpacing.s4)
+            .padding(.vertical, KbSpacing.s3)
             .frame(
                 minWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryMinWidth,
                 maxWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryMaxWidth
@@ -39,6 +33,16 @@ struct TaskbarEntryView: View {
 
     private var entryBackground: some View {
         RoundedRectangle(cornerRadius: KbRadii.sm)
-            .fill(entry.isFrontmost ? KbColors.separator : .clear)
+            .fill(fillOpacity)
+    }
+
+    private var fillOpacity: Color {
+        if entry.isFrontmost {
+            return KbColors.onSurface.opacity(0.16)
+        }
+        if entry.isMinimized {
+            return .clear
+        }
+        return KbColors.onSurface.opacity(0.06)
     }
 }
