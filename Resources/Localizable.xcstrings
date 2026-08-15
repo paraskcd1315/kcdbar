@@ -37,6 +37,12 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Other Networks" } }
       }
     },
+    "wifi.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Wi-Fi Settings…" } }
+      }
+    },
     "wifi.none" : {
       "extractionState" : "manual",
       "localizations" : {

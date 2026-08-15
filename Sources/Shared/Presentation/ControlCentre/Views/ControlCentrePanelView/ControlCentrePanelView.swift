@@ -4,6 +4,7 @@ struct ControlCentrePanelView: View {
     let wifi: WifiMonitor
     let arrowX: CGFloat
     let presentation: PopoverPresentation
+    let onOpenSettings: () -> Void
 
     @State private var isWifiExpanded = false
 
@@ -22,7 +23,7 @@ struct ControlCentrePanelView: View {
     private var panel: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             if isWifiExpanded {
-                WifiDetail(monitor: wifi)
+                WifiDetail(monitor: wifi, onOpenSettings: onOpenSettings)
             } else {
                 WifiTile(state: wifi.state) { expandWifi() }
             }
@@ -31,6 +32,7 @@ struct ControlCentrePanelView: View {
         .padding(.bottom, KbPopoverMetrics.arrowSize.height)
         .frame(width: isWifiExpanded ? WifiMetrics.detailWidth : WifiMetrics.tileWidth, alignment: .leading)
         .glassEffect(.regular.interactive(), in: KbPopoverShape(arrowX: arrowX))
+        .overlay { KbPopoverEdge(arrowX: arrowX) }
         .animation(KbMotion.standard, value: isWifiExpanded)
     }
 

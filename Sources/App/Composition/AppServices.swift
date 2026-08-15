@@ -231,7 +231,12 @@ final class AppServices {
         wifi.refresh()
         controlCentrePanel.present(anchor: NSEvent.mouseLocation) { [wifi] presentation, arrowX in
             AnyView(
-                ControlCentrePanelView(wifi: wifi, arrowX: arrowX, presentation: presentation)
+                ControlCentrePanelView(
+                    wifi: wifi,
+                    arrowX: arrowX,
+                    presentation: presentation,
+                    onOpenSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) }
+                )
             )
         }
     }

@@ -33,5 +33,6 @@ struct BatteryPanelView: View {
         .padding(.bottom, KbSpacing.s6 + KbPopoverMetrics.arrowSize.height)
         .frame(width: BatteryMetrics.panelWidth, alignment: .leading)
         .glassEffect(.regular.interactive(), in: KbPopoverShape(arrowX: arrowX))
+        .overlay { KbPopoverEdge(arrowX: arrowX) }
     }
 }

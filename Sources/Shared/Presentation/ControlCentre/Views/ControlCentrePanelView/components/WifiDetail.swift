@@ -2,12 +2,12 @@ import SwiftUI
 
 struct WifiDetail: View {
     let monitor: WifiMonitor
+    let onOpenSettings: () -> Void
 
-    @State private var showsKnown = false
     @State private var showsOther = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: KbSpacing.s2) {
+        VStack(alignment: .leading, spacing: KbSpacing.s3) {
             HStack {
                 Text("wifi.title")
                     .font(KbTypography.panelTitle)
@@ -18,46 +18,45 @@ struct WifiDetail: View {
             .padding(.horizontal, KbSpacing.s4)
 
             if monitor.state.isPowered {
-                sections
+                known
+                WifiDisclosureRow(titleKey: "wifi.section.other", isExpanded: showsOther) {
+                    withAnimation(KbMotion.standard) { showsOther.toggle() }
+                    guard showsOther else { return }
+
+                    Task { await monitor.scan() }
+                }
+                if showsOther {
+                    other
+                }
             }
+            WifiSettingsRow(onOpen: onOpenSettings)
+        }
+        .task { await monitor.scan() }
+    }
+
+    @ViewBuilder
+    private var known: some View {
+        if !monitor.inRange.isEmpty {
+            Text("wifi.section.known")
+                .font(KbTypography.tileStatus)
+                .foregroundStyle(KbColors.onSurfaceMuted)
+                .padding(.horizontal, KbSpacing.s4)
+            ForEach(monitor.inRange) { WifiNetworkRow(network: $0) }
         }
     }
 
-    private var sections: some View {
+    private var other: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
-                Section {
-                    if showsKnown {
-                        ForEach(monitor.known) { WifiNetworkRow(network: $0) }
-                    }
-                } header: {
-                    WifiSectionHeader(
-                        titleKey: "wifi.section.known",
-                        count: monitor.known.count,
-                        isExpanded: showsKnown
-                    ) {
-                        withAnimation(KbMotion.standard) { showsKnown.toggle() }
-                    }
-                }
-                Section {
-                    if showsOther {
-                        WifiNearbyList(monitor: monitor)
-                    }
-                } header: {
-                    WifiSectionHeader(
-                        titleKey: "wifi.section.other",
-                        count: monitor.nearby.count,
-                        isExpanded: showsOther
-                    ) {
-                        withAnimation(KbMotion.standard) { showsOther.toggle() }
-                        guard showsOther else { return }
-
-                        Task { await monitor.scan() }
-                    }
-                }
+            LazyVStack(alignment: .leading, spacing: 0) {
+                WifiNearbyList(monitor: monitor)
             }
         }
-        .frame(maxHeight: KbControlCentreMetrics.listMaxHeight)
+        .frame(
+            height: WifiMetrics.listHeight(
+                rows: max(monitor.nearby.count, 1),
+                cap: KbControlCentreMetrics.listMaxHeight
+            )
+        )
         .scrollBounceBehavior(.basedOnSize)
     }
 }

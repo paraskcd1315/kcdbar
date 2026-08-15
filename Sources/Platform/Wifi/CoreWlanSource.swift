@@ -52,23 +52,41 @@ final class CoreWlanSource: NSObject, WifiPort {
 
     func scan() async -> [WifiNetwork] {
         requestLocationIfNeeded()
-        guard let interface = client.interface() else { return [] }
+        guard client.interface() != nil else { return [] }
 
-        let current = interface.ssid()
+        let current = client.interface()?.ssid()
         let known = Set(knownNetworks().map(\.ssid))
-        guard let found = try? interface.scanForNetworks(withSSID: nil) else { return [] }
 
-        return found.compactMap { network in
-            guard let ssid = network.ssid, !ssid.isEmpty else { return nil }
+        return await Task.detached(priority: .utility) {
+            Self.sweep(known: known, current: current)
+        }.value
+    }
 
-            return WifiNetwork(
+    /** Runs off the main actor: scanForNetworks blocks for seconds. */
+    private nonisolated static func sweep(known: Set<String>, current: String?) -> [WifiNetwork] {
+        guard let interface = CWWiFiClient.shared().interface(),
+              let found = try? interface.scanForNetworks(withSSID: nil)
+        else {
+            return []
+        }
+
+        var strongest: [String: WifiNetwork] = [:]
+        for network in found {
+            guard let ssid = network.ssid, !ssid.isEmpty else { continue }
+
+            let candidate = WifiNetwork(
                 ssid: ssid,
                 rssi: network.rssiValue,
                 isSecure: network.supportsSecurity(.personal) || network.supportsSecurity(.enterprise),
                 isKnown: known.contains(ssid),
                 isCurrent: ssid == current
             )
+            if let held = strongest[ssid], held.rssi >= candidate.rssi { continue }
+
+            strongest[ssid] = candidate
         }
+
+        return Array(strongest.values)
     }
 
     private func requestLocationIfNeeded() {
