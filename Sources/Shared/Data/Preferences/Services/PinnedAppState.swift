@@ -33,4 +33,11 @@ final class PinnedAppState {
         await store.unpin(bundleIdentifier: bundleIdentifier)
         await load()
     }
+
+    func move(bundleIdentifier: String, before target: String?) async {
+        guard bundleIdentifier != target else { return }
+
+        await store.move(bundleIdentifier: bundleIdentifier, before: target)
+        await load()
+    }
 }

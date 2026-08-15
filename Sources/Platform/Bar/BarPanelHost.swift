@@ -14,6 +14,7 @@ final class BarPanelHost: BarPanelHostPort {
     private let onRequestAccessibility: () -> Void
     private let onOpenStart: () -> Void
     private let onTogglePin: (TaskbarEntryModel) -> Void
+    private let onDropPin: (String, TaskbarEntryModel) -> Void
 
     init(
         registry: WindowRegistry,
@@ -23,8 +24,10 @@ final class BarPanelHost: BarPanelHostPort {
         onActivate: @escaping (TaskbarEntryModel) -> Void,
         onRequestAccessibility: @escaping () -> Void,
         onOpenStart: @escaping () -> Void,
-        onTogglePin: @escaping (TaskbarEntryModel) -> Void
+        onTogglePin: @escaping (TaskbarEntryModel) -> Void,
+        onDropPin: @escaping (String, TaskbarEntryModel) -> Void
     ) {
+        self.onDropPin = onDropPin
         self.registry = registry
         self.pins = pins
         self.icons = icons
@@ -81,7 +84,8 @@ final class BarPanelHost: BarPanelHostPort {
                     onActivate: onActivate,
                     onRequestAccessibility: onRequestAccessibility,
                     onOpenStart: onOpenStart,
-                    onTogglePin: onTogglePin
+                    onTogglePin: onTogglePin,
+                    onDropPin: onDropPin
                 )
             )
             panel.orderFrontRegardless()

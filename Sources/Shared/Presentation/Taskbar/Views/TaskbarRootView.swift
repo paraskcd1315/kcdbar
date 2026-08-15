@@ -10,6 +10,7 @@ struct TaskbarRootView: View {
     let onRequestAccessibility: () -> Void
     let onOpenStart: () -> Void
     let onTogglePin: (TaskbarEntryModel) -> Void
+    let onDropPin: (String, TaskbarEntryModel) -> Void
 
     var body: some View {
         TaskbarView(
@@ -17,7 +18,8 @@ struct TaskbarRootView: View {
             onActivate: onActivate,
             onRequestAccessibility: onRequestAccessibility,
             onOpenStart: onOpenStart,
-            onTogglePin: onTogglePin
+            onTogglePin: onTogglePin,
+            onDropPin: onDropPin
         )
     }
 

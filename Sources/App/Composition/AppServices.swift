@@ -99,6 +99,12 @@ final class AppServices {
         }
     }
 
+    func movePin(bundleIdentifier: String, before target: TaskbarEntryModel) {
+        Task {
+            await pins.move(bundleIdentifier: bundleIdentifier, before: target.bundleIdentifier)
+        }
+    }
+
     func startBar(preset: BarPreset) {
         activePreset = preset
         let host = BarPanelHost(
@@ -109,7 +115,10 @@ final class AppServices {
             onActivate: { [weak self] entry in self?.activate(entry: entry) },
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
             onOpenStart: {},
-            onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) }
+            onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
+            onDropPin: { [weak self] dropped, target in
+                self?.movePin(bundleIdentifier: dropped, before: target)
+            }
         )
         host.present(preset: preset)
         bar = host

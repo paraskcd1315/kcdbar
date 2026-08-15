@@ -5,6 +5,7 @@ struct TaskbarEntryStrip: View {
     let preset: BarPreset
     let onActivate: (TaskbarEntryModel) -> Void
     let onTogglePin: (TaskbarEntryModel) -> Void
+    let onDropPin: (String, TaskbarEntryModel) -> Void
 
     var body: some View {
         layout {
@@ -13,7 +14,8 @@ struct TaskbarEntryStrip: View {
                     entry: entry,
                     preset: preset,
                     onActivate: { onActivate(entry) },
-                    onTogglePin: { onTogglePin(entry) }
+                    onTogglePin: { onTogglePin(entry) },
+                    onDropPin: { dropped in onDropPin(dropped, entry) }
                 )
                 .transition(entryTransition)
             }

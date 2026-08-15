@@ -5,8 +5,10 @@ struct TaskbarEntryView: View {
     let preset: BarPreset
     let onActivate: () -> Void
     let onTogglePin: () -> Void
+    let onDropPin: (String) -> Void
 
     @State private var isHovered = false
+    @State private var isDropTarget = false
 
     var body: some View {
         Button(action: onActivate) {
@@ -20,9 +22,9 @@ struct TaskbarEntryView: View {
                         .truncationMode(.tail)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, KbSpacing.s4)
-            .padding(.vertical, KbSpacing.s3)
+            .frame(maxWidth: .infinity, alignment: showsTitle ? .leading : .center)
+            .padding(.horizontal, showsTitle ? KbSpacing.s4 : KbSpacing.s2)
+            .padding(.vertical, KbSpacing.s2)
             .frame(
                 minWidth: showsTitle ? TaskbarMetrics.entryCompactWidth : TaskbarMetrics.iconOnlyEntryWidth,
                 maxWidth: showsTitle ? TaskbarMetrics.entryMaxWidth : TaskbarMetrics.iconOnlyEntryWidth
@@ -36,6 +38,23 @@ struct TaskbarEntryView: View {
         .animation(KbMotion.quick, value: entry.isFrontmost)
         .onHover { hovering in
             isHovered = hovering
+        }
+        .overlay(alignment: .leading) {
+            if isDropTarget {
+                Capsule()
+                    .fill(KbColors.activeIndicator)
+                    .frame(width: TaskbarMetrics.dropIndicatorWidth)
+            }
+        }
+        .draggable(entry.bundleIdentifier ?? entry.id) {
+            TaskbarEntryIcon(icon: entry.icon)
+        }
+        .dropDestination(for: String.self) { items, _ in
+            guard let dropped = items.first else { return false }
+            onDropPin(dropped)
+            return true
+        } isTargeted: { targeted in
+            isDropTarget = targeted && entry.isPinned
         }
         .contextMenu {
             if entry.bundleIdentifier != nil {
