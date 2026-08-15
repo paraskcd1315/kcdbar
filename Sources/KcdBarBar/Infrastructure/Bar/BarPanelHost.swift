@@ -17,6 +17,7 @@ package final class BarPanelHost: BarPanelHostPort {
 
     private let registry: WindowRegistry
     private let battery: BatteryMonitor
+    private let trash: TrashMonitor
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -37,6 +38,7 @@ package final class BarPanelHost: BarPanelHostPort {
     package init(
         registry: WindowRegistry,
         battery: BatteryMonitor,
+        trash: TrashMonitor,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -62,6 +64,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.onOpenBattery = onOpenBattery
         self.registry = registry
         self.battery = battery
+        self.trash = trash
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -275,6 +278,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 onOpenBattery: onOpenBattery,
                 onOpenNotifications: onOpenNotifications,
                 onOpenControlCentre: onOpenControlCentre,
+                trash: trash,
                 onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
             )
             .environment(\.middleClickCatcher) { action in

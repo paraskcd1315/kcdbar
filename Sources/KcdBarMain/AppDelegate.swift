@@ -12,6 +12,7 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
             services.authorization.requestTrust()
         }
 
+        services.trash.start()
         services.startBar(preset: BarPresetCatalogue.default)
         services.refreshAndEnforce()
         Task { await services.loadPreferences() }

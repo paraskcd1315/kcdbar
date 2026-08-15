@@ -14,6 +14,7 @@ package struct TaskbarItems: View {
     package let onOpenBattery: () -> Void
     package let onOpenNotifications: () -> Void
     package let onOpenControlCentre: () -> Void
+    package let trash: TrashMonitor
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
@@ -36,6 +37,7 @@ package struct TaskbarItems: View {
                 TaskbarControlCentreButton(onOpen: onOpenControlCentre)
                 TaskbarClock(onOpen: onOpenNotifications)
             }
+            TaskbarTrash(monitor: trash)
         }
     }
 }
