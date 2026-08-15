@@ -14,7 +14,10 @@ package struct WifiTile: View {
                 onToggle: { monitor.setPower(!monitor.state.isPowered) },
                 onOpen: onExpand
             ) {
-                Image(systemName: WifiStyle.symbol(for: monitor.state))
+                Image(
+                    systemName: WifiStyle.symbol(for: monitor.state),
+                    variableValue: WifiStyle.level(for: monitor.state)
+                )
                     .font(
                         .system(
                             size: KbControlCentreMetrics.rowGlyphSize

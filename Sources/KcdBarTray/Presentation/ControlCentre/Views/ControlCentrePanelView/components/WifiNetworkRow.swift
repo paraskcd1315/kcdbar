@@ -8,7 +8,10 @@ package struct WifiNetworkRow: View {
 
     package var body: some View {
         HStack(spacing: KbSpacing.s4) {
-            Image(systemName: WifiStyle.symbol(for: network))
+            Image(
+                systemName: WifiStyle.symbol(for: network),
+                variableValue: WifiStyle.level(for: network)
+            )
                 .font(.system(size: WifiMetrics.rowGlyphSize * KbControlCentreMetrics.glyphRatio))
                 .foregroundStyle(network.isCurrent ? KbColors.onBrand : KbColors.onSurface)
                 .frame(width: WifiMetrics.rowGlyphSize, height: WifiMetrics.rowGlyphSize)

@@ -6,7 +6,13 @@ package enum WifiMetrics {
     package static let fairRssi = -70
     package static let weakRssi = -80
 
+    package static let symbol = "wifi"
     package static let slashSymbol = "wifi.slash"
+
+    package static let unknownLevel = 1.0
+    package static let fairLevel = 0.66
+    package static let weakLevel = 0.33
+    package static let faintLevel = 0.1
     package static let lockSymbol = "lock.fill"
     package static let chevronSymbol = "chevron.right"
 
@@ -17,14 +23,5 @@ package enum WifiMetrics {
 
     package static func listHeight(rows: Int, cap: CGFloat) -> CGFloat {
         min(CGFloat(rows) * rowHeight, cap)
-    }
-
-    package static func symbol(bars: Int) -> String {
-        switch bars {
-        case 3: "wifi"
-        case 2: "wifi.exclamationmark"
-        case 1: "wifi.exclamationmark"
-        default: "wifi.slash"
-        }
     }
 }
