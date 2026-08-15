@@ -26,6 +26,10 @@ struct TaskbarEntryBand: View {
     }
 
     private var bandShape: AnyShape {
-        AnyShape(RoundedRectangle(cornerRadius: KbRadii.lg))
+        KbBarShape.shape(
+            edge: preset.edge,
+            attachment: preset.attachment,
+            cornerRadius: KbRadii.md
+        )
     }
 }

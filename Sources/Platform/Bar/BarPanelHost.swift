@@ -12,10 +12,12 @@ final class BarPanelHost: BarPanelHostPort {
     private var activePreset = BarPresetCatalogue.default
 
     private let registry: WindowRegistry
+    private let tray: MenuBarItemRegistry
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
     private let icons: any ApplicationIconPort
+    private let trayIcons: any MenuBarIconPort
     private let displaySource: any DisplayGeometryPort
     private let onActivate: (TaskbarEntryModel, Int) -> Void
     private let onRequestAccessibility: () -> Void
@@ -24,13 +26,16 @@ final class BarPanelHost: BarPanelHostPort {
     private let onDropPin: (String, TaskbarEntryModel) -> Void
     private let onToggleDesktop: () -> Void
     private let onMiddleClick: (TaskbarEntryModel, Int) -> Void
+    private let onPressTrayItem: (TrayItemModel) -> Void
 
     init(
         registry: WindowRegistry,
+        tray: MenuBarItemRegistry,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
         icons: any ApplicationIconPort,
+        trayIcons: any MenuBarIconPort,
         displaySource: any DisplayGeometryPort,
         onActivate: @escaping (TaskbarEntryModel, Int) -> Void,
         onRequestAccessibility: @escaping () -> Void,
@@ -38,16 +43,20 @@ final class BarPanelHost: BarPanelHostPort {
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
         onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
         onToggleDesktop: @escaping () -> Void,
-        onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void
+        onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void,
+        onPressTrayItem: @escaping (TrayItemModel) -> Void
     ) {
         self.onDropPin = onDropPin
         self.onToggleDesktop = onToggleDesktop
         self.onMiddleClick = onMiddleClick
+        self.onPressTrayItem = onPressTrayItem
         self.registry = registry
+        self.tray = tray
         self.pins = pins
         self.order = order
         self.desktop = desktop
         self.icons = icons
+        self.trayIcons = trayIcons
         self.onTogglePin = onTogglePin
         self.displaySource = displaySource
         self.onActivate = onActivate
@@ -199,19 +208,22 @@ final class BarPanelHost: BarPanelHostPort {
             }
             let root = TaskbarRootView(
                 registry: registry,
+                tray: tray,
                 pins: pins,
                 order: order,
                 desktop: desktop,
                 preset: preset,
                 displayId: display.id,
                 icons: icons,
+                trayIcons: trayIcons,
                 onActivate: { [onActivate] in onActivate($0, display.id) },
                 onRequestAccessibility: onRequestAccessibility,
                 onOpenStart: onOpenStart,
                 onTogglePin: onTogglePin,
                 onDropPin: onDropPin,
                 onToggleDesktop: onToggleDesktop,
-                onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) }
+                onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) },
+                onPressTrayItem: onPressTrayItem
             )
             .environment(\.middleClickCatcher) { action in
                 AnyView(MiddleClickView(action: action))
