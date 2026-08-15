@@ -14,6 +14,9 @@ final class AppServices {
     let batteryPanel = PopoverHost()
     let controlCentrePanel = PopoverHost()
     let wifi = WifiMonitor(source: CoreWlanSource())
+    let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
+    let sound = SoundMonitor(source: CoreAudioSoundSource())
+    let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
     let pins: PinnedAppState
     let order = EntryOrderMemory()
     let desktop = ShowDesktopState()
@@ -229,10 +232,17 @@ final class AppServices {
             return
         }
         wifi.refresh()
-        controlCentrePanel.present(anchor: NSEvent.mouseLocation) { [wifi] presentation, _ in
+        bluetooth.refresh()
+        sound.refresh()
+        brightness.refresh()
+        controlCentrePanel.present(anchor: NSEvent.mouseLocation) {
+            [wifi, bluetooth, sound, brightness] presentation, _ in
             AnyView(
                 ControlCentrePanelView(
                     wifi: wifi,
+                    bluetooth: bluetooth,
+                    sound: sound,
+                    brightness: brightness,
                     presentation: presentation,
                     onOpenSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) }
                 )
