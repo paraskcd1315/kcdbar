@@ -16,12 +16,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         services.refreshAndEnforce()
         services.changes.startObserving { [services] in
-            services.refreshAndEnforce()
+            services.scheduleRefresh()
         }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        services.changes.stopObserving()
+        services.stopObserving()
         services.bar?.dismiss()
     }
 }

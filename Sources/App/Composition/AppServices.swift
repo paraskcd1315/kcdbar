@@ -10,10 +10,20 @@ final class AppServices {
     let registry: WindowRegistry
 
     let control: any WindowControlPort = AccessibilityWindowControl()
+    let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
     private lazy var overlap = WindowOverlapEnforcer(control: control)
     private var activePreset = BarPresetCatalogue.default
+    private lazy var coalesced = CoalescedTrigger(
+        interval: WindowOverlapMetrics.coalesceInterval
+    ) { [weak self] in
+        self?.refreshAndEnforce()
+    }
 
     private(set) var bar: (any BarPanelHostPort)?
+
+    func scheduleRefresh() {
+        coalesced.fire()
+    }
 
     func refreshAndEnforce(now: Date = Date()) {
         registry.refresh()
@@ -23,6 +33,19 @@ final class AppServices {
             displays: registry.displays,
             now: now
         )
+        geometry.observe(pids: observedPids) { [weak self] in
+            self?.scheduleRefresh()
+        }
+    }
+
+    func stopObserving() {
+        coalesced.cancel()
+        geometry.stop()
+        changes.stopObserving()
+    }
+
+    private var observedPids: [pid_t] {
+        Array(Set(registry.windows.map(\.ownerPid)))
     }
 
     func toggle(entryId: String) {

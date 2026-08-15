@@ -2,7 +2,7 @@ import CoreGraphics
 import Foundation
 
 enum TaskbarMetrics {
-    static let reconciliationSweepInterval: TimeInterval = 2.0
+    static let reconciliationSweepInterval: TimeInterval = 5.0
     static let iconSize: CGFloat = 20
     static let iconOnlyEntryWidth: CGFloat = 44
     static let entryMinWidth: CGFloat = 96
