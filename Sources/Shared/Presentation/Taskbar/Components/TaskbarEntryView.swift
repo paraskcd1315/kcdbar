@@ -37,12 +37,6 @@ struct TaskbarEntryView: View {
     }
 
     private var fillOpacity: Color {
-        if entry.isFrontmost {
-            return KbColors.onSurface.opacity(0.16)
-        }
-        if entry.isMinimized {
-            return .clear
-        }
-        return KbColors.onSurface.opacity(0.06)
+        entry.isFrontmost ? KbColors.onSurface.opacity(0.16) : .clear
     }
 }
