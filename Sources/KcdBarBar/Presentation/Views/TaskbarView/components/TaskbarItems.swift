@@ -30,6 +30,9 @@ package struct TaskbarItems: View {
                 onDropPin: onDropPin,
                 onMiddleClick: onMiddleClick
             )
+            TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
+            TaskbarTrash(monitor: trash)
+            TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
             if viewModel.preset.showsStatusArea {
                 if battery.isPresent {
                     TaskbarBattery(state: battery, onOpen: onOpenBattery)
@@ -37,7 +40,6 @@ package struct TaskbarItems: View {
                 TaskbarControlCentreButton(onOpen: onOpenControlCentre)
                 TaskbarClock(onOpen: onOpenNotifications)
             }
-            TaskbarTrash(monitor: trash)
         }
     }
 }

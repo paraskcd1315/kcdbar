@@ -25,9 +25,11 @@ package struct EthernetDetail: View {
     package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             ControlCentreDetailTitle(title: name, onBack: onBack)
-            if let detail {
-                ControlCentreAccordion(titleKey: "network.details") {
-                    NetworkDetailList(detail: detail, onCopy: onCopy)
+            ControlCentreDetailBody {
+                if let detail {
+                    ControlCentreAccordion(titleKey: "network.details") {
+                        NetworkDetailList(detail: detail, onCopy: onCopy)
+                    }
                 }
             }
             ControlCentreSettingsRow(titleKey: "network.settings", onOpen: onOpenSettings)
