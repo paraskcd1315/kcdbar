@@ -7,9 +7,14 @@ import Observation
 package final class BatteryMonitor {
     package private(set) var state: BatteryState = .absent
     package private(set) var energyUsers: [EnergyUser] = []
+    package private(set) var isSamplingEnergy = false
 
     private let source: any BatteryPort
     private var sampledAt: Date?
+
+    package var hasSampledEnergy: Bool {
+        sampledAt != nil
+    }
 
     package init(source: any BatteryPort) {
         self.source = source
@@ -24,6 +29,8 @@ package final class BatteryMonitor {
             return
         }
         sampledAt = now
+        isSamplingEnergy = true
         energyUsers = BatteryStyle.significant(await source.energyUsers())
+        isSamplingEnergy = false
     }
 }
