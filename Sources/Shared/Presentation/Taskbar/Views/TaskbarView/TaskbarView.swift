@@ -8,7 +8,6 @@ struct TaskbarView: View {
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
-    let onPressTrayItem: (TrayItemModel) -> Void
     let isShowingDesktop: Bool
     let onToggleDesktop: () -> Void
 
@@ -30,7 +29,6 @@ struct TaskbarView: View {
                 onTogglePin: onTogglePin,
                 onDropPin: onDropPin,
                 onMiddleClick: onMiddleClick,
-                onPressTrayItem: onPressTrayItem,
                 onToggleDesktop: onToggleDesktop
             )
         }

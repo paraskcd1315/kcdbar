@@ -7,7 +7,6 @@ struct TaskbarItems: View {
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
-    let onPressTrayItem: (TrayItemModel) -> Void
 
     var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
@@ -23,11 +22,6 @@ struct TaskbarItems: View {
                 onMiddleClick: onMiddleClick
             )
             if viewModel.preset.showsStatusArea {
-                TaskbarTray(
-                    items: viewModel.trayItems,
-                    isVertical: viewModel.preset.edge.isVertical,
-                    onPress: onPressTrayItem
-                )
                 TaskbarClock()
             }
         }
