@@ -18,6 +18,7 @@ package struct TaskbarBody: View {
     package let onOpenNotifications: () -> Void
     package let onOpenControlCentre: () -> Void
     package let trash: TrashMonitor
+    package let timer: TimerMonitor
     package let onToggleDesktop: () -> Void
 
     package var body: some View {
@@ -37,6 +38,7 @@ package struct TaskbarBody: View {
                 onOpenNotifications: onOpenNotifications,
                 onOpenControlCentre: onOpenControlCentre,
                 trash: trash,
+                timer: timer,
             )
             if showsDesktopCap {
                 TaskbarDesktopCap(

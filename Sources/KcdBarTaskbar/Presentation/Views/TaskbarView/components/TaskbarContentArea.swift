@@ -17,6 +17,7 @@ package struct TaskbarContentArea: View {
     package let onOpenNotifications: () -> Void
     package let onOpenControlCentre: () -> Void
     package let trash: TrashMonitor
+    package let timer: TimerMonitor
 
     package var body: some View {
         Group {
@@ -37,6 +38,7 @@ package struct TaskbarContentArea: View {
                     onOpenNotifications: onOpenNotifications,
                     onOpenControlCentre: onOpenControlCentre,
                     trash: trash,
+                    timer: timer,
                 )
             }
         }

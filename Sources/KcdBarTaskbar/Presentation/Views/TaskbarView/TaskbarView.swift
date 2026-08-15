@@ -17,6 +17,7 @@ package struct TaskbarView: View {
     package let onOpenNotifications: () -> Void
     package let onOpenControlCentre: () -> Void
     package let trash: TrashMonitor
+    package let timer: TimerMonitor
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
     package let onBarFrameChange: (CGRect) -> Void
@@ -46,6 +47,7 @@ package struct TaskbarView: View {
                 onOpenNotifications: onOpenNotifications,
                 onOpenControlCentre: onOpenControlCentre,
                 trash: trash,
+                timer: timer,
                 onToggleDesktop: onToggleDesktop
             )
         }

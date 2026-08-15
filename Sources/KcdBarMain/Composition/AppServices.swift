@@ -20,6 +20,7 @@ package final class AppServices {
         links: SystemConfigurationLinkSource()
     )
     package let trash = TrashMonitor(source: FileManagerTrashSource())
+    package let timer = TimerMonitor(source: KcdSignalTimerSource())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
@@ -294,6 +295,7 @@ package final class AppServices {
             registry: registry,
             battery: battery,
             trash: trash,
+            timer: timer,
             pins: pins,
             order: order,
             desktop: desktop,

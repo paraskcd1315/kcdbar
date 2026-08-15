@@ -16,6 +16,7 @@ package struct TaskbarItems: View {
     package let onOpenNotifications: () -> Void
     package let onOpenControlCentre: () -> Void
     package let trash: TrashMonitor
+    package let timer: TimerMonitor
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
@@ -36,6 +37,7 @@ package struct TaskbarItems: View {
             TaskbarTrash(monitor: trash)
             TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
             if viewModel.preset.showsStatusArea {
+                TaskbarTimer(monitor: timer)
                 if battery.isPresent {
                     TaskbarBattery(state: battery, onOpen: onOpenBattery)
                 }

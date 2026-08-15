@@ -13,6 +13,7 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         services.trash.start()
+        services.timer.start()
         services.startBar(preset: BarPresetCatalogue.default)
         services.refreshAndEnforce()
         Task { await services.loadPreferences() }
@@ -23,6 +24,7 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
 
     package func applicationWillTerminate(_ notification: Notification) {
         services.stopObserving()
+        services.timer.stop()
         services.bar?.dismiss()
     }
 }
