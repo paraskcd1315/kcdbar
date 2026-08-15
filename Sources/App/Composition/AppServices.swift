@@ -66,8 +66,10 @@ final class AppServices {
             )
         }
         let launcherKeys = pins.apps.map { "pin:\($0.bundleIdentifier)" }
+        let entryIds = registry.taskbarEntries.map { WindowEntryIdentifier.text(for: $0.identity) }
+        let all = launcherKeys + windowKeys + entryIds
 
-        return Array(NSOrderedSet(array: launcherKeys + windowKeys)) as? [String] ?? windowKeys
+        return Array(NSOrderedSet(array: all)) as? [String] ?? all
     }
 
     func toggleShowDesktop() {
