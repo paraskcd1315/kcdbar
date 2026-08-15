@@ -19,8 +19,8 @@ final class EntryOrderMemory {
     }
 
     func seed(keys leading: [String]) {
-        let held = Set(keys)
-        keys = leading.filter(held.contains) + keys.filter { !leading.contains($0) }
+        let led = Set(leading)
+        keys = leading + keys.filter { !led.contains($0) }
     }
 
     func move(key: String, onto target: String) {

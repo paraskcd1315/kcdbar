@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 
 /** The composition root, and the only place naming a concrete platform implementation. */
@@ -8,6 +9,9 @@ final class AppServices {
     let authorization: any AccessibilityAuthorizationPort = AccessibilityAuthorization()
     let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     let registry: WindowRegistry
+    let tray = MenuBarItemRegistry(source: AccessibilityMenuBarItems())
+    let trayMenu = TrayMenuHost()
+    let trayIcons = ScreenCaptureMenuBarIcons()
     let pins: PinnedAppState
     let order = EntryOrderMemory()
     let desktop = ShowDesktopState()
@@ -33,6 +37,8 @@ final class AppServices {
 
     func refreshAndEnforce(now: Date = Date()) {
         registry.refresh()
+        tray.refresh()
+        Task { await trayIcons.refresh(items: tray.items) }
         overlap.enforce(
             preset: activePreset,
             windows: registry.windows,
@@ -140,7 +146,10 @@ final class AppServices {
     }
 
     func loadPreferences() async {
+        trayIcons.requestAuthorization()
         await pins.load()
+        order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
+        refreshAndEnforce()
     }
 
     func activate(entry: TaskbarEntryModel, onDisplay displayId: Int) {
@@ -192,6 +201,23 @@ final class AppServices {
         return opened
     }
 
+    func pressTrayItem(_ item: TrayItemModel) {
+        guard let match = tray.items.first(where: { $0.id == item.id }) else { return }
+
+        let entries = tray.menu(for: match)
+        guard !entries.isEmpty else {
+            tray.press(match)
+            return
+        }
+        trayMenu.present(
+            title: match.applicationName,
+            entries: entries,
+            anchor: NSEvent.mouseLocation
+        ) { [weak self] entry in
+            self?.tray.invoke(entry, in: match)
+        }
+    }
+
     func togglePin(entry: TaskbarEntryModel) {
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
         let name = entry.applicationName.isEmpty ? bundleIdentifier : entry.applicationName
@@ -209,10 +235,12 @@ final class AppServices {
         activePreset = preset
         let host = BarPanelHost(
             registry: registry,
+            tray: tray,
             pins: pins,
             order: order,
             desktop: desktop,
             icons: icons,
+            trayIcons: trayIcons,
             displaySource: displays,
             onActivate: { [weak self] entry, displayId in
                 self?.activate(entry: entry, onDisplay: displayId)
@@ -226,7 +254,8 @@ final class AppServices {
             onToggleDesktop: { [weak self] in self?.toggleShowDesktop() },
             onMiddleClick: { [weak self] entry, displayId in
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
-            }
+            },
+            onPressTrayItem: { [weak self] item in self?.pressTrayItem(item) }
         )
         host.present(preset: preset)
         bar = host

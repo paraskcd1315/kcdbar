@@ -4,6 +4,7 @@ import SwiftUI
 struct TaskbarViewModel {
     let preset: BarPreset
     let entries: [TaskbarEntryModel]
+    let trayItems: [TrayItemModel]
     let notice: TaskbarNotice?
 
     init(
@@ -14,11 +15,25 @@ struct TaskbarViewModel {
         frontmostPid: pid_t?,
         bundleIdentifiers: [pid_t: String],
         pinnedApps: [PinnedApp],
+        menuBarItems: [MenuBarItem],
         ranks: [String: Int],
         hasAccessibility: Bool,
-        icons: any ApplicationIconPort
+        icons: any ApplicationIconPort,
+        trayIcons: any MenuBarIconPort
     ) {
         self.preset = preset
+
+        trayItems = menuBarItems.map { item in
+            let glyph = trayIcons.icon(for: item)
+
+            return TrayItemModel(
+                id: item.id,
+                applicationName: item.applicationName,
+                label: item.label,
+                icon: glyph ?? icons.icon(forPid: item.ownerPid),
+                isGlyph: glyph != nil
+            )
+        }
 
         let scoped = WindowDisplayResolver.windows(
             windows,

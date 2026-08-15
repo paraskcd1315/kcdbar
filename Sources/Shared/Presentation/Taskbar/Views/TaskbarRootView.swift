@@ -2,12 +2,14 @@ import SwiftUI
 
 struct TaskbarRootView: View {
     let registry: WindowRegistry
+    let tray: MenuBarItemRegistry
     let pins: PinnedAppState
     let order: EntryOrderMemory
     let desktop: ShowDesktopState
     let preset: BarPreset
     let displayId: Int
     let icons: any ApplicationIconPort
+    let trayIcons: any MenuBarIconPort
     let onActivate: (TaskbarEntryModel) -> Void
     let onRequestAccessibility: () -> Void
     let onOpenStart: () -> Void
@@ -15,6 +17,7 @@ struct TaskbarRootView: View {
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onToggleDesktop: () -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
+    let onPressTrayItem: (TrayItemModel) -> Void
 
     var body: some View {
         TaskbarView(
@@ -25,6 +28,7 @@ struct TaskbarRootView: View {
             onTogglePin: onTogglePin,
             onDropPin: onDropPin,
             onMiddleClick: onMiddleClick,
+            onPressTrayItem: onPressTrayItem,
             isShowingDesktop: desktop.isShowingDesktop,
             onToggleDesktop: onToggleDesktop
         )
@@ -39,9 +43,11 @@ struct TaskbarRootView: View {
             frontmostPid: registry.frontmostPid,
             bundleIdentifiers: registry.bundleIdentifiers,
             pinnedApps: pins.apps,
+            menuBarItems: tray.items,
             ranks: order.ranks,
             hasAccessibility: registry.hasAccessibility,
-            icons: icons
+            icons: icons,
+            trayIcons: trayIcons
         )
     }
 }

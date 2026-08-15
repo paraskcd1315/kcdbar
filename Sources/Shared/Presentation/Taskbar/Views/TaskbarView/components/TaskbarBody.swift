@@ -9,6 +9,7 @@ struct TaskbarBody: View {
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
+    let onPressTrayItem: (TrayItemModel) -> Void
     let onToggleDesktop: () -> Void
 
     var body: some View {
@@ -20,7 +21,8 @@ struct TaskbarBody: View {
                 onOpenStart: onOpenStart,
                 onTogglePin: onTogglePin,
                 onDropPin: onDropPin,
-                onMiddleClick: onMiddleClick
+                onMiddleClick: onMiddleClick,
+                onPressTrayItem: onPressTrayItem
             )
             if showsDesktopCap {
                 TaskbarDesktopCap(
