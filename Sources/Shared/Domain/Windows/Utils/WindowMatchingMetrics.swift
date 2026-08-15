@@ -7,4 +7,5 @@ enum WindowMatchingMetrics {
     static let fullScreenAttribute = "AXFullScreen"
     static let windowRole = "AXWindow"
     static let switchableSubroles: Set<String> = ["AXStandardWindow", "AXDialog"]
+    static let accessibilityTimeout: Float = 0.2
 }

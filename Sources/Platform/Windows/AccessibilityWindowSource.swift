@@ -19,6 +19,8 @@ struct AccessibilityWindowSource: AxWindowSourcePort {
 
     private func windows(forPid pid: pid_t) -> [AxWindowRecord] {
         let application = AXUIElementCreateApplication(pid)
+        AXUIElementSetMessagingTimeout(application, WindowMatchingMetrics.accessibilityTimeout)
+
         guard let elements = copyValue(from: application, attribute: kAXWindowsAttribute) as? [AXUIElement] else {
             return []
         }

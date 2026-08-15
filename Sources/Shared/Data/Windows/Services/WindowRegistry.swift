@@ -40,6 +40,12 @@ final class WindowRegistry {
         self.authorization = authorization
     }
 
+    private func pidsWorthAsking(in coreGraphics: [CgWindowRecord]) -> [pid_t] {
+        let owners = Set(coreGraphics.filter(WindowReconciler.isManageable).map(\.ownerPid))
+
+        return Array(owners.union(windows.map(\.ownerPid)))
+    }
+
     func refresh() {
         let started = Date()
         hasAccessibility = authorization.isTrusted
@@ -49,7 +55,7 @@ final class WindowRegistry {
         let byPid = Dictionary(uniqueKeysWithValues: applications.map { ($0.pid, $0) })
         bundleIdentifiers = byPid.compactMapValues(\.bundleIdentifier)
         let coreGraphics = coreGraphicsSource.currentWindows()
-        let accessibility = accessibilitySource.windows(forPids: applications.map(\.pid))
+        let accessibility = accessibilitySource.windows(forPids: pidsWorthAsking(in: coreGraphics))
 
         lastScanCounts = WindowScanCounts(
             applications: applications.count,
