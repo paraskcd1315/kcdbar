@@ -6,6 +6,8 @@ final class BarPanelHost: BarPanelHostPort {
     private var panels: [Int: BarPanel] = [:]
     private var screenObserver: NSObjectProtocol?
     private var pointerMonitor: Any?
+    private var clickThroughMonitors: [Any] = []
+    private var hitRegions: [Int: BarHitRegion] = [:]
     private var hiddenDisplays: Set<Int> = []
     private var revealedDisplays: Set<Int> = []
     private var shown: [Int: Bool] = [:]
@@ -70,6 +72,7 @@ final class BarPanelHost: BarPanelHostPort {
     func present(preset: BarPreset) {
         activePreset = preset
         rebuild(preset: preset)
+        startClickThroughMonitors()
         screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
             object: nil,
@@ -152,6 +155,40 @@ final class BarPanelHost: BarPanelHostPort {
         }
     }
 
+    private func startClickThroughMonitors() {
+        guard clickThroughMonitors.isEmpty else { return }
+
+        let events: NSEvent.EventTypeMask = [.mouseMoved, .leftMouseDragged, .rightMouseDragged]
+        if let global = NSEvent.addGlobalMonitorForEvents(matching: events) { [weak self] _ in
+            MainActor.assumeIsolated { self?.updateClickThrough(at: NSEvent.mouseLocation) }
+        } {
+            clickThroughMonitors.append(global)
+        }
+        if let local = NSEvent.addLocalMonitorForEvents(matching: events) { [weak self] event in
+            MainActor.assumeIsolated { self?.updateClickThrough(at: NSEvent.mouseLocation) }
+            return event
+        } {
+            clickThroughMonitors.append(local)
+        }
+    }
+
+    private func stopClickThroughMonitors() {
+        for monitor in clickThroughMonitors {
+            NSEvent.removeMonitor(monitor)
+        }
+        clickThroughMonitors = []
+    }
+
+    private func updateClickThrough(at point: NSPoint) {
+        for (id, panel) in panels {
+            panel.ignoresMouseEvents = BarHitTesting.passesThrough(
+                point,
+                barRect: hitRegions[id]?.rect,
+                panelFrame: panel.frame
+            )
+        }
+    }
+
     private func stopPointerMonitor() {
         if let pointerMonitor {
             NSEvent.removeMonitor(pointerMonitor)
@@ -182,9 +219,11 @@ final class BarPanelHost: BarPanelHostPort {
 
     func dismiss() {
         stopPointerMonitor()
+        stopClickThroughMonitors()
         hiddenDisplays = []
         revealedDisplays = []
         shown = [:]
+        hitRegions = [:]
         panels.values.forEach { $0.orderOut(nil) }
         panels = [:]
         if let screenObserver {
@@ -209,7 +248,8 @@ final class BarPanelHost: BarPanelHostPort {
                 existing.setFrame(frame, display: true)
                 continue
             }
-            let hitRegion = BarHitRegion()
+            let hitRegion = hitRegions[display.id] ?? BarHitRegion()
+            hitRegions[display.id] = hitRegion
             let root = TaskbarRootView(
                 registry: registry,
                 pins: pins,
@@ -236,7 +276,7 @@ final class BarPanelHost: BarPanelHostPort {
             }
 
             let panel = BarPanel(contentRect: frame)
-            panel.contentView = BarHostingView(rootView: root, hitRegion: hitRegion)
+            panel.contentView = BarHostingView(rootView: root)
             panel.orderFrontRegardless()
             panels[display.id] = panel
             shown[display.id] = true

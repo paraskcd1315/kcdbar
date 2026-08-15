@@ -50,9 +50,7 @@ struct TaskbarView: View {
         .opacity(hasAppeared ? 1 : 0)
         .onGeometryChange(for: CGRect.self) { proxy in
             proxy.frame(in: .named(TaskbarBarLayout.coordinateSpace))
-        } action: { frame in
-            onBarFrameChange(frame)
-        }
+        } action: { onBarFrameChange($0) }
         .frame(
             maxWidth: .infinity,
             maxHeight: .infinity,
