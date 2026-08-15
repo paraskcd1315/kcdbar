@@ -14,10 +14,8 @@ package struct BluetoothDetail: View {
                 onBack: onBack,
                 onSetPower: { monitor.setPower($0) }
             )
-            ControlCentreDetailBody {
-                if monitor.state.isPowered {
-                    BluetoothDeviceList(devices: monitor.devices)
-                }
+            if monitor.state.isPowered {
+                BluetoothDeviceList(devices: monitor.devices)
             }
             ControlCentreSettingsRow(titleKey: "bluetooth.settings", onOpen: onOpenSettings)
         }

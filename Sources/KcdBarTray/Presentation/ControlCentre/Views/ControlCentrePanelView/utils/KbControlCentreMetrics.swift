@@ -16,7 +16,12 @@ package enum KbControlCentreMetrics {
     package static let rowHeight: CGFloat = 38
     package static let detailLabelWidth: CGFloat = 108
     package static let copiedDuration: TimeInterval = 1.2
-    package static let detailMaxHeight: CGFloat = 420
+    package static let detailMaxHeight: CGFloat = 260
+    package static let detailRowHeight: CGFloat = 30
+
+    package static func listHeight(rows: Int, cap: CGFloat) -> CGFloat {
+        min(CGFloat(max(rows, 1)) * detailRowHeight, cap)
+    }
     package static let chevronSymbol = "chevron.right"
     package static let backSymbol = "chevron.left"
     package static let settingsRowHeight: CGFloat = 28

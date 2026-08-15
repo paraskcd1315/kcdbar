@@ -17,22 +17,20 @@ package struct WifiDetail: View {
                 onBack: onBack,
                 onSetPower: { monitor.setPower($0) }
             )
-            ControlCentreDetailBody {
-                if monitor.state.isPowered {
-                    WifiKnownList(networks: monitor.inRange)
-                    WifiDisclosureRow(titleKey: "wifi.section.other", isExpanded: showsOther) {
-                        withAnimation(KbMotion.standard) { showsOther.toggle() }
-                        guard showsOther else { return }
+            if monitor.state.isPowered {
+                WifiKnownList(networks: monitor.inRange)
+                WifiDisclosureRow(titleKey: "wifi.section.other", isExpanded: showsOther) {
+                    withAnimation(KbMotion.standard) { showsOther.toggle() }
+                    guard showsOther else { return }
 
-                        Task { await monitor.scan() }
-                    }
-                    if showsOther {
-                        WifiOtherList(monitor: monitor)
-                    }
-                    if let detail = monitor.detail {
-                        ControlCentreAccordion(titleKey: "network.details") {
-                            NetworkDetailList(detail: detail, onCopy: onCopy)
-                        }
+                    Task { await monitor.scan() }
+                }
+                if showsOther {
+                    WifiOtherList(monitor: monitor)
+                }
+                if let detail = monitor.detail {
+                    ControlCentreAccordion(titleKey: "network.details") {
+                        NetworkDetailList(detail: detail, onCopy: onCopy)
                     }
                 }
             }
