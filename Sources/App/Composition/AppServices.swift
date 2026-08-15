@@ -36,7 +36,7 @@ final class AppServices {
             displays: registry.displays,
             now: now
         )
-        order.note(entryIds: registry.taskbarEntries.map { WindowEntryIdentifier.text(for: $0.identity) })
+        order.note(keys: orderingKeys)
         geometry.observe(pids: observedPids) { [weak self] in
             self?.scheduleRefresh()
         }
@@ -50,6 +50,36 @@ final class AppServices {
 
     private var observedPids: [pid_t] {
         Array(Set(registry.windows.map(\.ownerPid)))
+    }
+
+    private var orderingKeys: [String] {
+        let pinnedIdentifiers = Set(pins.apps.map(\.bundleIdentifier))
+        let windowKeys = registry.taskbarEntries.map { window -> String in
+            let bundleIdentifier = registry.bundleIdentifiers[window.ownerPid]
+            return TaskbarOrdering.orderingKey(
+                bundleIdentifier: bundleIdentifier,
+                entryId: WindowEntryIdentifier.text(for: window.identity),
+                isPinned: bundleIdentifier.map(pinnedIdentifiers.contains) ?? false
+            )
+        }
+        let launcherKeys = pins.apps.map { "pin:\($0.bundleIdentifier)" }
+
+        return Array(NSOrderedSet(array: launcherKeys + windowKeys)) as? [String] ?? windowKeys
+    }
+
+    func reorder(draggedKey: String, before target: TaskbarEntryModel) {
+        order.move(key: draggedKey, before: target.orderingKey)
+        persistPinnedOrder()
+    }
+
+    private func persistPinnedOrder() {
+        let pinnedByKey = Dictionary(
+            uniqueKeysWithValues: pins.apps.map { ("pin:\($0.bundleIdentifier)", $0) }
+        )
+        let ordered = order.keys.compactMap { pinnedByKey[$0] }
+        guard ordered.count == pins.apps.count else { return }
+
+        Task { await pins.reorder(ordered) }
     }
 
     func toggle(entryId: String) {
@@ -120,7 +150,7 @@ final class AppServices {
             onOpenStart: {},
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onDropPin: { [weak self] dropped, target in
-                self?.movePin(bundleIdentifier: dropped, before: target)
+                self?.reorder(draggedKey: dropped, before: target)
             }
         )
         host.present(preset: preset)

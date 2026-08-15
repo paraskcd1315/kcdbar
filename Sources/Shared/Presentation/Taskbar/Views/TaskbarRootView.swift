@@ -33,7 +33,7 @@ struct TaskbarRootView: View {
             frontmostPid: registry.frontmostPid,
             bundleIdentifiers: registry.bundleIdentifiers,
             pinnedApps: pins.apps,
-            sequences: order.sequences,
+            ranks: order.ranks,
             hasAccessibility: registry.hasAccessibility,
             icons: icons
         )

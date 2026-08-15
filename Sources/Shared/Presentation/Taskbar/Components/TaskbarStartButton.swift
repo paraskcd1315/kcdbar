@@ -10,8 +10,8 @@ struct TaskbarStartButton: View {
             Image(systemName: "line.3.horizontal")
                 .font(.system(size: TaskbarMetrics.startGlyphSize, weight: .medium))
                 .foregroundStyle(KbColors.onSurface)
-                .frame(width: TaskbarMetrics.startButtonWidth)
-                .frame(maxHeight: .infinity)
+                .frame(width: TaskbarMetrics.iconSize, height: TaskbarMetrics.iconSize)
+                .padding(KbSpacing.s3)
                 .contentShape(.rect(cornerRadius: KbRadii.md))
         }
         .buttonStyle(.plain)

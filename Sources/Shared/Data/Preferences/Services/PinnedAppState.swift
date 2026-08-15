@@ -34,6 +34,18 @@ final class PinnedAppState {
         await load()
     }
 
+    func reorder(_ ordered: [PinnedApp]) async {
+        let renumbered = ordered.enumerated().map { index, app in
+            PinnedApp(
+                bundleIdentifier: app.bundleIdentifier,
+                displayName: app.displayName,
+                order: index
+            )
+        }
+        await store.reorder(renumbered)
+        await load()
+    }
+
     func move(bundleIdentifier: String, before target: String?) async {
         guard bundleIdentifier != target else { return }
 

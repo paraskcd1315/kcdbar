@@ -9,86 +9,86 @@ struct TaskbarEntryView: View {
 
     @State private var isHovered = false
     @State private var isDropTarget = false
-    @State private var isDragging = false
     @State private var showsTooltip = false
 
     var body: some View {
-        Button(action: onActivate) {
-            HStack(spacing: KbSpacing.s3) {
+        content
+            .contentShape(.rect(cornerRadius: KbRadii.md))
+            .onTapGesture(perform: onActivate)
+            .glassEffect(entryGlass, in: .rect(cornerRadius: KbRadii.md))
+            .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
+            .animation(KbMotion.quick, value: isHovered)
+            .animation(KbMotion.quick, value: entry.isFrontmost)
+            .overlay(alignment: tooltipAlignment) { tooltip }
+            .onHover { isHovered = $0 }
+            .task(id: isHovered) { await revealTooltip() }
+            .padding(.leading, isDropTarget ? TaskbarMetrics.dropGap : 0)
+            .overlay(alignment: .leading) { dropIndicator }
+            .animation(KbMotion.quick, value: isDropTarget)
+            .draggable(entry.orderingKey) {
                 TaskbarEntryIcon(icon: entry.icon)
-                if preset.entryContent != .iconOnly && !entry.isLauncher {
-                    Text(entry.title)
-                        .font(entry.isFrontmost ? KbTypography.entryTitleActive : KbTypography.entryTitle)
-                        .foregroundStyle(entry.isMinimized ? KbColors.onSurfaceMuted : KbColors.onSurface)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
+            }
+            .dropDestination(for: String.self) { items, _ in
+                guard let dropped = items.first else { return false }
+                onDropPin(dropped)
+                return true
+            } isTargeted: { targeted in
+                isDropTarget = targeted
+            }
+            .contextMenu {
+                if entry.bundleIdentifier != nil {
+                    Button(entry.isPinned ? "taskbar.menu.unpin" : "taskbar.menu.pin", action: onTogglePin)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: showsTitle ? .leading : .center)
-            .padding(.horizontal, showsTitle ? KbSpacing.s4 : KbSpacing.s2)
-            .padding(.vertical, KbSpacing.s2)
-            .frame(
-                minWidth: showsTitle ? TaskbarMetrics.entryCompactWidth : TaskbarMetrics.iconOnlyEntryWidth,
-                maxWidth: showsTitle ? TaskbarMetrics.entryMaxWidth : TaskbarMetrics.iconOnlyEntryWidth
-            )
-            .contentShape(.rect(cornerRadius: KbRadii.md))
-        }
-        .buttonStyle(.plain)
-        .glassEffect(entryGlass, in: .rect(cornerRadius: KbRadii.md))
-        .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
-        .animation(KbMotion.quick, value: isHovered)
-        .animation(KbMotion.quick, value: entry.isFrontmost)
-        .overlay(alignment: tooltipAlignment) {
-            if showsTooltip {
-                TaskbarTooltip(
-                    applicationName: entry.applicationName,
-                    windowTitle: entry.title
-                )
-                    .offset(tooltipOffset)
-                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
+    }
+
+    private var content: some View {
+        HStack(spacing: KbSpacing.s3) {
+            TaskbarEntryIcon(icon: entry.icon)
+            if showsTitle {
+                Text(entry.title)
+                    .font(entry.isFrontmost ? KbTypography.entryTitleActive : KbTypography.entryTitle)
+                    .foregroundStyle(entry.isMinimized ? KbColors.onSurfaceMuted : KbColors.onSurface)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
         }
-        .onHover { hovering in
-            isHovered = hovering
+        .frame(maxWidth: .infinity, alignment: showsTitle ? .leading : .center)
+        .padding(.horizontal, showsTitle ? KbSpacing.s4 : KbSpacing.s3)
+        .padding(.vertical, KbSpacing.s3)
+        .frame(
+            minWidth: showsTitle ? TaskbarMetrics.entryCompactWidth : nil,
+            maxWidth: showsTitle ? TaskbarMetrics.entryMaxWidth : nil
+        )
+    }
+
+    @ViewBuilder
+    private var tooltip: some View {
+        if showsTooltip {
+            TaskbarTooltip(applicationName: entry.applicationName, windowTitle: entry.title)
+                .offset(tooltipOffset)
+                .transition(.opacity.combined(with: .scale(scale: 0.9)))
         }
-        .task(id: isHovered) {
-            guard isHovered, !entry.applicationName.isEmpty || !entry.title.isEmpty else {
-                showsTooltip = false
-                return
-            }
-            try? await Task.sleep(for: TaskbarMetrics.tooltipDelay)
-            guard !Task.isCancelled else { return }
-            withAnimation(KbMotion.quick) { showsTooltip = true }
+    }
+
+    @ViewBuilder
+    private var dropIndicator: some View {
+        if isDropTarget {
+            RoundedRectangle(cornerRadius: TaskbarMetrics.dropIndicatorWidth / 2)
+                .fill(KbColors.activeIndicator)
+                .frame(width: TaskbarMetrics.dropIndicatorWidth)
+                .transition(.opacity.combined(with: .scale(scale: 0.4)))
         }
-        .padding(.leading, isDropTarget ? TaskbarMetrics.dropGap : 0)
-        .overlay(alignment: .leading) {
-            if isDropTarget {
-                RoundedRectangle(cornerRadius: TaskbarMetrics.dropIndicatorWidth / 2)
-                    .fill(KbColors.activeIndicator)
-                    .frame(width: TaskbarMetrics.dropIndicatorWidth)
-                    .transition(.opacity.combined(with: .scale(scale: 0.4)))
-            }
+    }
+
+    private func revealTooltip() async {
+        guard isHovered, !entry.applicationName.isEmpty || !entry.title.isEmpty else {
+            showsTooltip = false
+            return
         }
-        .animation(KbMotion.quick, value: isDropTarget)
-        .opacity(isDragging ? TaskbarMetrics.draggingOpacity : 1)
-        .animation(KbMotion.quick, value: isDragging)
-        .draggable(entry.bundleIdentifier ?? entry.id) {
-            isDragging = true
-            return TaskbarEntryIcon(icon: entry.icon)
-        }
-        .dropDestination(for: String.self) { items, _ in
-            guard let dropped = items.first else { return false }
-            isDragging = false
-            onDropPin(dropped)
-            return true
-        } isTargeted: { targeted in
-            isDropTarget = targeted && entry.isPinned
-        }
-        .contextMenu {
-            if entry.bundleIdentifier != nil {
-                Button(entry.isPinned ? "taskbar.menu.unpin" : "taskbar.menu.pin", action: onTogglePin)
-            }
-        }
+        try? await Task.sleep(for: TaskbarMetrics.tooltipDelay)
+        guard !Task.isCancelled else { return }
+        withAnimation(KbMotion.quick) { showsTooltip = true }
     }
 
     private var tooltipAlignment: Alignment {
@@ -101,12 +101,12 @@ struct TaskbarEntryView: View {
     }
 
     private var tooltipOffset: CGSize {
-        let gap = TaskbarMetrics.tooltipGap
+        let travel = TaskbarMetrics.tooltipAllowance - TaskbarMetrics.tooltipGap
         switch preset.edge {
-        case .bottom: return CGSize(width: 0, height: -(TaskbarMetrics.tooltipAllowance - gap))
-        case .top: return CGSize(width: 0, height: TaskbarMetrics.tooltipAllowance - gap)
-        case .leading: return CGSize(width: TaskbarMetrics.tooltipAllowance - gap, height: 0)
-        case .trailing: return CGSize(width: -(TaskbarMetrics.tooltipAllowance - gap), height: 0)
+        case .bottom: return CGSize(width: 0, height: -travel)
+        case .top: return CGSize(width: 0, height: travel)
+        case .leading: return CGSize(width: travel, height: 0)
+        case .trailing: return CGSize(width: -travel, height: 0)
         }
     }
 
