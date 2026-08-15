@@ -6,11 +6,11 @@ enum BatteryMetrics {
     static let warningPercentage = 25
     static let fullPercentage = 100
 
-    static let pillWidth: CGFloat = 30
-    static let pillHeight: CGFloat = 14
-    static let pillRadius: CGFloat = 4
+    static let pillWidth: CGFloat = 25
+    static let pillHeight: CGFloat = 12
+    static let pillRadius: CGFloat = 3.5
     static let capWidth: CGFloat = 2
-    static let capHeight: CGFloat = 6
+    static let capHeight: CGFloat = 5
     static let capGap: CGFloat = 1.5
     static let pillBorderWidth: CGFloat = 1
     static let minimumFill: CGFloat = 0.06

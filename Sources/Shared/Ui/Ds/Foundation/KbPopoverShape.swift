@@ -1,11 +1,11 @@
 import SwiftUI
 
 /** A rounded panel with a caret on its lower edge, pointing at the item that opened it. */
-struct BatteryPopoverShape: Shape {
+struct KbPopoverShape: Shape {
     let arrowX: CGFloat
 
     func path(in rect: CGRect) -> Path {
-        let arrow = BatteryMetrics.arrowSize
+        let arrow = KbPopoverMetrics.arrowSize
         let radius = KbRadii.lg
         let body = CGRect(
             x: rect.minX,
@@ -13,7 +13,9 @@ struct BatteryPopoverShape: Shape {
             width: rect.width,
             height: rect.height - arrow.height
         )
-        let tip = min(max(arrowX, body.minX + radius + arrow.width), body.maxX - radius - arrow.width)
+        let lower = body.minX + radius + arrow.width
+        let upper = body.maxX - radius - arrow.width
+        let tip = min(max(arrowX, lower), upper)
 
         var path = Path(roundedRect: body, cornerRadius: radius)
         path.move(to: CGPoint(x: tip - arrow.width / 2, y: body.maxY))
