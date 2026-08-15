@@ -26,6 +26,7 @@ package final class AppServices {
     package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
     package let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
     package let terminator: any ApplicationTerminationPort = WorkspaceApplicationTerminator()
+    package let spotlight: any SpotlightPort = CgEventSpotlight()
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
@@ -293,7 +294,7 @@ package final class AppServices {
                 self?.activate(entry: entry, onDisplay: displayId)
             },
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
-            onOpenStart: {},
+            onOpenStart: { [spotlight] in _ = spotlight.openApplications() },
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onQuit: { [weak self] entry in self?.quit(entry: entry) },
             onDropPin: { [weak self] dropped, target in
