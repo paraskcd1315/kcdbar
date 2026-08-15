@@ -20,4 +20,10 @@ package enum TimerFormatting {
     package static func label(for timer: RunningTimer) -> String {
         timer.jiraKey ?? timer.detail
     }
+
+    package static func compact(_ seconds: Int) -> String {
+        Duration.seconds(max(seconds, 0)).formatted(
+            .units(allowed: [.hours, .minutes], width: .narrow)
+        )
+    }
 }

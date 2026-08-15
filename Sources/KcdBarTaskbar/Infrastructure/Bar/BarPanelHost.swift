@@ -19,6 +19,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let battery: BatteryMonitor
     private let trash: TrashMonitor
     private let timer: TimerMonitor
+    private let totals: TotalsMonitor
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -43,6 +44,7 @@ package final class BarPanelHost: BarPanelHostPort {
         battery: BatteryMonitor,
         trash: TrashMonitor,
         timer: TimerMonitor,
+        totals: TotalsMonitor,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -73,6 +75,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.battery = battery
         self.trash = trash
         self.timer = timer
+        self.totals = totals
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -290,6 +293,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 onOpenControlCentre: onOpenControlCentre,
                 trash: trash,
                 timer: timer,
+                totals: totals,
                 onOpenTimer: onOpenTimer,
                 onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
             )

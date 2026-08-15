@@ -24,6 +24,7 @@ package struct TaskbarRootView: View {
     package let onOpenControlCentre: () -> Void
     package let trash: TrashMonitor
     package let timer: TimerMonitor
+    package let totals: TotalsMonitor
     package let onOpenTimer: () -> Void
     package let onBarFrameChange: (CGRect) -> Void
 
@@ -44,6 +45,7 @@ package struct TaskbarRootView: View {
             onOpenControlCentre: onOpenControlCentre,
             trash: trash,
             timer: timer,
+            totals: totals,
             onOpenTimer: onOpenTimer,
             isShowingDesktop: desktop.isShowingDesktop,
             onToggleDesktop: onToggleDesktop,

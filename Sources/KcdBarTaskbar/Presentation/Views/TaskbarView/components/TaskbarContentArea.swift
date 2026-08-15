@@ -18,6 +18,7 @@ package struct TaskbarContentArea: View {
     package let onOpenControlCentre: () -> Void
     package let trash: TrashMonitor
     package let timer: TimerMonitor
+    package let totals: TotalsMonitor
     package let onOpenTimer: () -> Void
 
     package var body: some View {
@@ -40,6 +41,7 @@ package struct TaskbarContentArea: View {
                     onOpenControlCentre: onOpenControlCentre,
                     trash: trash,
                     timer: timer,
+                    totals: totals,
                     onOpenTimer: onOpenTimer,
                 )
             }
