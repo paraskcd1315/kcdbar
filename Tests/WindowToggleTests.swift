@@ -91,6 +91,24 @@ struct WindowToggleTests {
         #expect(WindowFocusPolicy.isFrontmost(visible, frontmostPid: 1, among: windows))
     }
 
+    @Test func aWindowWithoutAKnownStackingOrderIsNeverFrontmost() {
+        let windows = reconciled([(pid: 1, id: 10, title: "Off screen", z: Int.max)])
+
+        #expect(WindowFocusPolicy.isFrontmost(windows[0], frontmostPid: 1, among: windows) == false)
+    }
+
+    @Test func theFrontWindowWinsAmongSiblingsOfTheSameApplication() {
+        let windows = reconciled([
+            (pid: 1, id: 10, title: "Second", z: 4),
+            (pid: 1, id: 11, title: "First", z: 1),
+            (pid: 1, id: 12, title: "Third", z: 9)
+        ])
+        let first = windows.first { $0.identity.cgWindowId == 11 }!
+
+        #expect(WindowFocusPolicy.isFrontmost(first, frontmostPid: 1, among: windows))
+        #expect(windows.filter { WindowFocusPolicy.isFrontmost($0, frontmostPid: 1, among: windows) }.count == 1)
+    }
+
     @Test func nothingIsFrontmostWhenNoApplicationIsFrontmost() {
         let windows = reconciled([(pid: 1, id: 10, title: "Front", z: 0)])
 

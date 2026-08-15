@@ -6,7 +6,11 @@ enum WindowFocusPolicy {
         frontmostPid: pid_t?,
         among windows: [ManagedWindow]
     ) -> Bool {
-        guard window.ownerPid == frontmostPid, !window.isMinimized, let order = window.zOrder else {
+        guard window.ownerPid == frontmostPid,
+              !window.isMinimized,
+              let order = window.zOrder,
+              order != Int.max
+        else {
             return false
         }
         return siblings(of: window, in: windows).allSatisfy { $0 >= order }

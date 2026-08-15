@@ -12,9 +12,24 @@ struct CoreGraphicsWindowSource: CgWindowSourcePort {
         guard let entries = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
             return []
         }
-        return entries.enumerated().compactMap { index, entry in
-            record(from: entry, zOrder: index)
+        let ranks = frontToBackRanks()
+
+        return entries.compactMap { entry in
+            guard let windowId = entry[kCGWindowNumber as String] as? CGWindowID else { return nil }
+
+            return record(from: entry, zOrder: ranks[windowId] ?? Int.max)
         }
+    }
+
+    private func frontToBackRanks() -> [CGWindowID: Int] {
+        let options: CGWindowListOption = [.optionOnScreenOnly, .excludeDesktopElements]
+        guard let entries = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]]
+        else {
+            return [:]
+        }
+        let ids = entries.compactMap { $0[kCGWindowNumber as String] as? CGWindowID }
+
+        return Dictionary(uniqueKeysWithValues: ids.enumerated().map { ($0.element, $0.offset) })
     }
 
     private func record(from entry: [String: Any], zOrder: Int) -> CgWindowRecord? {
