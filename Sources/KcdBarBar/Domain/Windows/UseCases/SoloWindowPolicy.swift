@@ -21,6 +21,18 @@ package enum SoloWindowPolicy {
         }
     }
 
+    package static func isBare(
+        display: Int,
+        among windows: [ManagedWindow],
+        displays: [DisplayGeometry]
+    ) -> Bool {
+        !windows.contains { window in
+            guard !window.isMinimized else { return false }
+
+            return WindowDisplayResolver.displayId(for: window, in: displays) == display
+        }
+    }
+
     private static func focused(
         frontmostPid: pid_t?,
         among windows: [ManagedWindow]

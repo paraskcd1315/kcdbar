@@ -16,7 +16,10 @@ package final class AppServices {
     package let battery = BatteryMonitor(source: IoKitBatterySource())
     package let batteryPanel = PopoverHost()
     package let controlCentrePanel = PopoverHost()
-    package let wifi = WifiMonitor(source: CoreWlanSource())
+    package let wifi = WifiMonitor(
+        source: CoreWlanSource(),
+        links: SystemConfigurationLinkSource()
+    )
     package let trash = TrashMonitor(source: FileManagerTrashSource())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
@@ -250,7 +253,8 @@ package final class AppServices {
                 brightness: brightness,
                 presentation: presentation,
                 onOpenWifiSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) },
-                onOpenBluetoothSettings: { NSWorkspace.shared.open(BarSettingsLinks.bluetooth) }
+                onOpenBluetoothSettings: { NSWorkspace.shared.open(BarSettingsLinks.bluetooth) },
+                onOpenNetworkSettings: { NSWorkspace.shared.open(BarSettingsLinks.network) }
             )
         }
     }

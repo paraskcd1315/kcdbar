@@ -18,11 +18,21 @@ package struct TaskbarShowDesktopButton: View {
                     .fill(KbColors.separator)
                     .frame(width: TaskbarMetrics.showDesktopDividerWidth)
             }
+            .background(shape.fill(fill))
             .contentShape(shape)
             .onTapGesture(perform: onToggle)
-            .glassEffect(isHovered || isShowingDesktop ? .regular.interactive() : .identity, in: shape)
             .animation(KbMotion.quick, value: isHovered)
             .animation(KbMotion.quick, value: isShowingDesktop)
             .onHover { isHovered = $0 }
+    }
+
+    private var fill: Color {
+        if isShowingDesktop {
+            return KbColors.onSurface.opacity(TaskbarMetrics.showDesktopActiveOpacity)
+        }
+
+        return isHovered
+            ? KbColors.onSurface.opacity(TaskbarMetrics.showDesktopHoverOpacity)
+            : .clear
     }
 }

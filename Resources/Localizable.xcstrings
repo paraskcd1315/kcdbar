@@ -13,6 +13,12 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Bluetooth" } }
       }
     },
+    "ethernet.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ethernet" } }
+      }
+    },
     "bluetooth.settings" : {
       "extractionState" : "manual",
       "localizations" : {
