@@ -29,6 +29,7 @@ struct TaskbarView: View {
             }
         }
         .padding(viewModel.preset.contentPadding)
+        .animation(KbMotion.standard, value: viewModel.entries)
         .frame(
             maxWidth: fillsCrossAxis(.horizontal) ? .infinity : nil,
             maxHeight: fillsCrossAxis(.vertical) ? .infinity : nil
@@ -42,18 +43,46 @@ struct TaskbarView: View {
     }
 
     private var surfaceShape: AnyShape {
-        AnyShape(RoundedRectangle(cornerRadius: viewModel.preset.cornerRadius))
+        KbBarShape.shape(
+            edge: viewModel.preset.edge,
+            attachment: viewModel.preset.attachment,
+            cornerRadius: viewModel.preset.cornerRadius
+        )
     }
 
     private var outsetPadding: CGFloat {
-        viewModel.preset.widthMode == .island ? TaskbarMetrics.islandOutset : 0
+        viewModel.preset.attachment == .floating ? TaskbarMetrics.islandOutset : 0
     }
 
     private var contentAlignment: Alignment {
+        viewModel.preset.edge.isVertical
+            ? Alignment(horizontal: crossAxisHorizontal, vertical: alongAxisVertical)
+            : Alignment(horizontal: alongAxisHorizontal, vertical: crossAxisVertical)
+    }
+
+    private var alongAxisHorizontal: HorizontalAlignment {
         switch viewModel.preset.alignment {
-        case .leading: viewModel.preset.edge.isVertical ? .top : .leading
+        case .leading: .leading
         case .centered: .center
-        case .trailing: viewModel.preset.edge.isVertical ? .bottom : .trailing
+        case .trailing: .trailing
         }
+    }
+
+    private var alongAxisVertical: VerticalAlignment {
+        switch viewModel.preset.alignment {
+        case .leading: .top
+        case .centered: .center
+        case .trailing: .bottom
+        }
+    }
+
+    private var crossAxisVertical: VerticalAlignment {
+        guard viewModel.preset.attachment == .edgeAttached else { return .center }
+        return viewModel.preset.edge == .top ? .top : .bottom
+    }
+
+    private var crossAxisHorizontal: HorizontalAlignment {
+        guard viewModel.preset.attachment == .edgeAttached else { return .center }
+        return viewModel.preset.edge == .leading ? .leading : .trailing
     }
 }

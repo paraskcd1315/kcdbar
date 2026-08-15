@@ -5,6 +5,8 @@ struct TaskbarEntryView: View {
     let preset: BarPreset
     let onActivate: () -> Void
 
+    @State private var isHovered = false
+
     var body: some View {
         Button(action: onActivate) {
             HStack(spacing: KbSpacing.s3) {
@@ -24,19 +26,27 @@ struct TaskbarEntryView: View {
                 minWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryCompactWidth,
                 maxWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryMaxWidth
             )
-            .contentShape(.rect(cornerRadius: KbRadii.sm))
+            .contentShape(.capsule)
         }
         .buttonStyle(.plain)
         .background(entryBackground)
+        .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
+        .animation(KbMotion.quick, value: isHovered)
+        .animation(KbMotion.quick, value: entry.isFrontmost)
+        .onHover { hovering in
+            isHovered = hovering
+        }
         .help(entry.title)
     }
 
     private var entryBackground: some View {
-        RoundedRectangle(cornerRadius: KbRadii.sm)
-            .fill(fillOpacity)
+        Capsule().fill(fill)
     }
 
-    private var fillOpacity: Color {
-        entry.isFrontmost ? KbColors.onSurface.opacity(0.16) : .clear
+    private var fill: Color {
+        if entry.isFrontmost {
+            return KbColors.onSurface.opacity(TaskbarMetrics.focusedFillOpacity)
+        }
+        return KbColors.onSurface.opacity(isHovered ? TaskbarMetrics.hoverFillOpacity : 0)
     }
 }

@@ -12,4 +12,8 @@ enum TaskbarMetrics {
     static let indicatorWidth: CGFloat = 16
     static let islandOutset: CGFloat = 6
     static let magnificationScale: CGFloat = 1.35
+    static let hoverScale: CGFloat = 1.04
+    static let hoverFillOpacity: Double = 0.10
+    static let focusedFillOpacity: Double = 0.16
+    static let insertionScale: CGFloat = 0.4
 }

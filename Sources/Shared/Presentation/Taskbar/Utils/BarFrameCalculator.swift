@@ -3,7 +3,7 @@ import CoreGraphics
 enum BarFrameCalculator {
     static func frame(for preset: BarPreset, on display: DisplayGeometry) -> CGRect {
         let screen = display.frame
-        let thickness = preset.thickness + (preset.widthMode == .island ? TaskbarMetrics.islandOutset * 2 : 0)
+        let thickness = preset.thickness + (preset.attachment == .floating ? TaskbarMetrics.islandOutset * 2 : 0)
         switch preset.edge {
         case .bottom:
             return CGRect(x: screen.minX, y: screen.minY, width: screen.width, height: thickness)

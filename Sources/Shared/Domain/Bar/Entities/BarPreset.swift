@@ -5,6 +5,7 @@ struct BarPreset: Codable, Equatable, Sendable {
     var edge: BarEdge
     var alignment: BarAlignment
     var widthMode: BarWidthMode
+    var attachment: BarAttachment
     var entryContent: BarEntryContent
     var entrySizing: BarEntrySizing
     var grouping: BarGrouping

@@ -6,6 +6,7 @@ enum BarPresetCatalogue {
         edge: .bottom,
         alignment: .centered,
         widthMode: .island,
+        attachment: .edgeAttached,
         entryContent: .iconAndTitle,
         entrySizing: .fixed,
         grouping: .perWindow,
@@ -19,7 +20,7 @@ enum BarPresetCatalogue {
         thickness: 48,
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
-        cornerRadius: KbRadii.none,
+        cornerRadius: KbRadii.lg,
         showsStatusArea: true
     )
 
@@ -28,6 +29,7 @@ enum BarPresetCatalogue {
         edge: .bottom,
         alignment: .leading,
         widthMode: .fullEdge,
+        attachment: .edgeAttached,
         entryContent: .iconAndTitle,
         entrySizing: .fixed,
         grouping: .perWindow,
@@ -50,6 +52,7 @@ enum BarPresetCatalogue {
         edge: .bottom,
         alignment: .centered,
         widthMode: .island,
+        attachment: .floating,
         entryContent: .iconOnly,
         entrySizing: .magnifying,
         grouping: .perApplication,
@@ -72,6 +75,7 @@ enum BarPresetCatalogue {
         edge: .top,
         alignment: .centered,
         widthMode: .island,
+        attachment: .floating,
         entryContent: .iconOnly,
         entrySizing: .fixed,
         grouping: .perWindow,

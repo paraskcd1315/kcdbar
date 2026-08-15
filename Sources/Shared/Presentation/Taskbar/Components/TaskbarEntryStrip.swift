@@ -9,8 +9,10 @@ struct TaskbarEntryStrip: View {
         layout {
             ForEach(entries) { entry in
                 TaskbarEntryView(entry: entry, preset: preset) { onActivate(entry) }
+                    .transition(entryTransition)
             }
         }
+        .animation(KbMotion.standard, value: entries)
         .frame(
             maxWidth: expandsAlongBar && !preset.edge.isVertical ? .infinity : nil,
             maxHeight: expandsAlongBar && preset.edge.isVertical ? .infinity : nil,
@@ -20,6 +22,11 @@ struct TaskbarEntryStrip: View {
 
     private var expandsAlongBar: Bool {
         preset.widthMode == .fullEdge
+    }
+
+    private var entryTransition: AnyTransition {
+        .scale(scale: TaskbarMetrics.insertionScale, anchor: .center)
+            .combined(with: .opacity)
     }
 
     @ViewBuilder
