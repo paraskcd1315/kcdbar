@@ -43,6 +43,16 @@ struct TaskbarEntryView: View {
     }
 
     private var content: some View {
+        entryBody
+            .overlay(alignment: .bottom) {
+                if entry.instanceCount > 0 {
+                    TaskbarInstanceDots(count: entry.instanceCount, isFrontmost: entry.isFrontmost)
+                        .padding(.bottom, TaskbarMetrics.instanceDotInset)
+                }
+            }
+    }
+
+    private var entryBody: some View {
         HStack(spacing: KbSpacing.s3) {
             TaskbarEntryIcon(icon: entry.icon)
             if showsTitle {
