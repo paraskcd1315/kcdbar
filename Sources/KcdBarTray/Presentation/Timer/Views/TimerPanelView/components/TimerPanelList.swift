@@ -14,7 +14,8 @@ package struct TimerPanelList: View {
                 }
             }
         }
-        .frame(height: TimerReadoutMetrics.listHeight(rows: timers.count))
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxHeight: TimerReadoutMetrics.listMaxHeight)
         .scrollBounceBehavior(.basedOnSize)
     }
 }
