@@ -25,7 +25,7 @@ struct WifiNetworkRow: View {
             }
         }
         .padding(.horizontal, KbSpacing.s4)
-        .padding(.vertical, KbSpacing.s2)
+        .frame(height: WifiMetrics.rowHeight)
         .contentShape(Rectangle())
         .background(
             RoundedRectangle(cornerRadius: KbRadii.sm)

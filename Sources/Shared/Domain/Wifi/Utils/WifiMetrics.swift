@@ -1,4 +1,5 @@
 import CoreGraphics
+import Foundation
 
 enum WifiMetrics {
     static let strongRssi = -60
@@ -14,6 +15,13 @@ enum WifiMetrics {
     static let detailMaxHeight: CGFloat = 420
     static let glyphSize: CGFloat = 26
     static let rowGlyphSize: CGFloat = 20
+    static let rescanInterval: TimeInterval = 20
+    static let rowHeight: CGFloat = 28
+    static let headerHeight: CGFloat = 26
+
+    static func listHeight(rows: Int, cap: CGFloat) -> CGFloat {
+        min(CGFloat(rows) * rowHeight, cap)
+    }
 
     static func symbol(bars: Int) -> String {
         switch bars {
