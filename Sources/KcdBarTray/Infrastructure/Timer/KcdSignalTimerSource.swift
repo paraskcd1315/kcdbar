@@ -12,17 +12,24 @@ package final class KcdSignalTimerSource: TimerSignalPort {
         self.reader = SignalReader(channel: SignalChannel(TimerChannelMetrics.channelName))
     }
 
-    package func listen(_ onChange: @escaping @MainActor @Sendable (TimerReading) -> Void) {
+    package func listen(
+        _ onChange: @escaping @MainActor @Sendable (TimerReading) -> Void,
+        onProblem: @escaping @MainActor @Sendable (ChannelProblem) -> Void
+    ) {
         let projectId = self.projectId
 
-        reader.listen { envelope in
+        reader.listen({ envelope in
             let reading = TimerSelection.reading(
                 from: envelope.payload.runningTimers,
                 projectId: projectId
             )
 
             Task { @MainActor in onChange(reading) }
-        }
+        }, onProblem: { problem in
+            guard let carried = SignalProblems.of(problem) else { return }
+
+            Task { @MainActor in onProblem(carried) }
+        })
     }
 
     package func stop() {

@@ -6,11 +6,16 @@ import Testing
 @MainActor
 private final class FakeTimerSignalSource: TimerSignalPort {
     private var onChange: (@MainActor @Sendable (TimerReading) -> Void)?
+    private var onProblem: (@MainActor @Sendable (ChannelProblem) -> Void)?
 
     private(set) var isStopped = false
 
-    func listen(_ onChange: @escaping @MainActor @Sendable (TimerReading) -> Void) {
+    func listen(
+        _ onChange: @escaping @MainActor @Sendable (TimerReading) -> Void,
+        onProblem: @escaping @MainActor @Sendable (ChannelProblem) -> Void
+    ) {
         self.onChange = onChange
+        self.onProblem = onProblem
     }
 
     func stop() {
@@ -19,6 +24,10 @@ private final class FakeTimerSignalSource: TimerSignalPort {
 
     func send(_ reading: TimerReading) {
         onChange?(reading)
+    }
+
+    func send(_ problem: ChannelProblem) {
+        onProblem?(problem)
     }
 }
 
@@ -59,6 +68,30 @@ struct TimerMonitorTests {
         source.send(.running([timer()]))
         source.send(.idle)
 
+        #expect(monitor.reading == .idle)
+    }
+
+    @Test func aVersionThisReaderDoesNotKnowIsNotAnEmptyChannel() {
+        let source = FakeTimerSignalSource()
+        let monitor = TimerMonitor(source: source)
+        monitor.start()
+
+        source.send(.running([timer()]))
+        source.send(ChannelProblem.unknownVersion(2))
+
+        #expect(monitor.problem == .unknownVersion(2))
+        #expect(monitor.reading == .unknown)
+    }
+
+    @Test func aReadableSnapshotClearsTheProblemBeforeIt() {
+        let source = FakeTimerSignalSource()
+        let monitor = TimerMonitor(source: source)
+        monitor.start()
+
+        source.send(ChannelProblem.malformed("bad"))
+        source.send(.idle)
+
+        #expect(monitor.problem == nil)
         #expect(monitor.reading == .idle)
     }
 

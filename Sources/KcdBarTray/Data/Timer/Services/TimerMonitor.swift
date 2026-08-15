@@ -1,10 +1,11 @@
 import Observation
 
-/** The bar's live view of the timer running for this project. */
+/** The bar's live view of what is running, and of a channel it could not read. */
 @MainActor
 @Observable
 package final class TimerMonitor {
     package private(set) var reading: TimerReading = .unknown
+    package private(set) var problem: ChannelProblem?
 
     private let source: any TimerSignalPort
 
@@ -13,9 +14,11 @@ package final class TimerMonitor {
     }
 
     package func start() {
-        source.listen { [weak self] reading in
+        source.listen({ [weak self] reading in
             self?.apply(reading)
-        }
+        }, onProblem: { [weak self] problem in
+            self?.apply(problem)
+        })
     }
 
     package func stop() {
@@ -24,5 +27,11 @@ package final class TimerMonitor {
 
     package func apply(_ reading: TimerReading) {
         self.reading = reading
+        self.problem = nil
+    }
+
+    package func apply(_ problem: ChannelProblem) {
+        self.problem = problem
+        self.reading = .unknown
     }
 }
