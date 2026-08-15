@@ -24,6 +24,8 @@
 	<string>26.0</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>KCDBar shows Bluetooth in its Control Center and turns it on and off.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
 </dict>
