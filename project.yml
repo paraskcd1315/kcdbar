@@ -30,7 +30,7 @@ targets:
       - path: Resources
         buildPhase: resources
     info:
-      path: Sources/App/Info.plist
+      path: Sources/KcdBarMain/Info.plist
       properties:
         CFBundleName: KCDBar
         CFBundleDisplayName: KCDBar
@@ -50,25 +50,19 @@ targets:
     platform: macOS
     sources:
       - path: Tests
-      - path: Sources/Shared/Domain/Windows
-      - path: Sources/Shared/Domain/Bar
-      - path: Sources/Shared/Domain/Battery
-      - path: Sources/Shared/Domain/Wifi
-      - path: Sources/Shared/Domain/Sound
-      - path: Sources/Shared/Domain/Bluetooth
-      - path: Sources/Shared/Domain/Brightness
-      - path: Sources/Shared/Domain/Preferences
-      - path: Sources/Shared/Domain/Ui
-      - path: Sources/Shared/Ui/Ds/Foundation/KbPopoverMetrics.swift
-      - path: Sources/Shared/Ui/Theme/KbSpacing.swift
-      - path: Sources/Shared/Ui/Theme/KbRadii.swift
-      - path: Sources/Shared/Presentation/Taskbar/Utils/TaskbarOrdering.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragReorder.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragHitTest.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGroup.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGrouping.swift
-      - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarEntryModel.swift
-      - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarNotice.swift
+      - path: Sources/KcdBarBar/Domain
+      - path: Sources/KcdBarTray/Domain
+      - path: Sources/KcdBarPreferences/Domain
+      - path: Sources/KcdBarDesignSystem/Ds/Foundation/KbPopoverMetrics.swift
+      - path: Sources/KcdBarDesignSystem/Theme/KbSpacing.swift
+      - path: Sources/KcdBarDesignSystem/Theme/KbRadii.swift
+      - path: Sources/KcdBarBar/Presentation/Utils/TaskbarOrdering.swift
+      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragReorder.swift
+      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragHitTest.swift
+      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGroup.swift
+      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGrouping.swift
+      - path: Sources/KcdBarBar/Presentation/Models/TaskbarEntryModel.swift
+      - path: Sources/KcdBarBar/Presentation/Models/TaskbarNotice.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar.tests
