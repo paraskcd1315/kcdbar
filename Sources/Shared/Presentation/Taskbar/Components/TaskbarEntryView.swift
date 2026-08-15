@@ -39,7 +39,10 @@ struct TaskbarEntryView: View {
         .animation(KbMotion.quick, value: entry.isFrontmost)
         .overlay(alignment: tooltipAlignment) {
             if showsTooltip {
-                TaskbarTooltip(text: entry.title)
+                TaskbarTooltip(
+                    applicationName: entry.applicationName,
+                    windowTitle: entry.title
+                )
                     .offset(tooltipOffset)
                     .transition(.opacity.combined(with: .scale(scale: 0.9)))
             }
@@ -48,7 +51,7 @@ struct TaskbarEntryView: View {
             isHovered = hovering
         }
         .task(id: isHovered) {
-            guard isHovered, !entry.title.isEmpty else {
+            guard isHovered, !entry.applicationName.isEmpty || !entry.title.isEmpty else {
                 showsTooltip = false
                 return
             }

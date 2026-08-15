@@ -22,4 +22,5 @@ enum TaskbarMetrics {
     static let tooltipAllowance: CGFloat = 44
     static let tooltipGap: CGFloat = 8
     static let tooltipDelay: Duration = .milliseconds(400)
+    static let tooltipMaxWidth: CGFloat = 320
 }

@@ -1,17 +1,30 @@
 import SwiftUI
 
 struct TaskbarTooltip: View {
-    let text: String
+    let applicationName: String
+    let windowTitle: String
 
     var body: some View {
-        Text(text)
-            .font(KbTypography.entryTitle)
-            .foregroundStyle(KbColors.onSurface)
-            .lineLimit(1)
-            .padding(.horizontal, KbSpacing.s4)
-            .padding(.vertical, KbSpacing.s2)
-            .glassEffect(.regular, in: .capsule)
-            .fixedSize()
-            .allowsHitTesting(false)
+        VStack(alignment: .leading, spacing: KbSpacing.s1) {
+            Text(applicationName)
+                .font(KbTypography.entryTitleActive)
+                .foregroundStyle(KbColors.onSurface)
+            if showsWindowTitle {
+                Text(windowTitle)
+                    .font(KbTypography.entryTitle)
+                    .foregroundStyle(KbColors.onSurfaceMuted)
+            }
+        }
+        .lineLimit(1)
+        .padding(.horizontal, KbSpacing.s5)
+        .padding(.vertical, KbSpacing.s3)
+        .frame(maxWidth: TaskbarMetrics.tooltipMaxWidth, alignment: .leading)
+        .fixedSize()
+        .glassEffect(.regular, in: .rect(cornerRadius: KbRadii.md))
+        .allowsHitTesting(false)
+    }
+
+    private var showsWindowTitle: Bool {
+        !windowTitle.isEmpty && windowTitle != applicationName
     }
 }
