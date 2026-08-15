@@ -1,12 +1,13 @@
 import AppKit
 import SwiftUI
 
-/** Hosts one popover panel, anchored above a bar item, expanding from its lower edge. */
+/** Hosts one popover panel, anchored above a bar item, growing upward from its lower edge. */
 @MainActor
 final class PopoverHost {
     private var panel: NSPanel?
     private var presentation: PopoverPresentation?
     private var dismissMonitor: Any?
+    private var anchor: NSPoint = .zero
     private var isClosing = false
 
     var isPresented: Bool {
@@ -15,7 +16,7 @@ final class PopoverHost {
 
     func present(
         anchor: NSPoint,
-        content: (PopoverPresentation, CGFloat) -> AnyView
+        content: @escaping (PopoverPresentation, CGFloat) -> AnyView
     ) {
         closeImmediately()
 
@@ -24,11 +25,14 @@ final class PopoverHost {
         let settled = origin(for: size, anchor: anchor)
 
         let panel = makePanel()
-        panel.contentView = NSHostingView(rootView: content(presentation, anchor.x - settled.x))
         panel.setContentSize(size)
         panel.setFrameOrigin(settled)
+        panel.contentView = NSHostingView(
+            rootView: measured(content(presentation, anchor.x - settled.x))
+        )
         panel.orderFrontRegardless()
 
+        self.anchor = anchor
         self.panel = panel
         self.presentation = presentation
         withAnimation(KbMotion.standard) { presentation.isExpanded = true }
@@ -55,6 +59,24 @@ final class PopoverHost {
             self.presentation = nil
             self.isClosing = false
         }
+    }
+
+    private func measured(_ content: AnyView) -> AnyView {
+        AnyView(
+            content.onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { [weak self] size in
+                self?.resize(to: size)
+            }
+        )
+    }
+
+    private func resize(to size: CGSize) {
+        guard let panel, !isClosing, size.width > 0, size.height > 0 else { return }
+        guard panel.frame.size != size else { return }
+
+        let settled = origin(for: size, anchor: anchor)
+        panel.setFrame(NSRect(origin: settled, size: size), display: true)
     }
 
     private func closeImmediately() {
@@ -91,9 +113,10 @@ final class PopoverHost {
 
     private func origin(for size: NSSize, anchor: NSPoint) -> NSPoint {
         let screen = NSScreen.screens.first { $0.frame.contains(anchor) } ?? NSScreen.main
-        let bounds = screen?.frame ?? .zero
+        let bounds = screen?.visibleFrame ?? .zero
         let x = min(max(anchor.x - size.width / 2, bounds.minX), bounds.maxX - size.width)
+        let y = min(anchor.y + KbPopoverMetrics.gap, bounds.maxY - size.height)
 
-        return NSPoint(x: x, y: min(anchor.y + KbPopoverMetrics.gap, bounds.maxY - size.height))
+        return NSPoint(x: x, y: max(y, bounds.minY))
     }
 }

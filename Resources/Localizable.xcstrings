@@ -37,6 +37,12 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Other Networks" } }
       }
     },
+    "wifi.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No networks found" } }
+      }
+    },
     "wifi.scanning" : {
       "extractionState" : "manual",
       "localizations" : {
