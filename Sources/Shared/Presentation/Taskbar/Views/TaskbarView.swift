@@ -5,6 +5,7 @@ struct TaskbarView: View {
     let onActivate: (TaskbarEntryModel) -> Void
     let onRequestAccessibility: () -> Void
     let onOpenStart: () -> Void
+    let onTogglePin: (TaskbarEntryModel) -> Void
 
     @State private var hasAppeared = false
 
@@ -80,7 +81,8 @@ struct TaskbarView: View {
         TaskbarEntryStrip(
             entries: viewModel.entries,
             preset: viewModel.preset,
-            onActivate: onActivate
+            onActivate: onActivate,
+            onTogglePin: onTogglePin
         )
     }
 

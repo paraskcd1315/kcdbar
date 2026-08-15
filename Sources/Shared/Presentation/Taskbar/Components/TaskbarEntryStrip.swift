@@ -4,12 +4,18 @@ struct TaskbarEntryStrip: View {
     let entries: [TaskbarEntryModel]
     let preset: BarPreset
     let onActivate: (TaskbarEntryModel) -> Void
+    let onTogglePin: (TaskbarEntryModel) -> Void
 
     var body: some View {
         layout {
             ForEach(entries) { entry in
-                TaskbarEntryView(entry: entry, preset: preset) { onActivate(entry) }
-                    .transition(entryTransition)
+                TaskbarEntryView(
+                    entry: entry,
+                    preset: preset,
+                    onActivate: { onActivate(entry) },
+                    onTogglePin: { onTogglePin(entry) }
+                )
+                .transition(entryTransition)
             }
         }
         .animation(KbMotion.standard, value: entries)

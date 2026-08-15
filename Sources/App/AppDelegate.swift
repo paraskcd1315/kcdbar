@@ -11,10 +11,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             services.authorization.requestTrust()
         }
 
-        services.startBar(preset: BarPresetCatalogue.default) { [services] entry in
-            services.toggle(entryId: entry.id)
-        }
+        services.startBar(preset: BarPresetCatalogue.default)
         services.refreshAndEnforce()
+        Task { await services.loadPreferences() }
         services.changes.startObserving { [services] in
             services.scheduleRefresh()
         }

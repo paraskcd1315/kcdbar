@@ -12,30 +12,58 @@ struct TaskbarViewModel {
         displayId: Int,
         displays: [DisplayGeometry],
         frontmostPid: pid_t?,
+        bundleIdentifiers: [pid_t: String],
+        pinnedApps: [PinnedApp],
         hasAccessibility: Bool,
         icons: any ApplicationIconPort
     ) {
         self.preset = preset
+
         let scoped = WindowDisplayResolver.windows(
             windows,
             onDisplay: displayId,
             scope: preset.windowScope,
             displays: displays
         )
-        entries = scoped.map { window in
-            TaskbarEntryModel(
+        let pinnedIdentifiers = Set(pinnedApps.map(\.bundleIdentifier))
+
+        let windowEntries = scoped.map { window -> TaskbarEntryModel in
+            let bundleIdentifier = bundleIdentifiers[window.ownerPid]
+            return TaskbarEntryModel(
                 id: WindowEntryIdentifier.text(for: window.identity),
                 title: window.title ?? window.ownerName ?? "",
                 applicationName: window.ownerName ?? "",
+                bundleIdentifier: bundleIdentifier,
                 icon: icons.icon(forPid: window.ownerPid),
                 isMinimized: window.isMinimized,
                 isFrontmost: WindowFocusPolicy.isFrontmost(
                     window,
                     frontmostPid: frontmostPid,
                     among: windows
-                )
+                ),
+                isPinned: bundleIdentifier.map(pinnedIdentifiers.contains) ?? false,
+                isLauncher: false
             )
         }
+
+        let representedIdentifiers = Set(windowEntries.compactMap(\.bundleIdentifier))
+        let launchers = pinnedApps
+            .filter { !representedIdentifiers.contains($0.bundleIdentifier) }
+            .map { app in
+                TaskbarEntryModel(
+                    id: "pin:\(app.bundleIdentifier)",
+                    title: app.displayName,
+                    applicationName: app.displayName,
+                    bundleIdentifier: app.bundleIdentifier,
+                    icon: icons.icon(forBundleIdentifier: app.bundleIdentifier),
+                    isMinimized: false,
+                    isFrontmost: false,
+                    isPinned: true,
+                    isLauncher: true
+                )
+            }
+
+        entries = launchers + windowEntries
         notice = hasAccessibility ? nil : .accessibilityMissing
     }
 }

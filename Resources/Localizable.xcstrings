@@ -12,6 +12,28 @@
         }
       }
     },
+    "taskbar.menu.pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin to taskbar"
+          }
+        }
+      }
+    },
+    "taskbar.menu.unpin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin from taskbar"
+          }
+        }
+      }
+    },
     "taskbar.notice.grant" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -8,6 +8,7 @@ final class WindowRegistry {
     private(set) var displays: [DisplayGeometry] = []
     private(set) var frontmostPid: pid_t?
     private(set) var hasAccessibility = false
+    private(set) var bundleIdentifiers: [pid_t: String] = [:]
     private(set) var lastRefreshDuration: TimeInterval = 0
     private(set) var lastScanCounts: WindowScanCounts = .empty
 
@@ -46,6 +47,7 @@ final class WindowRegistry {
         frontmostPid = applicationsSource.frontmostPid
         let applications = applicationsSource.currentApplications()
         let byPid = Dictionary(uniqueKeysWithValues: applications.map { ($0.pid, $0) })
+        bundleIdentifiers = byPid.compactMapValues(\.bundleIdentifier)
         let coreGraphics = coreGraphicsSource.currentWindows()
         let accessibility = accessibilitySource.windows(forPids: applications.map(\.pid))
 

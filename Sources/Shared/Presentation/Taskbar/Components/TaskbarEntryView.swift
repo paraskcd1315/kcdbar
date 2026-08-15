@@ -4,6 +4,7 @@ struct TaskbarEntryView: View {
     let entry: TaskbarEntryModel
     let preset: BarPreset
     let onActivate: () -> Void
+    let onTogglePin: () -> Void
 
     @State private var isHovered = false
 
@@ -11,7 +12,7 @@ struct TaskbarEntryView: View {
         Button(action: onActivate) {
             HStack(spacing: KbSpacing.s3) {
                 TaskbarEntryIcon(icon: entry.icon)
-                if preset.entryContent != .iconOnly {
+                if preset.entryContent != .iconOnly && !entry.isLauncher {
                     Text(entry.title)
                         .font(entry.isFrontmost ? KbTypography.entryTitleActive : KbTypography.entryTitle)
                         .foregroundStyle(entry.isMinimized ? KbColors.onSurfaceMuted : KbColors.onSurface)
@@ -23,8 +24,8 @@ struct TaskbarEntryView: View {
             .padding(.horizontal, KbSpacing.s4)
             .padding(.vertical, KbSpacing.s3)
             .frame(
-                minWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryCompactWidth,
-                maxWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryMaxWidth
+                minWidth: showsTitle ? TaskbarMetrics.entryCompactWidth : TaskbarMetrics.iconOnlyEntryWidth,
+                maxWidth: showsTitle ? TaskbarMetrics.entryMaxWidth : TaskbarMetrics.iconOnlyEntryWidth
             )
             .contentShape(.capsule)
         }
@@ -36,7 +37,16 @@ struct TaskbarEntryView: View {
         .onHover { hovering in
             isHovered = hovering
         }
+        .contextMenu {
+            if entry.bundleIdentifier != nil {
+                Button(entry.isPinned ? "taskbar.menu.unpin" : "taskbar.menu.pin", action: onTogglePin)
+            }
+        }
         .help(entry.title)
+    }
+
+    private var showsTitle: Bool {
+        preset.entryContent != .iconOnly && !entry.isLauncher
     }
 
     private var entryBackground: some View {

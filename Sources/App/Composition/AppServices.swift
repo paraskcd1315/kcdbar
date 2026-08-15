@@ -8,6 +8,8 @@ final class AppServices {
     let authorization: any AccessibilityAuthorizationPort = AccessibilityAuthorization()
     let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     let registry: WindowRegistry
+    let pins: PinnedAppState
+    let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
 
     let control: any WindowControlPort = AccessibilityWindowControl()
     let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -67,19 +69,51 @@ final class AppServices {
             displaySource: ScreenGeometrySource(),
             authorization: AccessibilityAuthorization()
         )
+        let container = KcdBarStore.opened()
+        store = container.map { KcdBarStore(modelContainer: $0) }
+        pins = PinnedAppState(store: store ?? EphemeralPinnedAppStore())
     }
 
-    func startBar(preset: BarPreset, onActivate: @escaping (TaskbarEntryModel) -> Void) {
+    func loadPreferences() async {
+        await pins.load()
+    }
+
+    func activate(entry: TaskbarEntryModel) {
+        guard !entry.isLauncher else {
+            entry.bundleIdentifier.map(launcher.launch(bundleIdentifier:))
+            return
+        }
+        toggle(entryId: entry.id)
+    }
+
+    func togglePin(entry: TaskbarEntryModel) {
+        guard let bundleIdentifier = entry.bundleIdentifier else { return }
+        let name = entry.applicationName.isEmpty ? bundleIdentifier : entry.applicationName
+
+        Task {
+            if entry.isPinned {
+                await pins.unpin(bundleIdentifier: bundleIdentifier)
+            } else {
+                await pins.pin(bundleIdentifier: bundleIdentifier, displayName: name)
+            }
+        }
+    }
+
+    func startBar(preset: BarPreset) {
         activePreset = preset
         let host = BarPanelHost(
             registry: registry,
+            pins: pins,
             icons: icons,
             displaySource: displays,
-            onActivate: onActivate,
+            onActivate: { [weak self] entry in self?.activate(entry: entry) },
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
-            onOpenStart: {}
+            onOpenStart: {},
+            onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) }
         )
         host.present(preset: preset)
         bar = host
     }
+
+    private let store: KcdBarStore?
 }

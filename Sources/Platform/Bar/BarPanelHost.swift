@@ -7,22 +7,28 @@ final class BarPanelHost: BarPanelHostPort {
     private var screenObserver: NSObjectProtocol?
 
     private let registry: WindowRegistry
+    private let pins: PinnedAppState
     private let icons: any ApplicationIconPort
     private let displaySource: any DisplayGeometryPort
     private let onActivate: (TaskbarEntryModel) -> Void
     private let onRequestAccessibility: () -> Void
     private let onOpenStart: () -> Void
+    private let onTogglePin: (TaskbarEntryModel) -> Void
 
     init(
         registry: WindowRegistry,
+        pins: PinnedAppState,
         icons: any ApplicationIconPort,
         displaySource: any DisplayGeometryPort,
         onActivate: @escaping (TaskbarEntryModel) -> Void,
         onRequestAccessibility: @escaping () -> Void,
-        onOpenStart: @escaping () -> Void
+        onOpenStart: @escaping () -> Void,
+        onTogglePin: @escaping (TaskbarEntryModel) -> Void
     ) {
         self.registry = registry
+        self.pins = pins
         self.icons = icons
+        self.onTogglePin = onTogglePin
         self.displaySource = displaySource
         self.onActivate = onActivate
         self.onRequestAccessibility = onRequestAccessibility
@@ -68,12 +74,14 @@ final class BarPanelHost: BarPanelHostPort {
             panel.contentView = BarHostingView(
                 rootView: TaskbarRootView(
                     registry: registry,
+                    pins: pins,
                     preset: preset,
                     displayId: display.id,
                     icons: icons,
                     onActivate: onActivate,
                     onRequestAccessibility: onRequestAccessibility,
-                    onOpenStart: onOpenStart
+                    onOpenStart: onOpenStart,
+                    onTogglePin: onTogglePin
                 )
             )
             panel.orderFrontRegardless()
