@@ -36,7 +36,7 @@ final class GlassProbeController {
         )
         let window = NSWindow(
             contentRect: frame,
-            styleMask: [.titled, .closable],
+            styleMask: [.titled, .closable, .miniaturizable],
             backing: .buffered,
             defer: false
         )
