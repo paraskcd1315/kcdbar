@@ -3,15 +3,17 @@ import SwiftUI
 struct TaskbarEntryView: View {
     let entry: TaskbarEntryModel
     let preset: BarPreset
+    let isDragging: Bool
     let onActivate: () -> Void
     let onTogglePin: () -> Void
+    let onDragStart: () -> Void
+    let onTargeted: (Bool) -> Void
     let onDropPin: (String) -> Void
     let onMiddleClick: () -> Void
 
     @Environment(\.middleClickCatcher) private var middleClickCatcher
 
     @State private var isHovered = false
-    @State private var isDropTarget = false
     @State private var showsTooltip = false
 
     var body: some View {
@@ -27,8 +29,10 @@ struct TaskbarEntryView: View {
         .overlay { middleClickCatcher(onMiddleClick) }
         .onTapGesture(perform: onActivate)
         .glassEffect(TaskbarEntryStyle.glass(isFrontmost: entry.isFrontmost, isHovered: isHovered), in: shape)
+        .opacity(isDragging ? TaskbarMetrics.draggingOpacity : 1)
         .animation(KbMotion.quick, value: isHovered)
         .animation(KbMotion.quick, value: entry.isFrontmost)
+        .animation(KbMotion.quick, value: isDragging)
         .overlay(alignment: TaskbarEntryStyle.tooltipAlignment(edge: preset.edge)) {
             if showsTooltip {
                 TaskbarEntryTooltip(entry: entry, edge: preset.edge)
@@ -36,14 +40,10 @@ struct TaskbarEntryView: View {
         }
         .onHover { isHovered = $0 }
         .task(id: isHovered) { await revealTooltip() }
-        .padding(.leading, isDropTarget ? TaskbarMetrics.dropGap : 0)
-        .overlay(alignment: .leading) {
-            if isDropTarget {
-                TaskbarDropIndicator()
-            }
-        }
-        .animation(KbMotion.quick, value: isDropTarget)
-        .draggable(entry.orderingKey) {
+        .onDrag {
+            onDragStart()
+            return NSItemProvider(object: entry.orderingKey as NSString)
+        } preview: {
             TaskbarEntryIcon(icon: entry.icon)
         }
         .dropDestination(for: String.self) { items, _ in
@@ -51,7 +51,7 @@ struct TaskbarEntryView: View {
             onDropPin(dropped)
             return true
         } isTargeted: { targeted in
-            isDropTarget = targeted
+            onTargeted(targeted)
         }
         .contextMenu {
             if entry.bundleIdentifier != nil {

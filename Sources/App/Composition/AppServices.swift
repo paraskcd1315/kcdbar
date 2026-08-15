@@ -102,8 +102,8 @@ final class AppServices {
         desktop.clear()
     }
 
-    func reorder(draggedKey: String, before target: TaskbarEntryModel) {
-        order.move(key: draggedKey, before: target.orderingKey)
+    func reorder(draggedKey: String, onto target: TaskbarEntryModel) {
+        order.move(key: draggedKey, onto: target.orderingKey)
         persistPinnedOrder()
     }
 
@@ -207,12 +207,6 @@ final class AppServices {
         }
     }
 
-    func movePin(bundleIdentifier: String, before target: TaskbarEntryModel) {
-        Task {
-            await pins.move(bundleIdentifier: bundleIdentifier, before: target.bundleIdentifier)
-        }
-    }
-
     func startBar(preset: BarPreset) {
         activePreset = preset
         let host = BarPanelHost(
@@ -229,7 +223,7 @@ final class AppServices {
             onOpenStart: {},
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onDropPin: { [weak self] dropped, target in
-                self?.reorder(draggedKey: dropped, before: target)
+                self?.reorder(draggedKey: dropped, onto: target)
             },
             onToggleDesktop: { [weak self] in self?.toggleShowDesktop() },
             onMiddleClick: { [weak self] entry, displayId in

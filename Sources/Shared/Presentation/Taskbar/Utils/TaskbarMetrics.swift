@@ -18,9 +18,6 @@ enum TaskbarMetrics {
     static let insertionScale: CGFloat = 0.4
     static let startGlyphSize: CGFloat = 15
     static let startButtonWidth: CGFloat = 40
-    static let dropIndicatorWidth: CGFloat = 3
-    static let dropIndicatorAppearScale: CGFloat = 0.4
-    static let dropGap: CGFloat = 26
     static let instanceDotSize: CGFloat = 3
     static let instanceDotSpacing: CGFloat = 3
     static let maximumInstanceDots = 4
