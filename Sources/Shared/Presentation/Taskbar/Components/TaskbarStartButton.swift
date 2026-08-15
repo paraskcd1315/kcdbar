@@ -16,7 +16,6 @@ struct TaskbarStartButton: View {
         }
         .buttonStyle(.plain)
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: .rect(cornerRadius: KbRadii.md))
-        .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }
     }

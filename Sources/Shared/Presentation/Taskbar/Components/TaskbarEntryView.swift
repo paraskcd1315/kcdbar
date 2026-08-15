@@ -20,7 +20,6 @@ struct TaskbarEntryView: View {
             .overlay { middleClickCatcher(onMiddleClick) }
             .onTapGesture(perform: onActivate)
             .glassEffect(entryGlass, in: entryShape)
-            .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
             .animation(KbMotion.quick, value: isHovered)
             .animation(KbMotion.quick, value: entry.isFrontmost)
             .overlay(alignment: tooltipAlignment) { tooltip }
