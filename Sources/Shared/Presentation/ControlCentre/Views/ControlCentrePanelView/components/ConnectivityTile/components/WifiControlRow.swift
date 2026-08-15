@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WifiTile: View {
+struct WifiControlRow: View {
     let state: WifiState
     let onExpand: () -> Void
 
@@ -12,7 +12,7 @@ struct WifiTile: View {
                 .font(.system(size: WifiMetrics.glyphSize * KbControlCentreMetrics.glyphRatio))
                 .foregroundStyle(state.isPowered ? KbColors.onBrand : KbColors.onSurface)
                 .frame(width: WifiMetrics.glyphSize, height: WifiMetrics.glyphSize)
-                .background(glyphBackground)
+                .background(Circle().fill(state.isPowered ? KbColors.brand : KbColors.surfaceRaised))
             VStack(alignment: .leading, spacing: 0) {
                 Text("wifi.title")
                     .font(KbTypography.tileTitle)
@@ -26,21 +26,15 @@ struct WifiTile: View {
                 .font(KbTypography.tileStatus)
                 .foregroundStyle(KbColors.onSurfaceMuted)
         }
-        .padding(.horizontal, KbSpacing.s4)
+        .padding(.horizontal, KbSpacing.s3)
         .padding(.vertical, KbSpacing.s3)
         .contentShape(Rectangle())
         .onTapGesture(perform: onExpand)
-        .background(rowBackground)
+        .background(
+            RoundedRectangle(cornerRadius: KbRadii.md, style: .continuous)
+                .fill(isHovered ? KbColors.onSurface.opacity(KbControlCentreMetrics.hoverOpacity) : .clear)
+        )
         .onHover { isHovered = $0 }
-    }
-
-    private var glyphBackground: some View {
-        Circle().fill(state.isPowered ? KbColors.brand : KbColors.surfaceRaised)
-    }
-
-    private var rowBackground: some View {
-        RoundedRectangle(cornerRadius: KbRadii.md)
-            .fill(isHovered ? KbColors.onSurface.opacity(KbControlCentreMetrics.hoverOpacity) : .clear)
     }
 
     private var statusKey: LocalizedStringKey {

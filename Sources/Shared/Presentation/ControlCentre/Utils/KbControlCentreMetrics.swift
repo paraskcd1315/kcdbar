@@ -8,4 +8,7 @@ enum KbControlCentreMetrics {
     static let toggleHeight: CGFloat = 24
     static let listMaxHeight: CGFloat = 260
     static let knobInset: CGFloat = 2.5
+    static let panelWidth: CGFloat = 340
+    static let panelPadding: CGFloat = 10
+    static let tileGap: CGFloat = 8
 }
