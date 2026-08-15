@@ -25,11 +25,13 @@ package final class AppServices {
     package let desktop = ShowDesktopState()
     package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
     package let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
+    package let terminator: any ApplicationTerminationPort = WorkspaceApplicationTerminator()
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
     private lazy var overlap = WindowOverlapEnforcer(control: control)
+    private lazy var solo = SoloWindowEnforcer(control: control)
     private var activePreset = BarPresetCatalogue.default
     private lazy var coalesced = CoalescedTrigger(
         interval: WindowOverlapMetrics.coalesceInterval
@@ -48,6 +50,12 @@ package final class AppServices {
         battery.refresh()
         overlap.enforce(
             preset: activePreset,
+            windows: registry.windows,
+            displays: registry.displays,
+            now: now
+        )
+        solo.enforce(
+            frontmostPid: registry.frontmostPid,
             windows: registry.windows,
             displays: registry.displays,
             now: now
@@ -243,9 +251,19 @@ package final class AppServices {
                 sound: sound,
                 brightness: brightness,
                 presentation: presentation,
-                onOpenSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) }
+                onOpenWifiSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) },
+                onOpenBluetoothSettings: { NSWorkspace.shared.open(BarSettingsLinks.bluetooth) }
             )
         }
+    }
+
+    package func quit(entry: TaskbarEntryModel) {
+        guard let bundleIdentifier = entry.bundleIdentifier,
+              terminator.quit(bundleIdentifier: bundleIdentifier)
+        else {
+            return
+        }
+        scheduleRefresh()
     }
 
     package func togglePin(entry: TaskbarEntryModel) {
@@ -277,6 +295,7 @@ package final class AppServices {
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
             onOpenStart: {},
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
+            onQuit: { [weak self] entry in self?.quit(entry: entry) },
             onDropPin: { [weak self] dropped, target in
                 self?.reorder(draggedKey: dropped, onto: target)
             },

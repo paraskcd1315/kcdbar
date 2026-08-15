@@ -6,6 +6,7 @@ package struct TaskbarEntryStrip: View {
     package let preset: BarPreset
     package let onActivate: (TaskbarEntryModel) -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onQuit: (TaskbarEntryModel) -> Void
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
 
@@ -23,6 +24,7 @@ package struct TaskbarEntryStrip: View {
                     isDragging: dragging == group.id,
                     onActivate: onActivate,
                     onTogglePin: onTogglePin,
+                    onQuit: onQuit,
                     onMiddleClick: onMiddleClick
                 )
                 .onGeometryChange(for: CGRect.self) { proxy in

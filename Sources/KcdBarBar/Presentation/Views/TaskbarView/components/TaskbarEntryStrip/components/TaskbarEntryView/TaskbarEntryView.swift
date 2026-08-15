@@ -7,6 +7,7 @@ package struct TaskbarEntryView: View {
     package let isDragging: Bool
     package let onActivate: () -> Void
     package let onTogglePin: () -> Void
+    package let onQuit: () -> Void
     package let onMiddleClick: () -> Void
 
     @Environment(\.middleClickCatcher) private var middleClickCatcher
@@ -40,7 +41,7 @@ package struct TaskbarEntryView: View {
         .task(id: isHovered) { await revealTooltip() }
         .contextMenu {
             if entry.bundleIdentifier != nil {
-                Button(entry.isPinned ? "taskbar.menu.unpin" : "taskbar.menu.pin", action: onTogglePin)
+                TaskbarEntryMenu(entry: entry, onTogglePin: onTogglePin, onQuit: onQuit)
             }
         }
     }

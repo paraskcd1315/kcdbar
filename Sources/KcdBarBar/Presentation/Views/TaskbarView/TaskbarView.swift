@@ -8,6 +8,7 @@ package struct TaskbarView: View {
     package let onRequestAccessibility: () -> Void
     package let onOpenStart: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onQuit: (TaskbarEntryModel) -> Void
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
     package let battery: BatteryState
@@ -34,6 +35,7 @@ package struct TaskbarView: View {
                 onRequestAccessibility: onRequestAccessibility,
                 onOpenStart: onOpenStart,
                 onTogglePin: onTogglePin,
+                onQuit: onQuit,
                 onDropPin: onDropPin,
                 onMiddleClick: onMiddleClick,
                 battery: battery,

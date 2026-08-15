@@ -1,3 +1,4 @@
+import KcdBarDesignSystem
 import SwiftUI
 
 package struct ControlCentreTiles: View {
@@ -5,7 +6,7 @@ package struct ControlCentreTiles: View {
     package let bluetooth: BluetoothMonitor
     package let sound: SoundMonitor
     package let brightness: BrightnessMonitor
-    package let onExpandWifi: () -> Void
+    package let onOpen: (ControlCentrePage) -> Void
 
     package var body: some View {
         GlassEffectContainer(spacing: KbControlCentreMetrics.tileGap) {
@@ -15,8 +16,8 @@ package struct ControlCentreTiles: View {
                     BrightnessTile(monitor: brightness)
                 }
                 HStack(alignment: .top, spacing: KbControlCentreMetrics.tileGap) {
-                    WifiTile(monitor: wifi, onExpand: onExpandWifi)
-                    BluetoothTile(monitor: bluetooth)
+                    WifiTile(monitor: wifi) { onOpen(.wifi) }
+                    BluetoothTile(monitor: bluetooth) { onOpen(.bluetooth) }
                 }
             }
         }

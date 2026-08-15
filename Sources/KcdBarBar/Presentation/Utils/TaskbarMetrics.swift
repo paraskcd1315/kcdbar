@@ -20,7 +20,7 @@ package enum TaskbarMetrics {
     package static let startButtonWidth: CGFloat = 40
     package static let instanceDotSize: CGFloat = 3
     package static let instanceDotSpacing: CGFloat = 3
-    package static let maximumInstanceDots = 4
+    package static let maximumInstanceDots = 5
     package static let instanceDotInset: CGFloat = 2
     package static let openBorderHeight: CGFloat = 2
     package static let focusedBorderHeight: CGFloat = 3
