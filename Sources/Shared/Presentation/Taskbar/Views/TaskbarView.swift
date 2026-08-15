@@ -44,6 +44,29 @@ struct TaskbarView: View {
 
     @ViewBuilder
     private var content: some View {
+        if viewModel.preset.edge.isVertical {
+            VStack(spacing: 0) {
+                paddedContent
+                desktopButton
+            }
+            .frame(
+                maxWidth: fillsCrossAxis(.horizontal) ? .infinity : nil,
+                maxHeight: fillsCrossAxis(.vertical) ? .infinity : nil
+            )
+        } else {
+            HStack(spacing: 0) {
+                paddedContent
+                desktopButton
+            }
+            .frame(
+                maxWidth: fillsCrossAxis(.horizontal) ? .infinity : nil,
+                maxHeight: fillsCrossAxis(.vertical) ? .infinity : nil
+            )
+        }
+    }
+
+    @ViewBuilder
+    private var paddedContent: some View {
         Group {
             if let notice = viewModel.notice {
                 TaskbarNoticeView(notice: notice, onAct: onRequestAccessibility)
@@ -53,10 +76,16 @@ struct TaskbarView: View {
         }
         .padding(viewModel.preset.contentPadding)
         .animation(KbMotion.standard, value: viewModel.entries)
-        .frame(
-            maxWidth: fillsCrossAxis(.horizontal) ? .infinity : nil,
-            maxHeight: fillsCrossAxis(.vertical) ? .infinity : nil
-        )
+    }
+
+    @ViewBuilder
+    private var desktopButton: some View {
+        if viewModel.preset.showsDesktopButton, viewModel.notice == nil {
+            TaskbarShowDesktopButton(
+                isShowingDesktop: isShowingDesktop,
+                onToggle: onToggleDesktop
+            )
+        }
     }
 
     @ViewBuilder
@@ -70,12 +99,6 @@ struct TaskbarView: View {
                 if viewModel.preset.showsStatusArea {
                     TaskbarClock()
                 }
-                if viewModel.preset.showsDesktopButton {
-                    TaskbarShowDesktopButton(
-                        isShowingDesktop: isShowingDesktop,
-                        onToggle: onToggleDesktop
-                    )
-                }
             }
         } else {
             HStack(spacing: viewModel.preset.entrySpacing) {
@@ -85,12 +108,6 @@ struct TaskbarView: View {
                 entryStrip
                 if viewModel.preset.showsStatusArea {
                     TaskbarClock()
-                }
-                if viewModel.preset.showsDesktopButton {
-                    TaskbarShowDesktopButton(
-                        isShowingDesktop: isShowingDesktop,
-                        onToggle: onToggleDesktop
-                    )
                 }
             }
         }

@@ -18,7 +18,7 @@ struct TaskbarShowDesktopButton: View {
             }
             .contentShape(.rect)
             .onTapGesture(perform: onToggle)
-            .glassEffect(isHovered || isShowingDesktop ? .regular.interactive() : .identity, in: .rect(cornerRadius: KbRadii.md))
+            .glassEffect(isHovered || isShowingDesktop ? .regular.interactive() : .identity, in: .rect)
             .animation(KbMotion.quick, value: isHovered)
             .animation(KbMotion.quick, value: isShowingDesktop)
             .onHover { isHovered = $0 }
