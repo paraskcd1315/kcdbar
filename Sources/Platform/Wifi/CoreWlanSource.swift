@@ -70,23 +70,19 @@ final class CoreWlanSource: NSObject, WifiPort {
             return []
         }
 
-        var strongest: [String: WifiNetwork] = [:]
-        for network in found {
-            guard let ssid = network.ssid, !ssid.isEmpty else { continue }
+        let candidates = found.compactMap { network -> WifiNetwork? in
+            guard let ssid = network.ssid, !ssid.isEmpty else { return nil }
 
-            let candidate = WifiNetwork(
+            return WifiNetwork(
                 ssid: ssid,
                 rssi: network.rssiValue,
                 isSecure: network.supportsSecurity(.personal) || network.supportsSecurity(.enterprise),
                 isKnown: known.contains(ssid),
                 isCurrent: ssid == current
             )
-            if let held = strongest[ssid], held.rssi >= candidate.rssi { continue }
-
-            strongest[ssid] = candidate
         }
 
-        return Array(strongest.values)
+        return WifiScanReducer.strongestPerSsid(candidates)
     }
 
     private func requestLocationIfNeeded() {

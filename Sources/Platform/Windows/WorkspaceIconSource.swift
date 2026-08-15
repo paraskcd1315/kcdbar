@@ -11,7 +11,7 @@ final class WorkspaceIconSource: ApplicationIconPort {
     init() {
         iconAppearance = Self.currentIconAppearance
         themeObserver = DistributedNotificationCenter.default().addObserver(
-            forName: Notification.Name("AppleInterfaceThemeChangedNotification"),
+            forName: Notification.Name(SystemDefaultsKeys.interfaceThemeChanged),
             object: nil,
             queue: .main
         ) { [weak self] _ in
@@ -20,7 +20,7 @@ final class WorkspaceIconSource: ApplicationIconPort {
     }
 
     private static var currentIconAppearance: String? {
-        UserDefaults.standard.string(forKey: "AppleIconAppearanceTheme")
+        UserDefaults.standard.string(forKey: SystemDefaultsKeys.iconAppearanceTheme)
     }
 
     private func forgetIfAppearanceChanged() {

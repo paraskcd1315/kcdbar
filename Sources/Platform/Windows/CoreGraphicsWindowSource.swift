@@ -3,10 +3,6 @@ import CoreGraphics
 import Foundation
 
 struct CoreGraphicsWindowSource: CgWindowSourcePort {
-    private var flipReference: CGFloat {
-        MainActor.assumeIsolated { NSScreen.screens.first?.frame.maxY ?? 0 }
-    }
-
     func currentWindows() -> [CgWindowRecord] {
         let options: CGWindowListOption = [.optionAll, .excludeDesktopElements]
         guard let entries = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
@@ -45,19 +41,10 @@ struct CoreGraphicsWindowSource: CgWindowSourcePort {
             ownerPid: ownerPid,
             ownerName: entry[kCGWindowOwnerName as String] as? String,
             title: entry[kCGWindowName as String] as? String,
-            bounds: cocoaBounds(from: bounds),
-            layer: entry[kCGWindowLayer as String] as? Int ?? 0,
+            bounds: MainActor.assumeIsolated { ScreenCoordinateConverter.toCocoa(bounds) },
+            layer: entry[kCGWindowLayer as String] as? Int ?? WindowMatchingMetrics.normalWindowLayer,
             isOnScreen: entry[kCGWindowIsOnscreen as String] as? Bool ?? true,
             zOrder: zOrder
-        )
-    }
-
-    private func cocoaBounds(from bounds: CGRect) -> CGRect {
-        CGRect(
-            x: bounds.origin.x,
-            y: flipReference - bounds.origin.y - bounds.height,
-            width: bounds.width,
-            height: bounds.height
         )
     }
 }

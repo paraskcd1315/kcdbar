@@ -12,4 +12,10 @@ enum OrderedKeys {
 
         return remaining
     }
+
+    static func deduped(_ keys: [String]) -> [String] {
+        var seen: Set<String> = []
+
+        return keys.filter { seen.insert($0).inserted }
+    }
 }

@@ -13,6 +13,18 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Bluetooth" } }
       }
     },
+    "bluetooth.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bluetooth Settings…" } }
+      }
+    },
+    "bluetooth.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No devices paired" } }
+      }
+    },
     "bluetooth.status.on" : {
       "extractionState" : "manual",
       "localizations" : {

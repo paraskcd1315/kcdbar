@@ -74,10 +74,9 @@ final class AppServices {
             )
         }
         let launcherKeys = pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) }
-        let entryIds = registry.taskbarEntries.map { WindowEntryIdentifier.text(for: $0.identity) }
-        let all = launcherKeys + windowKeys + entryIds
+        let entryIds = ShowDesktopPlan.keys(of: registry.taskbarEntries)
 
-        return Array(NSOrderedSet(array: all)) as? [String] ?? all
+        return OrderedKeys.deduped(launcherKeys + windowKeys + entryIds)
     }
 
     func toggleShowDesktop() {
@@ -94,17 +93,19 @@ final class AppServices {
     }
 
     private func hideToDesktop() {
-        let visible = registry.taskbarEntries.filter { !$0.isMinimized }
+        let visible = ShowDesktopPlan.toHide(among: registry.taskbarEntries)
         for window in visible {
             _ = control.perform(.minimize, on: window)
         }
-        desktop.remember(keys: visible.map { WindowEntryIdentifier.text(for: $0.identity) })
+        desktop.remember(keys: ShowDesktopPlan.keys(of: visible))
     }
 
     private func restoreFromDesktop() {
-        let wanted = Set(desktop.hiddenKeys)
-        for window in registry.windows
-        where wanted.contains(WindowEntryIdentifier.text(for: window.identity)) {
+        let wanted = ShowDesktopPlan.toRestore(
+            among: registry.windows,
+            hiddenKeys: desktop.hiddenKeys
+        )
+        for window in wanted {
             _ = control.perform(.restore, on: window)
         }
         desktop.clear()
@@ -116,11 +117,7 @@ final class AppServices {
     }
 
     private func persistPinnedOrder() {
-        let pinnedByKey = Dictionary(
-            uniqueKeysWithValues: pins.apps.map { (TaskbarOrdering.applicationKey($0.bundleIdentifier), $0) }
-        )
-        let ordered = order.keys.compactMap { pinnedByKey[$0] }
-        guard ordered.count == pins.apps.count else { return }
+        guard let ordered = PinnedOrder.reordered(pins.apps, byKeys: order.keys) else { return }
 
         Task { await pins.reorder(ordered) }
     }
@@ -191,11 +188,14 @@ final class AppServices {
         else {
             return false
         }
-        let alreadyHere = registry.taskbarEntries.contains { window in
-            window.ownerPid == pid
-                && WindowDisplayResolver.displayId(for: window, in: registry.displays) == displayId
+        guard !NewWindowPlacement.hasWindow(
+            pid: pid,
+            onDisplay: displayId,
+            among: registry.taskbarEntries,
+            displays: registry.displays
+        ) else {
+            return false
         }
-        guard !alreadyHere else { return false }
 
         let opened = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
         if opened {
@@ -214,13 +214,11 @@ final class AppServices {
         Task {
             await battery.sampleEnergy()
             batteryPanel.present(anchor: anchor) { [battery] presentation, arrowX in
-                AnyView(
-                    BatteryPanelView(
-                        state: battery.state,
-                        energyUsers: battery.energyUsers,
-                        arrowX: arrowX,
-                        presentation: presentation
-                    )
+                BatteryPanelPresentation.content(
+                    state: battery.state,
+                    energyUsers: battery.energyUsers,
+                    presentation: presentation,
+                    arrowX: arrowX
                 )
             }
         }
@@ -237,15 +235,13 @@ final class AppServices {
         brightness.refresh()
         controlCentrePanel.present(anchor: NSEvent.mouseLocation) {
             [wifi, bluetooth, sound, brightness] presentation, _ in
-            AnyView(
-                ControlCentrePanelView(
-                    wifi: wifi,
-                    bluetooth: bluetooth,
-                    sound: sound,
-                    brightness: brightness,
-                    presentation: presentation,
-                    onOpenSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) }
-                )
+            ControlCentrePresentation.content(
+                wifi: wifi,
+                bluetooth: bluetooth,
+                sound: sound,
+                brightness: brightness,
+                presentation: presentation,
+                onOpenSettings: { NSWorkspace.shared.open(BarSettingsLinks.wifi) }
             )
         }
     }

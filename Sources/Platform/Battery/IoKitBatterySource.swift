@@ -25,7 +25,7 @@ struct IoKitBatterySource: BatteryPort {
 
             return BatteryState(
                 isPresent: true,
-                percentage: Int((Double(capacity) / Double(maximum) * 100).rounded()),
+                percentage: BatteryPercentage.of(capacity: capacity, maximum: maximum),
                 isCharging: isCharging,
                 isCharged: description[kIOPSIsChargedKey] as? Bool ?? false,
                 isPluggedIn: onAdapter,
