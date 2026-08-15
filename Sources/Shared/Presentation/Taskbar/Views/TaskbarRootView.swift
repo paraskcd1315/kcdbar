@@ -3,6 +3,7 @@ import SwiftUI
 struct TaskbarRootView: View {
     let registry: WindowRegistry
     let pins: PinnedAppState
+    let order: EntryOrderMemory
     let preset: BarPreset
     let displayId: Int
     let icons: any ApplicationIconPort
@@ -32,6 +33,7 @@ struct TaskbarRootView: View {
             frontmostPid: registry.frontmostPid,
             bundleIdentifiers: registry.bundleIdentifiers,
             pinnedApps: pins.apps,
+            sequences: order.sequences,
             hasAccessibility: registry.hasAccessibility,
             icons: icons
         )

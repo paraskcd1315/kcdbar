@@ -9,6 +9,7 @@ final class AppServices {
     let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     let registry: WindowRegistry
     let pins: PinnedAppState
+    let order = EntryOrderMemory()
     let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
 
     let control: any WindowControlPort = AccessibilityWindowControl()
@@ -35,6 +36,7 @@ final class AppServices {
             displays: registry.displays,
             now: now
         )
+        order.note(entryIds: registry.taskbarEntries.map { WindowEntryIdentifier.text(for: $0.identity) })
         geometry.observe(pids: observedPids) { [weak self] in
             self?.scheduleRefresh()
         }
@@ -110,6 +112,7 @@ final class AppServices {
         let host = BarPanelHost(
             registry: registry,
             pins: pins,
+            order: order,
             icons: icons,
             displaySource: displays,
             onActivate: { [weak self] entry in self?.activate(entry: entry) },

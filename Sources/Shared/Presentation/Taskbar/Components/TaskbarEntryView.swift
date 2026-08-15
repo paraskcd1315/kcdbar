@@ -9,6 +9,7 @@ struct TaskbarEntryView: View {
 
     @State private var isHovered = false
     @State private var isDropTarget = false
+    @State private var isDragging = false
     @State private var showsTooltip = false
 
     var body: some View {
@@ -59,18 +60,25 @@ struct TaskbarEntryView: View {
             guard !Task.isCancelled else { return }
             withAnimation(KbMotion.quick) { showsTooltip = true }
         }
+        .padding(.leading, isDropTarget ? TaskbarMetrics.dropGap : 0)
         .overlay(alignment: .leading) {
             if isDropTarget {
                 RoundedRectangle(cornerRadius: TaskbarMetrics.dropIndicatorWidth / 2)
                     .fill(KbColors.activeIndicator)
                     .frame(width: TaskbarMetrics.dropIndicatorWidth)
+                    .transition(.opacity.combined(with: .scale(scale: 0.4)))
             }
         }
+        .animation(KbMotion.quick, value: isDropTarget)
+        .opacity(isDragging ? TaskbarMetrics.draggingOpacity : 1)
+        .animation(KbMotion.quick, value: isDragging)
         .draggable(entry.bundleIdentifier ?? entry.id) {
-            TaskbarEntryIcon(icon: entry.icon)
+            isDragging = true
+            return TaskbarEntryIcon(icon: entry.icon)
         }
         .dropDestination(for: String.self) { items, _ in
             guard let dropped = items.first else { return false }
+            isDragging = false
             onDropPin(dropped)
             return true
         } isTargeted: { targeted in

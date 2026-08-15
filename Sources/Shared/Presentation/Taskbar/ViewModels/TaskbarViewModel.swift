@@ -14,6 +14,7 @@ struct TaskbarViewModel {
         frontmostPid: pid_t?,
         bundleIdentifiers: [pid_t: String],
         pinnedApps: [PinnedApp],
+        sequences: [String: Int],
         hasAccessibility: Bool,
         icons: any ApplicationIconPort
     ) {
@@ -63,7 +64,11 @@ struct TaskbarViewModel {
                 )
             }
 
-        entries = launchers + windowEntries
+        entries = TaskbarOrdering.ordered(
+            entries: launchers + windowEntries,
+            pinnedApps: pinnedApps,
+            sequences: sequences
+        )
         notice = hasAccessibility ? nil : .accessibilityMissing
     }
 }

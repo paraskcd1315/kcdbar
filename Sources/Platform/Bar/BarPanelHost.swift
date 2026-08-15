@@ -8,6 +8,7 @@ final class BarPanelHost: BarPanelHostPort {
 
     private let registry: WindowRegistry
     private let pins: PinnedAppState
+    private let order: EntryOrderMemory
     private let icons: any ApplicationIconPort
     private let displaySource: any DisplayGeometryPort
     private let onActivate: (TaskbarEntryModel) -> Void
@@ -19,6 +20,7 @@ final class BarPanelHost: BarPanelHostPort {
     init(
         registry: WindowRegistry,
         pins: PinnedAppState,
+        order: EntryOrderMemory,
         icons: any ApplicationIconPort,
         displaySource: any DisplayGeometryPort,
         onActivate: @escaping (TaskbarEntryModel) -> Void,
@@ -30,6 +32,7 @@ final class BarPanelHost: BarPanelHostPort {
         self.onDropPin = onDropPin
         self.registry = registry
         self.pins = pins
+        self.order = order
         self.icons = icons
         self.onTogglePin = onTogglePin
         self.displaySource = displaySource
@@ -78,6 +81,7 @@ final class BarPanelHost: BarPanelHostPort {
                 rootView: TaskbarRootView(
                     registry: registry,
                     pins: pins,
+                    order: order,
                     preset: preset,
                     displayId: display.id,
                     icons: icons,
