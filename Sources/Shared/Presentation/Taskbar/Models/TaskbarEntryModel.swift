@@ -11,6 +11,7 @@ struct TaskbarEntryModel: Identifiable, Equatable {
     let isPinned: Bool
     let isLauncher: Bool
     let instanceCount: Int
+    let instancesOnThisDisplay: Int
 
     var orderingKey: String {
         TaskbarOrdering.orderingKey(
@@ -30,5 +31,6 @@ struct TaskbarEntryModel: Identifiable, Equatable {
             && lhs.isPinned == rhs.isPinned
             && lhs.isLauncher == rhs.isLauncher
             && lhs.instanceCount == rhs.instanceCount
+            && lhs.instancesOnThisDisplay == rhs.instancesOnThisDisplay
     }
 }

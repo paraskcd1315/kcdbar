@@ -44,24 +44,27 @@ struct TaskbarEntryView: View {
 
     private var content: some View {
         entryBody
-            .overlay(alignment: .bottom) {
-                if isOpen {
-                    VStack(spacing: TaskbarMetrics.instanceDotInset) {
-                        TaskbarInstanceDots(count: entry.instanceCount, isFrontmost: entry.isFrontmost)
-                        Rectangle()
-                            .fill(entry.isFrontmost ? KbColors.activeIndicator : KbColors.onSurfaceMuted)
-                            .frame(height: TaskbarMetrics.openBorderHeight)
-                    }
-                }
-            }
+            .overlay(alignment: .bottom) { openIndicator }
     }
 
-    private var isOpen: Bool {
-        entry.instanceCount > 0
+    @ViewBuilder
+    private var openIndicator: some View {
+        if isOpenHere {
+            Rectangle()
+                .fill(entry.isFrontmost ? KbColors.activeIndicator : KbColors.onSurfaceMuted)
+                .frame(height: TaskbarMetrics.openBorderHeight)
+        } else if entry.instanceCount > 0 {
+            TaskbarInstanceDots(count: entry.instanceCount, isFrontmost: entry.isFrontmost)
+                .padding(.bottom, TaskbarMetrics.instanceDotInset)
+        }
+    }
+
+    private var isOpenHere: Bool {
+        entry.instancesOnThisDisplay > 0
     }
 
     private var entryShape: AnyShape {
-        guard isOpen else { return AnyShape(RoundedRectangle(cornerRadius: KbRadii.md)) }
+        guard isOpenHere else { return AnyShape(RoundedRectangle(cornerRadius: KbRadii.md)) }
 
         return AnyShape(
             UnevenRoundedRectangle(

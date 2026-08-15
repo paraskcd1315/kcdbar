@@ -31,6 +31,10 @@ struct TaskbarViewModel {
             grouping: windows.compactMap { bundleIdentifiers[$0.ownerPid] },
             by: { $0 }
         ).mapValues(\.count)
+        let windowsHerePerApplication = Dictionary(
+            grouping: scoped.compactMap { bundleIdentifiers[$0.ownerPid] },
+            by: { $0 }
+        ).mapValues(\.count)
 
         let windowEntries = scoped.map { window -> TaskbarEntryModel in
             let bundleIdentifier = bundleIdentifiers[window.ownerPid]
@@ -48,7 +52,8 @@ struct TaskbarViewModel {
                 ),
                 isPinned: bundleIdentifier.map(pinnedIdentifiers.contains) ?? false,
                 isLauncher: false,
-                instanceCount: bundleIdentifier.flatMap { windowsPerApplication[$0] } ?? 1
+                instanceCount: bundleIdentifier.flatMap { windowsPerApplication[$0] } ?? 1,
+                instancesOnThisDisplay: bundleIdentifier.flatMap { windowsHerePerApplication[$0] } ?? 1
             )
         }
 
@@ -66,7 +71,8 @@ struct TaskbarViewModel {
                     isFrontmost: false,
                     isPinned: true,
                     isLauncher: true,
-                    instanceCount: windowsPerApplication[app.bundleIdentifier] ?? 0
+                    instanceCount: windowsPerApplication[app.bundleIdentifier] ?? 0,
+                    instancesOnThisDisplay: 0
                 )
             }
 
