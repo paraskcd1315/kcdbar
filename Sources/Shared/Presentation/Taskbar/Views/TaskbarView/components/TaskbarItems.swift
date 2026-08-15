@@ -26,10 +26,10 @@ struct TaskbarItems: View {
                 onMiddleClick: onMiddleClick
             )
             if viewModel.preset.showsStatusArea {
-                TaskbarControlCentreButton(onOpen: onOpenControlCentre)
                 if battery.isPresent {
                     TaskbarBattery(state: battery, onOpen: onOpenBattery)
                 }
+                TaskbarControlCentreButton(onOpen: onOpenControlCentre)
                 TaskbarClock(onOpen: onOpenNotifications)
             }
         }

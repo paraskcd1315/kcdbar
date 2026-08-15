@@ -1,10 +1,11 @@
 import AppKit
 import SwiftUI
 
+/** Hosts one popover panel, anchored above a bar item, expanding from its lower edge. */
 @MainActor
-final class BatteryPanelHost {
+final class PopoverHost {
     private var panel: NSPanel?
-    private var presentation: BatteryPanelPresentation?
+    private var presentation: PopoverPresentation?
     private var dismissMonitor: Any?
     private var isClosing = false
 
@@ -12,30 +13,18 @@ final class BatteryPanelHost {
         panel != nil && !isClosing
     }
 
-    func present(state: BatteryState, energyUsers: [EnergyUser], anchor: NSPoint) {
+    func present(
+        anchor: NSPoint,
+        content: (PopoverPresentation, CGFloat) -> AnyView
+    ) {
         closeImmediately()
 
-        let presentation = BatteryPanelPresentation()
-        let sizing = NSHostingView(
-            rootView: BatteryPanelView(
-                state: state,
-                energyUsers: energyUsers,
-                arrowX: 0,
-                presentation: presentation
-            )
-        )
-        let size = sizing.fittingSize
+        let presentation = PopoverPresentation()
+        let size = NSHostingView(rootView: content(presentation, 0)).fittingSize
         let settled = origin(for: size, anchor: anchor)
 
         let panel = makePanel()
-        panel.contentView = NSHostingView(
-            rootView: BatteryPanelView(
-                state: state,
-                energyUsers: energyUsers,
-                arrowX: anchor.x - settled.x,
-                presentation: presentation
-            )
-        )
+        panel.contentView = NSHostingView(rootView: content(presentation, anchor.x - settled.x))
         panel.setContentSize(size)
         panel.setFrameOrigin(settled)
         panel.orderFrontRegardless()
@@ -59,7 +48,7 @@ final class BatteryPanelHost {
         withAnimation(KbMotion.standard) { presentation.isExpanded = false }
 
         Task { [weak self] in
-            try? await Task.sleep(for: .milliseconds(BatteryMetrics.collapseMilliseconds))
+            try? await Task.sleep(for: .milliseconds(KbPopoverMetrics.collapseMilliseconds))
             panel.orderOut(nil)
             guard let self, self.panel === panel else { return }
             self.panel = nil
@@ -105,6 +94,6 @@ final class BatteryPanelHost {
         let bounds = screen?.frame ?? .zero
         let x = min(max(anchor.x - size.width / 2, bounds.minX), bounds.maxX - size.width)
 
-        return NSPoint(x: x, y: min(anchor.y + BatteryMetrics.panelGap, bounds.maxY - size.height))
+        return NSPoint(x: x, y: min(anchor.y + KbPopoverMetrics.gap, bounds.maxY - size.height))
     }
 }

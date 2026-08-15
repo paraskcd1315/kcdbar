@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import SwiftUI
 
 /** The composition root, and the only place naming a concrete platform implementation. */
 @MainActor
@@ -10,8 +11,9 @@ final class AppServices {
     let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     let registry: WindowRegistry
     let battery = BatteryMonitor(source: IoKitBatterySource())
-    let batteryPanel = BatteryPanelHost()
-    let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
+    let batteryPanel = PopoverHost()
+    let controlCentrePanel = PopoverHost()
+    let wifi = WifiMonitor(source: CoreWlanSource())
     let pins: PinnedAppState
     let order = EntryOrderMemory()
     let desktop = ShowDesktopState()
@@ -208,10 +210,28 @@ final class AppServices {
 
         Task {
             await battery.sampleEnergy()
-            batteryPanel.present(
-                state: battery.state,
-                energyUsers: battery.energyUsers,
-                anchor: anchor
+            batteryPanel.present(anchor: anchor) { [battery] presentation, arrowX in
+                AnyView(
+                    BatteryPanelView(
+                        state: battery.state,
+                        energyUsers: battery.energyUsers,
+                        arrowX: arrowX,
+                        presentation: presentation
+                    )
+                )
+            }
+        }
+    }
+
+    func openControlCentre() {
+        guard !controlCentrePanel.isPresented else {
+            controlCentrePanel.dismiss()
+            return
+        }
+        wifi.refresh()
+        controlCentrePanel.present(anchor: NSEvent.mouseLocation) { [wifi] presentation, arrowX in
+            AnyView(
+                ControlCentrePanelView(wifi: wifi, arrowX: arrowX, presentation: presentation)
             )
         }
     }
@@ -253,12 +273,8 @@ final class AppServices {
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
             },
             onOpenBattery: { [weak self] in self?.openBatteryPanel() },
-            onOpenNotifications: { [menuExtras] in
-                _ = menuExtras.press(BarControlMetrics.clockIdentifier)
-            },
-            onOpenControlCentre: { [menuExtras] in
-                _ = menuExtras.press(BarControlMetrics.controlCentreIdentifier)
-            }
+            onOpenNotifications: {},
+            onOpenControlCentre: { [weak self] in self?.openControlCentre() }
         )
         host.present(preset: preset)
         bar = host
