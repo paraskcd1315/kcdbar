@@ -32,7 +32,7 @@ package struct TaskbarTimer: View {
                         .truncationMode(.tail)
                         .frame(maxWidth: TimerReadoutMetrics.labelWidth, alignment: .leading)
                 } else {
-                    Text("\(timers.count)")
+                    Text("timer.running.count \(timers.count)")
                         .foregroundStyle(KbColors.onSurface)
                         .monospacedDigit()
                         .lineLimit(1)

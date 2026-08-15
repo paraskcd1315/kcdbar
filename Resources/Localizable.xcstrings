@@ -314,6 +314,12 @@
         }
       }
     },
+    "timer.running.count %lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld running" } }
+      }
+    },
     "timer.title" : {
       "extractionState" : "manual",
       "localizations" : {
