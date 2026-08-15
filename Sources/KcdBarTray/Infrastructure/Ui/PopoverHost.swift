@@ -30,14 +30,13 @@ package final class PopoverHost {
         let panel = makePanel()
         panel.setContentSize(size)
         panel.setFrameOrigin(settled)
-        panel.contentView = NSHostingView(
+        let hosting = PopoverHostingView(
             rootView: content(presentation, anchor.x - settled.x)
-                .onGeometryChange(for: CGSize.self) { proxy in
-                    proxy.size
-                } action: { [weak self] size in
-                    self?.resize(to: size)
-                }
         )
+        hosting.onContentSizeChange = { [weak self] size in
+            self?.resize(to: size)
+        }
+        panel.contentView = hosting
         panel.orderFrontRegardless()
 
         self.anchor = anchor

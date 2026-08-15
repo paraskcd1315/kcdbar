@@ -5,6 +5,7 @@ package struct TaskbarTrash: View {
     package let monitor: TrashMonitor
 
     @State private var isHovered = false
+    @State private var isAskingToEmpty = false
 
     package init(monitor: TrashMonitor) {
         self.monitor = monitor
@@ -32,9 +33,12 @@ package struct TaskbarTrash: View {
             TaskbarTrashMenu(
                 isEmpty: monitor.state.isEmpty,
                 onOpen: { monitor.open() },
-                onEmpty: { monitor.empty() }
+                onEmpty: { isAskingToEmpty = true }
             )
         }
+        .modifier(
+            TaskbarTrashConfirm(isAsking: $isAskingToEmpty) { monitor.empty() }
+        )
     }
 
     private var shape: AnyShape {

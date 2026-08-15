@@ -67,6 +67,35 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "IPv6 Address" } }
       }
     },
+    "trash.confirm.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Empty the Trash?" } }
+      }
+    },
+    "trash.confirm.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything in the Trash is deleted permanently. This cannot be undone."
+          }
+        }
+      }
+    },
+    "trash.confirm.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } }
+      }
+    },
+    "trash.confirm.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Empty Trash" } }
+      }
+    },
     "trash.open" : {
       "extractionState" : "manual",
       "localizations" : {
