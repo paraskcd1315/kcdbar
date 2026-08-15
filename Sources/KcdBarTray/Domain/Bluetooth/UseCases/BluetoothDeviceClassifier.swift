@@ -1,6 +1,6 @@
 /** Maps a Bluetooth class-of-device to the kind the control centre draws. */
-enum BluetoothDeviceClassifier {
-    static func kind(major: Int, minor: Int) -> BluetoothDeviceKind {
+package enum BluetoothDeviceClassifier {
+    package static func kind(major: Int, minor: Int) -> BluetoothDeviceKind {
         switch major {
         case BluetoothClassCodes.audio: .audio
         case BluetoothClassCodes.phone: .phone

@@ -1,13 +1,13 @@
 import SwiftUI
 
-struct ControlCentreTiles: View {
-    let wifi: WifiMonitor
-    let bluetooth: BluetoothMonitor
-    let sound: SoundMonitor
-    let brightness: BrightnessMonitor
-    let onExpandWifi: () -> Void
+package struct ControlCentreTiles: View {
+    package let wifi: WifiMonitor
+    package let bluetooth: BluetoothMonitor
+    package let sound: SoundMonitor
+    package let brightness: BrightnessMonitor
+    package let onExpandWifi: () -> Void
 
-    var body: some View {
+    package var body: some View {
         GlassEffectContainer(spacing: KbControlCentreMetrics.tileGap) {
             VStack(spacing: KbControlCentreMetrics.tileGap) {
                 SoundTile(monitor: sound)

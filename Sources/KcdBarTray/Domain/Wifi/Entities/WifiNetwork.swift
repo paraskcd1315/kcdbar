@@ -1,11 +1,11 @@
 import Foundation
 
-struct WifiNetwork: Equatable, Sendable, Identifiable {
-    let ssid: String
-    let rssi: Int
-    let isSecure: Bool
-    let isKnown: Bool
-    let isCurrent: Bool
+package struct WifiNetwork: Equatable, Sendable, Identifiable {
+    package let ssid: String
+    package let rssi: Int
+    package let isSecure: Bool
+    package let isKnown: Bool
+    package let isCurrent: Bool
 
-    var id: String { ssid }
+    package var id: String { ssid }
 }

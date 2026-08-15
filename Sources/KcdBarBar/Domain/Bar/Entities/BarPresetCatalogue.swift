@@ -1,7 +1,8 @@
 import CoreGraphics
+import KcdBarDesignSystem
 
-enum BarPresetCatalogue {
-    static let windows11 = BarPreset(
+package enum BarPresetCatalogue {
+    package static let windows11 = BarPreset(
         name: "windows11",
         edge: .bottom,
         alignment: .centered,
@@ -25,7 +26,7 @@ enum BarPresetCatalogue {
         showsDesktopButton: true
     )
 
-    static let windows10 = BarPreset(
+    package static let windows10 = BarPreset(
         name: "windows10",
         edge: .bottom,
         alignment: .leading,
@@ -49,7 +50,7 @@ enum BarPresetCatalogue {
         showsDesktopButton: true
     )
 
-    static let dock = BarPreset(
+    package static let dock = BarPreset(
         name: "dock",
         edge: .bottom,
         alignment: .centered,
@@ -73,7 +74,7 @@ enum BarPresetCatalogue {
         showsDesktopButton: false
     )
 
-    static let minimal = BarPreset(
+    package static let minimal = BarPreset(
         name: "minimal",
         edge: .top,
         alignment: .centered,
@@ -97,7 +98,7 @@ enum BarPresetCatalogue {
         showsDesktopButton: false
     )
 
-    static let all: [BarPreset] = [windows11, windows10, dock, minimal]
+    package static let all: [BarPreset] = [windows11, windows10, dock, minimal]
 
-    static let `default` = windows11
+    package static let `default` = windows11
 }

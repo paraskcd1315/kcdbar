@@ -1,5 +1,5 @@
 import CoreGraphics
 
-enum BarRevealMetrics {
-    static let edgeThreshold: CGFloat = 2
+package enum BarRevealMetrics {
+    package static let edgeThreshold: CGFloat = 2
 }

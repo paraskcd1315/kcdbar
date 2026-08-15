@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BluetoothTile: View {
-    let monitor: BluetoothMonitor
+package struct BluetoothTile: View {
+    package let monitor: BluetoothMonitor
 
-    var body: some View {
+    package var body: some View {
         KbTile {
             ConnectivityRow(
                 titleKey: "bluetooth.title",

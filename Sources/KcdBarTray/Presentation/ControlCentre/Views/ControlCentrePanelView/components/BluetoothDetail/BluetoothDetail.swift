@@ -1,11 +1,12 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BluetoothDetail: View {
-    let monitor: BluetoothMonitor
-    let onBack: () -> Void
-    let onOpenSettings: () -> Void
+package struct BluetoothDetail: View {
+    package let monitor: BluetoothMonitor
+    package let onBack: () -> Void
+    package let onOpenSettings: () -> Void
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             ControlCentreDetailHeader(
                 titleKey: "bluetooth.title",

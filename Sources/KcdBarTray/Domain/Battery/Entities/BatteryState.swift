@@ -1,15 +1,15 @@
 import Foundation
 
-struct BatteryState: Equatable, Sendable {
-    let isPresent: Bool
-    let percentage: Int
-    let isCharging: Bool
-    let isCharged: Bool
-    let isPluggedIn: Bool
-    let isLowPower: Bool
-    let minutesRemaining: Int?
+package struct BatteryState: Equatable, Sendable {
+    package let isPresent: Bool
+    package let percentage: Int
+    package let isCharging: Bool
+    package let isCharged: Bool
+    package let isPluggedIn: Bool
+    package let isLowPower: Bool
+    package let minutesRemaining: Int?
 
-    static let absent = BatteryState(
+    package static let absent = BatteryState(
         isPresent: false,
         percentage: 0,
         isCharging: false,

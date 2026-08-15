@@ -1,12 +1,12 @@
 import CoreGraphics
 
-struct CgWindowRecord: Equatable, Sendable {
-    let windowId: CGWindowID
-    let ownerPid: pid_t
-    let ownerName: String?
-    let title: String?
-    let bounds: CGRect
-    let layer: Int
-    let isOnScreen: Bool
-    let zOrder: Int
+package struct CgWindowRecord: Equatable, Sendable {
+    package let windowId: CGWindowID
+    package let ownerPid: pid_t
+    package let ownerName: String?
+    package let title: String?
+    package let bounds: CGRect
+    package let layer: Int
+    package let isOnScreen: Bool
+    package let zOrder: Int
 }

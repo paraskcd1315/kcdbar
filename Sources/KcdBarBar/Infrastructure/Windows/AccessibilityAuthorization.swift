@@ -1,12 +1,14 @@
 import ApplicationServices
 import Foundation
 
-struct AccessibilityAuthorization: AccessibilityAuthorizationPort {
-    var isTrusted: Bool {
+package struct AccessibilityAuthorization: AccessibilityAuthorizationPort {
+    package init() {}
+
+    package var isTrusted: Bool {
         AXIsProcessTrusted()
     }
 
-    func requestTrust() {
+    package func requestTrust() {
         let options = [SystemDefaultsKeys.accessibilityPrompt: true] as CFDictionary
         _ = AXIsProcessTrustedWithOptions(options)
     }

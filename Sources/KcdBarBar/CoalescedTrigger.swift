@@ -1,17 +1,17 @@
 import Foundation
 
 @MainActor
-final class CoalescedTrigger {
+package final class CoalescedTrigger {
     private let interval: TimeInterval
     private let action: () -> Void
     private var timer: Timer?
 
-    init(interval: TimeInterval, action: @escaping () -> Void) {
+    package init(interval: TimeInterval, action: @escaping () -> Void) {
         self.interval = interval
         self.action = action
     }
 
-    func fire() {
+    package func fire() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { [weak self] _ in
             MainActor.assumeIsolated {
@@ -21,7 +21,7 @@ final class CoalescedTrigger {
         }
     }
 
-    func cancel() {
+    package func cancel() {
         timer?.invalidate()
         timer = nil
     }

@@ -2,15 +2,15 @@ import CoreGraphics
 import Foundation
 
 @MainActor
-final class WindowOverlapEnforcer {
+package final class WindowOverlapEnforcer {
     private let control: any WindowControlPort
     private var lastCorrection: [String: Date] = [:]
 
-    init(control: any WindowControlPort) {
+    package init(control: any WindowControlPort) {
         self.control = control
     }
 
-    func enforce(preset: BarPreset, windows: [ManagedWindow], displays: [DisplayGeometry], now: Date) {
+    package func enforce(preset: BarPreset, windows: [ManagedWindow], displays: [DisplayGeometry], now: Date) {
         guard preset.overlap == .pushDisplayFillingWindows else { return }
 
         for window in windows {

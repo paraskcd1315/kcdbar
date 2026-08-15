@@ -1,10 +1,10 @@
 import Foundation
 
-struct WifiState: Equatable, Sendable {
-    let isAvailable: Bool
-    let isPowered: Bool
-    let ssid: String?
-    let rssi: Int
+package struct WifiState: Equatable, Sendable {
+    package let isAvailable: Bool
+    package let isPowered: Bool
+    package let ssid: String?
+    package let rssi: Int
 
-    static let unavailable = WifiState(isAvailable: false, isPowered: false, ssid: nil, rssi: 0)
+    package static let unavailable = WifiState(isAvailable: false, isPowered: false, ssid: nil, rssi: 0)
 }

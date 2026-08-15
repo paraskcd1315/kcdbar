@@ -2,16 +2,16 @@ import AppKit
 import CoreGraphics
 
 @MainActor
-enum ScreenCoordinateConverter {
-    static var flipReference: CGFloat {
+package enum ScreenCoordinateConverter {
+    package static var flipReference: CGFloat {
         NSScreen.screens.first?.frame.maxY ?? 0
     }
 
-    static func toCocoa(_ rect: CGRect) -> CGRect {
+    package static func toCocoa(_ rect: CGRect) -> CGRect {
         flip(rect)
     }
 
-    static func toAccessibility(_ rect: CGRect) -> CGRect {
+    package static func toAccessibility(_ rect: CGRect) -> CGRect {
         flip(rect)
     }
 

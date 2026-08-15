@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiNote: View {
-    let titleKey: LocalizedStringKey
+package struct WifiNote: View {
+    package let titleKey: LocalizedStringKey
 
-    var body: some View {
+    package var body: some View {
         Text(titleKey)
             .font(KbTypography.tileStatus)
             .foregroundStyle(KbColors.onSurfaceMuted)

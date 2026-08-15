@@ -1,7 +1,7 @@
 import Foundation
 
-enum ClockFormatting {
-    static func naturalDate(_ date: Date, calendar: Calendar = .current) -> String {
+package enum ClockFormatting {
+    package static func naturalDate(_ date: Date, calendar: Calendar = .current) -> String {
         let day = calendar.component(.day, from: date)
         let ordinalDay = ordinal.string(from: NSNumber(value: day)) ?? "\(day)"
         let monthAndYear = date.formatted(.dateTime.month(.abbreviated).year())

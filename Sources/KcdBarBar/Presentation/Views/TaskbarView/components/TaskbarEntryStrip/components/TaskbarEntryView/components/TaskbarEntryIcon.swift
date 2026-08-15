@@ -1,9 +1,9 @@
 import SwiftUI
 
-struct TaskbarEntryIcon: View {
-    let icon: Image?
+package struct TaskbarEntryIcon: View {
+    package let icon: Image?
 
-    var body: some View {
+    package var body: some View {
         Group {
             if let icon {
                 icon.resizable().interpolation(.high)

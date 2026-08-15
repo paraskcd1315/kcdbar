@@ -1,10 +1,14 @@
 import SwiftUI
 
 /** A rounded panel, optionally carrying a caret on its lower edge that points at the item that opened it. */
-struct KbPopoverShape: Shape {
-    let arrowX: CGFloat?
+package struct KbPopoverShape: Shape {
+    package let arrowX: CGFloat?
 
-    func path(in rect: CGRect) -> Path {
+    package init(arrowX: CGFloat?) {
+        self.arrowX = arrowX
+    }
+
+    package func path(in rect: CGRect) -> Path {
         let radius = KbRadii.lg
         guard let arrowX else {
             return Path(roundedRect: rect, cornerRadius: radius)

@@ -2,8 +2,10 @@ import AppKit
 import CoreGraphics
 import Foundation
 
-struct CoreGraphicsWindowSource: CgWindowSourcePort {
-    func currentWindows() -> [CgWindowRecord] {
+package struct CoreGraphicsWindowSource: CgWindowSourcePort {
+    package init() {}
+
+    package func currentWindows() -> [CgWindowRecord] {
         let options: CGWindowListOption = [.optionAll, .excludeDesktopElements]
         guard let entries = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
             return []

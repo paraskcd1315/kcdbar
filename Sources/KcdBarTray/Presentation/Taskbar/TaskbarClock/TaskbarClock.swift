@@ -1,11 +1,16 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarClock: View {
-    let onOpen: () -> Void
+package struct TaskbarClock: View {
+    package let onOpen: () -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package init(onOpen: @escaping () -> Void) {
+        self.onOpen = onOpen
+    }
+
+    package var body: some View {
         TimelineView(.everyMinute) { context in
             VStack(alignment: .trailing, spacing: 0) {
                 Text(context.date, format: .dateTime.hour().minute())

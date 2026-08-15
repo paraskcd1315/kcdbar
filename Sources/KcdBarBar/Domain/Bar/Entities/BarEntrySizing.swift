@@ -1,4 +1,4 @@
-enum BarEntrySizing: String, Codable, CaseIterable, Sendable {
+package enum BarEntrySizing: String, Codable, CaseIterable, Sendable {
     case fixed
     case magnifying
 }

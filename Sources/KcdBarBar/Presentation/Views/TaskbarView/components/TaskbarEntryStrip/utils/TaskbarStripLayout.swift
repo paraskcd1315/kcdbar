@@ -1,13 +1,13 @@
 import SwiftUI
 
-enum TaskbarStripLayout {
-    static let coordinateSpace = "taskbar.strip"
+package enum TaskbarStripLayout {
+    package static let coordinateSpace = "taskbar.strip"
 
-    static func expandsAlongBar(preset: BarPreset) -> Bool {
+    package static func expandsAlongBar(preset: BarPreset) -> Bool {
         preset.widthMode == .fullEdge
     }
 
-    static func alignment(preset: BarPreset) -> Alignment {
+    package static func alignment(preset: BarPreset) -> Alignment {
         switch preset.alignment {
         case .leading: preset.edge.isVertical ? .top : .leading
         case .centered: .center
@@ -15,7 +15,7 @@ enum TaskbarStripLayout {
         }
     }
 
-    static var insertion: AnyTransition {
+    package static var insertion: AnyTransition {
         .scale(scale: TaskbarMetrics.insertionScale, anchor: .center).combined(with: .opacity)
     }
 }

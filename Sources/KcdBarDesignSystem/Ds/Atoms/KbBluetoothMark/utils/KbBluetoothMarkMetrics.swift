@@ -1,6 +1,6 @@
 import CoreGraphics
 
-enum KbBluetoothMarkMetrics {
-    static let strokeRatio: CGFloat = 0.13
-    static let widthRatio: CGFloat = 0.62
+package enum KbBluetoothMarkMetrics {
+    package static let strokeRatio: CGFloat = 0.13
+    package static let widthRatio: CGFloat = 0.62
 }

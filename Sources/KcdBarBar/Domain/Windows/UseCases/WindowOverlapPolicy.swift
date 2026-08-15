@@ -1,7 +1,7 @@
 import CoreGraphics
 
-enum WindowOverlapPolicy {
-    static func correctedFrame(
+package enum WindowOverlapPolicy {
+    package static func correctedFrame(
         for window: ManagedWindow,
         barFrame: CGRect,
         display: DisplayGeometry
@@ -17,7 +17,7 @@ enum WindowOverlapPolicy {
         return corrected
     }
 
-    static func usableArea(of display: DisplayGeometry, excluding barFrame: CGRect) -> CGRect {
+    package static func usableArea(of display: DisplayGeometry, excluding barFrame: CGRect) -> CGRect {
         let screen = display.frame
         guard screen.intersects(barFrame) else { return screen }
 

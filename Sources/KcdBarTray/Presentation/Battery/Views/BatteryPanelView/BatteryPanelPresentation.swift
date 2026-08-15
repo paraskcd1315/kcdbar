@@ -2,8 +2,8 @@ import SwiftUI
 
 /** Builds the battery popover's content, so no AppKit host constructs a view. */
 @MainActor
-enum BatteryPanelPresentation {
-    static func content(
+package enum BatteryPanelPresentation {
+    package static func content(
         state: BatteryState,
         energyUsers: [EnergyUser],
         presentation: PopoverPresentation,

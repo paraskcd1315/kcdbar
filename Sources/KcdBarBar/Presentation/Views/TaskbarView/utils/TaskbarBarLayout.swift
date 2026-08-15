@@ -1,9 +1,9 @@
 import SwiftUI
 
-enum TaskbarBarLayout {
-    static let coordinateSpace = "kb.bar.panel"
+package enum TaskbarBarLayout {
+    package static let coordinateSpace = "kb.bar.panel"
 
-    static func appearOffset(edge: BarEdge, thickness: CGFloat) -> CGSize {
+    package static func appearOffset(edge: BarEdge, thickness: CGFloat) -> CGSize {
         switch edge {
         case .bottom: CGSize(width: 0, height: thickness)
         case .top: CGSize(width: 0, height: -thickness)
@@ -12,17 +12,17 @@ enum TaskbarBarLayout {
         }
     }
 
-    static func outsetPadding(attachment: BarAttachment) -> CGFloat {
+    package static func outsetPadding(attachment: BarAttachment) -> CGFloat {
         attachment == .floating ? TaskbarMetrics.islandOutset : 0
     }
 
-    static func fillsCrossAxis(_ axis: Axis.Set, preset: BarPreset) -> Bool {
+    package static func fillsCrossAxis(_ axis: Axis.Set, preset: BarPreset) -> Bool {
         let alongBar: Axis.Set = preset.edge.isVertical ? .vertical : .horizontal
         guard axis == alongBar else { return true }
         return preset.widthMode == .fullEdge
     }
 
-    static func contentAlignment(preset: BarPreset) -> Alignment {
+    package static func contentAlignment(preset: BarPreset) -> Alignment {
         preset.edge.isVertical
             ? Alignment(
                 horizontal: crossAxisHorizontal(preset: preset),
@@ -34,7 +34,7 @@ enum TaskbarBarLayout {
             )
     }
 
-    static func alongAxisHorizontal(alignment: BarAlignment) -> HorizontalAlignment {
+    package static func alongAxisHorizontal(alignment: BarAlignment) -> HorizontalAlignment {
         switch alignment {
         case .leading: .leading
         case .centered: .center
@@ -42,7 +42,7 @@ enum TaskbarBarLayout {
         }
     }
 
-    static func alongAxisVertical(alignment: BarAlignment) -> VerticalAlignment {
+    package static func alongAxisVertical(alignment: BarAlignment) -> VerticalAlignment {
         switch alignment {
         case .leading: .top
         case .centered: .center
@@ -50,12 +50,12 @@ enum TaskbarBarLayout {
         }
     }
 
-    static func crossAxisVertical(preset: BarPreset) -> VerticalAlignment {
+    package static func crossAxisVertical(preset: BarPreset) -> VerticalAlignment {
         guard preset.attachment == .edgeAttached else { return .center }
         return preset.edge == .top ? .top : .bottom
     }
 
-    static func crossAxisHorizontal(preset: BarPreset) -> HorizontalAlignment {
+    package static func crossAxisHorizontal(preset: BarPreset) -> HorizontalAlignment {
         guard preset.attachment == .edgeAttached else { return .center }
         return preset.edge == .leading ? .leading : .trailing
     }

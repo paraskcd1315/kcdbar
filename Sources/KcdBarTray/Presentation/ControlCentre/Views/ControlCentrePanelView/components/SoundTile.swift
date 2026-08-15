@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct SoundTile: View {
-    let monitor: SoundMonitor
+package struct SoundTile: View {
+    package let monitor: SoundMonitor
 
-    var body: some View {
+    package var body: some View {
         KbTile {
             VStack(alignment: .leading, spacing: KbSpacing.s4) {
                 Text("sound.title")

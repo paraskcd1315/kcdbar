@@ -4,12 +4,14 @@ import Foundation
 
 /** Opens another application's own New Window command, found by its key equivalent. */
 @MainActor
-final class AccessibilityNewWindow: NewWindowPort {
+package final class AccessibilityNewWindow: NewWindowPort {
+    package init() {}
+
     private var capability: [pid_t: Bool] = [:]
     private var pendingPlacement: [pid_t: CGRect] = [:]
     private var observers: [pid_t: AXObserver] = [:]
 
-    func supportsNewWindow(pid: pid_t) -> Bool {
+    package func supportsNewWindow(pid: pid_t) -> Bool {
         if let known = capability[pid] { return known }
 
         let supported = newWindowItem(pid: pid) != nil
@@ -18,7 +20,7 @@ final class AccessibilityNewWindow: NewWindowPort {
         return supported
     }
 
-    func openNewWindow(pid: pid_t, placingOn frame: CGRect) -> Bool {
+    package func openNewWindow(pid: pid_t, placingOn frame: CGRect) -> Bool {
         guard let item = newWindowItem(pid: pid) else { return false }
 
         pendingPlacement[pid] = frame
@@ -27,7 +29,7 @@ final class AccessibilityNewWindow: NewWindowPort {
         return AXUIElementPerformAction(item, kAXPressAction as CFString) == .success
     }
 
-    func forget(pid: pid_t) {
+    package func forget(pid: pid_t) {
         capability.removeValue(forKey: pid)
         pendingPlacement.removeValue(forKey: pid)
         observers.removeValue(forKey: pid)

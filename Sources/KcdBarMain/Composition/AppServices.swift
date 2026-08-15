@@ -1,31 +1,34 @@
 import AppKit
 import Foundation
+import KcdBarBar
+import KcdBarPreferences
+import KcdBarTray
 import SwiftUI
 
 /** The composition root, and the only place naming a concrete platform implementation. */
 @MainActor
-final class AppServices {
-    let icons: any ApplicationIconPort = WorkspaceIconSource()
-    let displays: any DisplayGeometryPort = ScreenGeometrySource()
-    let authorization: any AccessibilityAuthorizationPort = AccessibilityAuthorization()
-    let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
-    let registry: WindowRegistry
-    let battery = BatteryMonitor(source: IoKitBatterySource())
-    let batteryPanel = PopoverHost()
-    let controlCentrePanel = PopoverHost()
-    let wifi = WifiMonitor(source: CoreWlanSource())
-    let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
-    let sound = SoundMonitor(source: CoreAudioSoundSource())
-    let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
-    let pins: PinnedAppState
-    let order = EntryOrderMemory()
-    let desktop = ShowDesktopState()
-    let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
-    let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
-    let newWindow: any NewWindowPort = AccessibilityNewWindow()
+package final class AppServices {
+    package let icons: any ApplicationIconPort = WorkspaceIconSource()
+    package let displays: any DisplayGeometryPort = ScreenGeometrySource()
+    package let authorization: any AccessibilityAuthorizationPort = AccessibilityAuthorization()
+    package let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
+    package let registry: WindowRegistry
+    package let battery = BatteryMonitor(source: IoKitBatterySource())
+    package let batteryPanel = PopoverHost()
+    package let controlCentrePanel = PopoverHost()
+    package let wifi = WifiMonitor(source: CoreWlanSource())
+    package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
+    package let sound = SoundMonitor(source: CoreAudioSoundSource())
+    package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
+    package let pins: PinnedAppState
+    package let order = EntryOrderMemory()
+    package let desktop = ShowDesktopState()
+    package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
+    package let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
+    package let newWindow: any NewWindowPort = AccessibilityNewWindow()
 
-    let control: any WindowControlPort = AccessibilityWindowControl()
-    let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
+    package let control: any WindowControlPort = AccessibilityWindowControl()
+    package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
     private lazy var overlap = WindowOverlapEnforcer(control: control)
     private var activePreset = BarPresetCatalogue.default
     private lazy var coalesced = CoalescedTrigger(
@@ -34,13 +37,13 @@ final class AppServices {
         self?.refreshAndEnforce()
     }
 
-    private(set) var bar: (any BarPanelHostPort)?
+    package private(set) var bar: (any BarPanelHostPort)?
 
-    func scheduleRefresh() {
+    package func scheduleRefresh() {
         coalesced.fire()
     }
 
-    func refreshAndEnforce(now: Date = Date()) {
+    package func refreshAndEnforce(now: Date = Date()) {
         registry.refresh()
         battery.refresh()
         overlap.enforce(
@@ -56,7 +59,7 @@ final class AppServices {
         }
     }
 
-    func stopObserving() {
+    package func stopObserving() {
         coalesced.cancel()
         geometry.stop()
         changes.stopObserving()
@@ -79,7 +82,7 @@ final class AppServices {
         return OrderedKeys.deduped(launcherKeys + windowKeys + entryIds)
     }
 
-    func toggleShowDesktop() {
+    package func toggleShowDesktop() {
         if showDesktop.toggle() {
             desktop.setSystemShowingDesktop(!desktop.isShowingDesktop)
             return
@@ -111,7 +114,7 @@ final class AppServices {
         desktop.clear()
     }
 
-    func reorder(draggedKey: String, onto target: TaskbarEntryModel) {
+    package func reorder(draggedKey: String, onto target: TaskbarEntryModel) {
         order.move(key: draggedKey, onto: target.orderingKey)
         persistPinnedOrder()
     }
@@ -122,7 +125,7 @@ final class AppServices {
         Task { await pins.reorder(ordered) }
     }
 
-    func toggle(entryId: String) {
+    package func toggle(entryId: String) {
         guard let window = registry.window(withEntryId: entryId) else { return }
         let action = WindowToggleDecider.action(
             for: window,
@@ -133,7 +136,7 @@ final class AppServices {
         refreshAndEnforce()
     }
 
-    init() {
+    package init() {
         registry = WindowRegistry(
             coreGraphicsSource: CoreGraphicsWindowSource(),
             accessibilitySource: AccessibilityWindowSource(),
@@ -141,18 +144,17 @@ final class AppServices {
             displaySource: ScreenGeometrySource(),
             authorization: AccessibilityAuthorization()
         )
-        let container = KcdBarStore.opened()
-        store = container.map { KcdBarStore(modelContainer: $0) }
-        pins = PinnedAppState(store: store ?? EphemeralPinnedAppStore())
+        store = PreferencesStore.opened()
+        pins = PinnedAppState(store: store)
     }
 
-    func loadPreferences() async {
+    package func loadPreferences() async {
         await pins.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
         refreshAndEnforce()
     }
 
-    func activate(entry: TaskbarEntryModel, onDisplay displayId: Int) {
+    package func activate(entry: TaskbarEntryModel, onDisplay displayId: Int) {
         guard entry.isLauncher else {
             toggle(entryId: entry.id)
             return
@@ -165,7 +167,7 @@ final class AppServices {
         launcher.launch(bundleIdentifier: bundleIdentifier)
     }
 
-    func openNewInstance(entry: TaskbarEntryModel, onDisplay displayId: Int) {
+    package func openNewInstance(entry: TaskbarEntryModel, onDisplay displayId: Int) {
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
         guard let pid = registry.bundleIdentifiers.first(where: { $0.value == bundleIdentifier })?.key,
               let display = registry.displays.first(where: { $0.id == displayId }),
@@ -204,7 +206,7 @@ final class AppServices {
         return opened
     }
 
-    func openBatteryPanel() {
+    package func openBatteryPanel() {
         guard !batteryPanel.isPresented else {
             batteryPanel.dismiss()
             return
@@ -224,7 +226,7 @@ final class AppServices {
         }
     }
 
-    func openControlCentre() {
+    package func openControlCentre() {
         guard !controlCentrePanel.isPresented else {
             controlCentrePanel.dismiss()
             return
@@ -246,7 +248,7 @@ final class AppServices {
         }
     }
 
-    func togglePin(entry: TaskbarEntryModel) {
+    package func togglePin(entry: TaskbarEntryModel) {
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
         let name = entry.applicationName.isEmpty ? bundleIdentifier : entry.applicationName
 
@@ -259,7 +261,7 @@ final class AppServices {
         }
     }
 
-    func startBar(preset: BarPreset) {
+    package func startBar(preset: BarPreset) {
         activePreset = preset
         let host = BarPanelHost(
             registry: registry,
@@ -290,5 +292,5 @@ final class AppServices {
         bar = host
     }
 
-    private let store: KcdBarStore?
+    private let store: any PinnedAppStorePort
 }

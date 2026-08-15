@@ -1,15 +1,20 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarControlCentreButton: View {
-    let onOpen: () -> Void
+package struct TaskbarControlCentreButton: View {
+    package let onOpen: () -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
-        Image(systemName: "switch.2")
+    package init(onOpen: @escaping () -> Void) {
+        self.onOpen = onOpen
+    }
+
+    package var body: some View {
+        Image(systemName: TrayItemMetrics.glyphSymbol)
             .font(KbTypography.controlCentreGlyph)
             .foregroundStyle(KbColors.onSurface)
-            .frame(width: TaskbarMetrics.controlCentreWidth)
+            .frame(width: TrayItemMetrics.controlCentreWidth)
             .padding(.vertical, KbSpacing.s2)
             .contentShape(shape)
             .onTapGesture(perform: onOpen)

@@ -1,10 +1,11 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarNoticeView: View {
-    let notice: TaskbarNotice
-    let onAct: () -> Void
+package struct TaskbarNoticeView: View {
+    package let notice: TaskbarNotice
+    package let onAct: () -> Void
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: KbSpacing.s3) {
             Image(systemName: notice.symbolName)
                 .foregroundStyle(KbColors.onSurfaceMuted)

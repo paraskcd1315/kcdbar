@@ -3,11 +3,11 @@ import CoreWLAN
 import Foundation
 
 @MainActor
-final class CoreWlanSource: NSObject, WifiPort {
+package final class CoreWlanSource: NSObject, WifiPort {
     private let client = CWWiFiClient.shared()
     private let location = CLLocationManager()
 
-    func state() -> WifiState {
+    package func state() -> WifiState {
         guard let interface = client.interface() else { return .unavailable }
 
         return WifiState(
@@ -18,7 +18,7 @@ final class CoreWlanSource: NSObject, WifiPort {
         )
     }
 
-    func setPower(_ isOn: Bool) -> Bool {
+    package func setPower(_ isOn: Bool) -> Bool {
         guard let interface = client.interface() else { return false }
 
         do {
@@ -29,7 +29,7 @@ final class CoreWlanSource: NSObject, WifiPort {
         }
     }
 
-    func knownNetworks() -> [WifiNetwork] {
+    package func knownNetworks() -> [WifiNetwork] {
         guard let interface = client.interface(),
               let profiles = interface.configuration()?.networkProfiles.array as? [CWNetworkProfile]
         else {
@@ -50,7 +50,7 @@ final class CoreWlanSource: NSObject, WifiPort {
         }
     }
 
-    func scan() async -> [WifiNetwork] {
+    package func scan() async -> [WifiNetwork] {
         requestLocationIfNeeded()
         guard client.interface() != nil else { return [] }
 

@@ -1,8 +1,8 @@
 import AppKit
 import SwiftUI
 
-final class BarHostingView<Content: View>: NSHostingView<Content> {
-    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+package final class BarHostingView<Content: View>: NSHostingView<Content> {
+    package override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
         true
     }
 }

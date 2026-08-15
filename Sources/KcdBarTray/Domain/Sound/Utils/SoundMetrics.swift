@@ -1,13 +1,13 @@
-enum SoundMetrics {
-    static let mutedSymbol = "speaker.slash.fill"
-    static let quietSymbol = "speaker.fill"
-    static let mediumSymbol = "speaker.wave.2.fill"
-    static let loudSymbol = "speaker.wave.3.fill"
+package enum SoundMetrics {
+    package static let mutedSymbol = "speaker.slash.fill"
+    package static let quietSymbol = "speaker.fill"
+    package static let mediumSymbol = "speaker.wave.2.fill"
+    package static let loudSymbol = "speaker.wave.3.fill"
 
-    static let quietCeiling = 0.01
-    static let mediumCeiling = 0.5
+    package static let quietCeiling = 0.01
+    package static let mediumCeiling = 0.5
 
-    static func symbol(volume: Double, isMuted: Bool) -> String {
+    package static func symbol(volume: Double, isMuted: Bool) -> String {
         guard !isMuted else { return mutedSymbol }
         if volume <= quietCeiling { return quietSymbol }
         if volume <= mediumCeiling { return mediumSymbol }

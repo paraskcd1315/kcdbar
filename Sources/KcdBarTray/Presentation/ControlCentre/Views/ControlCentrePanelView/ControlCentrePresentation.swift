@@ -2,8 +2,8 @@ import SwiftUI
 
 /** Builds the control centre's content, so no AppKit host constructs a view. */
 @MainActor
-enum ControlCentrePresentation {
-    static func content(
+package enum ControlCentrePresentation {
+    package static func content(
         wifi: WifiMonitor,
         bluetooth: BluetoothMonitor,
         sound: SoundMonitor,

@@ -1,17 +1,17 @@
 import Foundation
 
-enum TaskbarOrdering {
-    static func applicationKey(_ bundleIdentifier: String) -> String {
+package enum TaskbarOrdering {
+    package static func applicationKey(_ bundleIdentifier: String) -> String {
         "app:\(bundleIdentifier)"
     }
 
-    static func orderingKey(bundleIdentifier: String?, entryId: String) -> String {
+    package static func orderingKey(bundleIdentifier: String?, entryId: String) -> String {
         guard let bundleIdentifier else { return entryId }
 
         return applicationKey(bundleIdentifier)
     }
 
-    static func ordered(
+    package static func ordered(
         entries: [TaskbarEntryModel],
         ranks: [String: Int]
     ) -> [TaskbarEntryModel] {

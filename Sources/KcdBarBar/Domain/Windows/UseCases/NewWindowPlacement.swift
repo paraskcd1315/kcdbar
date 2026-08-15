@@ -1,8 +1,8 @@
 import Foundation
 
 /** Whether an application already has a window on the display the user clicked. */
-enum NewWindowPlacement {
-    static func hasWindow(
+package enum NewWindowPlacement {
+    package static func hasWindow(
         pid: pid_t,
         onDisplay displayId: Int,
         among entries: [ManagedWindow],

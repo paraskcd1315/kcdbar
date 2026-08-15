@@ -1,11 +1,12 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BatteryPanelSurface: View {
-    let state: BatteryState
-    let energyUsers: [EnergyUser]
-    let arrowX: CGFloat
+package struct BatteryPanelSurface: View {
+    package let state: BatteryState
+    package let energyUsers: [EnergyUser]
+    package let arrowX: CGFloat
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s5) {
             BatteryPanelHeader(state: state)
             if !energyUsers.isEmpty {

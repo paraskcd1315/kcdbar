@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BatteryPanelEnergyList: View {
-    let users: [EnergyUser]
+package struct BatteryPanelEnergyList: View {
+    package let users: [EnergyUser]
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             Text("battery.energy.heading")
                 .font(KbTypography.panelDetail)

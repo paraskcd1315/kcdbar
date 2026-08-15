@@ -1,20 +1,23 @@
 import AppKit
+import KcdBarDesignSystem
 import SwiftUI
 
 /** Hosts one popover panel, anchored above a bar item, growing upward from its lower edge. */
 @MainActor
-final class PopoverHost {
+package final class PopoverHost {
+    package init() {}
+
     private var panel: NSPanel?
     private var presentation: PopoverPresentation?
     private var dismissMonitor: Any?
     private var anchor: NSPoint = .zero
     private var isClosing = false
 
-    var isPresented: Bool {
+    package var isPresented: Bool {
         panel != nil && !isClosing
     }
 
-    func present(
+    package func present(
         anchor: NSPoint,
         content: @escaping (PopoverPresentation, CGFloat) -> AnyView
     ) {
@@ -49,7 +52,7 @@ final class PopoverHost {
         }
     }
 
-    func dismiss() {
+    package func dismiss() {
         guard let panel, let presentation, !isClosing else { return }
 
         stopMonitor()

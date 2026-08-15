@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BluetoothDeviceList: View {
-    let devices: [BluetoothDevice]
+package struct BluetoothDeviceList: View {
+    package let devices: [BluetoothDevice]
 
-    var body: some View {
+    package var body: some View {
         if devices.isEmpty {
             Text("bluetooth.none")
                 .font(KbTypography.tileStatus)

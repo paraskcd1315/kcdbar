@@ -2,13 +2,13 @@ import AppKit
 import SwiftUI
 
 @MainActor
-final class WorkspaceIconSource: ApplicationIconPort {
+package final class WorkspaceIconSource: ApplicationIconPort {
     private var byPid: [pid_t: Image] = [:]
     private var byBundle: [String: Image] = [:]
     private var themeObserver: NSObjectProtocol?
     private var iconAppearance: String?
 
-    init() {
+    package init() {
         iconAppearance = Self.currentIconAppearance
         themeObserver = DistributedNotificationCenter.default().addObserver(
             forName: Notification.Name(SystemDefaultsKeys.interfaceThemeChanged),
@@ -31,7 +31,7 @@ final class WorkspaceIconSource: ApplicationIconPort {
         forget()
     }
 
-    func icon(forPid pid: pid_t) -> Image? {
+    package func icon(forPid pid: pid_t) -> Image? {
         forgetIfAppearanceChanged()
 
         if let cached = byPid[pid] { return cached }
@@ -46,7 +46,7 @@ final class WorkspaceIconSource: ApplicationIconPort {
         return image
     }
 
-    func icon(forBundleIdentifier bundleIdentifier: String) -> Image? {
+    package func icon(forBundleIdentifier bundleIdentifier: String) -> Image? {
         forgetIfAppearanceChanged()
 
         if let cached = byBundle[bundleIdentifier] { return cached }

@@ -1,12 +1,13 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct ControlCentreSettingsRow: View {
-    let titleKey: LocalizedStringKey
-    let onOpen: () -> Void
+package struct ControlCentreSettingsRow: View {
+    package let titleKey: LocalizedStringKey
+    package let onOpen: () -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s2) {
             Rectangle()
                 .fill(KbColors.separator)

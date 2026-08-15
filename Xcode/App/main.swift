@@ -1,0 +1,3 @@
+import KcdBarMain
+
+KcdBarLauncher.run()

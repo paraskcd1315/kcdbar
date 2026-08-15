@@ -5,17 +5,19 @@ private typealias SetControllerPowerStateFn = @convention(c) (Int32) -> Int32
 
 /** Bluetooth power: the read is public, the write is a DisplayServices-style private symbol. */
 @MainActor
-struct IoBluetoothSource: BluetoothPort {
+package struct IoBluetoothSource: BluetoothPort {
+    package init() {}
+
     private static let setPowerState: SetControllerPowerStateFn? = {
-        guard let handle = dlopen(PrivateFrameworks.ioBluetooth, RTLD_LAZY),
-              let address = dlsym(handle, PrivateFrameworks.bluetoothSetControllerPowerState)
+        guard let handle = dlopen(TrayPrivateFrameworks.ioBluetooth, RTLD_LAZY),
+              let address = dlsym(handle, TrayPrivateFrameworks.setControllerPowerState)
         else {
             return nil
         }
         return unsafeBitCast(address, to: SetControllerPowerStateFn.self)
     }()
 
-    func state() -> BluetoothState {
+    package func state() -> BluetoothState {
         guard let controller = IOBluetoothHostController.default() else { return .unavailable }
 
         return BluetoothState(
@@ -24,7 +26,7 @@ struct IoBluetoothSource: BluetoothPort {
         )
     }
 
-    func devices() -> [BluetoothDevice] {
+    package func devices() -> [BluetoothDevice] {
         guard let paired = IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice] else {
             return []
         }
@@ -32,7 +34,7 @@ struct IoBluetoothSource: BluetoothPort {
         return BluetoothStyle.ordered(paired.compactMap(Self.device))
     }
 
-    func setPower(_ isOn: Bool) -> Bool {
+    package func setPower(_ isOn: Bool) -> Bool {
         guard let setPowerState = Self.setPowerState else { return false }
 
         _ = setPowerState(isOn ? BluetoothClassCodes.powerOn : BluetoothClassCodes.powerOff)

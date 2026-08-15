@@ -1,11 +1,11 @@
 import Foundation
 
 /** One application's adjacent entries on a display, sharing an ordering slot. */
-struct TaskbarEntryGroup: Identifiable, Equatable {
-    let id: String
-    let entries: [TaskbarEntryModel]
+package struct TaskbarEntryGroup: Identifiable, Equatable {
+    package let id: String
+    package let entries: [TaskbarEntryModel]
 
-    var isBanded: Bool {
+    package var isBanded: Bool {
         entries.count > 1
     }
 }

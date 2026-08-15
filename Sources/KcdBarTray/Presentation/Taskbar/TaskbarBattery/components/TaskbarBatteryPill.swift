@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarBatteryPill: View {
-    let state: BatteryState
+package struct TaskbarBatteryPill: View {
+    package let state: BatteryState
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: BatteryMetrics.capGap) {
             ZStack {
                 RoundedRectangle(cornerRadius: BatteryMetrics.pillRadius)

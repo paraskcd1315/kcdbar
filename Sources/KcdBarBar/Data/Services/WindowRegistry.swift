@@ -3,20 +3,20 @@ import Observation
 
 @MainActor
 @Observable
-final class WindowRegistry {
-    private(set) var windows: [ManagedWindow] = []
-    private(set) var displays: [DisplayGeometry] = []
-    private(set) var frontmostPid: pid_t?
-    private(set) var hasAccessibility = false
-    private(set) var bundleIdentifiers: [pid_t: String] = [:]
-    private(set) var lastRefreshDuration: TimeInterval = 0
-    private(set) var lastScanCounts: WindowScanCounts = .empty
+package final class WindowRegistry {
+    package private(set) var windows: [ManagedWindow] = []
+    package private(set) var displays: [DisplayGeometry] = []
+    package private(set) var frontmostPid: pid_t?
+    package private(set) var hasAccessibility = false
+    package private(set) var bundleIdentifiers: [pid_t: String] = [:]
+    package private(set) var lastRefreshDuration: TimeInterval = 0
+    package private(set) var lastScanCounts: WindowScanCounts = .empty
 
-    var taskbarEntries: [ManagedWindow] {
+    package var taskbarEntries: [ManagedWindow] {
         WindowPresentationPolicy.taskbarEntries(from: windows)
     }
 
-    func window(withEntryId entryId: String) -> ManagedWindow? {
+    package func window(withEntryId entryId: String) -> ManagedWindow? {
         windows.first { WindowEntryIdentifier.text(for: $0.identity) == entryId }
     }
 
@@ -26,7 +26,7 @@ final class WindowRegistry {
     private let displaySource: any DisplayGeometryPort
     private let authorization: any AccessibilityAuthorizationPort
 
-    init(
+    package init(
         coreGraphicsSource: CgWindowSourcePort,
         accessibilitySource: AxWindowSourcePort,
         applicationsSource: RunningApplicationsPort,
@@ -46,7 +46,7 @@ final class WindowRegistry {
         return Array(owners.union(windows.map(\.ownerPid)))
     }
 
-    func refresh() {
+    package func refresh() {
         let started = Date()
         hasAccessibility = authorization.isTrusted
         displays = displaySource.currentDisplays()

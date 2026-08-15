@@ -1,16 +1,17 @@
 import Foundation
 import SwiftData
+import KcdBarBar
 
 /** The Dock settings KCDBar found before it changed anything. */
 @Model
-final class StoredDockSnapshot {
-    @Attribute(.unique) var id: String
-    var payload: Data
+package final class StoredDockSnapshot {
+    @Attribute(.unique) package var id: String
+    package var payload: Data
 
-    init(payload: Data) {
+    package init(payload: Data) {
         self.id = StoredDockSnapshot.singletonKey
         self.payload = payload
     }
 
-    static let singletonKey = "dock-snapshot"
+    package static let singletonKey = "dock-snapshot"
 }

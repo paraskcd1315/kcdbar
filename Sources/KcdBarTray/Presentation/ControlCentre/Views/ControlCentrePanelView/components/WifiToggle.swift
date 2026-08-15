@@ -1,10 +1,11 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiToggle: View {
-    let isOn: Bool
-    let onToggle: (Bool) -> Void
+package struct WifiToggle: View {
+    package let isOn: Bool
+    package let onToggle: (Bool) -> Void
 
-    var body: some View {
+    package var body: some View {
         Capsule()
             .fill(isOn ? KbColors.brand : KbColors.surfaceRaised)
             .frame(width: KbControlCentreMetrics.toggleWidth, height: KbControlCentreMetrics.toggleHeight)

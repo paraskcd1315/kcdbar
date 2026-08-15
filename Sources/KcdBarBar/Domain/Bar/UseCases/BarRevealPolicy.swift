@@ -1,8 +1,8 @@
 import CoreGraphics
 
 /** Whether a hidden bar should come back for a pointer at its screen edge. */
-enum BarRevealPolicy {
-    static func shouldReveal(
+package enum BarRevealPolicy {
+    package static func shouldReveal(
         pointer: CGPoint,
         barFrame: CGRect,
         display: DisplayGeometry,
@@ -22,7 +22,7 @@ enum BarRevealPolicy {
         }
     }
 
-    static func concealedFrame(_ frame: CGRect, edge: BarEdge) -> CGRect {
+    package static func concealedFrame(_ frame: CGRect, edge: BarEdge) -> CGRect {
         switch edge {
         case .bottom: frame.offsetBy(dx: 0, dy: -frame.height)
         case .top: frame.offsetBy(dx: 0, dy: frame.height)

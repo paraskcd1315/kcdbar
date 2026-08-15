@@ -2,8 +2,10 @@ import AppKit
 import ApplicationServices
 
 @MainActor
-struct AccessibilityWindowControl: WindowControlPort {
-    func perform(_ action: WindowToggleAction, on window: ManagedWindow) -> Bool {
+package struct AccessibilityWindowControl: WindowControlPort {
+    package init() {}
+
+    package func perform(_ action: WindowToggleAction, on window: ManagedWindow) -> Bool {
         guard let element = element(for: window) else { return false }
         switch action {
         case .minimize:
@@ -16,7 +18,7 @@ struct AccessibilityWindowControl: WindowControlPort {
         }
     }
 
-    func close(_ window: ManagedWindow) -> Bool {
+    package func close(_ window: ManagedWindow) -> Bool {
         guard let element = element(for: window),
               let button = copyValue(from: element, attribute: kAXCloseButtonAttribute)
         else {
@@ -25,7 +27,7 @@ struct AccessibilityWindowControl: WindowControlPort {
         return AXUIElementPerformAction(button as! AXUIElement, kAXPressAction as CFString) == .success
     }
 
-    func setFrame(_ frame: CGRect, on window: ManagedWindow) -> Bool {
+    package func setFrame(_ frame: CGRect, on window: ManagedWindow) -> Bool {
         guard let element = element(for: window) else { return false }
         let target = ScreenCoordinateConverter.toAccessibility(frame)
         var origin = target.origin

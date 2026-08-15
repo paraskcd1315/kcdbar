@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct TaskbarDesktopCap: View {
-    let preset: BarPreset
-    let isShowingDesktop: Bool
-    let onToggle: () -> Void
+package struct TaskbarDesktopCap: View {
+    package let preset: BarPreset
+    package let isShowingDesktop: Bool
+    package let onToggle: () -> Void
 
-    var body: some View {
+    package var body: some View {
         TaskbarShowDesktopButton(
             isShowingDesktop: isShowingDesktop,
             shape: KbBarShape.trailingCap(

@@ -1,17 +1,17 @@
 import AppKit
 import SwiftUI
 
-struct MiddleClickView: NSViewRepresentable {
-    let action: () -> Void
+package struct MiddleClickView: NSViewRepresentable {
+    package let action: () -> Void
 
-    func makeNSView(context: Context) -> MiddleClickCatchingView {
+    package func makeNSView(context: Context) -> MiddleClickCatchingView {
         let view = MiddleClickCatchingView()
         view.action = action
 
         return view
     }
 
-    func updateNSView(_ view: MiddleClickCatchingView, context: Context) {
+    package func updateNSView(_ view: MiddleClickCatchingView, context: Context) {
         view.action = action
     }
 }

@@ -1,4 +1,4 @@
 @MainActor
-protocol DisplayGeometryPort {
+package protocol DisplayGeometryPort {
     func currentDisplays() -> [DisplayGeometry]
 }

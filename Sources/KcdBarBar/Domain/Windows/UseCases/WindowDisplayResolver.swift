@@ -1,8 +1,8 @@
 import CoreGraphics
 
 /** Assigns a window to the display it mostly occupies. */
-enum WindowDisplayResolver {
-    static func displayId(for window: ManagedWindow, in displays: [DisplayGeometry]) -> Int? {
+package enum WindowDisplayResolver {
+    package static func displayId(for window: ManagedWindow, in displays: [DisplayGeometry]) -> Int? {
         guard let bounds = window.bounds else { return displays.first(where: \.isPrimary)?.id }
         let overlaps = displays
             .map { ($0.id, $0.frame.intersection(bounds)) }
@@ -13,7 +13,7 @@ enum WindowDisplayResolver {
         return best.0
     }
 
-    static func windows(
+    package static func windows(
         _ windows: [ManagedWindow],
         onDisplay displayId: Int,
         scope: BarWindowScope,

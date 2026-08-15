@@ -1,8 +1,10 @@
 import Foundation
 import IOKit.ps
 
-struct IoKitBatterySource: BatteryPort {
-    func state() -> BatteryState {
+package struct IoKitBatterySource: BatteryPort {
+    package init() {}
+
+    package func state() -> BatteryState {
         guard let snapshot = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
               let sources = IOPSCopyPowerSourcesList(snapshot)?.takeRetainedValue() as? [CFTypeRef]
         else {
@@ -37,7 +39,7 @@ struct IoKitBatterySource: BatteryPort {
         return .absent
     }
 
-    func energyUsers() async -> [EnergyUser] {
+    package func energyUsers() async -> [EnergyUser] {
         await TopEnergySampler.sample()
     }
 

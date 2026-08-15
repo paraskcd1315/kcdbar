@@ -1,24 +1,26 @@
+import KcdBarDesignSystem
+import KcdBarTray
 import SwiftUI
 
-struct TaskbarView: View {
-    let viewModel: TaskbarViewModel
-    let onActivate: (TaskbarEntryModel) -> Void
-    let onRequestAccessibility: () -> Void
-    let onOpenStart: () -> Void
-    let onTogglePin: (TaskbarEntryModel) -> Void
-    let onDropPin: (String, TaskbarEntryModel) -> Void
-    let onMiddleClick: (TaskbarEntryModel) -> Void
-    let battery: BatteryState
-    let onOpenBattery: () -> Void
-    let onOpenNotifications: () -> Void
-    let onOpenControlCentre: () -> Void
-    let isShowingDesktop: Bool
-    let onToggleDesktop: () -> Void
-    let onBarFrameChange: (CGRect) -> Void
+package struct TaskbarView: View {
+    package let viewModel: TaskbarViewModel
+    package let onActivate: (TaskbarEntryModel) -> Void
+    package let onRequestAccessibility: () -> Void
+    package let onOpenStart: () -> Void
+    package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onDropPin: (String, TaskbarEntryModel) -> Void
+    package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let battery: BatteryState
+    package let onOpenBattery: () -> Void
+    package let onOpenNotifications: () -> Void
+    package let onOpenControlCentre: () -> Void
+    package let isShowingDesktop: Bool
+    package let onToggleDesktop: () -> Void
+    package let onBarFrameChange: (CGRect) -> Void
 
     @State private var hasAppeared = false
 
-    var body: some View {
+    package var body: some View {
         KbBarSurface(
             material: viewModel.preset.material,
             edge: viewModel.preset.edge,

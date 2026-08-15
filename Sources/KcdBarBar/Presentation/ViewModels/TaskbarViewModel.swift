@@ -1,12 +1,12 @@
 import SwiftUI
 
 @MainActor
-struct TaskbarViewModel {
-    let preset: BarPreset
-    let entries: [TaskbarEntryModel]
-    let notice: TaskbarNotice?
+package struct TaskbarViewModel {
+    package let preset: BarPreset
+    package let entries: [TaskbarEntryModel]
+    package let notice: TaskbarNotice?
 
-    init(
+    package init(
         preset: BarPreset,
         windows: [ManagedWindow],
         displayId: Int,

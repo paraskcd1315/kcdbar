@@ -1,18 +1,24 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarBattery: View {
-    let state: BatteryState
-    let onOpen: () -> Void
+package struct TaskbarBattery: View {
+    package let state: BatteryState
+    package let onOpen: () -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package init(state: BatteryState, onOpen: @escaping () -> Void) {
+        self.state = state
+        self.onOpen = onOpen
+    }
+
+    package var body: some View {
         HStack(spacing: KbSpacing.s1) {
             TaskbarBatteryPill(state: state)
             if let symbol = powerSymbol {
                 Image(systemName: symbol)
                     .font(KbTypography.batteryReadout)
-                    .foregroundStyle(KbColors.battery(BatteryStyle.tone(for: state)))
+                    .foregroundStyle(BatteryTint.colour(for: BatteryStyle.tone(for: state)))
             }
         }
         .padding(.horizontal, KbSpacing.s2)

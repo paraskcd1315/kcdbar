@@ -1,13 +1,14 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiDetailHeader: View {
-    let isPowered: Bool
-    let onBack: () -> Void
-    let onSetPower: (Bool) -> Void
+package struct WifiDetailHeader: View {
+    package let isPowered: Bool
+    package let onBack: () -> Void
+    package let onSetPower: (Bool) -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: KbSpacing.s5) {
             HStack(spacing: KbSpacing.s3) {
                 Image(systemName: KbControlCentreMetrics.backSymbol)

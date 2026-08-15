@@ -1,10 +1,11 @@
 import AppKit
+import KcdBarBar
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+package final class AppDelegate: NSObject, NSApplicationDelegate {
     private let services = AppServices()
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    package func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
 
         if !services.authorization.isTrusted {
@@ -19,7 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
+    package func applicationWillTerminate(_ notification: Notification) {
         services.stopObserving()
         services.bar?.dismiss()
     }

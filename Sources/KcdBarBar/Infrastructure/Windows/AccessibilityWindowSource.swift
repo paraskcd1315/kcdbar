@@ -2,7 +2,9 @@ import ApplicationServices
 import CoreGraphics
 import Foundation
 
-struct AccessibilityWindowSource: AxWindowSourcePort {
+package struct AccessibilityWindowSource: AxWindowSourcePort {
+    package init() {}
+
     private static let attributeNames = [
         kAXTitleAttribute,
         kAXRoleAttribute,
@@ -13,7 +15,7 @@ struct AccessibilityWindowSource: AxWindowSourcePort {
         WindowMatchingMetrics.fullScreenAttribute
     ]
 
-    func windows(forPids pids: [pid_t]) -> [AxWindowRecord] {
+    package func windows(forPids pids: [pid_t]) -> [AxWindowRecord] {
         pids.flatMap(windows(forPid:))
     }
 

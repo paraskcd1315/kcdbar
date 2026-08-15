@@ -1,8 +1,8 @@
 import SwiftUI
 
 /** The Bluetooth rune, which SF Symbols does not ship. */
-struct KbBluetoothShape: Shape {
-    func path(in rect: CGRect) -> Path {
+package struct KbBluetoothShape: Shape {
+    package func path(in rect: CGRect) -> Path {
         var path = Path()
         path.move(to: point(rect, 0.16, 0.30))
         path.addLine(to: point(rect, 0.84, 0.70))

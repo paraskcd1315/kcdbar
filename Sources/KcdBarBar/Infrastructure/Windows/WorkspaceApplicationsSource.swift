@@ -1,7 +1,9 @@
 import AppKit
 
-struct WorkspaceApplicationsSource: RunningApplicationsPort {
-    func currentApplications() -> [RunningApplication] {
+package struct WorkspaceApplicationsSource: RunningApplicationsPort {
+    package init() {}
+
+    package func currentApplications() -> [RunningApplication] {
         NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
             .map {
@@ -13,7 +15,7 @@ struct WorkspaceApplicationsSource: RunningApplicationsPort {
             }
     }
 
-    var frontmostPid: pid_t? {
+    package var frontmostPid: pid_t? {
         NSWorkspace.shared.frontmostApplication?.processIdentifier
     }
 }

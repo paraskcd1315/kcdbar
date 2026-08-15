@@ -1,10 +1,11 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiTile: View {
-    let monitor: WifiMonitor
-    let onExpand: () -> Void
+package struct WifiTile: View {
+    package let monitor: WifiMonitor
+    package let onExpand: () -> Void
 
-    var body: some View {
+    package var body: some View {
         KbTile {
             ConnectivityRow(
                 titleKey: "wifi.title",

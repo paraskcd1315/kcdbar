@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiKnownList: View {
-    let networks: [WifiNetwork]
+package struct WifiKnownList: View {
+    package let networks: [WifiNetwork]
 
-    var body: some View {
+    package var body: some View {
         if !networks.isEmpty {
             Text("wifi.section.known")
                 .font(KbTypography.tileStatus)
