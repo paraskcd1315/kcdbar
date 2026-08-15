@@ -3,6 +3,7 @@ import Foundation
 
 package enum BatteryMetrics {
     package static let fullCharge = 100.0
+    package static let skeletonWidths: [CGFloat] = [118, 92, 134]
 
     package static let criticalPercentage = 10
     package static let warningPercentage = 25

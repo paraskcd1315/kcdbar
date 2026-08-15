@@ -220,19 +220,15 @@ package final class AppServices {
             batteryPanel.dismiss()
             return
         }
-        let anchor = NSEvent.mouseLocation
-
-        Task {
-            await battery.sampleEnergy()
-            batteryPanel.present(anchor: anchor) { [battery] presentation, arrowX in
-                BatteryPanelPresentation.content(
-                    state: battery.state,
-                    energyUsers: battery.energyUsers,
-                    presentation: presentation,
-                    arrowX: arrowX
-                )
-            }
+        battery.refresh()
+        batteryPanel.present(anchor: NSEvent.mouseLocation) { [battery] presentation, arrowX in
+            BatteryPanelPresentation.content(
+                monitor: battery,
+                presentation: presentation,
+                arrowX: arrowX
+            )
         }
+        Task { await battery.sampleEnergy() }
     }
 
     package func openControlCentre() {

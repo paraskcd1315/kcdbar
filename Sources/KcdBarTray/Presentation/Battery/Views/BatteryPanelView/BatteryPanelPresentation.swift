@@ -4,15 +4,15 @@ import SwiftUI
 @MainActor
 package enum BatteryPanelPresentation {
     package static func content(
-        state: BatteryState,
-        energyUsers: [EnergyUser],
+        monitor: BatteryMonitor,
         presentation: PopoverPresentation,
         arrowX: CGFloat
     ) -> AnyView {
         AnyView(
             BatteryPanelView(
-                state: state,
-                energyUsers: energyUsers,
+                state: monitor.state,
+                energyUsers: monitor.energyUsers,
+                isSampling: monitor.isSamplingEnergy,
                 arrowX: arrowX,
                 presentation: presentation
             )
