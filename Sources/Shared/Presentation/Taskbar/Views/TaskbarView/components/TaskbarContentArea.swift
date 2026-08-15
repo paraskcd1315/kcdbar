@@ -8,7 +8,6 @@ struct TaskbarContentArea: View {
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onMiddleClick: (TaskbarEntryModel) -> Void
-    let onPressTrayItem: (TrayItemModel) -> Void
 
     var body: some View {
         Group {
@@ -22,7 +21,6 @@ struct TaskbarContentArea: View {
                     onTogglePin: onTogglePin,
                     onDropPin: onDropPin,
                     onMiddleClick: onMiddleClick,
-                    onPressTrayItem: onPressTrayItem
                 )
             }
         }

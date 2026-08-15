@@ -51,7 +51,6 @@ targets:
       - path: Tests
       - path: Sources/Shared/Domain/Windows
       - path: Sources/Shared/Domain/Bar
-      - path: Sources/Shared/Domain/Tray
       - path: Sources/Shared/Ui/Theme/KbSpacing.swift
       - path: Sources/Shared/Ui/Theme/KbRadii.swift
       - path: Sources/Shared/Presentation/Taskbar/Utils/TaskbarOrdering.swift
