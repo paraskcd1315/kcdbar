@@ -15,27 +15,27 @@ struct TaskbarEntryStrip: View {
 
     var body: some View {
         KbAxisStack(isVertical: preset.edge.isVertical, spacing: preset.entrySpacing) {
-            ForEach(previewed) { entry in
-                TaskbarEntryView(
-                    entry: entry,
+            ForEach(groups) { group in
+                TaskbarEntryBand(
+                    group: group,
                     preset: preset,
-                    isDragging: dragging == entry.orderingKey,
-                    onActivate: { onActivate(entry) },
-                    onTogglePin: { onTogglePin(entry) },
-                    onMiddleClick: { onMiddleClick(entry) }
+                    isDragging: dragging == group.id,
+                    onActivate: onActivate,
+                    onTogglePin: onTogglePin,
+                    onMiddleClick: onMiddleClick
                 )
                 .onGeometryChange(for: CGRect.self) { proxy in
                     proxy.frame(in: .named(TaskbarStripLayout.coordinateSpace))
                 } action: { frame in
-                    slots[entry.orderingKey] = frame
+                    slots[group.id] = frame
                 }
-                .gesture(reorderGesture(for: entry))
+                .gesture(reorderGesture(for: group))
                 .transition(TaskbarStripLayout.insertion)
             }
         }
         .coordinateSpace(.named(TaskbarStripLayout.coordinateSpace))
         .animation(KbMotion.standard, value: entries)
-        .animation(KbMotion.standard, value: previewed.map(\.id))
+        .animation(KbMotion.standard, value: groups.map(\.id))
         .frame(
             maxWidth: expandsAlongBar && !preset.edge.isVertical ? .infinity : nil,
             maxHeight: expandsAlongBar && preset.edge.isVertical ? .infinity : nil,
@@ -43,22 +43,24 @@ struct TaskbarEntryStrip: View {
         )
     }
 
-    private var previewed: [TaskbarEntryModel] {
-        TaskbarDragReorder.preview(entries: entries, dragging: dragging, over: over)
+    private var groups: [TaskbarEntryGroup] {
+        TaskbarEntryGrouping.groups(
+            from: TaskbarDragReorder.preview(entries: entries, dragging: dragging, over: over)
+        )
     }
 
     private var expandsAlongBar: Bool {
         TaskbarStripLayout.expandsAlongBar(preset: preset)
     }
 
-    private func reorderGesture(for entry: TaskbarEntryModel) -> some Gesture {
+    private func reorderGesture(for group: TaskbarEntryGroup) -> some Gesture {
         DragGesture(
             minimumDistance: TaskbarMetrics.dragActivationDistance,
             coordinateSpace: .named(TaskbarStripLayout.coordinateSpace)
         )
         .onChanged { value in
             if dragging == nil {
-                dragging = entry.orderingKey
+                dragging = group.id
                 dragSlots = slots
             }
             over = TaskbarDragHitTest.key(at: value.location, in: dragSlots, dragging: dragging)

@@ -57,7 +57,7 @@ struct TaskbarDragReorderTests {
 
         let previewed = TaskbarDragReorder.preview(
             entries: entries,
-            dragging: "pin:com.example.app",
+            dragging: "app:com.example.app",
             over: "cg:20"
         )
 
