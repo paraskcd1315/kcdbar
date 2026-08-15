@@ -284,10 +284,6 @@ final class BarPanelHost: BarPanelHostPort {
     }
 
     private func targetDisplays(for preset: BarPreset) -> [DisplayGeometry] {
-        let displays = displaySource.currentDisplays()
-        switch preset.displays {
-        case .primaryOnly: return displays.filter(\.isPrimary)
-        case .allDisplays, .chosenDisplays: return displays
-        }
+        BarDisplaySelection.wanted(for: preset, among: displaySource.currentDisplays())
     }
 }

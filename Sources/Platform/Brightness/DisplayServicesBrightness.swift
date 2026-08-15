@@ -11,15 +11,14 @@ private typealias CanChangeBrightnessFn =
 /** Display brightness, reached through DisplayServices since no public API exposes it. */
 @MainActor
 struct DisplayServicesBrightness: BrightnessPort {
-    private static let frameworkPath =
-        "/System/Library/PrivateFrameworks/DisplayServices.framework/DisplayServices"
+    private static let handle = dlopen(PrivateFrameworks.displayServices, RTLD_LAZY)
 
-    private static let handle = dlopen(frameworkPath, RTLD_LAZY)
-
-    private static let get: GetBrightnessFn? = symbol("DisplayServicesGetBrightness")
-    private static let set: SetBrightnessFn? = symbol("DisplayServicesSetBrightness")
+    private static let get: GetBrightnessFn? =
+        symbol(PrivateFrameworks.displayServicesGetBrightness)
+    private static let set: SetBrightnessFn? =
+        symbol(PrivateFrameworks.displayServicesSetBrightness)
     private static let canChange: CanChangeBrightnessFn? =
-        symbol("DisplayServicesCanChangeBrightness")
+        symbol(PrivateFrameworks.displayServicesCanChangeBrightness)
 
     func state() -> BrightnessState {
         guard let get = Self.get, let display = Self.mainDisplay() else { return .unavailable }

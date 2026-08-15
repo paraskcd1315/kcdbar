@@ -27,14 +27,16 @@ enum TopEnergySampler {
 
     private static func parse(_ line: String) -> (pid: pid_t, command: String, impact: Double)? {
         let columns = line.split(separator: " ", omittingEmptySubsequences: true)
-        guard columns.count >= 3,
-              let pid = pid_t(columns[0]),
-              let impact = Double(columns[columns.count - 1])
+        let last = columns.count - 1
+        guard columns.count >= EnergySamplerMetrics.minimumColumns,
+              let pid = pid_t(columns[EnergySamplerMetrics.pidColumn]),
+              let impact = Double(columns[last])
         else {
             return nil
         }
+        let command = columns[EnergySamplerMetrics.firstCommandColumn..<last]
 
-        return (pid, columns[1..<(columns.count - 1)].joined(separator: " "), impact)
+        return (pid, command.joined(separator: " "), impact)
     }
 
     private static func owner(of command: String, among names: Set<String>) -> String? {
@@ -46,8 +48,8 @@ enum TopEnergySampler {
     private static func run() async -> String? {
         await withCheckedContinuation { continuation in
             let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/top")
-            process.arguments = ["-l", "2", "-o", "power", "-stats", "pid,command,power", "-n", "20"]
+            process.executableURL = URL(fileURLWithPath: EnergySamplerMetrics.executablePath)
+            process.arguments = EnergySamplerMetrics.arguments
 
             let pipe = Pipe()
             process.standardOutput = pipe

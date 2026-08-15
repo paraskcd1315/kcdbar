@@ -2,6 +2,8 @@ import CoreGraphics
 import Foundation
 
 enum BatteryMetrics {
+    static let fullCharge = 100.0
+
     static let criticalPercentage = 10
     static let warningPercentage = 25
     static let fullPercentage = 100

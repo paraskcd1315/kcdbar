@@ -7,7 +7,7 @@ struct AccessibilityAuthorization: AccessibilityAuthorizationPort {
     }
 
     func requestTrust() {
-        let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
+        let options = [SystemDefaultsKeys.accessibilityPrompt: true] as CFDictionary
         _ = AXIsProcessTrustedWithOptions(options)
     }
 }

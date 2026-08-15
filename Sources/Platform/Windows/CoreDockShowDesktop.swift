@@ -6,15 +6,9 @@ private typealias CoreDockSendNotificationFn =
 /** The system's own Show Desktop, reached through Dock's notification entry point. */
 @MainActor
 struct CoreDockShowDesktop: ShowDesktopPort {
-    private static let hiServicesPath =
-        "/System/Library/Frameworks/ApplicationServices.framework"
-        + "/Frameworks/HIServices.framework/Versions/A/HIServices"
-
-    private static let notificationName = "com.apple.showdesktop.awake"
-
     private static let send: CoreDockSendNotificationFn? = {
-        guard let handle = dlopen(hiServicesPath, RTLD_LAZY),
-              let symbol = dlsym(handle, "CoreDockSendNotification")
+        guard let handle = dlopen(PrivateFrameworks.applicationServices, RTLD_LAZY),
+              let symbol = dlsym(handle, PrivateFrameworks.coreDockSendNotification)
         else {
             return nil
         }
@@ -26,7 +20,7 @@ struct CoreDockShowDesktop: ShowDesktopPort {
     func toggle() -> Bool {
         guard let send = Self.send else { return false }
 
-        send(Self.notificationName as CFString, nil)
+        send(PrivateFrameworks.showDesktopNotification as CFString, nil)
 
         return true
     }

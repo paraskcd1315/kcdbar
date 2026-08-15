@@ -4,7 +4,8 @@ final class MiddleClickCatchingView: NSView {
     var action: (() -> Void)?
 
     override func otherMouseUp(with event: NSEvent) {
-        guard event.buttonNumber == 2, bounds.contains(convert(event.locationInWindow, from: nil))
+        guard event.buttonNumber == MiddleClickMetrics.buttonNumber,
+              bounds.contains(convert(event.locationInWindow, from: nil))
         else {
             super.otherMouseUp(with: event)
             return

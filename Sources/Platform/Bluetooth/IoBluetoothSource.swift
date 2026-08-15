@@ -6,12 +6,9 @@ private typealias SetControllerPowerStateFn = @convention(c) (Int32) -> Int32
 /** Bluetooth power: the read is public, the write is a DisplayServices-style private symbol. */
 @MainActor
 struct IoBluetoothSource: BluetoothPort {
-    private static let frameworkPath =
-        "/System/Library/Frameworks/IOBluetooth.framework/Versions/A/IOBluetooth"
-
     private static let setPowerState: SetControllerPowerStateFn? = {
-        guard let handle = dlopen(frameworkPath, RTLD_LAZY),
-              let address = dlsym(handle, "IOBluetoothPreferenceSetControllerPowerState")
+        guard let handle = dlopen(PrivateFrameworks.ioBluetooth, RTLD_LAZY),
+              let address = dlsym(handle, PrivateFrameworks.bluetoothSetControllerPowerState)
         else {
             return nil
         }
@@ -38,7 +35,7 @@ struct IoBluetoothSource: BluetoothPort {
     func setPower(_ isOn: Bool) -> Bool {
         guard let setPowerState = Self.setPowerState else { return false }
 
-        _ = setPowerState(isOn ? 1 : 0)
+        _ = setPowerState(isOn ? BluetoothClassCodes.powerOn : BluetoothClassCodes.powerOff)
 
         return true
     }
@@ -52,29 +49,10 @@ struct IoBluetoothSource: BluetoothPort {
             id: address,
             name: name.isEmpty ? address : name,
             isConnected: paired.isConnected(),
-            kind: kind(major: paired.deviceClassMajor, minor: paired.deviceClassMinor)
+            kind: BluetoothDeviceClassifier.kind(
+                major: Int(paired.deviceClassMajor),
+                minor: Int(paired.deviceClassMinor)
+            )
         )
-    }
-
-    private static func kind(
-        major: BluetoothDeviceClassMajor,
-        minor: BluetoothDeviceClassMinor
-    ) -> BluetoothDeviceKind {
-        switch Int(major) {
-        case kBluetoothDeviceClassMajorAudio: .audio
-        case kBluetoothDeviceClassMajorPhone: .phone
-        case kBluetoothDeviceClassMajorComputer: .computer
-        case kBluetoothDeviceClassMajorWearable: .wearable
-        case kBluetoothDeviceClassMajorPeripheral: peripheral(minor: minor)
-        default: .other
-        }
-    }
-
-    private static func peripheral(minor: BluetoothDeviceClassMinor) -> BluetoothDeviceKind {
-        switch Int(minor) {
-        case kBluetoothDeviceClassMinorPeripheral1Keyboard: .keyboard
-        case kBluetoothDeviceClassMinorPeripheral1Pointing: .pointing
-        default: .other
-        }
     }
 }

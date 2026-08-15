@@ -108,10 +108,11 @@ final class PopoverHost {
 
     private func origin(for size: NSSize, anchor: NSPoint) -> NSPoint {
         let screen = NSScreen.screens.first { $0.frame.contains(anchor) } ?? NSScreen.main
-        let bounds = screen?.visibleFrame ?? .zero
-        let x = min(max(anchor.x - size.width / 2, bounds.minX), bounds.maxX - size.width)
-        let y = min(anchor.y + KbPopoverMetrics.gap, bounds.maxY - size.height)
 
-        return NSPoint(x: x, y: max(y, bounds.minY))
+        return PopoverAnchor.origin(
+            for: size,
+            anchor: anchor,
+            within: screen?.visibleFrame ?? .zero
+        )
     }
 }

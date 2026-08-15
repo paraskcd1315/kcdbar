@@ -57,6 +57,9 @@ targets:
       - path: Sources/Shared/Domain/Sound
       - path: Sources/Shared/Domain/Bluetooth
       - path: Sources/Shared/Domain/Brightness
+      - path: Sources/Shared/Domain/Preferences
+      - path: Sources/Shared/Domain/Ui
+      - path: Sources/Shared/Ui/Ds/Foundation/KbPopoverMetrics.swift
       - path: Sources/Shared/Ui/Theme/KbSpacing.swift
       - path: Sources/Shared/Ui/Theme/KbRadii.swift
       - path: Sources/Shared/Presentation/Taskbar/Utils/TaskbarOrdering.swift
