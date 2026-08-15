@@ -85,6 +85,18 @@ struct SoloWindowPolicyTests {
         #expect(toMinimise.isEmpty)
     }
 
+    @Test func aSheetNeverMinimisesTheWindowItBelongsTo() {
+        let parent = window(1, pid: 10, on: left, zOrder: 1)
+        let sheet = window(2, pid: 10, on: left, zOrder: 0)
+        let toMinimise = SoloWindowPolicy.toMinimise(
+            frontmostPid: 10,
+            among: [parent, sheet],
+            displays: [left, right]
+        )
+
+        #expect(toMinimise.isEmpty)
+    }
+
     @Test func nothingHappensWithoutAFocusedWindow() {
         let one = window(1, pid: 10, on: left, zOrder: 0)
         let two = window(2, pid: 20, on: left, zOrder: 1)

@@ -15,6 +15,7 @@ package enum SoloWindowPolicy {
 
         return windows.filter { window in
             guard window.identity != focused.identity else { return false }
+            guard window.ownerPid != focused.ownerPid else { return false }
             guard !window.isMinimized, !window.isFullScreen else { return false }
 
             return WindowDisplayResolver.displayId(for: window, in: displays) == display
