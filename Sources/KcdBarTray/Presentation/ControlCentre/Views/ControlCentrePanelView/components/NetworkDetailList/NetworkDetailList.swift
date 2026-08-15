@@ -11,10 +11,23 @@ package struct NetworkDetailList: View {
     }
 
     package var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ForEach(NetworkDetailFields.rows(for: detail)) { field in
-                NetworkDetailRow(field: field, onCopy: { onCopy(field.value) })
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 0) {
+                ForEach(rows) { field in
+                    NetworkDetailRow(field: field, onCopy: { onCopy(field.value) })
+                }
             }
         }
+        .frame(
+            height: KbControlCentreMetrics.listHeight(
+                rows: rows.count,
+                cap: KbControlCentreMetrics.detailMaxHeight
+            )
+        )
+        .scrollBounceBehavior(.basedOnSize)
+    }
+
+    private var rows: [NetworkDetailField] {
+        NetworkDetailFields.rows(for: detail)
     }
 }
