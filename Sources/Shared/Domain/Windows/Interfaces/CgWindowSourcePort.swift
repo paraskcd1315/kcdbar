@@ -1,3 +1,3 @@
-protocol CgWindowSourceProviding: Sendable {
+protocol CgWindowSourcePort: Sendable {
     func currentWindows() -> [CgWindowRecord]
 }

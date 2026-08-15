@@ -1,7 +1,12 @@
+import AppKit
 import CoreGraphics
 import Foundation
 
-struct CoreGraphicsWindowSource: CgWindowSourceProviding {
+struct CoreGraphicsWindowSource: CgWindowSourcePort {
+    private var flipReference: CGFloat {
+        MainActor.assumeIsolated { NSScreen.screens.first?.frame.maxY ?? 0 }
+    }
+
     func currentWindows() -> [CgWindowRecord] {
         let options: CGWindowListOption = [.optionAll, .excludeDesktopElements]
         guard let entries = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
@@ -25,10 +30,19 @@ struct CoreGraphicsWindowSource: CgWindowSourceProviding {
             ownerPid: ownerPid,
             ownerName: entry[kCGWindowOwnerName as String] as? String,
             title: entry[kCGWindowName as String] as? String,
-            bounds: bounds,
+            bounds: cocoaBounds(from: bounds),
             layer: entry[kCGWindowLayer as String] as? Int ?? 0,
             isOnScreen: entry[kCGWindowIsOnscreen as String] as? Bool ?? true,
             zOrder: zOrder
+        )
+    }
+
+    private func cocoaBounds(from bounds: CGRect) -> CGRect {
+        CGRect(
+            x: bounds.origin.x,
+            y: flipReference - bounds.origin.y - bounds.height,
+            width: bounds.width,
+            height: bounds.height
         )
     }
 }

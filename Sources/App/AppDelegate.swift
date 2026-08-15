@@ -2,17 +2,24 @@ import AppKit
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    private let probe = GlassProbeController()
-    private let authorization = AccessibilityAuthorization()
-    private lazy var registry = WindowRegistry(
-        coreGraphicsSource: CoreGraphicsWindowSource(),
-        accessibilitySource: AccessibilityWindowSource(),
-        applicationsSource: WorkspaceApplicationsSource()
-    )
+    private let services = AppServices()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        probe.present()
-        WindowRegistryProbe.report(registry: registry, authorization: authorization)
+
+        if !services.authorization.isTrusted {
+            services.authorization.requestTrust()
+        }
+
+        services.registry.refresh()
+        services.startBar(preset: BarPresetCatalogue.default) { _ in }
+        services.changes.startObserving { [services] in
+            services.registry.refresh()
+        }
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        services.changes.stopObserving()
+        services.bar?.dismiss()
     }
 }

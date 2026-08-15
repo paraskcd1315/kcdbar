@@ -1,35 +1,35 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "probe.surface.panel" : {
+    "taskbar.notice.accessibility" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Borderless panel"
+            "value" : "KCDBar needs Accessibility to list and control windows"
           }
         }
       }
     },
-    "probe.surface.window" : {
+    "taskbar.notice.empty" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ordinary window"
+            "value" : "No windows on this display"
           }
         }
       }
     },
-    "probe.window.title" : {
+    "taskbar.notice.grant" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "KCDBar — Liquid Glass probe"
+            "value" : "Grant access"
           }
         }
       }

@@ -5,6 +5,9 @@ import Observation
 @Observable
 final class WindowRegistry {
     private(set) var windows: [ManagedWindow] = []
+    private(set) var displays: [DisplayGeometry] = []
+    private(set) var frontmostPid: pid_t?
+    private(set) var hasAccessibility = false
     private(set) var lastRefreshDuration: TimeInterval = 0
     private(set) var lastScanCounts: WindowScanCounts = .empty
 
@@ -12,22 +15,31 @@ final class WindowRegistry {
         WindowPresentationPolicy.taskbarEntries(from: windows)
     }
 
-    private let coreGraphicsSource: CgWindowSourceProviding
-    private let accessibilitySource: AxWindowSourceProviding
-    private let applicationsSource: RunningApplicationsProviding
+    private let coreGraphicsSource: CgWindowSourcePort
+    private let accessibilitySource: AxWindowSourcePort
+    private let applicationsSource: RunningApplicationsPort
+    private let displaySource: any DisplayGeometryPort
+    private let authorization: any AccessibilityAuthorizationPort
 
     init(
-        coreGraphicsSource: CgWindowSourceProviding,
-        accessibilitySource: AxWindowSourceProviding,
-        applicationsSource: RunningApplicationsProviding
+        coreGraphicsSource: CgWindowSourcePort,
+        accessibilitySource: AxWindowSourcePort,
+        applicationsSource: RunningApplicationsPort,
+        displaySource: any DisplayGeometryPort,
+        authorization: any AccessibilityAuthorizationPort
     ) {
         self.coreGraphicsSource = coreGraphicsSource
         self.accessibilitySource = accessibilitySource
         self.applicationsSource = applicationsSource
+        self.displaySource = displaySource
+        self.authorization = authorization
     }
 
     func refresh() {
         let started = Date()
+        hasAccessibility = authorization.isTrusted
+        displays = displaySource.currentDisplays()
+        frontmostPid = applicationsSource.frontmostPid
         let applications = applicationsSource.currentApplications()
         let byPid = Dictionary(uniqueKeysWithValues: applications.map { ($0.pid, $0) })
         let coreGraphics = coreGraphicsSource.currentWindows()

@@ -2,7 +2,7 @@ import ApplicationServices
 import CoreGraphics
 import Foundation
 
-struct AccessibilityWindowSource: AxWindowSourceProviding {
+struct AccessibilityWindowSource: AxWindowSourcePort {
     func windows(forPids pids: [pid_t]) -> [AxWindowRecord] {
         pids.flatMap(windows(forPid:))
     }

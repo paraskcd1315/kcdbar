@@ -1,6 +1,6 @@
 import AppKit
 
-struct WorkspaceApplicationsSource: RunningApplicationsProviding {
+struct WorkspaceApplicationsSource: RunningApplicationsPort {
     func currentApplications() -> [RunningApplication] {
         NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }

@@ -1,7 +1,7 @@
 import ApplicationServices
 import Foundation
 
-struct AccessibilityAuthorization: AccessibilityAuthorizing {
+struct AccessibilityAuthorization: AccessibilityAuthorizationPort {
     var isTrusted: Bool {
         AXIsProcessTrusted()
     }

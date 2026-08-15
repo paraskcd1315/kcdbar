@@ -1,0 +1,28 @@
+import SwiftUI
+
+struct TaskbarEntryStrip: View {
+    let entries: [TaskbarEntryModel]
+    let preset: BarPreset
+    let onActivate: (TaskbarEntryModel) -> Void
+
+    var body: some View {
+        ScrollView(preset.edge.isVertical ? .vertical : .horizontal) {
+            layout {
+                ForEach(entries) { entry in
+                    TaskbarEntryView(entry: entry, preset: preset) { onActivate(entry) }
+                }
+            }
+            .padding(.horizontal, KbSpacing.s2)
+        }
+        .scrollIndicators(.never)
+    }
+
+    @ViewBuilder
+    private func layout<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        if preset.edge.isVertical {
+            VStack(spacing: preset.entrySpacing, content: content)
+        } else {
+            HStack(spacing: preset.entrySpacing, content: content)
+        }
+    }
+}
