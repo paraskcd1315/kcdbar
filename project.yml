@@ -21,16 +21,23 @@ settings:
     DEVELOPMENT_TEAM: ""
     DEAD_CODE_STRIPPING: YES
 
+packages:
+  KcdBar:
+    path: .
+
 targets:
   KCDBar:
     type: application
     platform: macOS
     sources:
-      - path: Sources
+      - path: Xcode/App
       - path: Resources
         buildPhase: resources
+    dependencies:
+      - package: KcdBar
+        product: KcdBarMain
     info:
-      path: Sources/App/Info.plist
+      path: Sources/KcdBarMain/Info.plist
       properties:
         CFBundleName: KCDBar
         CFBundleDisplayName: KCDBar
@@ -39,6 +46,7 @@ targets:
         LSMinimumSystemVersion: "26.0"
         LSUIElement: true
         NSHumanReadableCopyright: ""
+        NSBluetoothAlwaysUsageDescription: "KCDBar shows Bluetooth in its Control Center and turns it on and off."
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar
@@ -49,19 +57,13 @@ targets:
     platform: macOS
     sources:
       - path: Tests
-      - path: Sources/Shared/Domain/Windows
-      - path: Sources/Shared/Domain/Bar
-      - path: Sources/Shared/Domain/Battery
-      - path: Sources/Shared/Domain/Wifi
-      - path: Sources/Shared/Ui/Theme/KbSpacing.swift
-      - path: Sources/Shared/Ui/Theme/KbRadii.swift
-      - path: Sources/Shared/Presentation/Taskbar/Utils/TaskbarOrdering.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragReorder.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragHitTest.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGroup.swift
-      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGrouping.swift
-      - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarEntryModel.swift
-      - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarNotice.swift
+    dependencies:
+      - package: KcdBar
+        product: KcdBarBar
+      - package: KcdBar
+        product: KcdBarTray
+      - package: KcdBar
+        product: KcdBarDesignSystem
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar.tests

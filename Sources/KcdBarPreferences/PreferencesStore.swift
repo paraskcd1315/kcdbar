@@ -1,0 +1,10 @@
+import KcdBarBar
+
+/** Opens the app's SwiftData store, falling back to memory so the bar still runs. */
+package enum PreferencesStore {
+    package static func opened() -> any PinnedAppStorePort {
+        guard let container = KcdBarStore.opened() else { return EphemeralPinnedAppStore() }
+
+        return KcdBarStore(modelContainer: container)
+    }
+}

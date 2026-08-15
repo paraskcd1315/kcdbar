@@ -7,6 +7,155 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Wi-Fi" } }
       }
     },
+    "bluetooth.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bluetooth" } }
+      }
+    },
+    "network.details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Details" } }
+      }
+    },
+    "network.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Network Settings…" } }
+      }
+    },
+    "network.method" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Configure IPv4" } }
+      }
+    },
+    "network.address" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "IP Address" } }
+      }
+    },
+    "network.subnetMask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Subnet Mask" } }
+      }
+    },
+    "network.router" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Router" } }
+      }
+    },
+    "network.dns" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "DNS Servers" } }
+      }
+    },
+    "network.searchDomains" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search Domains" } }
+      }
+    },
+    "network.ipv6" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "IPv6 Address" } }
+      }
+    },
+    "trash.confirm.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Empty the Trash?" } }
+      }
+    },
+    "trash.confirm.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything in the Trash is deleted permanently. This cannot be undone."
+          }
+        }
+      }
+    },
+    "trash.confirm.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } }
+      }
+    },
+    "trash.confirm.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Empty Trash" } }
+      }
+    },
+    "trash.open" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Trash" } }
+      }
+    },
+    "trash.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Empty Trash" } }
+      }
+    },
+    "ethernet.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ethernet" } }
+      }
+    },
+    "bluetooth.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bluetooth Settings…" } }
+      }
+    },
+    "bluetooth.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No devices paired" } }
+      }
+    },
+    "bluetooth.status.on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "On" } }
+      }
+    },
+    "bluetooth.status.off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Off" } }
+      }
+    },
+    "bluetooth.status.unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unavailable" } }
+      }
+    },
+    "sound.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sound" } }
+      }
+    },
+    "display.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Display" } }
+      }
+    },
     "wifi.status.on" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -174,6 +323,12 @@
             "value" : "Pin to taskbar"
           }
         }
+      }
+    },
+    "taskbar.menu.quit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit" } }
       }
     },
     "taskbar.menu.unpin" : {
