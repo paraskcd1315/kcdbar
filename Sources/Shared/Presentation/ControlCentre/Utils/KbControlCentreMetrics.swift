@@ -11,6 +11,6 @@ enum KbControlCentreMetrics {
     static let panelWidth: CGFloat = 340
     static let panelPadding: CGFloat = 10
     static let tileGap: CGFloat = 8
-    static let rowGlyphSize: CGFloat = 26
+    static let rowGlyphSize: CGFloat = 34
     static let chevronSymbol = "chevron.right"
 }

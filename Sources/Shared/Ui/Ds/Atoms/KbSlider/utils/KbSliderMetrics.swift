@@ -1,6 +1,7 @@
 import CoreGraphics
 
 enum KbSliderMetrics {
-    static let height: CGFloat = 26
-    static let glyphRatio: CGFloat = 0.55
+    static let trackHeight: CGFloat = 6
+    static let leadingGlyphSize: CGFloat = 12
+    static let trailingGlyphSize: CGFloat = 17
 }

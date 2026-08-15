@@ -5,15 +5,16 @@ struct BrightnessTile: View {
 
     var body: some View {
         KbTile {
-            VStack(alignment: .leading, spacing: KbSpacing.s3) {
+            VStack(alignment: .leading, spacing: KbSpacing.s4) {
                 Text("display.title")
                     .font(KbTypography.tileTitle)
                     .foregroundStyle(KbColors.onSurface)
                 KbSlider(
                     value: monitor.state.level,
-                    symbol: BrightnessMetrics.symbol,
+                    leadingSymbol: BrightnessMetrics.lowSymbol,
+                    trailingSymbol: BrightnessMetrics.highSymbol,
                     onChange: { monitor.setLevel($0) },
-                    onTapGlyph: {}
+                    onTapLeading: {}
                 )
             }
             .padding(.horizontal, KbSpacing.s3)
