@@ -39,6 +39,7 @@ targets:
         LSMinimumSystemVersion: "26.0"
         LSUIElement: true
         NSHumanReadableCopyright: ""
+        NSBluetoothAlwaysUsageDescription: "KCDBar shows Bluetooth in its Control Center and turns it on and off."
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar
