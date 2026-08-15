@@ -12,6 +12,9 @@ let package = Package(
         .library(name: "KcdBarTaskbar", targets: ["KcdBarTaskbar"]),
         .library(name: "KcdBarMain", targets: ["KcdBarMain"]),
     ],
+    dependencies: [
+        .package(path: "../kcdsignal")
+    ],
     targets: [
         .target(
             name: "KcdBarDesignSystem",
@@ -19,7 +22,10 @@ let package = Package(
         ),
         .target(
             name: "KcdBarTray",
-            dependencies: ["KcdBarDesignSystem"],
+            dependencies: [
+                "KcdBarDesignSystem",
+                .product(name: "KcdSignal", package: "KcdSignal"),
+            ],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .target(
