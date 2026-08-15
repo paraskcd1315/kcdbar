@@ -45,6 +45,7 @@ package final class PopoverHost {
 
         let hosting = PopoverHostingView(
             rootView: content(presentation, anchor.x - settled.x)
+                .environment(\.pointerCatcher) { AppKitPointer.set(isInside: $0) }
         )
         hosting.onContentSizeChange = { [weak self] size in
             self?.resize(to: size)

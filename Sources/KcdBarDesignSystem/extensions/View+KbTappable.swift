@@ -7,12 +7,25 @@ extension View {
         perform action: @escaping () -> Void
     ) -> some View {
         contentShape(shape)
-            .pointerStyle(.link)
+            .kbClickable()
             .onTapGesture(perform: action)
     }
 
     /** The pointer alone, for a control that owns its own gesture. */
     package func kbClickable() -> some View {
-        pointerStyle(.link)
+        modifier(KbClickable())
+    }
+}
+
+private struct KbClickable: ViewModifier {
+    @Environment(\.pointerCatcher) private var pointerCatcher
+
+    func body(content: Content) -> some View {
+        content.onContinuousHover { phase in
+            switch phase {
+            case .active: pointerCatcher(true)
+            case .ended: pointerCatcher(false)
+            }
+        }
     }
 }
