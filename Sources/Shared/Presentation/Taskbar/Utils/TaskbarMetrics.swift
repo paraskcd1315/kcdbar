@@ -19,6 +19,7 @@ enum TaskbarMetrics {
     static let startGlyphSize: CGFloat = 15
     static let startButtonWidth: CGFloat = 40
     static let dropIndicatorWidth: CGFloat = 3
+    static let dropIndicatorAppearScale: CGFloat = 0.4
     static let dropGap: CGFloat = 26
     static let instanceDotSize: CGFloat = 3
     static let instanceDotSpacing: CGFloat = 3
@@ -33,5 +34,6 @@ enum TaskbarMetrics {
     static let tooltipAllowance: CGFloat = 44
     static let tooltipGap: CGFloat = 8
     static let tooltipDelay: Duration = .milliseconds(400)
+    static let tooltipAppearScale: CGFloat = 0.9
     static let tooltipMaxWidth: CGFloat = 320
 }
