@@ -2,6 +2,9 @@ import SwiftUI
 
 struct ControlCentreSurface: View {
     let wifi: WifiMonitor
+    let bluetooth: BluetoothMonitor
+    let sound: SoundMonitor
+    let brightness: BrightnessMonitor
     @Binding var isWifiExpanded: Bool
     let onOpenSettings: () -> Void
 
@@ -10,7 +13,12 @@ struct ControlCentreSurface: View {
             if isWifiExpanded {
                 WifiDetail(monitor: wifi, onOpenSettings: onOpenSettings)
             } else {
-                ControlCentreTiles(wifi: wifi) {
+                ControlCentreTiles(
+                    wifi: wifi,
+                    bluetooth: bluetooth,
+                    sound: sound,
+                    brightness: brightness
+                ) {
                     withAnimation(KbMotion.standard) { isWifiExpanded = true }
                 }
             }

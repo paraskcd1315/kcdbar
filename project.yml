@@ -53,6 +53,9 @@ targets:
       - path: Sources/Shared/Domain/Bar
       - path: Sources/Shared/Domain/Battery
       - path: Sources/Shared/Domain/Wifi
+      - path: Sources/Shared/Domain/Sound
+      - path: Sources/Shared/Domain/Bluetooth
+      - path: Sources/Shared/Domain/Brightness
       - path: Sources/Shared/Ui/Theme/KbSpacing.swift
       - path: Sources/Shared/Ui/Theme/KbRadii.swift
       - path: Sources/Shared/Presentation/Taskbar/Utils/TaskbarOrdering.swift

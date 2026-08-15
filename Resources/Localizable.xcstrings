@@ -7,6 +7,42 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Wi-Fi" } }
       }
     },
+    "bluetooth.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bluetooth" } }
+      }
+    },
+    "bluetooth.status.on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "On" } }
+      }
+    },
+    "bluetooth.status.off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Off" } }
+      }
+    },
+    "bluetooth.status.unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unavailable" } }
+      }
+    },
+    "sound.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sound" } }
+      }
+    },
+    "display.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Display" } }
+      }
+    },
     "wifi.status.on" : {
       "extractionState" : "manual",
       "localizations" : {
