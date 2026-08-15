@@ -11,16 +11,14 @@ struct ControlCentrePanelView: View {
     @State private var isWifiExpanded = false
 
     var body: some View {
-        GlassEffectContainer {
-            ControlCentreSurface(
-                wifi: wifi,
-                bluetooth: bluetooth,
-                sound: sound,
-                brightness: brightness,
-                isWifiExpanded: $isWifiExpanded,
-                onOpenSettings: onOpenSettings
-            )
-        }
+        ControlCentreSurface(
+            wifi: wifi,
+            bluetooth: bluetooth,
+            sound: sound,
+            brightness: brightness,
+            isWifiExpanded: $isWifiExpanded,
+            onOpenSettings: onOpenSettings
+        )
         .scaleEffect(
             x: 1,
             y: presentation.isExpanded ? 1 : KbPopoverMetrics.collapsedScale,

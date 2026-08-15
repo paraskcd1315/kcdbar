@@ -9,11 +9,8 @@ enum KbColors {
     static let onBrand = Color.white
     static let separator = Color.white.opacity(0.12)
     static let activeIndicator = Color.accentColor
-    static let tileFill = Color.white.opacity(0.10)
-    static let sliderTrack = Color.white.opacity(0.16)
-    static let sliderFill = Color.white.opacity(0.90)
-    static let sliderGlyph = Color.black.opacity(0.55)
-    static let tileEdge = Color.white.opacity(0.14)
+    static let sliderTrack = Color.black.opacity(0.28)
+    static let sliderFill = Color.white.opacity(0.88)
     static let glassEdgeBright = Color.white.opacity(0.65)
     static let glassEdgeShade = Color.black.opacity(0.5)
     static let batteryFull = Color(red: 0.30, green: 0.78, blue: 0.36)

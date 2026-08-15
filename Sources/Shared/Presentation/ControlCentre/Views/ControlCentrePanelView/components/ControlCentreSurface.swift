@@ -9,9 +9,11 @@ struct ControlCentreSurface: View {
     let onOpenSettings: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: KbSpacing.s4) {
+        VStack(alignment: .leading, spacing: KbControlCentreMetrics.tileGap) {
             if isWifiExpanded {
-                WifiDetail(monitor: wifi, onOpenSettings: onOpenSettings)
+                KbTile {
+                    WifiDetail(monitor: wifi, onOpenSettings: onOpenSettings)
+                }
             } else {
                 ControlCentreTiles(
                     wifi: wifi,
@@ -25,8 +27,6 @@ struct ControlCentreSurface: View {
         }
         .padding(KbControlCentreMetrics.panelPadding)
         .frame(width: KbControlCentreMetrics.panelWidth, alignment: .leading)
-        .glassEffect(.regular.interactive(), in: KbPopoverShape(arrowX: nil))
-        .overlay { KbPopoverEdge(arrowX: nil) }
         .animation(KbMotion.standard, value: isWifiExpanded)
     }
 }
