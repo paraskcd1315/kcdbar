@@ -7,7 +7,7 @@ set -euo pipefail
 # Accessibility is granted to /Applications/KCDBar.app and nothing else.
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CONFIG="${CONFIG:-Debug}"
+CONFIG="${CONFIG:-Release}"
 BUILT="$ROOT/build/Build/Products/$CONFIG/KCDBar.app"
 TARGET="/Applications/KCDBar.app"
 

@@ -13,4 +13,5 @@ enum TrayMetrics {
     static let separatorHeight: CGFloat = 1
     static let glyphLuminanceMidpoint: Double = 0.5
     static let glyphScale: CGFloat = 2
+    static let sweepInterval: TimeInterval = 3
 }

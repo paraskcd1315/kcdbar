@@ -8,12 +8,17 @@ final class MenuBarItemRegistry {
     private(set) var items: [MenuBarItem] = []
 
     private let source: any MenuBarItemsPort
+    private var lastSweep: Date?
 
     init(source: any MenuBarItemsPort) {
         self.source = source
     }
 
-    func refresh() {
+    func refresh(now: Date = Date()) {
+        if let lastSweep, now.timeIntervalSince(lastSweep) < TrayMetrics.sweepInterval {
+            return
+        }
+        lastSweep = now
         items = MenuBarItemPolicy.hostable(source.items())
     }
 
