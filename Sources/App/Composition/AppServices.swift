@@ -11,6 +11,7 @@ final class AppServices {
     let pins: PinnedAppState
     let order = EntryOrderMemory()
     let desktop = ShowDesktopState()
+    let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
     let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
 
     let control: any WindowControlPort = AccessibilityWindowControl()
@@ -69,6 +70,10 @@ final class AppServices {
     }
 
     func toggleShowDesktop() {
+        if showDesktop.toggle() {
+            desktop.setSystemShowingDesktop(!desktop.isShowingDesktop)
+            return
+        }
         if desktop.isShowingDesktop {
             restoreFromDesktop()
         } else {

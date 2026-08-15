@@ -6,8 +6,13 @@ import Observation
 @Observable
 final class ShowDesktopState {
     private(set) var hiddenKeys: [String] = []
+    private(set) var systemShowingDesktop = false
 
-    var isShowingDesktop: Bool { !hiddenKeys.isEmpty }
+    var isShowingDesktop: Bool { systemShowingDesktop || !hiddenKeys.isEmpty }
+
+    func setSystemShowingDesktop(_ showing: Bool) {
+        systemShowingDesktop = showing
+    }
 
     func remember(keys: [String]) {
         hiddenKeys = keys
