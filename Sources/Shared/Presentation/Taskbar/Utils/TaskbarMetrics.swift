@@ -3,8 +3,8 @@ import Foundation
 
 enum TaskbarMetrics {
     static let reconciliationSweepInterval: TimeInterval = 5.0
-    static let iconSize: CGFloat = 28
-    static let iconOnlyEntryWidth: CGFloat = 52
+    static let iconSize: CGFloat = 34
+    static let iconOnlyEntryWidth: CGFloat = 56
     static let entryMinWidth: CGFloat = 96
     static let entryCompactWidth: CGFloat = 52
     static let entryMaxWidth: CGFloat = 220
