@@ -18,7 +18,7 @@ struct WifiDetail: View {
             .padding(.horizontal, KbSpacing.s4)
 
             if monitor.state.isPowered {
-                known
+                WifiKnownList(networks: monitor.inRange)
                 WifiDisclosureRow(titleKey: "wifi.section.other", isExpanded: showsOther) {
                     withAnimation(KbMotion.standard) { showsOther.toggle() }
                     guard showsOther else { return }
@@ -26,37 +26,11 @@ struct WifiDetail: View {
                     Task { await monitor.scan() }
                 }
                 if showsOther {
-                    other
+                    WifiOtherList(monitor: monitor)
                 }
             }
             WifiSettingsRow(onOpen: onOpenSettings)
         }
         .task { await monitor.scan() }
-    }
-
-    @ViewBuilder
-    private var known: some View {
-        if !monitor.inRange.isEmpty {
-            Text("wifi.section.known")
-                .font(KbTypography.tileStatus)
-                .foregroundStyle(KbColors.onSurfaceMuted)
-                .padding(.horizontal, KbSpacing.s4)
-            ForEach(monitor.inRange) { WifiNetworkRow(network: $0) }
-        }
-    }
-
-    private var other: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                WifiNearbyList(monitor: monitor)
-            }
-        }
-        .frame(
-            height: WifiMetrics.listHeight(
-                rows: max(monitor.nearby.count, 1),
-                cap: KbControlCentreMetrics.listMaxHeight
-            )
-        )
-        .scrollBounceBehavior(.basedOnSize)
     }
 }

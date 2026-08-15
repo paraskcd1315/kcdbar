@@ -8,7 +8,7 @@ struct TaskbarBatteryPill: View {
             ZStack {
                 RoundedRectangle(cornerRadius: BatteryMetrics.pillRadius)
                     .stroke(KbColors.onSurfaceMuted, lineWidth: BatteryMetrics.pillBorderWidth)
-                fill
+                TaskbarBatteryFill(state: state)
                 Text(percentage)
                     .font(KbTypography.batteryReadout)
                     .foregroundStyle(KbColors.onSurface)
@@ -18,16 +18,6 @@ struct TaskbarBatteryPill: View {
                 .fill(KbColors.onSurfaceMuted)
                 .frame(width: BatteryMetrics.capWidth, height: BatteryMetrics.capHeight)
         }
-    }
-
-    private var fill: some View {
-        GeometryReader { proxy in
-            RoundedRectangle(cornerRadius: BatteryMetrics.pillRadius - BatteryMetrics.pillBorderWidth)
-                .fill(KbColors.battery(BatteryStyle.tone(for: state)))
-                .frame(width: proxy.size.width * BatteryStyle.fill(for: state))
-                .padding(BatteryMetrics.pillBorderWidth)
-        }
-        .animation(KbMotion.standard, value: state.percentage)
     }
 
     private var percentage: String {

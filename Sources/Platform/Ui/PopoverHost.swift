@@ -28,7 +28,12 @@ final class PopoverHost {
         panel.setContentSize(size)
         panel.setFrameOrigin(settled)
         panel.contentView = NSHostingView(
-            rootView: measured(content(presentation, anchor.x - settled.x))
+            rootView: content(presentation, anchor.x - settled.x)
+                .onGeometryChange(for: CGSize.self) { proxy in
+                    proxy.size
+                } action: { [weak self] size in
+                    self?.resize(to: size)
+                }
         )
         panel.orderFrontRegardless()
 
@@ -59,16 +64,6 @@ final class PopoverHost {
             self.presentation = nil
             self.isClosing = false
         }
-    }
-
-    private func measured(_ content: AnyView) -> AnyView {
-        AnyView(
-            content.onGeometryChange(for: CGSize.self) { proxy in
-                proxy.size
-            } action: { [weak self] size in
-                self?.resize(to: size)
-            }
-        )
     }
 
     private func resize(to size: CGSize) {

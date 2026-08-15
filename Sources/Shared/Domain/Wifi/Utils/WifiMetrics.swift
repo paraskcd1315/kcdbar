@@ -10,9 +10,6 @@ enum WifiMetrics {
     static let lockSymbol = "lock.fill"
     static let chevronSymbol = "chevron.right"
 
-    static let tileWidth: CGFloat = 300
-    static let detailWidth: CGFloat = 340
-    static let detailMaxHeight: CGFloat = 420
     static let glyphSize: CGFloat = 26
     static let rowGlyphSize: CGFloat = 20
     static let rescanInterval: TimeInterval = 20
