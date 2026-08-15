@@ -1,3 +1,3 @@
-enum MiddleClickMetrics {
-    static let buttonNumber = 2
+package enum MiddleClickMetrics {
+    package static let buttonNumber = 2
 }

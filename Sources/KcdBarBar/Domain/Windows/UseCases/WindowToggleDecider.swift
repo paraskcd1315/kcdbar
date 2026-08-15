@@ -1,7 +1,7 @@
 import Foundation
 
-enum WindowToggleDecider {
-    static func action(
+package enum WindowToggleDecider {
+    package static func action(
         for window: ManagedWindow,
         frontmostPid: pid_t?,
         among windows: [ManagedWindow]

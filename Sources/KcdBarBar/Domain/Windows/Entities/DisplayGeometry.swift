@@ -1,8 +1,8 @@
 import CoreGraphics
 
 /** A display's frame in Cocoa coordinates. */
-struct DisplayGeometry: Equatable, Sendable, Identifiable {
-    let id: Int
-    let frame: CGRect
-    let isPrimary: Bool
+package struct DisplayGeometry: Equatable, Sendable, Identifiable {
+    package let id: Int
+    package let frame: CGRect
+    package let isPrimary: Bool
 }

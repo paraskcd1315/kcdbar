@@ -1,15 +1,15 @@
-enum TaskbarNotice: Equatable {
+package enum TaskbarNotice: Equatable {
     case accessibilityMissing
 
-    var symbolName: String {
+    package var symbolName: String {
         "lock.trianglebadge.exclamationmark"
     }
 
-    var messageKey: String {
+    package var messageKey: String {
         "taskbar.notice.accessibility"
     }
 
-    var actionKey: String {
+    package var actionKey: String {
         "taskbar.notice.grant"
     }
 }

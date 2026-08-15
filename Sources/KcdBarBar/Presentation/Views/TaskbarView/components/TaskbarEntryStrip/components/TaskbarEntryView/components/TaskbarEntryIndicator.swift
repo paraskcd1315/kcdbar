@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarEntryIndicator: View {
-    let entry: TaskbarEntryModel
+package struct TaskbarEntryIndicator: View {
+    package let entry: TaskbarEntryModel
 
-    var body: some View {
+    package var body: some View {
         if TaskbarEntryStyle.isOpenHere(entry) {
             GeometryReader { proxy in
                 RoundedRectangle(cornerRadius: TaskbarMetrics.openBorderHeight)

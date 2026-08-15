@@ -1,12 +1,22 @@
 import SwiftUI
 
 /** A floating glass tile. */
-struct KbTile<Content: View>: View {
-    var cornerRadius: CGFloat = KbRadii.xl
-    var padding: CGFloat = KbSpacing.s4
-    @ViewBuilder let content: Content
+package struct KbTile<Content: View>: View {
+    package var cornerRadius: CGFloat = KbRadii.xl
+    package var padding: CGFloat = KbSpacing.s4
+    @ViewBuilder package let content: Content
 
-    var body: some View {
+    package init(
+        cornerRadius: CGFloat = KbRadii.xl,
+        padding: CGFloat = KbSpacing.s4,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.cornerRadius = cornerRadius
+        self.padding = padding
+        self.content = content()
+    }
+
+    package var body: some View {
         content
             .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)

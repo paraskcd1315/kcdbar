@@ -1,10 +1,11 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarTooltip: View {
-    let applicationName: String
-    let windowTitle: String
+package struct TaskbarTooltip: View {
+    package let applicationName: String
+    package let windowTitle: String
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s1) {
             Text(applicationName)
                 .font(KbTypography.entryTitleActive)

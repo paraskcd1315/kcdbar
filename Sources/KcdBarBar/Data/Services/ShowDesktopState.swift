@@ -4,21 +4,23 @@ import Observation
 /** The windows KCDBar minimized to show the desktop, so the same click can put them back. */
 @MainActor
 @Observable
-final class ShowDesktopState {
-    private(set) var hiddenKeys: [String] = []
-    private(set) var systemShowingDesktop = false
+package final class ShowDesktopState {
+    package init() {}
 
-    var isShowingDesktop: Bool { systemShowingDesktop || !hiddenKeys.isEmpty }
+    package private(set) var hiddenKeys: [String] = []
+    package private(set) var systemShowingDesktop = false
 
-    func setSystemShowingDesktop(_ showing: Bool) {
+    package var isShowingDesktop: Bool { systemShowingDesktop || !hiddenKeys.isEmpty }
+
+    package func setSystemShowingDesktop(_ showing: Bool) {
         systemShowingDesktop = showing
     }
 
-    func remember(keys: [String]) {
+    package func remember(keys: [String]) {
         hiddenKeys = keys
     }
 
-    func clear() {
+    package func clear() {
         hiddenKeys = []
     }
 }

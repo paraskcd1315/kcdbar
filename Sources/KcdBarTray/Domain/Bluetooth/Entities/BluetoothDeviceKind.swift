@@ -1,4 +1,4 @@
-enum BluetoothDeviceKind: Equatable {
+package enum BluetoothDeviceKind: Equatable {
     case audio
     case phone
     case computer

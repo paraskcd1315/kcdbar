@@ -1,12 +1,13 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BatteryPanelView: View {
-    let state: BatteryState
-    let energyUsers: [EnergyUser]
-    let arrowX: CGFloat
-    let presentation: PopoverPresentation
+package struct BatteryPanelView: View {
+    package let state: BatteryState
+    package let energyUsers: [EnergyUser]
+    package let arrowX: CGFloat
+    package let presentation: PopoverPresentation
 
-    var body: some View {
+    package var body: some View {
         GlassEffectContainer {
             BatteryPanelSurface(state: state, energyUsers: energyUsers, arrowX: arrowX)
         }

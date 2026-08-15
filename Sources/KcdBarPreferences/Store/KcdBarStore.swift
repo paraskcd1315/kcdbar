@@ -1,10 +1,11 @@
 import Foundation
+import KcdBarBar
 import SwiftData
 
 /** Everything KCDBar remembers between launches. */
 @ModelActor
 actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort {
-    static let fileName = "kcdbar.store"
+    package static let fileName = "kcdbar.store"
 
     static func container(at url: URL? = nil, inMemory: Bool = false) throws -> ModelContainer {
         let schema = Schema([

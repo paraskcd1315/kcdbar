@@ -1,10 +1,11 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarInstanceDots: View {
-    let count: Int
-    let isFrontmost: Bool
+package struct TaskbarInstanceDots: View {
+    package let count: Int
+    package let isFrontmost: Bool
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: TaskbarMetrics.instanceDotSpacing) {
             ForEach(0..<shownCount, id: \.self) { _ in
                 Circle()

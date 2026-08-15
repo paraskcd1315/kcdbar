@@ -1,5 +1,5 @@
 @MainActor
-protocol ShowDesktopPort {
+package protocol ShowDesktopPort {
     var isAvailable: Bool { get }
     func toggle() -> Bool
 }

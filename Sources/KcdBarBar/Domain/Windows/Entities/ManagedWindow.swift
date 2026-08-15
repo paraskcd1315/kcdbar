@@ -1,14 +1,14 @@
 import CoreGraphics
 
-struct ManagedWindow: Equatable, Sendable {
-    let identity: WindowIdentity
-    let ownerPid: pid_t
-    let ownerName: String?
-    let title: String?
-    let bounds: CGRect?
-    let isMinimized: Bool
-    let isFullScreen: Bool
-    let isOnScreen: Bool
-    let zOrder: Int?
-    let source: WindowRecordSource
+package struct ManagedWindow: Equatable, Sendable {
+    package let identity: WindowIdentity
+    package let ownerPid: pid_t
+    package let ownerName: String?
+    package let title: String?
+    package let bounds: CGRect?
+    package let isMinimized: Bool
+    package let isFullScreen: Bool
+    package let isOnScreen: Bool
+    package let zOrder: Int?
+    package let source: WindowRecordSource
 }

@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BatteryPanelHeader: View {
-    let state: BatteryState
+package struct BatteryPanelHeader: View {
+    package let state: BatteryState
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             HStack {
                 Text("battery.title")
@@ -12,7 +13,7 @@ struct BatteryPanelHeader: View {
                 Spacer(minLength: KbSpacing.s5)
                 Text("\(state.percentage)%")
                     .font(KbTypography.panelTitle)
-                    .foregroundStyle(KbColors.battery(BatteryStyle.tone(for: state)))
+                    .foregroundStyle(BatteryTint.colour(for: BatteryStyle.tone(for: state)))
             }
             VStack(alignment: .leading, spacing: KbSpacing.s2) {
                 Text(sourceKey)

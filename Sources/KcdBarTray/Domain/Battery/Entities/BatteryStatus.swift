@@ -1,4 +1,4 @@
-enum BatteryStatus: Equatable, Sendable {
+package enum BatteryStatus: Equatable, Sendable {
     case fullyCharged
     case charging
     case pluggedInNotCharging

@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BrightnessTile: View {
-    let monitor: BrightnessMonitor
+package struct BrightnessTile: View {
+    package let monitor: BrightnessMonitor
 
-    var body: some View {
+    package var body: some View {
         KbTile {
             VStack(alignment: .leading, spacing: KbSpacing.s4) {
                 Text("display.title")

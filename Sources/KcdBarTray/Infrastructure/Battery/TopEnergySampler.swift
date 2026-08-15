@@ -2,8 +2,8 @@ import AppKit
 import Foundation
 
 /** Reads per-process energy impact from top, attributed to the applications a person can see. */
-enum TopEnergySampler {
-    static func sample() async -> [EnergyUser] {
+package enum TopEnergySampler {
+    package static func sample() async -> [EnergyUser] {
         let applications = NSWorkspace.shared.runningApplications.filter { $0.activationPolicy == .regular }
         let namesByPid = Dictionary(
             uniqueKeysWithValues: applications.compactMap { application in

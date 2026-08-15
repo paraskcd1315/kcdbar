@@ -1,25 +1,25 @@
 import CoreGraphics
 
-struct BarPreset: Codable, Equatable, Sendable {
-    var name: String
-    var edge: BarEdge
-    var alignment: BarAlignment
-    var widthMode: BarWidthMode
-    var attachment: BarAttachment
-    var entryContent: BarEntryContent
-    var entrySizing: BarEntrySizing
-    var grouping: BarGrouping
-    var material: BarMaterial
-    var startButton: BarStartButtonPlacement
-    var autoHide: BarAutoHidePolicy
-    var displays: BarDisplayPolicy
-    var windowScope: BarWindowScope
-    var overlap: BarOverlapPolicy
-    var dockHandling: DockHandling
-    var thickness: CGFloat
-    var entrySpacing: CGFloat
-    var contentPadding: CGFloat
-    var cornerRadius: CGFloat
-    var showsStatusArea: Bool
-    var showsDesktopButton: Bool
+package struct BarPreset: Codable, Equatable, Sendable {
+    package var name: String
+    package var edge: BarEdge
+    package var alignment: BarAlignment
+    package var widthMode: BarWidthMode
+    package var attachment: BarAttachment
+    package var entryContent: BarEntryContent
+    package var entrySizing: BarEntrySizing
+    package var grouping: BarGrouping
+    package var material: BarMaterial
+    package var startButton: BarStartButtonPlacement
+    package var autoHide: BarAutoHidePolicy
+    package var displays: BarDisplayPolicy
+    package var windowScope: BarWindowScope
+    package var overlap: BarOverlapPolicy
+    package var dockHandling: DockHandling
+    package var thickness: CGFloat
+    package var entrySpacing: CGFloat
+    package var contentPadding: CGFloat
+    package var cornerRadius: CGFloat
+    package var showsStatusArea: Bool
+    package var showsDesktopButton: Bool
 }

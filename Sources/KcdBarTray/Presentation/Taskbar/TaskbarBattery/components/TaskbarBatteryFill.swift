@@ -1,12 +1,13 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarBatteryFill: View {
-    let state: BatteryState
+package struct TaskbarBatteryFill: View {
+    package let state: BatteryState
 
-    var body: some View {
+    package var body: some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: BatteryMetrics.pillRadius - BatteryMetrics.pillBorderWidth)
-                .fill(KbColors.battery(BatteryStyle.tone(for: state)))
+                .fill(BatteryTint.colour(for: BatteryStyle.tone(for: state)))
                 .frame(width: proxy.size.width * BatteryStyle.fill(for: state))
                 .padding(BatteryMetrics.pillBorderWidth)
         }

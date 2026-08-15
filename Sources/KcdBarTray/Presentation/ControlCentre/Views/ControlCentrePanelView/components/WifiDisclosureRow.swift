@@ -1,13 +1,14 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiDisclosureRow: View {
-    let titleKey: LocalizedStringKey
-    let isExpanded: Bool
-    let onToggle: () -> Void
+package struct WifiDisclosureRow: View {
+    package let titleKey: LocalizedStringKey
+    package let isExpanded: Bool
+    package let onToggle: () -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package var body: some View {
         HStack {
             Text(titleKey)
                 .font(KbTypography.panelItem)

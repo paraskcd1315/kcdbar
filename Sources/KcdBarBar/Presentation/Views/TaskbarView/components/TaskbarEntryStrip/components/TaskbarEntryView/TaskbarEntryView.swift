@@ -1,19 +1,20 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarEntryView: View {
-    let entry: TaskbarEntryModel
-    let preset: BarPreset
-    let isDragging: Bool
-    let onActivate: () -> Void
-    let onTogglePin: () -> Void
-    let onMiddleClick: () -> Void
+package struct TaskbarEntryView: View {
+    package let entry: TaskbarEntryModel
+    package let preset: BarPreset
+    package let isDragging: Bool
+    package let onActivate: () -> Void
+    package let onTogglePin: () -> Void
+    package let onMiddleClick: () -> Void
 
     @Environment(\.middleClickCatcher) private var middleClickCatcher
 
     @State private var isHovered = false
     @State private var showsTooltip = false
 
-    var body: some View {
+    package var body: some View {
         TaskbarEntryLabel(
             entry: entry,
             showsTitle: TaskbarEntryStyle.showsTitle(

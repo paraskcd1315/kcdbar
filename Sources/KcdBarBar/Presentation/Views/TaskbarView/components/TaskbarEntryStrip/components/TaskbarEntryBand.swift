@@ -1,14 +1,15 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarEntryBand: View {
-    let group: TaskbarEntryGroup
-    let preset: BarPreset
-    let isDragging: Bool
-    let onActivate: (TaskbarEntryModel) -> Void
-    let onTogglePin: (TaskbarEntryModel) -> Void
-    let onMiddleClick: (TaskbarEntryModel) -> Void
+package struct TaskbarEntryBand: View {
+    package let group: TaskbarEntryGroup
+    package let preset: BarPreset
+    package let isDragging: Bool
+    package let onActivate: (TaskbarEntryModel) -> Void
+    package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onMiddleClick: (TaskbarEntryModel) -> Void
 
-    var body: some View {
+    package var body: some View {
         KbAxisStack(isVertical: preset.edge.isVertical, spacing: TaskbarMetrics.bandSpacing) {
             ForEach(group.entries) { entry in
                 TaskbarEntryView(

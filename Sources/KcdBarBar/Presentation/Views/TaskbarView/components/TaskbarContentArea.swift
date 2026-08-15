@@ -1,19 +1,21 @@
+import KcdBarDesignSystem
+import KcdBarTray
 import SwiftUI
 
-struct TaskbarContentArea: View {
-    let viewModel: TaskbarViewModel
-    let onActivate: (TaskbarEntryModel) -> Void
-    let onRequestAccessibility: () -> Void
-    let onOpenStart: () -> Void
-    let onTogglePin: (TaskbarEntryModel) -> Void
-    let onDropPin: (String, TaskbarEntryModel) -> Void
-    let onMiddleClick: (TaskbarEntryModel) -> Void
-    let battery: BatteryState
-    let onOpenBattery: () -> Void
-    let onOpenNotifications: () -> Void
-    let onOpenControlCentre: () -> Void
+package struct TaskbarContentArea: View {
+    package let viewModel: TaskbarViewModel
+    package let onActivate: (TaskbarEntryModel) -> Void
+    package let onRequestAccessibility: () -> Void
+    package let onOpenStart: () -> Void
+    package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onDropPin: (String, TaskbarEntryModel) -> Void
+    package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let battery: BatteryState
+    package let onOpenBattery: () -> Void
+    package let onOpenNotifications: () -> Void
+    package let onOpenControlCentre: () -> Void
 
-    var body: some View {
+    package var body: some View {
         Group {
             if let notice = viewModel.notice {
                 TaskbarNoticeView(notice: notice, onAct: onRequestAccessibility)

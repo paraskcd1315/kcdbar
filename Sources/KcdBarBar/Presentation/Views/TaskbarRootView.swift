@@ -1,27 +1,28 @@
+import KcdBarTray
 import SwiftUI
 
-struct TaskbarRootView: View {
-    let registry: WindowRegistry
-    let pins: PinnedAppState
-    let order: EntryOrderMemory
-    let desktop: ShowDesktopState
-    let preset: BarPreset
-    let displayId: Int
-    let icons: any ApplicationIconPort
-    let onActivate: (TaskbarEntryModel) -> Void
-    let onRequestAccessibility: () -> Void
-    let onOpenStart: () -> Void
-    let onTogglePin: (TaskbarEntryModel) -> Void
-    let onDropPin: (String, TaskbarEntryModel) -> Void
-    let onToggleDesktop: () -> Void
-    let onMiddleClick: (TaskbarEntryModel) -> Void
-    let battery: BatteryMonitor
-    let onOpenBattery: () -> Void
-    let onOpenNotifications: () -> Void
-    let onOpenControlCentre: () -> Void
-    let onBarFrameChange: (CGRect) -> Void
+package struct TaskbarRootView: View {
+    package let registry: WindowRegistry
+    package let pins: PinnedAppState
+    package let order: EntryOrderMemory
+    package let desktop: ShowDesktopState
+    package let preset: BarPreset
+    package let displayId: Int
+    package let icons: any ApplicationIconPort
+    package let onActivate: (TaskbarEntryModel) -> Void
+    package let onRequestAccessibility: () -> Void
+    package let onOpenStart: () -> Void
+    package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onDropPin: (String, TaskbarEntryModel) -> Void
+    package let onToggleDesktop: () -> Void
+    package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let battery: BatteryMonitor
+    package let onOpenBattery: () -> Void
+    package let onOpenNotifications: () -> Void
+    package let onOpenControlCentre: () -> Void
+    package let onBarFrameChange: (CGRect) -> Void
 
-    var body: some View {
+    package var body: some View {
         TaskbarView(
             viewModel: viewModel,
             onActivate: onActivate,

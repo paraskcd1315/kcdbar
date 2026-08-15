@@ -1,16 +1,17 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct ControlCentrePanelView: View {
-    let wifi: WifiMonitor
-    let bluetooth: BluetoothMonitor
-    let sound: SoundMonitor
-    let brightness: BrightnessMonitor
-    let presentation: PopoverPresentation
-    let onOpenSettings: () -> Void
+package struct ControlCentrePanelView: View {
+    package let wifi: WifiMonitor
+    package let bluetooth: BluetoothMonitor
+    package let sound: SoundMonitor
+    package let brightness: BrightnessMonitor
+    package let presentation: PopoverPresentation
+    package let onOpenSettings: () -> Void
 
     @State private var isWifiExpanded = false
 
-    var body: some View {
+    package var body: some View {
         ControlCentreSurface(
             wifi: wifi,
             bluetooth: bluetooth,

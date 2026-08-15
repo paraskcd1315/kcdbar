@@ -1,8 +1,10 @@
 import AppKit
+import KcdBarDesignSystem
+import KcdBarTray
 import SwiftUI
 
 @MainActor
-final class BarPanelHost: BarPanelHostPort {
+package final class BarPanelHost: BarPanelHostPort {
     private var panels: [Int: BarPanel] = [:]
     private var screenObserver: NSObjectProtocol?
     private var pointerMonitor: Any?
@@ -31,7 +33,7 @@ final class BarPanelHost: BarPanelHostPort {
     private let onOpenNotifications: () -> Void
     private let onOpenControlCentre: () -> Void
 
-    init(
+    package init(
         registry: WindowRegistry,
         battery: BatteryMonitor,
         pins: PinnedAppState,
@@ -69,7 +71,7 @@ final class BarPanelHost: BarPanelHostPort {
         self.onOpenStart = onOpenStart
     }
 
-    func present(preset: BarPreset) {
+    package func present(preset: BarPreset) {
         activePreset = preset
         rebuild(preset: preset)
         startClickThroughMonitors()
@@ -82,7 +84,7 @@ final class BarPanelHost: BarPanelHostPort {
         }
     }
 
-    func syncVisibility() {
+    package func syncVisibility() {
         hiddenDisplays = Set(
             panels.keys.filter { id in
                 BarVisibilityPolicy.isHidden(
@@ -217,7 +219,7 @@ final class BarPanelHost: BarPanelHostPort {
         }
     }
 
-    func dismiss() {
+    package func dismiss() {
         stopPointerMonitor()
         stopClickThroughMonitors()
         hiddenDisplays = []

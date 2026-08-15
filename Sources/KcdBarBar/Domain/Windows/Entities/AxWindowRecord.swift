@@ -1,13 +1,13 @@
 import CoreGraphics
 
-struct AxWindowRecord: Equatable, Sendable {
-    let ownerPid: pid_t
-    let cgWindowId: CGWindowID?
-    let title: String?
-    let role: String?
-    let subrole: String?
-    let bounds: CGRect?
-    let isMinimized: Bool
-    let isFullScreen: Bool
-    let indexInApplication: Int
+package struct AxWindowRecord: Equatable, Sendable {
+    package let ownerPid: pid_t
+    package let cgWindowId: CGWindowID?
+    package let title: String?
+    package let role: String?
+    package let subrole: String?
+    package let bounds: CGRect?
+    package let isMinimized: Bool
+    package let isFullScreen: Bool
+    package let indexInApplication: Int
 }

@@ -1,14 +1,15 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct ControlCentreDetailHeader: View {
-    let titleKey: LocalizedStringKey
-    let isOn: Bool
-    let onBack: () -> Void
-    let onSetPower: (Bool) -> Void
+package struct ControlCentreDetailHeader: View {
+    package let titleKey: LocalizedStringKey
+    package let isOn: Bool
+    package let onBack: () -> Void
+    package let onSetPower: (Bool) -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: KbSpacing.s5) {
             HStack(spacing: KbSpacing.s3) {
                 Image(systemName: KbControlCentreMetrics.backSymbol)

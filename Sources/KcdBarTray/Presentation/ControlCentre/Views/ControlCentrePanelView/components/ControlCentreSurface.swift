@@ -1,14 +1,15 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct ControlCentreSurface: View {
-    let wifi: WifiMonitor
-    let bluetooth: BluetoothMonitor
-    let sound: SoundMonitor
-    let brightness: BrightnessMonitor
-    @Binding var isWifiExpanded: Bool
-    let onOpenSettings: () -> Void
+package struct ControlCentreSurface: View {
+    package let wifi: WifiMonitor
+    package let bluetooth: BluetoothMonitor
+    package let sound: SoundMonitor
+    package let brightness: BrightnessMonitor
+    @Binding package var isWifiExpanded: Bool
+    package let onOpenSettings: () -> Void
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbControlCentreMetrics.tileGap) {
             if isWifiExpanded {
                 KbTile {

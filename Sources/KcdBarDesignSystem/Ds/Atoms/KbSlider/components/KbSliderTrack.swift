@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct KbSliderTrack: View {
-    let value: Double
-    let height: CGFloat
-    let onChange: (Double) -> Void
+package struct KbSliderTrack: View {
+    package let value: Double
+    package let height: CGFloat
+    package let onChange: (Double) -> Void
 
-    var body: some View {
+    package var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
                 Capsule().fill(KbColors.sliderTrack)

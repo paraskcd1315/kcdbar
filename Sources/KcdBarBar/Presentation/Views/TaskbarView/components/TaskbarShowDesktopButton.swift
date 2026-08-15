@@ -1,13 +1,14 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarShowDesktopButton: View {
-    let isShowingDesktop: Bool
-    let shape: AnyShape
-    let onToggle: () -> Void
+package struct TaskbarShowDesktopButton: View {
+    package let isShowingDesktop: Bool
+    package let shape: AnyShape
+    package let onToggle: () -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package var body: some View {
         Rectangle()
             .fill(.clear)
             .frame(width: TaskbarMetrics.showDesktopWidth)

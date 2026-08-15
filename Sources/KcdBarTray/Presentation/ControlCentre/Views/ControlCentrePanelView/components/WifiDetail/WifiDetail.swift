@@ -1,13 +1,14 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiDetail: View {
-    let monitor: WifiMonitor
-    let onBack: () -> Void
-    let onOpenSettings: () -> Void
+package struct WifiDetail: View {
+    package let monitor: WifiMonitor
+    package let onBack: () -> Void
+    package let onOpenSettings: () -> Void
 
     @State private var showsOther = false
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             WifiDetailHeader(
                 isPowered: monitor.state.isPowered,

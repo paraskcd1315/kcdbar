@@ -1,15 +1,15 @@
 import SwiftUI
 
-struct KbTileEdge: View {
-    let cornerRadius: CGFloat
+package struct KbTileEdge: View {
+    package let cornerRadius: CGFloat
 
-    var body: some View {
+    package var body: some View {
         ZStack {
             shape
-                .stroke(KbColors.glassEdgeBright, lineWidth: KbTileMetrics.edgeWidth)
+                .stroke(KbColors.glassEdgeBright, lineWidth: KbEdgeMetrics.width)
                 .blendMode(.plusLighter)
             shape
-                .stroke(KbColors.glassEdgeShade, lineWidth: KbTileMetrics.edgeWidth)
+                .stroke(KbColors.glassEdgeShade, lineWidth: KbEdgeMetrics.width)
                 .blendMode(.plusDarker)
         }
         .allowsHitTesting(false)

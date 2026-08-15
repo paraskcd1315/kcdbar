@@ -1,11 +1,11 @@
 import CoreGraphics
 
-struct WindowIdentity: Hashable, Sendable {
-    let ownerPid: pid_t
-    let cgWindowId: CGWindowID?
-    let fallbackKey: String
+package struct WindowIdentity: Hashable, Sendable {
+    package let ownerPid: pid_t
+    package let cgWindowId: CGWindowID?
+    package let fallbackKey: String
 
-    init(ownerPid: pid_t, cgWindowId: CGWindowID?, fallbackKey: String) {
+    package init(ownerPid: pid_t, cgWindowId: CGWindowID?, fallbackKey: String) {
         self.ownerPid = ownerPid
         self.cgWindowId = cgWindowId
         self.fallbackKey = fallbackKey

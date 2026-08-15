@@ -1,7 +1,7 @@
 import Foundation
 
-enum TaskbarEntryGrouping {
-    static func groups(from entries: [TaskbarEntryModel]) -> [TaskbarEntryGroup] {
+package enum TaskbarEntryGrouping {
+    package static func groups(from entries: [TaskbarEntryModel]) -> [TaskbarEntryGroup] {
         var groups: [TaskbarEntryGroup] = []
 
         for entry in entries {

@@ -1,9 +1,13 @@
 import SwiftUI
 
-struct KbBluetoothMark: View {
-    let size: CGFloat
+package struct KbBluetoothMark: View {
+    package let size: CGFloat
 
-    var body: some View {
+    package init(size: CGFloat) {
+        self.size = size
+    }
+
+    package var body: some View {
         KbBluetoothShape()
             .stroke(
                 style: StrokeStyle(

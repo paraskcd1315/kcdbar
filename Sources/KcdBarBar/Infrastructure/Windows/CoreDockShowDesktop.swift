@@ -5,7 +5,9 @@ private typealias CoreDockSendNotificationFn =
 
 /** The system's own Show Desktop, reached through Dock's notification entry point. */
 @MainActor
-struct CoreDockShowDesktop: ShowDesktopPort {
+package struct CoreDockShowDesktop: ShowDesktopPort {
+    package init() {}
+
     private static let send: CoreDockSendNotificationFn? = {
         guard let handle = dlopen(PrivateFrameworks.applicationServices, RTLD_LAZY),
               let symbol = dlsym(handle, PrivateFrameworks.coreDockSendNotification)
@@ -15,9 +17,9 @@ struct CoreDockShowDesktop: ShowDesktopPort {
         return unsafeBitCast(symbol, to: CoreDockSendNotificationFn.self)
     }()
 
-    var isAvailable: Bool { Self.send != nil }
+    package var isAvailable: Bool { Self.send != nil }
 
-    func toggle() -> Bool {
+    package func toggle() -> Bool {
         guard let send = Self.send else { return false }
 
         send(PrivateFrameworks.showDesktopNotification as CFString, nil)

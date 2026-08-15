@@ -1,6 +1,6 @@
-struct BrightnessState: Equatable {
-    let isAvailable: Bool
-    let level: Double
+package struct BrightnessState: Equatable {
+    package let isAvailable: Bool
+    package let level: Double
 
-    static let unavailable = BrightnessState(isAvailable: false, level: 0)
+    package static let unavailable = BrightnessState(isAvailable: false, level: 0)
 }

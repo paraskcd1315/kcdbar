@@ -1,9 +1,10 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct BluetoothDeviceRow: View {
-    let device: BluetoothDevice
+package struct BluetoothDeviceRow: View {
+    package let device: BluetoothDevice
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: KbSpacing.s4) {
             Image(systemName: BluetoothStyle.symbol(for: device.kind))
                 .font(.system(size: BluetoothMetrics.rowGlyphSize * KbControlCentreMetrics.glyphRatio))

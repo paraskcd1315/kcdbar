@@ -1,10 +1,10 @@
 import AppKit
 
-final class BarPanel: NSPanel {
-    override var canBecomeKey: Bool { false }
-    override var canBecomeMain: Bool { false }
+package final class BarPanel: NSPanel {
+    package override var canBecomeKey: Bool { false }
+    package override var canBecomeMain: Bool { false }
 
-    init(contentRect: NSRect) {
+    package init(contentRect: NSRect) {
         super.init(
             contentRect: contentRect,
             styleMask: [.borderless, .nonactivatingPanel],

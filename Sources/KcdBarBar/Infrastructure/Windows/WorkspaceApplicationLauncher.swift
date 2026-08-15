@@ -1,8 +1,10 @@
 import AppKit
 
 @MainActor
-struct WorkspaceApplicationLauncher: ApplicationLaunchPort {
-    func launch(bundleIdentifier: String) {
+package struct WorkspaceApplicationLauncher: ApplicationLaunchPort {
+    package init() {}
+
+    package func launch(bundleIdentifier: String) {
         if let running = NSRunningApplication
             .runningApplications(withBundleIdentifier: bundleIdentifier)
             .first {

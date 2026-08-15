@@ -1,21 +1,23 @@
+import KcdBarDesignSystem
+import KcdBarTray
 import SwiftUI
 
-struct TaskbarBody: View {
-    let viewModel: TaskbarViewModel
-    let isShowingDesktop: Bool
-    let onActivate: (TaskbarEntryModel) -> Void
-    let onRequestAccessibility: () -> Void
-    let onOpenStart: () -> Void
-    let onTogglePin: (TaskbarEntryModel) -> Void
-    let onDropPin: (String, TaskbarEntryModel) -> Void
-    let onMiddleClick: (TaskbarEntryModel) -> Void
-    let battery: BatteryState
-    let onOpenBattery: () -> Void
-    let onOpenNotifications: () -> Void
-    let onOpenControlCentre: () -> Void
-    let onToggleDesktop: () -> Void
+package struct TaskbarBody: View {
+    package let viewModel: TaskbarViewModel
+    package let isShowingDesktop: Bool
+    package let onActivate: (TaskbarEntryModel) -> Void
+    package let onRequestAccessibility: () -> Void
+    package let onOpenStart: () -> Void
+    package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onDropPin: (String, TaskbarEntryModel) -> Void
+    package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let battery: BatteryState
+    package let onOpenBattery: () -> Void
+    package let onOpenNotifications: () -> Void
+    package let onOpenControlCentre: () -> Void
+    package let onToggleDesktop: () -> Void
 
-    var body: some View {
+    package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: 0) {
             TaskbarContentArea(
                 viewModel: viewModel,

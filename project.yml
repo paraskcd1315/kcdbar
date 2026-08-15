@@ -21,14 +21,21 @@ settings:
     DEVELOPMENT_TEAM: ""
     DEAD_CODE_STRIPPING: YES
 
+packages:
+  KcdBar:
+    path: .
+
 targets:
   KCDBar:
     type: application
     platform: macOS
     sources:
-      - path: Sources
+      - path: Xcode/App
       - path: Resources
         buildPhase: resources
+    dependencies:
+      - package: KcdBar
+        product: KcdBarMain
     info:
       path: Sources/KcdBarMain/Info.plist
       properties:
@@ -50,19 +57,13 @@ targets:
     platform: macOS
     sources:
       - path: Tests
-      - path: Sources/KcdBarBar/Domain
-      - path: Sources/KcdBarTray/Domain
-      - path: Sources/KcdBarPreferences/Domain
-      - path: Sources/KcdBarDesignSystem/Ds/Foundation/KbPopoverMetrics.swift
-      - path: Sources/KcdBarDesignSystem/Theme/KbSpacing.swift
-      - path: Sources/KcdBarDesignSystem/Theme/KbRadii.swift
-      - path: Sources/KcdBarBar/Presentation/Utils/TaskbarOrdering.swift
-      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragReorder.swift
-      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragHitTest.swift
-      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGroup.swift
-      - path: Sources/KcdBarBar/Presentation/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGrouping.swift
-      - path: Sources/KcdBarBar/Presentation/Models/TaskbarEntryModel.swift
-      - path: Sources/KcdBarBar/Presentation/Models/TaskbarNotice.swift
+    dependencies:
+      - package: KcdBar
+        product: KcdBarBar
+      - package: KcdBar
+        product: KcdBarTray
+      - package: KcdBar
+        product: KcdBarDesignSystem
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar.tests

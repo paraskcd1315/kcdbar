@@ -1,7 +1,7 @@
 import Foundation
 
-enum WindowFocusPolicy {
-    static func isFrontmost(
+package enum WindowFocusPolicy {
+    package static func isFrontmost(
         _ window: ManagedWindow,
         frontmostPid: pid_t?,
         among windows: [ManagedWindow]

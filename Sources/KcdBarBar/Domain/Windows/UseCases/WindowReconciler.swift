@@ -1,7 +1,7 @@
 import CoreGraphics
 
-enum WindowReconciler {
-    static func reconcile(
+package enum WindowReconciler {
+    package static func reconcile(
         coreGraphics: [CgWindowRecord],
         accessibility: [AxWindowRecord],
         previous: [ManagedWindow]
@@ -23,7 +23,7 @@ enum WindowReconciler {
         return reconciled
     }
 
-    static func isManageable(_ record: CgWindowRecord) -> Bool {
+    package static func isManageable(_ record: CgWindowRecord) -> Bool {
         record.layer == WindowMatchingMetrics.normalWindowLayer
             && record.bounds.width >= WindowMatchingMetrics.minimumManageableSize.width
             && record.bounds.height >= WindowMatchingMetrics.minimumManageableSize.height

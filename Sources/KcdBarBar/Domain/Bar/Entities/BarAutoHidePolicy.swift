@@ -1,4 +1,4 @@
-enum BarAutoHidePolicy: String, Codable, CaseIterable, Sendable {
+package enum BarAutoHidePolicy: String, Codable, CaseIterable, Sendable {
     case never
     case always
     case whenOverlapped

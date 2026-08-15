@@ -1,6 +1,6 @@
-struct BluetoothDevice: Identifiable, Equatable {
-    let id: String
-    let name: String
-    let isConnected: Bool
-    let kind: BluetoothDeviceKind
+package struct BluetoothDevice: Identifiable, Equatable {
+    package let id: String
+    package let name: String
+    package let isConnected: Bool
+    package let kind: BluetoothDeviceKind
 }

@@ -1,9 +1,9 @@
 import AppKit
 
-final class MiddleClickCatchingView: NSView {
-    var action: (() -> Void)?
+package final class MiddleClickCatchingView: NSView {
+    package var action: (() -> Void)?
 
-    override func otherMouseUp(with event: NSEvent) {
+    package override func otherMouseUp(with event: NSEvent) {
         guard event.buttonNumber == MiddleClickMetrics.buttonNumber,
               bounds.contains(convert(event.locationInWindow, from: nil))
         else {
@@ -13,11 +13,11 @@ final class MiddleClickCatchingView: NSView {
         action?()
     }
 
-    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+    package override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
         true
     }
 
-    override var acceptsFirstResponder: Bool {
+    package override var acceptsFirstResponder: Bool {
         false
     }
 }

@@ -1,11 +1,12 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiNetworkRow: View {
-    let network: WifiNetwork
+package struct WifiNetworkRow: View {
+    package let network: WifiNetwork
 
     @State private var isHovered = false
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: KbSpacing.s4) {
             Image(systemName: WifiStyle.symbol(for: network))
                 .font(.system(size: WifiMetrics.rowGlyphSize * KbControlCentreMetrics.glyphRatio))

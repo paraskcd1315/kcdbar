@@ -1,9 +1,9 @@
 import SwiftUI
 
-struct WifiOtherList: View {
-    let monitor: WifiMonitor
+package struct WifiOtherList: View {
+    package let monitor: WifiMonitor
 
-    var body: some View {
+    package var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 0) {
                 WifiNearbyList(monitor: monitor)

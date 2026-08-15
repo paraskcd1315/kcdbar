@@ -1,10 +1,10 @@
-struct WindowScanCounts: Equatable, Sendable {
-    let applications: Int
-    let coreGraphicsRecords: Int
-    let manageableCoreGraphicsRecords: Int
-    let accessibilityRecords: Int
+package struct WindowScanCounts: Equatable, Sendable {
+    package let applications: Int
+    package let coreGraphicsRecords: Int
+    package let manageableCoreGraphicsRecords: Int
+    package let accessibilityRecords: Int
 
-    static let empty = WindowScanCounts(
+    package static let empty = WindowScanCounts(
         applications: 0,
         coreGraphicsRecords: 0,
         manageableCoreGraphicsRecords: 0,

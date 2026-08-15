@@ -1,5 +1,5 @@
 @MainActor
-protocol BarPanelHostPort: AnyObject {
+package protocol BarPanelHostPort: AnyObject {
     func present(preset: BarPreset)
     func syncVisibility()
     func dismiss()

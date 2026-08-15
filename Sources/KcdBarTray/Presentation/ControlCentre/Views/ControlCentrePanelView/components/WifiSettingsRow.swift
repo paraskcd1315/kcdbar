@@ -1,11 +1,12 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct WifiSettingsRow: View {
-    let onOpen: () -> Void
+package struct WifiSettingsRow: View {
+    package let onOpen: () -> Void
 
     @State private var isHovered = false
 
-    var body: some View {
+    package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s2) {
             Rectangle()
                 .fill(KbColors.separator)

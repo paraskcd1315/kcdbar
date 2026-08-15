@@ -2,7 +2,9 @@ import ApplicationServices
 import Foundation
 
 @MainActor
-final class AccessibilityGeometryObserver: WindowGeometryObserverPort {
+package final class AccessibilityGeometryObserver: WindowGeometryObserverPort {
+    package init() {}
+
     private var observers: [pid_t: AXObserver] = [:]
     private var onChange: (() -> Void)?
 
@@ -17,7 +19,7 @@ final class AccessibilityGeometryObserver: WindowGeometryObserverPort {
         kAXTitleChangedNotification
     ]
 
-    func observe(pids: [pid_t], onChange: @escaping () -> Void) {
+    package func observe(pids: [pid_t], onChange: @escaping () -> Void) {
         self.onChange = onChange
         let wanted = Set(pids)
 
@@ -29,7 +31,7 @@ final class AccessibilityGeometryObserver: WindowGeometryObserverPort {
         }
     }
 
-    func stop() {
+    package func stop() {
         observers.keys.forEach(remove(pid:))
         onChange = nil
     }

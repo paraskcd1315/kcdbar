@@ -3,8 +3,10 @@ import CoreAudio
 import Foundation
 
 @MainActor
-final class CoreAudioSoundSource: SoundPort {
-    func state() -> SoundState {
+package final class CoreAudioSoundSource: SoundPort {
+    package init() {}
+
+    package func state() -> SoundState {
         guard let device = defaultOutputDevice() else { return .unavailable }
 
         return SoundState(
@@ -14,7 +16,7 @@ final class CoreAudioSoundSource: SoundPort {
         )
     }
 
-    func setVolume(_ volume: Double) {
+    package func setVolume(_ volume: Double) {
         guard let device = defaultOutputDevice() else { return }
 
         var value = Float32(min(max(volume, 0), 1))
@@ -24,7 +26,7 @@ final class CoreAudioSoundSource: SoundPort {
         )
     }
 
-    func setMuted(_ isMuted: Bool) {
+    package func setMuted(_ isMuted: Bool) {
         guard let device = defaultOutputDevice() else { return }
 
         var value: UInt32 = isMuted ? 1 : 0

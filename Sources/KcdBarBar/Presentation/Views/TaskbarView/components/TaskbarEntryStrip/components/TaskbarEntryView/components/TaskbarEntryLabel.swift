@@ -1,10 +1,11 @@
+import KcdBarDesignSystem
 import SwiftUI
 
-struct TaskbarEntryLabel: View {
-    let entry: TaskbarEntryModel
-    let showsTitle: Bool
+package struct TaskbarEntryLabel: View {
+    package let entry: TaskbarEntryModel
+    package let showsTitle: Bool
 
-    var body: some View {
+    package var body: some View {
         HStack(spacing: KbSpacing.s3) {
             TaskbarEntryIcon(icon: entry.icon)
             if showsTitle {

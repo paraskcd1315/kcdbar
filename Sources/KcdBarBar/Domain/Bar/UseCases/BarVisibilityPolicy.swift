@@ -1,8 +1,8 @@
 import CoreGraphics
 
 /** Whether the bar yields the display to a full-screen window. */
-enum BarVisibilityPolicy {
-    static func isHidden(
+package enum BarVisibilityPolicy {
+    package static func isHidden(
         onDisplay displayId: Int,
         windows: [ManagedWindow],
         displays: [DisplayGeometry]

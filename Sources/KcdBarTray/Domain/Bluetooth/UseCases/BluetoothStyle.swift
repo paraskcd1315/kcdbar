@@ -1,7 +1,7 @@
 import Foundation
 
-enum BluetoothStyle {
-    static func symbol(for kind: BluetoothDeviceKind) -> String {
+package enum BluetoothStyle {
+    package static func symbol(for kind: BluetoothDeviceKind) -> String {
         switch kind {
         case .audio: BluetoothMetrics.audioSymbol
         case .phone: BluetoothMetrics.phoneSymbol
@@ -13,7 +13,7 @@ enum BluetoothStyle {
         }
     }
 
-    static func ordered(_ devices: [BluetoothDevice]) -> [BluetoothDevice] {
+    package static func ordered(_ devices: [BluetoothDevice]) -> [BluetoothDevice] {
         devices.sorted { first, second in
             guard first.isConnected == second.isConnected else { return first.isConnected }
 

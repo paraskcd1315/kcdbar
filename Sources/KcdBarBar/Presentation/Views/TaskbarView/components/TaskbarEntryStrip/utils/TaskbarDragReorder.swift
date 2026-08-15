@@ -1,7 +1,7 @@
 import Foundation
 
-enum TaskbarDragReorder {
-    static func preview(
+package enum TaskbarDragReorder {
+    package static func preview(
         entries: [TaskbarEntryModel],
         dragging: String?,
         over: String?
