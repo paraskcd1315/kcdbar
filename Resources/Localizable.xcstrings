@@ -224,6 +224,12 @@
         }
       }
     },
+    "taskbar.menu.quit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit" } }
+      }
+    },
     "taskbar.menu.unpin" : {
       "extractionState" : "manual",
       "localizations" : {

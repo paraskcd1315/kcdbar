@@ -26,6 +26,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onRequestAccessibility: () -> Void
     private let onOpenStart: () -> Void
     private let onTogglePin: (TaskbarEntryModel) -> Void
+    private let onQuit: (TaskbarEntryModel) -> Void
     private let onDropPin: (String, TaskbarEntryModel) -> Void
     private let onToggleDesktop: () -> Void
     private let onMiddleClick: (TaskbarEntryModel, Int) -> Void
@@ -45,6 +46,7 @@ package final class BarPanelHost: BarPanelHostPort {
         onRequestAccessibility: @escaping () -> Void,
         onOpenStart: @escaping () -> Void,
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
+        onQuit: @escaping (TaskbarEntryModel) -> Void,
         onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
         onToggleDesktop: @escaping () -> Void,
         onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void,
@@ -65,6 +67,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.desktop = desktop
         self.icons = icons
         self.onTogglePin = onTogglePin
+        self.onQuit = onQuit
         self.displaySource = displaySource
         self.onActivate = onActivate
         self.onRequestAccessibility = onRequestAccessibility
@@ -264,6 +267,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 onRequestAccessibility: onRequestAccessibility,
                 onOpenStart: onOpenStart,
                 onTogglePin: onTogglePin,
+                onQuit: onQuit,
                 onDropPin: onDropPin,
                 onToggleDesktop: onToggleDesktop,
                 onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) },

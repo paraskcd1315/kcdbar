@@ -7,9 +7,28 @@ package struct ControlCentrePanelView: View {
     package let sound: SoundMonitor
     package let brightness: BrightnessMonitor
     package let presentation: PopoverPresentation
-    package let onOpenSettings: () -> Void
+    package let onOpenWifiSettings: () -> Void
+    package let onOpenBluetoothSettings: () -> Void
 
-    @State private var isWifiExpanded = false
+    @State private var page: ControlCentrePage = .tiles
+
+    package init(
+        wifi: WifiMonitor,
+        bluetooth: BluetoothMonitor,
+        sound: SoundMonitor,
+        brightness: BrightnessMonitor,
+        presentation: PopoverPresentation,
+        onOpenWifiSettings: @escaping () -> Void,
+        onOpenBluetoothSettings: @escaping () -> Void
+    ) {
+        self.wifi = wifi
+        self.bluetooth = bluetooth
+        self.sound = sound
+        self.brightness = brightness
+        self.presentation = presentation
+        self.onOpenWifiSettings = onOpenWifiSettings
+        self.onOpenBluetoothSettings = onOpenBluetoothSettings
+    }
 
     package var body: some View {
         ControlCentreSurface(
@@ -17,8 +36,9 @@ package struct ControlCentrePanelView: View {
             bluetooth: bluetooth,
             sound: sound,
             brightness: brightness,
-            isWifiExpanded: $isWifiExpanded,
-            onOpenSettings: onOpenSettings
+            page: $page,
+            onOpenWifiSettings: onOpenWifiSettings,
+            onOpenBluetoothSettings: onOpenBluetoothSettings
         )
         .scaleEffect(
             x: 1,

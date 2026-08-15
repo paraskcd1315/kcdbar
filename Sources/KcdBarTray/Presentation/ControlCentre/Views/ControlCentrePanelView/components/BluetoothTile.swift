@@ -3,6 +3,12 @@ import SwiftUI
 
 package struct BluetoothTile: View {
     package let monitor: BluetoothMonitor
+    package let onExpand: () -> Void
+
+    package init(monitor: BluetoothMonitor, onExpand: @escaping () -> Void) {
+        self.monitor = monitor
+        self.onExpand = onExpand
+    }
 
     package var body: some View {
         KbTile {
@@ -11,7 +17,7 @@ package struct BluetoothTile: View {
                 statusKey: ConnectivityLabels.bluetoothStatus(monitor.state),
                 isOn: monitor.state.isPowered,
                 onToggle: { monitor.setPower(!monitor.state.isPowered) },
-                onOpen: nil
+                onOpen: onExpand
             ) {
                 KbBluetoothMark(
                     size: KbControlCentreMetrics.rowGlyphSize * KbControlCentreMetrics.glyphRatio

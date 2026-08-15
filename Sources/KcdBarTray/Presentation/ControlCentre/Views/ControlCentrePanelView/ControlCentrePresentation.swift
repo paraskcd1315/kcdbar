@@ -9,7 +9,8 @@ package enum ControlCentrePresentation {
         sound: SoundMonitor,
         brightness: BrightnessMonitor,
         presentation: PopoverPresentation,
-        onOpenSettings: @escaping () -> Void
+        onOpenWifiSettings: @escaping () -> Void,
+        onOpenBluetoothSettings: @escaping () -> Void
     ) -> AnyView {
         AnyView(
             ControlCentrePanelView(
@@ -18,7 +19,8 @@ package enum ControlCentrePresentation {
                 sound: sound,
                 brightness: brightness,
                 presentation: presentation,
-                onOpenSettings: onOpenSettings
+                onOpenWifiSettings: onOpenWifiSettings,
+                onOpenBluetoothSettings: onOpenBluetoothSettings
             )
         )
     }

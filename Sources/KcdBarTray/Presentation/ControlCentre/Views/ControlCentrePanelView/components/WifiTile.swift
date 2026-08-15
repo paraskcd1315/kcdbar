@@ -5,6 +5,11 @@ package struct WifiTile: View {
     package let monitor: WifiMonitor
     package let onExpand: () -> Void
 
+    package init(monitor: WifiMonitor, onExpand: @escaping () -> Void) {
+        self.monitor = monitor
+        self.onExpand = onExpand
+    }
+
     package var body: some View {
         KbTile {
             ConnectivityRow(

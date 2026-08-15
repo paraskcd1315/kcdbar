@@ -6,32 +6,45 @@ package struct ControlCentreSurface: View {
     package let bluetooth: BluetoothMonitor
     package let sound: SoundMonitor
     package let brightness: BrightnessMonitor
-    @Binding package var isWifiExpanded: Bool
-    package let onOpenSettings: () -> Void
+    @Binding package var page: ControlCentrePage
+    package let onOpenWifiSettings: () -> Void
+    package let onOpenBluetoothSettings: () -> Void
 
     package var body: some View {
         VStack(alignment: .leading, spacing: KbControlCentreMetrics.tileGap) {
-            if isWifiExpanded {
-                KbTile {
-                    WifiDetail(
-                        monitor: wifi,
-                        onBack: { withAnimation(KbMotion.standard) { isWifiExpanded = false } },
-                        onOpenSettings: onOpenSettings
-                    )
-                }
-            } else {
+            switch page {
+            case .tiles:
                 ControlCentreTiles(
                     wifi: wifi,
                     bluetooth: bluetooth,
                     sound: sound,
-                    brightness: brightness
-                ) {
-                    withAnimation(KbMotion.standard) { isWifiExpanded = true }
+                    brightness: brightness,
+                    onOpen: { show($0) }
+                )
+            case .wifi:
+                KbTile {
+                    WifiDetail(
+                        monitor: wifi,
+                        onBack: { show(.tiles) },
+                        onOpenSettings: onOpenWifiSettings
+                    )
+                }
+            case .bluetooth:
+                KbTile {
+                    BluetoothDetail(
+                        monitor: bluetooth,
+                        onBack: { show(.tiles) },
+                        onOpenSettings: onOpenBluetoothSettings
+                    )
                 }
             }
         }
         .padding(KbControlCentreMetrics.panelPadding)
         .frame(width: KbControlCentreMetrics.panelWidth, alignment: .leading)
-        .animation(KbMotion.standard, value: isWifiExpanded)
+        .animation(KbMotion.standard, value: page)
+    }
+
+    private func show(_ wanted: ControlCentrePage) {
+        withAnimation(KbMotion.standard) { page = wanted }
     }
 }

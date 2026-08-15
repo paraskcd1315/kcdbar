@@ -17,6 +17,6 @@ package struct TaskbarInstanceDots: View {
     }
 
     private var shownCount: Int {
-        min(count, TaskbarMetrics.maximumInstanceDots)
+        min(TaskbarDotCount.dots(windows: count), TaskbarMetrics.maximumInstanceDots)
     }
 }

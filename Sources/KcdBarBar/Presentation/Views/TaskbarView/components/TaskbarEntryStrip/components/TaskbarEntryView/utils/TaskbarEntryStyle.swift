@@ -16,9 +16,7 @@ package enum TaskbarEntryStyle {
 
     package static func glass(isFrontmost: Bool, isHovered: Bool) -> Glass {
         if isFrontmost {
-            return .regular
-                .tint(KbColors.onSurface.opacity(TaskbarMetrics.focusedFillOpacity))
-                .interactive()
+            return .regular.tint(KbColors.focusedFill).interactive()
         }
         return isHovered ? .regular.interactive() : .identity
     }
