@@ -28,8 +28,7 @@ package struct ControlCentreDetailTitle: View {
             RoundedRectangle(cornerRadius: KbRadii.md, style: .continuous)
                 .fill(isHovered ? KbColors.onSurface.opacity(KbControlCentreMetrics.hoverOpacity) : .clear)
         )
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onBack)
+        .kbTappable(in: Rectangle(), perform: onBack)
         .onHover { isHovered = $0 }
     }
 }

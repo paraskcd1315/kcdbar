@@ -19,8 +19,7 @@ package struct TaskbarShowDesktopButton: View {
                     .frame(width: TaskbarMetrics.showDesktopDividerWidth)
             }
             .background(shape.fill(fill))
-            .contentShape(shape)
-            .onTapGesture(perform: onToggle)
+            .kbTappable(in: shape, perform: onToggle)
             .animation(KbMotion.quick, value: isHovered)
             .animation(KbMotion.quick, value: isShowingDesktop)
             .onHover { isHovered = $0 }

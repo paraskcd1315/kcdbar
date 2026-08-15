@@ -23,8 +23,7 @@ package struct TaskbarBattery: View {
         }
         .padding(.horizontal, KbSpacing.s2)
         .padding(.vertical, KbSpacing.s1)
-        .contentShape(shape)
-        .onTapGesture(perform: onOpen)
+        .kbTappable(in: shape, perform: onOpen)
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }

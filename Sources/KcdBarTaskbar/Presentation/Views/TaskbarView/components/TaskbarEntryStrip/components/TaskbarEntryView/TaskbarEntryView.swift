@@ -26,6 +26,7 @@ package struct TaskbarEntryView: View {
         )
         .overlay(alignment: .bottom) { TaskbarEntryIndicator(entry: entry) }
         .contentShape(shape)
+        .kbClickable()
         .overlay { middleClickCatcher(onMiddleClick) }
         .onTapGesture(perform: onActivate)
         .glassEffect(TaskbarEntryStyle.glass(isFrontmost: entry.isFrontmost, isHovered: isHovered), in: shape)

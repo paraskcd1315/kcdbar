@@ -43,9 +43,8 @@ package struct TimerPanelRow: View {
         }
         .padding(.vertical, KbSpacing.s1)
         .padding(.horizontal, KbSpacing.s2)
-        .contentShape(shape)
         .background(isHovered && timer.opensATicket ? KbColors.separator : .clear, in: shape)
-        .onTapGesture(perform: onOpen)
+        .kbTappable(in: shape, perform: onOpen)
         .onHover { isHovered = $0 }
         .animation(KbMotion.quick, value: isHovered)
     }

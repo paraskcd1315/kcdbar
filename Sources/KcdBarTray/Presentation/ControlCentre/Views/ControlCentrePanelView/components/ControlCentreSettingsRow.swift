@@ -18,7 +18,6 @@ package struct ControlCentreSettingsRow: View {
                 .padding(.horizontal, KbSpacing.s4)
                 .frame(height: KbControlCentreMetrics.settingsRowHeight, alignment: .leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
                 .background(
                     RoundedRectangle(cornerRadius: KbRadii.sm)
                         .fill(
@@ -28,7 +27,7 @@ package struct ControlCentreSettingsRow: View {
                         )
                 )
                 .onHover { isHovered = $0 }
-                .onTapGesture(perform: onOpen)
+                .kbTappable(in: Rectangle(), perform: onOpen)
         }
     }
 }

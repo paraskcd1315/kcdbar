@@ -14,8 +14,7 @@ package struct WifiToggle: View {
                     .fill(KbColors.onBrand)
                     .padding(KbControlCentreMetrics.knobInset)
             }
-            .contentShape(Capsule())
-            .onTapGesture { onToggle(!isOn) }
+            .kbTappable(in: Capsule()) { onToggle(!isOn) }
             .animation(KbMotion.quick, value: isOn)
     }
 }

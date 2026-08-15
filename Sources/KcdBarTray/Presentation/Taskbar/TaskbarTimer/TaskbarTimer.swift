@@ -47,8 +47,7 @@ package struct TaskbarTimer: View {
             .padding(.vertical, KbSpacing.s1)
             .fixedSize(horizontal: true, vertical: false)
         }
-        .contentShape(shape)
-        .onTapGesture(perform: onOpen)
+        .kbTappable(in: shape, perform: onOpen)
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }

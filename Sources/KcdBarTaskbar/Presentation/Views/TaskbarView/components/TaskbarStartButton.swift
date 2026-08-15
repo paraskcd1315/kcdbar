@@ -14,6 +14,7 @@ package struct TaskbarStartButton: View {
                 .frame(width: TaskbarMetrics.iconSize, height: TaskbarMetrics.iconSize)
                 .padding(KbSpacing.s3)
                 .contentShape(.rect(cornerRadius: KbRadii.md))
+                .kbClickable()
         }
         .buttonStyle(.plain)
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: .rect(cornerRadius: KbRadii.md))

@@ -21,12 +21,11 @@ package struct WifiDisclosureRow: View {
         }
         .padding(.horizontal, KbSpacing.s4)
         .frame(height: WifiMetrics.rowHeight)
-        .contentShape(Rectangle())
         .background(
             RoundedRectangle(cornerRadius: KbRadii.sm)
                 .fill(isHovered ? KbColors.onSurface.opacity(KbControlCentreMetrics.hoverOpacity) : .clear)
         )
         .onHover { isHovered = $0 }
-        .onTapGesture(perform: onToggle)
+        .kbTappable(in: Rectangle(), perform: onToggle)
     }
 }
