@@ -6,6 +6,7 @@ enum TaskbarMetrics {
     static let iconSize: CGFloat = 20
     static let iconOnlyEntryWidth: CGFloat = 44
     static let entryMinWidth: CGFloat = 96
+    static let entryCompactWidth: CGFloat = 52
     static let entryMaxWidth: CGFloat = 220
     static let indicatorHeight: CGFloat = 2
     static let indicatorWidth: CGFloat = 16

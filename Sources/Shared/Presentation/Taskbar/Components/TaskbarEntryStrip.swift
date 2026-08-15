@@ -6,15 +6,20 @@ struct TaskbarEntryStrip: View {
     let onActivate: (TaskbarEntryModel) -> Void
 
     var body: some View {
-        ScrollView(preset.edge.isVertical ? .vertical : .horizontal) {
-            layout {
-                ForEach(entries) { entry in
-                    TaskbarEntryView(entry: entry, preset: preset) { onActivate(entry) }
-                }
+        layout {
+            ForEach(entries) { entry in
+                TaskbarEntryView(entry: entry, preset: preset) { onActivate(entry) }
             }
-            .padding(.horizontal, KbSpacing.s2)
         }
-        .scrollIndicators(.never)
+        .frame(
+            maxWidth: expandsAlongBar && !preset.edge.isVertical ? .infinity : nil,
+            maxHeight: expandsAlongBar && preset.edge.isVertical ? .infinity : nil,
+            alignment: stackAlignment
+        )
+    }
+
+    private var expandsAlongBar: Bool {
+        preset.widthMode == .fullEdge
     }
 
     @ViewBuilder
@@ -23,6 +28,14 @@ struct TaskbarEntryStrip: View {
             VStack(spacing: preset.entrySpacing, content: content)
         } else {
             HStack(spacing: preset.entrySpacing, content: content)
+        }
+    }
+
+    private var stackAlignment: Alignment {
+        switch preset.alignment {
+        case .leading: preset.edge.isVertical ? .top : .leading
+        case .centered: .center
+        case .trailing: preset.edge.isVertical ? .bottom : .trailing
         }
     }
 }

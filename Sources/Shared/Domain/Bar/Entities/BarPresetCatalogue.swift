@@ -5,7 +5,7 @@ enum BarPresetCatalogue {
         name: "windows11",
         edge: .bottom,
         alignment: .centered,
-        widthMode: .fullEdge,
+        widthMode: .island,
         entryContent: .iconAndTitle,
         entrySizing: .fixed,
         grouping: .perWindow,

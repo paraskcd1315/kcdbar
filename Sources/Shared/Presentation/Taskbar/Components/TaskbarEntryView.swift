@@ -21,7 +21,7 @@ struct TaskbarEntryView: View {
             .padding(.horizontal, KbSpacing.s4)
             .padding(.vertical, KbSpacing.s3)
             .frame(
-                minWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryMinWidth,
+                minWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryCompactWidth,
                 maxWidth: preset.entryContent == .iconOnly ? TaskbarMetrics.iconOnlyEntryWidth : TaskbarMetrics.entryMaxWidth
             )
             .contentShape(.rect(cornerRadius: KbRadii.sm))
