@@ -85,34 +85,30 @@ final class BarPanelHost: BarPanelHostPort {
                 existing.setFrame(frame, display: true)
                 continue
             }
-            let panel = BarPanel(contentRect: frame)
-            panel.contentView = BarHostingView(
-                rootView: taskbarRoot(for: display, preset: preset)
+            let root = TaskbarRootView(
+                registry: registry,
+                pins: pins,
+                order: order,
+                desktop: desktop,
+                preset: preset,
+                displayId: display.id,
+                icons: icons,
+                onActivate: { [onActivate] in onActivate($0, display.id) },
+                onRequestAccessibility: onRequestAccessibility,
+                onOpenStart: onOpenStart,
+                onTogglePin: onTogglePin,
+                onDropPin: onDropPin,
+                onToggleDesktop: onToggleDesktop,
+                onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) }
             )
+            .environment(\.middleClickCatcher) { action in
+                AnyView(MiddleClickView(action: action))
+            }
+
+            let panel = BarPanel(contentRect: frame)
+            panel.contentView = BarHostingView(rootView: root)
             panel.orderFrontRegardless()
             panels[display.id] = panel
-        }
-    }
-
-    private func taskbarRoot(for display: DisplayGeometry, preset: BarPreset) -> some View {
-        TaskbarRootView(
-                    registry: registry,
-                    pins: pins,
-                    order: order,
-                    desktop: desktop,
-                    preset: preset,
-                    displayId: display.id,
-                    icons: icons,
-                    onActivate: { [onActivate] in onActivate($0, display.id) },
-                    onRequestAccessibility: onRequestAccessibility,
-                    onOpenStart: onOpenStart,
-                    onTogglePin: onTogglePin,
-                    onDropPin: onDropPin,
-                    onToggleDesktop: onToggleDesktop,
-                    onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) }
-        )
-        .environment(\.middleClickCatcher) { action in
-            AnyView(MiddleClickView(action: action))
         }
     }
 

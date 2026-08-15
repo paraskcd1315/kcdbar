@@ -9,7 +9,7 @@ struct TaskbarEntryStrip: View {
     let onMiddleClick: (TaskbarEntryModel) -> Void
 
     var body: some View {
-        layout {
+        KbAxisStack(isVertical: preset.edge.isVertical, spacing: preset.entrySpacing) {
             ForEach(entries) { entry in
                 TaskbarEntryView(
                     entry: entry,
@@ -19,40 +19,18 @@ struct TaskbarEntryStrip: View {
                     onDropPin: { dropped in onDropPin(dropped, entry) },
                     onMiddleClick: { onMiddleClick(entry) }
                 )
-                .transition(entryTransition)
+                .transition(TaskbarStripLayout.insertion)
             }
         }
         .animation(KbMotion.standard, value: entries)
         .frame(
             maxWidth: expandsAlongBar && !preset.edge.isVertical ? .infinity : nil,
             maxHeight: expandsAlongBar && preset.edge.isVertical ? .infinity : nil,
-            alignment: stackAlignment
+            alignment: TaskbarStripLayout.alignment(preset: preset)
         )
     }
 
     private var expandsAlongBar: Bool {
-        preset.widthMode == .fullEdge
-    }
-
-    private var entryTransition: AnyTransition {
-        .scale(scale: TaskbarMetrics.insertionScale, anchor: .center)
-            .combined(with: .opacity)
-    }
-
-    @ViewBuilder
-    private func layout<Content: View>(@ViewBuilder content: () -> Content) -> some View {
-        if preset.edge.isVertical {
-            VStack(spacing: preset.entrySpacing, content: content)
-        } else {
-            HStack(spacing: preset.entrySpacing, content: content)
-        }
-    }
-
-    private var stackAlignment: Alignment {
-        switch preset.alignment {
-        case .leading: preset.edge.isVertical ? .top : .leading
-        case .centered: .center
-        case .trailing: preset.edge.isVertical ? .bottom : .trailing
-        }
+        TaskbarStripLayout.expandsAlongBar(preset: preset)
     }
 }
