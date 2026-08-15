@@ -13,6 +13,72 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Bluetooth" } }
       }
     },
+    "network.details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Details" } }
+      }
+    },
+    "network.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Network Settings…" } }
+      }
+    },
+    "network.method" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Configure IPv4" } }
+      }
+    },
+    "network.address" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "IP Address" } }
+      }
+    },
+    "network.subnetMask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Subnet Mask" } }
+      }
+    },
+    "network.router" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Router" } }
+      }
+    },
+    "network.dns" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "DNS Servers" } }
+      }
+    },
+    "network.searchDomains" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search Domains" } }
+      }
+    },
+    "network.ipv6" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "IPv6 Address" } }
+      }
+    },
+    "trash.open" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Trash" } }
+      }
+    },
+    "trash.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Empty Trash" } }
+      }
+    },
     "ethernet.title" : {
       "extractionState" : "manual",
       "localizations" : {

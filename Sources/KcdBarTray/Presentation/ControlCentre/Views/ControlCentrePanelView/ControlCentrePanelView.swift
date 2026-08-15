@@ -10,6 +10,7 @@ package struct ControlCentrePanelView: View {
     package let onOpenWifiSettings: () -> Void
     package let onOpenBluetoothSettings: () -> Void
     package let onOpenNetworkSettings: () -> Void
+    package let onCopy: (String) -> Void
 
     @State private var page: ControlCentrePage = .tiles
 
@@ -21,7 +22,8 @@ package struct ControlCentrePanelView: View {
         presentation: PopoverPresentation,
         onOpenWifiSettings: @escaping () -> Void,
         onOpenBluetoothSettings: @escaping () -> Void,
-        onOpenNetworkSettings: @escaping () -> Void
+        onOpenNetworkSettings: @escaping () -> Void,
+        onCopy: @escaping (String) -> Void
     ) {
         self.wifi = wifi
         self.bluetooth = bluetooth
@@ -31,6 +33,7 @@ package struct ControlCentrePanelView: View {
         self.onOpenWifiSettings = onOpenWifiSettings
         self.onOpenBluetoothSettings = onOpenBluetoothSettings
         self.onOpenNetworkSettings = onOpenNetworkSettings
+        self.onCopy = onCopy
     }
 
     package var body: some View {
@@ -42,7 +45,8 @@ package struct ControlCentrePanelView: View {
             page: $page,
             onOpenWifiSettings: onOpenWifiSettings,
             onOpenBluetoothSettings: onOpenBluetoothSettings,
-            onOpenNetworkSettings: onOpenNetworkSettings
+            onOpenNetworkSettings: onOpenNetworkSettings,
+            onCopy: onCopy
         )
         .scaleEffect(
             x: 1,

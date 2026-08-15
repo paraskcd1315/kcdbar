@@ -28,6 +28,13 @@ package struct TaskbarTrash: View {
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }
+        .contextMenu {
+            TaskbarTrashMenu(
+                isEmpty: monitor.state.isEmpty,
+                onOpen: { monitor.open() },
+                onEmpty: { monitor.empty() }
+            )
+        }
     }
 
     private var shape: AnyShape {

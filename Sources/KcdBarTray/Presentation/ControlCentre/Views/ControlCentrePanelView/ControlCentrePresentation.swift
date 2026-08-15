@@ -11,7 +11,8 @@ package enum ControlCentrePresentation {
         presentation: PopoverPresentation,
         onOpenWifiSettings: @escaping () -> Void,
         onOpenBluetoothSettings: @escaping () -> Void,
-        onOpenNetworkSettings: @escaping () -> Void
+        onOpenNetworkSettings: @escaping () -> Void,
+        onCopy: @escaping (String) -> Void
     ) -> AnyView {
         AnyView(
             ControlCentrePanelView(
@@ -22,7 +23,8 @@ package enum ControlCentrePresentation {
                 presentation: presentation,
                 onOpenWifiSettings: onOpenWifiSettings,
                 onOpenBluetoothSettings: onOpenBluetoothSettings,
-                onOpenNetworkSettings: onOpenNetworkSettings
+                onOpenNetworkSettings: onOpenNetworkSettings,
+            onCopy: onCopy
             )
         )
     }

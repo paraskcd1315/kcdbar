@@ -3,4 +3,5 @@ package enum ControlCentrePage: Equatable {
     case tiles
     case wifi
     case bluetooth
+    case ethernet
 }
