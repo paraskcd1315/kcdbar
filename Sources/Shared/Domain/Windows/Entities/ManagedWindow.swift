@@ -7,6 +7,7 @@ struct ManagedWindow: Equatable, Sendable {
     let title: String?
     let bounds: CGRect?
     let isMinimized: Bool
+    let isFullScreen: Bool
     let isOnScreen: Bool
     let zOrder: Int?
     let source: WindowRecordSource

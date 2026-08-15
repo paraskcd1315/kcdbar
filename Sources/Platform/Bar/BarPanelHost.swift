@@ -5,6 +5,10 @@ import SwiftUI
 final class BarPanelHost: BarPanelHostPort {
     private var panels: [Int: BarPanel] = [:]
     private var screenObserver: NSObjectProtocol?
+    private var pointerMonitor: Any?
+    private var hiddenDisplays: Set<Int> = []
+    private var revealedDisplays: Set<Int> = []
+    private var activePreset = BarPresetCatalogue.default
 
     private let registry: WindowRegistry
     private let pins: PinnedAppState
@@ -51,6 +55,7 @@ final class BarPanelHost: BarPanelHostPort {
     }
 
     func present(preset: BarPreset) {
+        activePreset = preset
         rebuild(preset: preset)
         screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
@@ -61,7 +66,80 @@ final class BarPanelHost: BarPanelHostPort {
         }
     }
 
+    func syncVisibility() {
+        hiddenDisplays = Set(
+            panels.keys.filter { id in
+                BarVisibilityPolicy.isHidden(
+                    onDisplay: id,
+                    windows: registry.windows,
+                    displays: registry.displays
+                )
+            }
+        )
+        revealedDisplays.formIntersection(hiddenDisplays)
+
+        for (id, panel) in panels {
+            let showing = !hiddenDisplays.contains(id) || revealedDisplays.contains(id)
+            apply(showing: showing, to: panel)
+        }
+        updatePointerMonitor()
+    }
+
+    private func apply(showing: Bool, to panel: BarPanel) {
+        if showing, !panel.isVisible {
+            panel.orderFrontRegardless()
+        } else if !showing, panel.isVisible {
+            panel.orderOut(nil)
+        }
+    }
+
+    private func updatePointerMonitor() {
+        if hiddenDisplays.isEmpty {
+            stopPointerMonitor()
+            return
+        }
+        guard pointerMonitor == nil else { return }
+
+        pointerMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved]) { [weak self] _ in
+            MainActor.assumeIsolated { self?.pointerMoved(to: NSEvent.mouseLocation) }
+        }
+    }
+
+    private func stopPointerMonitor() {
+        if let pointerMonitor {
+            NSEvent.removeMonitor(pointerMonitor)
+        }
+        pointerMonitor = nil
+    }
+
+    private func pointerMoved(to location: NSPoint) {
+        for id in hiddenDisplays {
+            guard let panel = panels[id],
+                  let display = registry.displays.first(where: { $0.id == id })
+            else {
+                continue
+            }
+            let reveal = BarRevealPolicy.shouldReveal(
+                pointer: location,
+                barFrame: panel.frame,
+                display: display,
+                edge: activePreset.edge
+            )
+            guard reveal != revealedDisplays.contains(id) else { continue }
+
+            if reveal {
+                revealedDisplays.insert(id)
+            } else {
+                revealedDisplays.remove(id)
+            }
+            apply(showing: reveal, to: panel)
+        }
+    }
+
     func dismiss() {
+        stopPointerMonitor()
+        hiddenDisplays = []
+        revealedDisplays = []
         panels.values.forEach { $0.orderOut(nil) }
         panels = [:]
         if let screenObserver {

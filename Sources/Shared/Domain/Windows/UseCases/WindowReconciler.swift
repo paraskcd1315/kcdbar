@@ -7,7 +7,7 @@ enum WindowReconciler {
         previous: [ManagedWindow]
     ) -> [ManagedWindow] {
         let manageable = coreGraphics.filter(isManageable)
-        var unmatched = accessibility
+        var unmatched = accessibility.filter(AxWindowClassification.isSwitchable)
         var reconciled: [ManagedWindow] = []
 
         for record in manageable.sorted(by: { $0.zOrder < $1.zOrder }) {
@@ -70,6 +70,7 @@ enum WindowReconciler {
             title: preferredTitle(record.title, match?.title, previous: previous, identity: identity),
             bounds: record.bounds,
             isMinimized: match?.isMinimized ?? false,
+            isFullScreen: match?.isFullScreen ?? false,
             isOnScreen: record.isOnScreen,
             zOrder: record.zOrder,
             source: match == nil ? .coreGraphicsOnly : .both
@@ -85,6 +86,7 @@ enum WindowReconciler {
             title: record.title,
             bounds: record.bounds,
             isMinimized: true,
+            isFullScreen: false,
             isOnScreen: false,
             zOrder: nil,
             source: .accessibilityOnly

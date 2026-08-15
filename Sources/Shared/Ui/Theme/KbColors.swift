@@ -9,6 +9,6 @@ enum KbColors {
     static let onBrand = Color.white
     static let separator = Color.white.opacity(0.12)
     static let activeIndicator = Color.accentColor
-    static let glassEdgeBright = Color.white.opacity(0.35)
-    static let glassEdgeDim = Color.white.opacity(0.08)
+    static let glassEdgeBright = Color.white.opacity(0.65)
+    static let glassEdgeShade = Color.black.opacity(0.5)
 }

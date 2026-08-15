@@ -40,6 +40,7 @@ final class AppServices {
             now: now
         )
         order.note(keys: orderingKeys)
+        bar?.syncVisibility()
         geometry.observe(pids: observedPids) { [weak self] in
             self?.scheduleRefresh()
         }

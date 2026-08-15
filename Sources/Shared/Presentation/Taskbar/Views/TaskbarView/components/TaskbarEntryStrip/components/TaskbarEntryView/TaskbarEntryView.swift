@@ -6,9 +6,6 @@ struct TaskbarEntryView: View {
     let isDragging: Bool
     let onActivate: () -> Void
     let onTogglePin: () -> Void
-    let onDragStart: () -> Void
-    let onTargeted: (Bool) -> Void
-    let onDropPin: (String) -> Void
     let onMiddleClick: () -> Void
 
     @Environment(\.middleClickCatcher) private var middleClickCatcher
@@ -34,25 +31,12 @@ struct TaskbarEntryView: View {
         .animation(KbMotion.quick, value: entry.isFrontmost)
         .animation(KbMotion.quick, value: isDragging)
         .overlay(alignment: TaskbarEntryStyle.tooltipAlignment(edge: preset.edge)) {
-            if showsTooltip {
+            if showsTooltip, !isDragging {
                 TaskbarEntryTooltip(entry: entry, edge: preset.edge)
             }
         }
         .onHover { isHovered = $0 }
         .task(id: isHovered) { await revealTooltip() }
-        .onDrag {
-            onDragStart()
-            return NSItemProvider(object: entry.orderingKey as NSString)
-        } preview: {
-            TaskbarEntryIcon(icon: entry.icon)
-        }
-        .dropDestination(for: String.self) { items, _ in
-            guard let dropped = items.first else { return false }
-            onDropPin(dropped)
-            return true
-        } isTargeted: { targeted in
-            onTargeted(targeted)
-        }
         .contextMenu {
             if entry.bundleIdentifier != nil {
                 Button(entry.isPinned ? "taskbar.menu.unpin" : "taskbar.menu.pin", action: onTogglePin)

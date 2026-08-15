@@ -28,16 +28,22 @@ enum WindowFixtures {
         pid: pid_t,
         cgWindowId: CGWindowID?,
         title: String?,
+        role: String? = "AXWindow",
+        subrole: String? = "AXStandardWindow",
         bounds: CGRect? = defaultBounds,
         isMinimized: Bool = false,
+        isFullScreen: Bool = false,
         indexInApplication: Int = 0
     ) -> AxWindowRecord {
         AxWindowRecord(
             ownerPid: pid,
             cgWindowId: cgWindowId,
             title: title,
+            role: role,
+            subrole: subrole,
             bounds: bounds,
             isMinimized: isMinimized,
+            isFullScreen: isFullScreen,
             indexInApplication: indexInApplication
         )
     }
