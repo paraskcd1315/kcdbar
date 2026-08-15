@@ -16,6 +16,10 @@ struct TaskbarView: View {
                 content
             }
         }
+        .frame(
+            width: viewModel.preset.edge.isVertical ? viewModel.preset.thickness : nil,
+            height: viewModel.preset.edge.isVertical ? nil : viewModel.preset.thickness
+        )
         .padding(outsetPadding)
         .offset(x: appearOffset.width, y: appearOffset.height)
         .opacity(hasAppeared ? 1 : 0)
