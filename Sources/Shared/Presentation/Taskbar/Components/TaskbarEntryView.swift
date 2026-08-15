@@ -53,7 +53,7 @@ struct TaskbarEntryView: View {
                     .truncationMode(.tail)
             }
         }
-        .frame(maxWidth: .infinity, alignment: showsTitle ? .leading : .center)
+        .frame(maxWidth: showsTitle ? .infinity : nil, alignment: showsTitle ? .leading : .center)
         .padding(.horizontal, showsTitle ? KbSpacing.s4 : KbSpacing.s3)
         .padding(.vertical, KbSpacing.s3)
         .frame(
