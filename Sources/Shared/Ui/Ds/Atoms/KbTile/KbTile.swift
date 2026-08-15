@@ -2,7 +2,7 @@ import SwiftUI
 
 /** A rounded plate inside a glass panel. */
 struct KbTile<Content: View>: View {
-    var cornerRadius: CGFloat = KbRadii.lg
+    var cornerRadius: CGFloat = KbRadii.xl
     var padding: CGFloat = KbSpacing.s3
     var fill: Color = KbColors.tileFill
     var edge: Color = KbColors.tileEdge
