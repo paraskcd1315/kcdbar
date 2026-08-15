@@ -62,7 +62,7 @@ final class BarPanelHost: BarPanelHostPort {
                 continue
             }
             let panel = BarPanel(contentRect: frame)
-            panel.contentView = NSHostingView(
+            panel.contentView = BarHostingView(
                 rootView: TaskbarRootView(
                     registry: registry,
                     preset: preset,

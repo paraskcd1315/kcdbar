@@ -9,7 +9,20 @@ final class AppServices {
     let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     let registry: WindowRegistry
 
+    let control: any WindowControlPort = AccessibilityWindowControl()
+
     private(set) var bar: (any BarPanelHostPort)?
+
+    func toggle(entryId: String) {
+        guard let window = registry.window(withEntryId: entryId) else { return }
+        let action = WindowToggleDecider.action(
+            for: window,
+            frontmostPid: registry.frontmostPid,
+            among: registry.windows
+        )
+        _ = control.perform(action, on: window)
+        registry.refresh()
+    }
 
     init() {
         registry = WindowRegistry(

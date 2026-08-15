@@ -29,7 +29,11 @@ struct TaskbarViewModel {
                 applicationName: window.ownerName ?? "",
                 icon: icons.icon(forPid: window.ownerPid),
                 isMinimized: window.isMinimized,
-                isFrontmost: window.ownerPid == frontmostPid && window.zOrder == 0
+                isFrontmost: WindowFocusPolicy.isFrontmost(
+                    window,
+                    frontmostPid: frontmostPid,
+                    among: windows
+                )
             )
         }
         notice = if !hasAccessibility {

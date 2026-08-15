@@ -15,6 +15,10 @@ final class WindowRegistry {
         WindowPresentationPolicy.taskbarEntries(from: windows)
     }
 
+    func window(withEntryId entryId: String) -> ManagedWindow? {
+        windows.first { WindowEntryIdentifier.text(for: $0.identity) == entryId }
+    }
+
     private let coreGraphicsSource: CgWindowSourcePort
     private let accessibilitySource: AxWindowSourcePort
     private let applicationsSource: RunningApplicationsPort

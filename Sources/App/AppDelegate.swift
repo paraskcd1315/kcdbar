@@ -12,7 +12,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         services.registry.refresh()
-        services.startBar(preset: BarPresetCatalogue.default) { _ in }
+        services.startBar(preset: BarPresetCatalogue.default) { [services] entry in
+            services.toggle(entryId: entry.id)
+        }
         services.changes.startObserving { [services] in
             services.registry.refresh()
         }
