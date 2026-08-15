@@ -36,4 +36,24 @@ struct PopoverAnchorTests {
 
         #expect(origin.y == 0)
     }
+
+    @Test func aPopoverThatFitsKeepsTheSizeItAskedFor() {
+        let fitted = PopoverAnchor.fittedSize(size, anchor: CGPoint(x: 960, y: 52), within: screen)
+
+        #expect(fitted == size)
+    }
+
+    @Test func aTallPopoverIsCutToTheRoomAboveItsAnchor() {
+        let tall = CGSize(width: 340, height: 1200)
+        let fitted = PopoverAnchor.fittedSize(tall, anchor: CGPoint(x: 960, y: 52), within: screen)
+
+        #expect(fitted.height == 1022)
+        #expect(fitted.width == 340)
+    }
+
+    @Test func anAnchorAtTheTopEdgeLeavesNoNegativeHeight() {
+        let fitted = PopoverAnchor.fittedSize(size, anchor: CGPoint(x: 960, y: 1080), within: screen)
+
+        #expect(fitted.height == 0)
+    }
 }

@@ -14,8 +14,7 @@ package final class AppServices {
     package let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     package let registry: WindowRegistry
     package let battery = BatteryMonitor(source: IoKitBatterySource())
-    package let batteryPanel = PopoverHost()
-    package let controlCentrePanel = PopoverHost()
+    package let popover = PopoverHost()
     package let wifi = WifiMonitor(
         source: CoreWlanSource(),
         links: SystemConfigurationLinkSource()
@@ -221,12 +220,12 @@ package final class AppServices {
     }
 
     package func openBatteryPanel() {
-        guard !batteryPanel.isPresented else {
-            batteryPanel.dismiss()
+        guard !popover.isPresenting(.battery) else {
+            popover.dismiss()
             return
         }
         battery.refresh()
-        batteryPanel.present(anchor: NSEvent.mouseLocation) { [battery] presentation, arrowX in
+        popover.present(.battery, anchor: popoverAnchor()) { [battery] presentation, arrowX in
             BatteryPanelPresentation.content(
                 monitor: battery,
                 presentation: presentation,
@@ -237,15 +236,15 @@ package final class AppServices {
     }
 
     package func openControlCentre() {
-        guard !controlCentrePanel.isPresented else {
-            controlCentrePanel.dismiss()
+        guard !popover.isPresenting(.controlCentre) else {
+            popover.dismiss()
             return
         }
         wifi.refresh()
         bluetooth.refresh()
         sound.refresh()
         brightness.refresh()
-        controlCentrePanel.present(anchor: NSEvent.mouseLocation) {
+        popover.present(.controlCentre, anchor: popoverAnchor()) {
             [wifi, bluetooth, sound, brightness, pasteboard] presentation, _ in
             ControlCentrePresentation.content(
                 wifi: wifi,
@@ -259,6 +258,18 @@ package final class AppServices {
                 onCopy: { [pasteboard] in pasteboard.copy($0) }
             )
         }
+    }
+
+    private func popoverAnchor() -> NSPoint {
+        let pointer = NSEvent.mouseLocation
+        guard let display = registry.displays.first(where: { $0.frame.contains(pointer) }) else {
+            return pointer
+        }
+
+        return NSPoint(
+            x: pointer.x,
+            y: BarFrameCalculator.frame(for: activePreset, on: display).maxY
+        )
     }
 
     package func closeWindow(entry: TaskbarEntryModel) {
