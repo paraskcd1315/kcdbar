@@ -4,6 +4,7 @@ import SwiftUI
 package struct TimerPanelSurface: View {
     package let timers: [RunningTimer]
     package let arrowX: CGFloat
+    package let onOpen: (RunningTimer) -> Void
 
     package var body: some View {
         TimelineView(.periodic(from: anchor, by: TimerReadoutMetrics.tick)) { context in
@@ -12,7 +13,7 @@ package struct TimerPanelSurface: View {
                 Rectangle()
                     .fill(KbColors.separator)
                     .frame(height: KbPopoverMetrics.dividerHeight)
-                TimerPanelList(timers: timers, now: context.date)
+                TimerPanelList(timers: timers, now: context.date, onOpen: onOpen)
             }
             .padding(.horizontal, KbSpacing.s6)
             .padding(.top, KbSpacing.s6)

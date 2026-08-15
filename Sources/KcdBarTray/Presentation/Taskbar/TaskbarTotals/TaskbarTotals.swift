@@ -10,7 +10,7 @@ package struct TaskbarTotals: View {
 
     package var body: some View {
         if let totals = monitor.totals {
-            HStack(spacing: KbSpacing.s3) {
+            HStack(alignment: .firstTextBaseline, spacing: KbSpacing.s3) {
                 TaskbarTotalsFigure(
                     label: "totals.today",
                     seconds: totals.todaySeconds,

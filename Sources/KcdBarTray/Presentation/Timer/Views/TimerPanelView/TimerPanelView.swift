@@ -5,10 +5,11 @@ package struct TimerPanelView: View {
     package let timers: [RunningTimer]
     package let arrowX: CGFloat
     package let presentation: PopoverPresentation
+    package let onOpen: (RunningTimer) -> Void
 
     package var body: some View {
         GlassEffectContainer {
-            TimerPanelSurface(timers: timers, arrowX: arrowX)
+            TimerPanelSurface(timers: timers, arrowX: arrowX, onOpen: onOpen)
         }
         .scaleEffect(
             x: 1,

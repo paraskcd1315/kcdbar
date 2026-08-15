@@ -31,8 +31,18 @@ private final class FakeTimerSignalSource: TimerSignalPort {
     }
 }
 
+private struct FakeTicketOpener: TicketOpenerPort {
+    var isAvailable: Bool { true }
+
+    func open(contextPath: String, key: String) async -> Bool { true }
+}
+
 @MainActor
 struct TimerMonitorTests {
+    private func monitor(_ source: FakeTimerSignalSource) -> TimerMonitor {
+        TimerMonitor(source: source, tickets: FakeTicketOpener())
+    }
+
     private func timer() -> RunningTimer {
         RunningTimer(
             projectId: 13,
@@ -45,14 +55,14 @@ struct TimerMonitorTests {
     }
 
     @Test func aMonitorThatHasHeardNothingReadsAsUnknown() {
-        let monitor = TimerMonitor(source: FakeTimerSignalSource())
+        let monitor = monitor(FakeTimerSignalSource())
 
         #expect(monitor.reading == .unknown)
     }
 
     @Test func theChannelsFirstValueReachesTheMonitor() {
         let source = FakeTimerSignalSource()
-        let monitor = TimerMonitor(source: source)
+        let monitor = monitor(source)
         monitor.start()
 
         source.send(.running([timer()]))
@@ -62,7 +72,7 @@ struct TimerMonitorTests {
 
     @Test func aTimerStoppingLeavesIdleRatherThanUnknown() {
         let source = FakeTimerSignalSource()
-        let monitor = TimerMonitor(source: source)
+        let monitor = monitor(source)
         monitor.start()
 
         source.send(.running([timer()]))
@@ -73,7 +83,7 @@ struct TimerMonitorTests {
 
     @Test func aVersionThisReaderDoesNotKnowIsNotAnEmptyChannel() {
         let source = FakeTimerSignalSource()
-        let monitor = TimerMonitor(source: source)
+        let monitor = monitor(source)
         monitor.start()
 
         source.send(.running([timer()]))
@@ -85,7 +95,7 @@ struct TimerMonitorTests {
 
     @Test func aReadableSnapshotClearsTheProblemBeforeIt() {
         let source = FakeTimerSignalSource()
-        let monitor = TimerMonitor(source: source)
+        let monitor = monitor(source)
         monitor.start()
 
         source.send(ChannelProblem.malformed("bad"))
@@ -97,7 +107,7 @@ struct TimerMonitorTests {
 
     @Test func stoppingTheMonitorStopsTheChannel() {
         let source = FakeTimerSignalSource()
-        let monitor = TimerMonitor(source: source)
+        let monitor = monitor(source)
         monitor.start()
         monitor.stop()
 

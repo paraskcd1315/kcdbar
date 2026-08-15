@@ -12,7 +12,8 @@ package enum TimerPanelPresentation {
             TimerPanelView(
                 timers: monitor.reading.timers,
                 arrowX: arrowX,
-                presentation: presentation
+                presentation: presentation,
+                onOpen: { monitor.open($0) }
             )
         )
     }

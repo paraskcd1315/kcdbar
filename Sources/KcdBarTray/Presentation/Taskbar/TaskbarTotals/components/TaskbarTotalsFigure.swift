@@ -7,7 +7,7 @@ package struct TaskbarTotalsFigure: View {
     package let tone: Color
 
     package var body: some View {
-        HStack(spacing: KbSpacing.s1) {
+        HStack(alignment: .firstTextBaseline, spacing: KbSpacing.s1) {
             Text(label)
                 .font(KbTypography.clockDate)
                 .foregroundStyle(KbColors.onSurfaceMuted)

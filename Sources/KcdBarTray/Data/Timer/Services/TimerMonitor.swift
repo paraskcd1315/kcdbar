@@ -8,9 +8,19 @@ package final class TimerMonitor {
     package private(set) var problem: ChannelProblem?
 
     private let source: any TimerSignalPort
+    private let tickets: any TicketOpenerPort
 
-    package init(source: any TimerSignalPort) {
+    package init(source: any TimerSignalPort, tickets: any TicketOpenerPort) {
         self.source = source
+        self.tickets = tickets
+    }
+
+    package func open(_ timer: RunningTimer) {
+        guard let contextPath = timer.contextPath, let key = timer.jiraKey else { return }
+
+        Task { [tickets] in
+            _ = await tickets.open(contextPath: contextPath, key: key)
+        }
     }
 
     package func start() {

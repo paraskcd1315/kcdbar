@@ -10,10 +10,12 @@ package struct TimerSignalEntry: Codable, Sendable, Equatable {
     package let seconds: Int
     package let isBillable: Bool
     package let projectId: Int?
+    package let contextPath: String?
 
     package func toEntity() -> RunningTimer {
         RunningTimer(
             projectId: projectId,
+            contextPath: contextPath,
             jiraKey: jiraKey,
             detail: detail,
             startedAt: startedAt,

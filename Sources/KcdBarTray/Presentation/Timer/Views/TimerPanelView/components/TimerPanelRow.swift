@@ -4,6 +4,9 @@ import SwiftUI
 package struct TimerPanelRow: View {
     package let timer: RunningTimer
     package let now: Date
+    package let onOpen: () -> Void
+
+    @State private var isHovered = false
 
     package var body: some View {
         HStack(alignment: .top, spacing: KbSpacing.s4) {
@@ -16,6 +19,13 @@ package struct TimerPanelRow: View {
                         Image(systemName: TimerReadoutMetrics.billableSymbol)
                             .font(KbTypography.panelDetail)
                             .foregroundStyle(KbColors.brand)
+                    }
+                    if timer.opensATicket {
+                        Image(systemName: TimerReadoutMetrics.openSymbol)
+                            .font(KbTypography.panelDetail)
+                            .foregroundStyle(
+                                isHovered ? KbColors.brand : KbColors.onSurfaceMuted
+                            )
                     }
                 }
                 Text(timer.detail)
@@ -31,5 +41,16 @@ package struct TimerPanelRow: View {
                 .foregroundStyle(KbColors.onSurface)
                 .monospacedDigit()
         }
+        .padding(.vertical, KbSpacing.s1)
+        .padding(.horizontal, KbSpacing.s2)
+        .contentShape(shape)
+        .background(isHovered && timer.opensATicket ? KbColors.separator : .clear, in: shape)
+        .onTapGesture(perform: onOpen)
+        .onHover { isHovered = $0 }
+        .animation(KbMotion.quick, value: isHovered)
+    }
+
+    private var shape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: KbRadii.sm, style: .continuous)
     }
 }
