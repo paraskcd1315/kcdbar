@@ -12,17 +12,6 @@
         }
       }
     },
-    "taskbar.notice.empty" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No windows on this display"
-          }
-        }
-      }
-    },
     "taskbar.notice.grant" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -30,9 +30,15 @@ struct TaskbarView: View {
         }
         .padding(viewModel.preset.contentPadding)
         .frame(
-            maxWidth: viewModel.preset.widthMode == .fullEdge ? .infinity : nil,
-            maxHeight: viewModel.preset.edge.isVertical ? .infinity : nil
+            maxWidth: fillsCrossAxis(.horizontal) ? .infinity : nil,
+            maxHeight: fillsCrossAxis(.vertical) ? .infinity : nil
         )
+    }
+
+    private func fillsCrossAxis(_ axis: Axis.Set) -> Bool {
+        let alongBar: Axis.Set = viewModel.preset.edge.isVertical ? .vertical : .horizontal
+        guard axis == alongBar else { return true }
+        return viewModel.preset.widthMode == .fullEdge
     }
 
     private var surfaceShape: AnyShape {

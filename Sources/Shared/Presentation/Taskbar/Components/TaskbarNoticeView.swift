@@ -12,14 +12,12 @@ struct TaskbarNoticeView: View {
                 .font(KbTypography.entryTitle)
                 .foregroundStyle(KbColors.onSurfaceMuted)
                 .lineLimit(1)
-            if notice.isActionable {
-                Button(action: onAct) {
-                    Text(LocalizedStringKey(notice.actionKey))
-                        .font(KbTypography.entryTitleActive)
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(KbColors.brand)
+            Button(action: onAct) {
+                Text(LocalizedStringKey(notice.actionKey))
+                    .font(KbTypography.entryTitleActive)
             }
+            .buttonStyle(.plain)
+            .foregroundStyle(KbColors.brand)
         }
         .padding(.horizontal, KbSpacing.s4)
     }

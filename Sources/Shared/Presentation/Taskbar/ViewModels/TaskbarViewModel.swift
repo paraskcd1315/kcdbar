@@ -36,12 +36,6 @@ struct TaskbarViewModel {
                 )
             )
         }
-        notice = if !hasAccessibility {
-            .accessibilityMissing
-        } else if entries.isEmpty {
-            .noWindows
-        } else {
-            nil
-        }
+        notice = hasAccessibility ? nil : .accessibilityMissing
     }
 }

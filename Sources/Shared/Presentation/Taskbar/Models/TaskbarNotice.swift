@@ -1,26 +1,15 @@
 enum TaskbarNotice: Equatable {
     case accessibilityMissing
-    case noWindows
 
     var symbolName: String {
-        switch self {
-        case .accessibilityMissing: "lock.trianglebadge.exclamationmark"
-        case .noWindows: "macwindow"
-        }
+        "lock.trianglebadge.exclamationmark"
     }
 
     var messageKey: String {
-        switch self {
-        case .accessibilityMissing: "taskbar.notice.accessibility"
-        case .noWindows: "taskbar.notice.empty"
-        }
+        "taskbar.notice.accessibility"
     }
 
     var actionKey: String {
         "taskbar.notice.grant"
-    }
-
-    var isActionable: Bool {
-        self == .accessibilityMissing
     }
 }

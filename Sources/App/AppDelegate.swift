@@ -11,12 +11,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             services.authorization.requestTrust()
         }
 
-        services.registry.refresh()
         services.startBar(preset: BarPresetCatalogue.default) { [services] entry in
             services.toggle(entryId: entry.id)
         }
+        services.refreshAndEnforce()
         services.changes.startObserving { [services] in
-            services.registry.refresh()
+            services.refreshAndEnforce()
         }
     }
 

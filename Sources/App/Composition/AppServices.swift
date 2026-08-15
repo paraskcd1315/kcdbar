@@ -10,8 +10,20 @@ final class AppServices {
     let registry: WindowRegistry
 
     let control: any WindowControlPort = AccessibilityWindowControl()
+    private lazy var overlap = WindowOverlapEnforcer(control: control)
+    private var activePreset = BarPresetCatalogue.default
 
     private(set) var bar: (any BarPanelHostPort)?
+
+    func refreshAndEnforce(now: Date = Date()) {
+        registry.refresh()
+        overlap.enforce(
+            preset: activePreset,
+            windows: registry.windows,
+            displays: registry.displays,
+            now: now
+        )
+    }
 
     func toggle(entryId: String) {
         guard let window = registry.window(withEntryId: entryId) else { return }
@@ -21,7 +33,7 @@ final class AppServices {
             among: registry.windows
         )
         _ = control.perform(action, on: window)
-        registry.refresh()
+        refreshAndEnforce()
     }
 
     init() {
@@ -35,6 +47,7 @@ final class AppServices {
     }
 
     func startBar(preset: BarPreset, onActivate: @escaping (TaskbarEntryModel) -> Void) {
+        activePreset = preset
         let host = BarPanelHost(
             registry: registry,
             icons: icons,

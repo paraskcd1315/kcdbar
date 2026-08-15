@@ -25,6 +25,21 @@ struct AccessibilityWindowControl: WindowControlPort {
         return AXUIElementPerformAction(button as! AXUIElement, kAXPressAction as CFString) == .success
     }
 
+    func setFrame(_ frame: CGRect, on window: ManagedWindow) -> Bool {
+        guard let element = element(for: window) else { return false }
+        let target = ScreenCoordinateConverter.toAccessibility(frame)
+        var origin = target.origin
+        var size = target.size
+        guard let positionValue = AXValueCreate(.cgPoint, &origin),
+              let sizeValue = AXValueCreate(.cgSize, &size)
+        else {
+            return false
+        }
+        let movedOk = AXUIElementSetAttributeValue(element, kAXPositionAttribute as CFString, positionValue) == .success
+        let sizedOk = AXUIElementSetAttributeValue(element, kAXSizeAttribute as CFString, sizeValue) == .success
+        return movedOk && sizedOk
+    }
+
     private func focus(_ element: AXUIElement, pid: pid_t) -> Bool {
         NSRunningApplication(processIdentifier: pid)?.activate()
         let raised = AXUIElementPerformAction(element, kAXRaiseAction as CFString) == .success

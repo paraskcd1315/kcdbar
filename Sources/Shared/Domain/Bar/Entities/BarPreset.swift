@@ -13,6 +13,7 @@ struct BarPreset: Codable, Equatable, Sendable {
     var autoHide: BarAutoHidePolicy
     var displays: BarDisplayPolicy
     var windowScope: BarWindowScope
+    var overlap: BarOverlapPolicy
     var dockHandling: DockHandling
     var thickness: CGFloat
     var entrySpacing: CGFloat
