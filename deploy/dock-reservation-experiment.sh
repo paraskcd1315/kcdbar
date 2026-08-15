@@ -3,16 +3,30 @@ set -euo pipefail
 
 # KCDBAR-21 — can a third-party bar borrow the Dock's own screen-space reservation?
 #
-# macOS reserves screen space for the Dock when it is NOT auto-hidden, and gives a
-# third-party window no way to reserve any. This sweeps tilesize to find what
-# reserved strip heights are actually obtainable, so we know whether one of them
-# can match a usable bar thickness.
+# ANSWERED 15-08-2026: no. A visible, non-auto-hidden Dock reserves nothing on
+# macOS 26.6.1. This script is kept only to re-test on a DIFFERENT machine, since
+# the finding came from a single configuration.
+#
+# DANGEROUS — it froze a machine hard enough to need a restart. `Dock.app` owns the
+# sole window-server connection for Spaces, and restarting it repeatedly in a loop
+# can wedge WindowServer and take the whole UI down with it. Hence:
+#   - it refuses to run without RUN_DOCK_EXPERIMENT=1
+#   - it defaults to THREE tile sizes, not eleven
+#   - it waits 5s after each Dock restart instead of 2
+# Do not widen SIZES without a reason, and never run it on a machine mid-work.
 #
 # Reads the current settings first and restores them at the end, including on failure.
 
+if [ "${RUN_DOCK_EXPERIMENT:-0}" != "1" ]; then
+  echo "Refusing to run: this restarts the Dock repeatedly and has frozen a machine."
+  echo "The question it answers is already settled (see AppleConventions.md)."
+  echo "To re-test on another machine: RUN_DOCK_EXPERIMENT=1 $0"
+  exit 1
+fi
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MEASURE="$ROOT/deploy/measure-visible-frame.swift"
-SIZES="${SIZES:-16 24 32 40 48 56 64 80 96 112 128}"
+SIZES="${SIZES:-16 64 128}"
 
 read_key() { defaults read com.apple.dock "$1" 2>/dev/null || echo ""; }
 
@@ -48,7 +62,7 @@ defaults write com.apple.dock orientation -string bottom
 for size in $SIZES; do
   defaults write com.apple.dock tilesize -int "$size"
   killall Dock 2>/dev/null || true
-  /bin/sleep 2
+  /bin/sleep 5
   insets="$(swift "$MEASURE" 2>/dev/null | awk '/insets/ { printf "%s ", $2 }')"
   echo "tilesize=$size -> ${insets}"
 done
