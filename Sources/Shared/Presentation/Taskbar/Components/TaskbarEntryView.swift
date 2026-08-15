@@ -13,9 +13,9 @@ struct TaskbarEntryView: View {
 
     var body: some View {
         content
-            .contentShape(.rect(cornerRadius: KbRadii.md))
+            .contentShape(entryShape)
             .onTapGesture(perform: onActivate)
-            .glassEffect(entryGlass, in: .rect(cornerRadius: KbRadii.md))
+            .glassEffect(entryGlass, in: entryShape)
             .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)
             .animation(KbMotion.quick, value: isHovered)
             .animation(KbMotion.quick, value: entry.isFrontmost)
@@ -45,11 +45,30 @@ struct TaskbarEntryView: View {
     private var content: some View {
         entryBody
             .overlay(alignment: .bottom) {
-                if entry.instanceCount > 0 {
-                    TaskbarInstanceDots(count: entry.instanceCount, isFrontmost: entry.isFrontmost)
-                        .padding(.bottom, TaskbarMetrics.instanceDotInset)
+                if isOpen {
+                    VStack(spacing: TaskbarMetrics.instanceDotInset) {
+                        TaskbarInstanceDots(count: entry.instanceCount, isFrontmost: entry.isFrontmost)
+                        Rectangle()
+                            .fill(entry.isFrontmost ? KbColors.activeIndicator : KbColors.onSurfaceMuted)
+                            .frame(height: TaskbarMetrics.openBorderHeight)
+                    }
                 }
             }
+    }
+
+    private var isOpen: Bool {
+        entry.instanceCount > 0
+    }
+
+    private var entryShape: AnyShape {
+        guard isOpen else { return AnyShape(RoundedRectangle(cornerRadius: KbRadii.md)) }
+
+        return AnyShape(
+            UnevenRoundedRectangle(
+                topLeadingRadius: KbRadii.md,
+                topTrailingRadius: KbRadii.md
+            )
+        )
     }
 
     private var entryBody: some View {

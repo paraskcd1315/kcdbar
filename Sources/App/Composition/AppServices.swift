@@ -13,6 +13,7 @@ final class AppServices {
     let desktop = ShowDesktopState()
     let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
     let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
+    let newWindow: any NewWindowPort = AccessibilityNewWindow()
 
     let control: any WindowControlPort = AccessibilityWindowControl()
     let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -142,12 +143,40 @@ final class AppServices {
         await pins.load()
     }
 
-    func activate(entry: TaskbarEntryModel) {
-        guard !entry.isLauncher else {
-            entry.bundleIdentifier.map(launcher.launch(bundleIdentifier:))
+    func activate(entry: TaskbarEntryModel, onDisplay displayId: Int) {
+        guard entry.isLauncher else {
+            toggle(entryId: entry.id)
             return
         }
-        toggle(entryId: entry.id)
+        guard let bundleIdentifier = entry.bundleIdentifier else { return }
+
+        if openNewWindowElsewhere(bundleIdentifier: bundleIdentifier, displayId: displayId) {
+            return
+        }
+        launcher.launch(bundleIdentifier: bundleIdentifier)
+    }
+
+    private func openNewWindowElsewhere(bundleIdentifier: String, displayId: Int) -> Bool {
+        let pids = registry.bundleIdentifiers
+            .filter { $0.value == bundleIdentifier }
+            .map(\.key)
+        guard let pid = pids.first,
+              let display = registry.displays.first(where: { $0.id == displayId }),
+              newWindow.supportsNewWindow(pid: pid)
+        else {
+            return false
+        }
+        let alreadyHere = registry.taskbarEntries.contains { window in
+            window.ownerPid == pid
+                && WindowDisplayResolver.displayId(for: window, in: registry.displays) == displayId
+        }
+        guard !alreadyHere else { return false }
+
+        let opened = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
+        if opened {
+            scheduleRefresh()
+        }
+        return opened
     }
 
     func togglePin(entry: TaskbarEntryModel) {
@@ -178,7 +207,9 @@ final class AppServices {
             desktop: desktop,
             icons: icons,
             displaySource: displays,
-            onActivate: { [weak self] entry in self?.activate(entry: entry) },
+            onActivate: { [weak self] entry, displayId in
+                self?.activate(entry: entry, onDisplay: displayId)
+            },
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
             onOpenStart: {},
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },

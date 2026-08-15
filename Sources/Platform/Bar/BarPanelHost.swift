@@ -12,7 +12,7 @@ final class BarPanelHost: BarPanelHostPort {
     private let desktop: ShowDesktopState
     private let icons: any ApplicationIconPort
     private let displaySource: any DisplayGeometryPort
-    private let onActivate: (TaskbarEntryModel) -> Void
+    private let onActivate: (TaskbarEntryModel, Int) -> Void
     private let onRequestAccessibility: () -> Void
     private let onOpenStart: () -> Void
     private let onTogglePin: (TaskbarEntryModel) -> Void
@@ -26,7 +26,7 @@ final class BarPanelHost: BarPanelHostPort {
         desktop: ShowDesktopState,
         icons: any ApplicationIconPort,
         displaySource: any DisplayGeometryPort,
-        onActivate: @escaping (TaskbarEntryModel) -> Void,
+        onActivate: @escaping (TaskbarEntryModel, Int) -> Void,
         onRequestAccessibility: @escaping () -> Void,
         onOpenStart: @escaping () -> Void,
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
@@ -92,7 +92,7 @@ final class BarPanelHost: BarPanelHostPort {
                     preset: preset,
                     displayId: display.id,
                     icons: icons,
-                    onActivate: onActivate,
+                    onActivate: { [onActivate] in onActivate($0, display.id) },
                     onRequestAccessibility: onRequestAccessibility,
                     onOpenStart: onOpenStart,
                     onTogglePin: onTogglePin,

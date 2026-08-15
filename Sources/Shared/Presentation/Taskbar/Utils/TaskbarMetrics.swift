@@ -24,6 +24,7 @@ enum TaskbarMetrics {
     static let instanceDotSpacing: CGFloat = 3
     static let maximumInstanceDots = 4
     static let instanceDotInset: CGFloat = 2
+    static let openBorderHeight: CGFloat = 2
     static let showDesktopWidth: CGFloat = 10
     static let showDesktopDividerWidth: CGFloat = 1
     static let draggingOpacity: Double = 0.35
