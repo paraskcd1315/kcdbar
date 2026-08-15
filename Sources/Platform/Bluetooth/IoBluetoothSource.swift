@@ -27,11 +27,54 @@ struct IoBluetoothSource: BluetoothPort {
         )
     }
 
+    func devices() -> [BluetoothDevice] {
+        guard let paired = IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice] else {
+            return []
+        }
+
+        return BluetoothStyle.ordered(paired.compactMap(Self.device))
+    }
+
     func setPower(_ isOn: Bool) -> Bool {
         guard let setPowerState = Self.setPowerState else { return false }
 
         _ = setPowerState(isOn ? 1 : 0)
 
         return true
+    }
+
+    private static func device(_ paired: IOBluetoothDevice) -> BluetoothDevice? {
+        guard let address = paired.addressString, !address.isEmpty else { return nil }
+
+        let name = paired.name ?? address
+
+        return BluetoothDevice(
+            id: address,
+            name: name.isEmpty ? address : name,
+            isConnected: paired.isConnected(),
+            kind: kind(major: paired.deviceClassMajor, minor: paired.deviceClassMinor)
+        )
+    }
+
+    private static func kind(
+        major: BluetoothDeviceClassMajor,
+        minor: BluetoothDeviceClassMinor
+    ) -> BluetoothDeviceKind {
+        switch Int(major) {
+        case kBluetoothDeviceClassMajorAudio: .audio
+        case kBluetoothDeviceClassMajorPhone: .phone
+        case kBluetoothDeviceClassMajorComputer: .computer
+        case kBluetoothDeviceClassMajorWearable: .wearable
+        case kBluetoothDeviceClassMajorPeripheral: peripheral(minor: minor)
+        default: .other
+        }
+    }
+
+    private static func peripheral(minor: BluetoothDeviceClassMinor) -> BluetoothDeviceKind {
+        switch Int(minor) {
+        case kBluetoothDeviceClassMinorPeripheral1Keyboard: .keyboard
+        case kBluetoothDeviceClassMinorPeripheral1Pointing: .pointing
+        default: .other
+        }
     }
 }
