@@ -34,14 +34,18 @@ package struct TaskbarTimer: View {
                 } else {
                     Text("\(timers.count)")
                         .foregroundStyle(KbColors.onSurface)
+                        .monospacedDigit()
+                        .lineLimit(1)
                 }
                 Text(TimerFormatting.duration(TimerTotals.elapsed(of: timers, at: context.date)))
                     .foregroundStyle(KbColors.onSurfaceMuted)
                     .monospacedDigit()
+                    .lineLimit(1)
             }
             .font(KbTypography.clockTime)
             .padding(.horizontal, KbSpacing.s4)
             .padding(.vertical, KbSpacing.s1)
+            .fixedSize(horizontal: true, vertical: false)
         }
         .contentShape(shape)
         .onTapGesture(perform: onOpen)
