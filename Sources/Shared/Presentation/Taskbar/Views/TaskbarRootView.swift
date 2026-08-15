@@ -14,6 +14,7 @@ struct TaskbarRootView: View {
     let onTogglePin: (TaskbarEntryModel) -> Void
     let onDropPin: (String, TaskbarEntryModel) -> Void
     let onToggleDesktop: () -> Void
+    let onMiddleClick: (TaskbarEntryModel) -> Void
 
     var body: some View {
         TaskbarView(
@@ -23,6 +24,7 @@ struct TaskbarRootView: View {
             onOpenStart: onOpenStart,
             onTogglePin: onTogglePin,
             onDropPin: onDropPin,
+            onMiddleClick: onMiddleClick,
             isShowingDesktop: desktop.isShowingDesktop,
             onToggleDesktop: onToggleDesktop
         )

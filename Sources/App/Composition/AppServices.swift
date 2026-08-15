@@ -156,6 +156,19 @@ final class AppServices {
         launcher.launch(bundleIdentifier: bundleIdentifier)
     }
 
+    func openNewInstance(entry: TaskbarEntryModel, onDisplay displayId: Int) {
+        guard let bundleIdentifier = entry.bundleIdentifier else { return }
+        guard let pid = registry.bundleIdentifiers.first(where: { $0.value == bundleIdentifier })?.key,
+              let display = registry.displays.first(where: { $0.id == displayId }),
+              newWindow.supportsNewWindow(pid: pid)
+        else {
+            launcher.launch(bundleIdentifier: bundleIdentifier)
+            return
+        }
+        _ = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
+        scheduleRefresh()
+    }
+
     private func openNewWindowElsewhere(bundleIdentifier: String, displayId: Int) -> Bool {
         let pids = registry.bundleIdentifiers
             .filter { $0.value == bundleIdentifier }
@@ -216,7 +229,10 @@ final class AppServices {
             onDropPin: { [weak self] dropped, target in
                 self?.reorder(draggedKey: dropped, before: target)
             },
-            onToggleDesktop: { [weak self] in self?.toggleShowDesktop() }
+            onToggleDesktop: { [weak self] in self?.toggleShowDesktop() },
+            onMiddleClick: { [weak self] entry, displayId in
+                self?.openNewInstance(entry: entry, onDisplay: displayId)
+            }
         )
         host.present(preset: preset)
         bar = host

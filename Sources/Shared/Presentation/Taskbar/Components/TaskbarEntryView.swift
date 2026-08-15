@@ -6,6 +6,9 @@ struct TaskbarEntryView: View {
     let onActivate: () -> Void
     let onTogglePin: () -> Void
     let onDropPin: (String) -> Void
+    let onMiddleClick: () -> Void
+
+    @Environment(\.middleClickCatcher) private var middleClickCatcher
 
     @State private var isHovered = false
     @State private var isDropTarget = false
@@ -14,6 +17,7 @@ struct TaskbarEntryView: View {
     var body: some View {
         content
             .contentShape(entryShape)
+            .overlay { middleClickCatcher(onMiddleClick) }
             .onTapGesture(perform: onActivate)
             .glassEffect(entryGlass, in: entryShape)
             .scaleEffect(isHovered ? TaskbarMetrics.hoverScale : 1)

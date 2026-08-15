@@ -18,6 +18,7 @@ final class BarPanelHost: BarPanelHostPort {
     private let onTogglePin: (TaskbarEntryModel) -> Void
     private let onDropPin: (String, TaskbarEntryModel) -> Void
     private let onToggleDesktop: () -> Void
+    private let onMiddleClick: (TaskbarEntryModel, Int) -> Void
 
     init(
         registry: WindowRegistry,
@@ -31,10 +32,12 @@ final class BarPanelHost: BarPanelHostPort {
         onOpenStart: @escaping () -> Void,
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
         onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
-        onToggleDesktop: @escaping () -> Void
+        onToggleDesktop: @escaping () -> Void,
+        onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void
     ) {
         self.onDropPin = onDropPin
         self.onToggleDesktop = onToggleDesktop
+        self.onMiddleClick = onMiddleClick
         self.registry = registry
         self.pins = pins
         self.order = order
@@ -84,7 +87,15 @@ final class BarPanelHost: BarPanelHostPort {
             }
             let panel = BarPanel(contentRect: frame)
             panel.contentView = BarHostingView(
-                rootView: TaskbarRootView(
+                rootView: taskbarRoot(for: display, preset: preset)
+            )
+            panel.orderFrontRegardless()
+            panels[display.id] = panel
+        }
+    }
+
+    private func taskbarRoot(for display: DisplayGeometry, preset: BarPreset) -> some View {
+        TaskbarRootView(
                     registry: registry,
                     pins: pins,
                     order: order,
@@ -97,11 +108,11 @@ final class BarPanelHost: BarPanelHostPort {
                     onOpenStart: onOpenStart,
                     onTogglePin: onTogglePin,
                     onDropPin: onDropPin,
-                    onToggleDesktop: onToggleDesktop
-                )
-            )
-            panel.orderFrontRegardless()
-            panels[display.id] = panel
+                    onToggleDesktop: onToggleDesktop,
+                    onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) }
+        )
+        .environment(\.middleClickCatcher) { action in
+            AnyView(MiddleClickView(action: action))
         }
     }
 

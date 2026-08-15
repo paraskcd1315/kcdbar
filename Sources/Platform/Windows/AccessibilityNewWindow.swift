@@ -108,7 +108,16 @@ final class AccessibilityNewWindow: NewWindowPort {
 
         guard let value = AXValueCreate(.cgPoint, &origin) else { return }
 
-        AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, value)
+        let status = AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, value)
+        var readBack = CGPoint.zero
+        if let current = copy(from: window, attribute: kAXPositionAttribute) {
+            AXValueGetValue(current as! AXValue, .cgPoint, &readBack)
+        }
+        FileHandle.standardError.write(Data("""
+        KCDBAR-NEWWIN target=\(frame) flipRef=\(ScreenCoordinateConverter.flipReference) \
+        wanted=\(origin) status=\(status.rawValue) readBack=\(readBack)
+
+        """.utf8))
     }
 
     private func isSettable(_ element: AXUIElement, attribute: String) -> Bool {
