@@ -13,7 +13,8 @@ struct ControlCentreTiles: View {
             if brightness.state.isAvailable {
                 BrightnessTile(monitor: brightness)
             }
-            ConnectivityTile(wifi: wifi, bluetooth: bluetooth, onExpandWifi: onExpandWifi)
+            BluetoothTile(monitor: bluetooth)
+            WifiTile(monitor: wifi, onExpand: onExpandWifi)
         }
     }
 }

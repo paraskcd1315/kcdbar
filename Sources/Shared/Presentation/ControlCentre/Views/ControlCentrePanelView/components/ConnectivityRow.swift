@@ -8,14 +8,15 @@ struct ConnectivityRow: View {
     let onToggle: () -> Void
     let onOpen: (() -> Void)?
 
-    @State private var isHovered = false
-
     var body: some View {
-        HStack(spacing: KbSpacing.s4) {
+        HStack(spacing: KbSpacing.s5) {
             Image(systemName: symbol)
                 .font(.system(size: KbControlCentreMetrics.rowGlyphSize * KbControlCentreMetrics.glyphRatio))
                 .foregroundStyle(isOn ? KbColors.onBrand : KbColors.onSurface)
-                .frame(width: KbControlCentreMetrics.rowGlyphSize, height: KbControlCentreMetrics.rowGlyphSize)
+                .frame(
+                    width: KbControlCentreMetrics.rowGlyphSize,
+                    height: KbControlCentreMetrics.rowGlyphSize
+                )
                 .background(Circle().fill(isOn ? KbColors.brand : KbColors.surfaceRaised))
                 .contentShape(Circle())
                 .onTapGesture(perform: onToggle)
@@ -34,14 +35,7 @@ struct ConnectivityRow: View {
                     .foregroundStyle(KbColors.onSurfaceMuted)
             }
         }
-        .padding(.horizontal, KbSpacing.s3)
-        .padding(.vertical, KbSpacing.s3)
         .contentShape(Rectangle())
         .onTapGesture { onOpen?() }
-        .background(
-            RoundedRectangle(cornerRadius: KbRadii.md, style: .continuous)
-                .fill(isHovered ? KbColors.onSurface.opacity(KbControlCentreMetrics.hoverOpacity) : .clear)
-        )
-        .onHover { isHovered = $0 }
     }
 }
