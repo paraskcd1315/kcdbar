@@ -9,6 +9,7 @@ package struct ControlCentreSurface: View {
     @Binding package var page: ControlCentrePage
     package let onOpenWifiSettings: () -> Void
     package let onOpenBluetoothSettings: () -> Void
+    package let onOpenNetworkSettings: () -> Void
 
     package var body: some View {
         VStack(alignment: .leading, spacing: KbControlCentreMetrics.tileGap) {
@@ -19,7 +20,8 @@ package struct ControlCentreSurface: View {
                     bluetooth: bluetooth,
                     sound: sound,
                     brightness: brightness,
-                    onOpen: { show($0) }
+                    onOpen: { show($0) },
+                    onOpenNetworkSettings: onOpenNetworkSettings
                 )
             case .wifi:
                 KbTile {

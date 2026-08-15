@@ -7,6 +7,7 @@ package struct ControlCentreTiles: View {
     package let sound: SoundMonitor
     package let brightness: BrightnessMonitor
     package let onOpen: (ControlCentrePage) -> Void
+    package let onOpenNetworkSettings: () -> Void
 
     package var body: some View {
         GlassEffectContainer(spacing: KbControlCentreMetrics.tileGap) {
@@ -16,7 +17,11 @@ package struct ControlCentreTiles: View {
                     BrightnessTile(monitor: brightness)
                 }
                 HStack(alignment: .top, spacing: KbControlCentreMetrics.tileGap) {
-                    WifiTile(monitor: wifi) { onOpen(.wifi) }
+                    if case let .ethernet(name) = wifi.link {
+                        EthernetTile(name: name, onOpenSettings: onOpenNetworkSettings)
+                    } else {
+                        WifiTile(monitor: wifi) { onOpen(.wifi) }
+                    }
                     BluetoothTile(monitor: bluetooth) { onOpen(.bluetooth) }
                 }
             }

@@ -10,15 +10,20 @@ package final class WifiMonitor {
     package private(set) var nearby: [WifiNetwork] = []
     package private(set) var isScanning = false
 
+    package private(set) var link: NetworkLink = .none
+
     private let source: any WifiPort
+    private let links: any NetworkLinkPort
     private var scannedAt: Date?
 
-    package init(source: any WifiPort) {
+    package init(source: any WifiPort, links: any NetworkLinkPort) {
         self.source = source
+        self.links = links
     }
 
     package func refresh() {
         state = source.state()
+        link = links.primaryLink()
         if inRange.isEmpty {
             inRange = currentOnly
         }
