@@ -5,6 +5,8 @@ struct TaskbarView: View {
     let onActivate: (TaskbarEntryModel) -> Void
     let onRequestAccessibility: () -> Void
 
+    @State private var hasAppeared = false
+
     var body: some View {
         GlassEffectContainer {
             KbBarSurface(material: viewModel.preset.material, shape: surfaceShape) {
@@ -12,7 +14,23 @@ struct TaskbarView: View {
             }
         }
         .padding(outsetPadding)
+        .offset(x: appearOffset.width, y: appearOffset.height)
+        .opacity(hasAppeared ? 1 : 0)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: contentAlignment)
+        .onAppear {
+            withAnimation(KbMotion.slow) { hasAppeared = true }
+        }
+    }
+
+    private var appearOffset: CGSize {
+        guard !hasAppeared else { return .zero }
+        let distance = viewModel.preset.thickness
+        switch viewModel.preset.edge {
+        case .bottom: return CGSize(width: 0, height: distance)
+        case .top: return CGSize(width: 0, height: -distance)
+        case .leading: return CGSize(width: -distance, height: 0)
+        case .trailing: return CGSize(width: distance, height: 0)
+        }
     }
 
     @ViewBuilder
