@@ -83,6 +83,11 @@ struct TaskbarView: View {
         if viewModel.preset.showsDesktopButton, viewModel.notice == nil {
             TaskbarShowDesktopButton(
                 isShowingDesktop: isShowingDesktop,
+                shape: KbBarShape.trailingCap(
+                    edge: viewModel.preset.edge,
+                    attachment: viewModel.preset.attachment,
+                    cornerRadius: viewModel.preset.cornerRadius
+                ),
                 onToggle: onToggleDesktop
             )
         }

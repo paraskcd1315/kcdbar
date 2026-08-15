@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TaskbarShowDesktopButton: View {
     let isShowingDesktop: Bool
+    let shape: AnyShape
     let onToggle: () -> Void
 
     @State private var isHovered = false
@@ -16,9 +17,9 @@ struct TaskbarShowDesktopButton: View {
                     .fill(KbColors.separator)
                     .frame(width: TaskbarMetrics.showDesktopDividerWidth)
             }
-            .contentShape(.rect)
+            .contentShape(shape)
             .onTapGesture(perform: onToggle)
-            .glassEffect(isHovered || isShowingDesktop ? .regular.interactive() : .identity, in: .rect)
+            .glassEffect(isHovered || isShowingDesktop ? .regular.interactive() : .identity, in: shape)
             .animation(KbMotion.quick, value: isHovered)
             .animation(KbMotion.quick, value: isShowingDesktop)
             .onHover { isHovered = $0 }
