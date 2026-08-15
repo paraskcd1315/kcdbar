@@ -1,25 +1,35 @@
 import Foundation
 
 package enum WifiStyle {
-    /** The SF Symbol whose filled bars match the signal, as macOS draws it. */
+    /** The slash means the radio is off; a powered radio always draws the wifi glyph. */
     package static func symbol(for state: WifiState) -> String {
-        guard state.isAvailable else { return WifiMetrics.slashSymbol }
-        guard state.isPowered else { return WifiMetrics.slashSymbol }
+        guard state.isAvailable, state.isPowered else { return WifiMetrics.slashSymbol }
 
-        return WifiMetrics.symbol(bars: bars(rssi: state.rssi))
+        return WifiMetrics.symbol
     }
 
     package static func symbol(for network: WifiNetwork) -> String {
-        WifiMetrics.symbol(bars: bars(rssi: network.rssi))
+        WifiMetrics.symbol
     }
 
-    package static func bars(rssi: Int) -> Int {
-        guard rssi != 0 else { return 0 }
-        if rssi >= WifiMetrics.strongRssi { return 3 }
-        if rssi >= WifiMetrics.fairRssi { return 2 }
-        if rssi >= WifiMetrics.weakRssi { return 1 }
+    /** How many of the glyph's arcs are filled, as SF Symbols' variable value. */
+    package static func level(for state: WifiState) -> Double {
+        guard state.isAvailable, state.isPowered else { return 0 }
 
-        return 0
+        return level(rssi: state.rssi)
+    }
+
+    package static func level(for network: WifiNetwork) -> Double {
+        level(rssi: network.rssi)
+    }
+
+    package static func level(rssi: Int) -> Double {
+        guard rssi != 0 else { return WifiMetrics.unknownLevel }
+        if rssi >= WifiMetrics.strongRssi { return 1 }
+        if rssi >= WifiMetrics.fairRssi { return WifiMetrics.fairLevel }
+        if rssi >= WifiMetrics.weakRssi { return WifiMetrics.weakLevel }
+
+        return WifiMetrics.faintLevel
     }
 
     package static func ordered(_ networks: [WifiNetwork]) -> [WifiNetwork] {
