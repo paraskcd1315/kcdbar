@@ -33,6 +33,7 @@ package final class AppServices {
     package let spotlight: any SpotlightPort = CgEventSpotlight()
     package let pasteboard: any PasteboardPort = AppKitPasteboard()
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
+    package let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -332,7 +333,9 @@ package final class AppServices {
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
             },
             onOpenBattery: { [weak self] in self?.openBatteryPanel() },
-            onOpenNotifications: {},
+            onOpenNotifications: { [menuExtras] in
+                _ = menuExtras.press(BarControlMetrics.clockIdentifier)
+            },
             onOpenControlCentre: { [weak self] in self?.openControlCentre() },
             onOpenTimer: { [weak self] in self?.openTimerPanel() }
         )
