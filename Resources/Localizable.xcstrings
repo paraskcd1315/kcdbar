@@ -314,6 +314,12 @@
         }
       }
     },
+    "taskbar.menu.close" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Close Window" } }
+      }
+    },
     "taskbar.menu.pin" : {
       "extractionState" : "manual",
       "localizations" : {

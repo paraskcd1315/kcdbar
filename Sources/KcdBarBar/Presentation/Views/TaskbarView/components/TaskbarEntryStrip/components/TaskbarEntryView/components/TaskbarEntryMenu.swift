@@ -3,6 +3,7 @@ import SwiftUI
 package struct TaskbarEntryMenu: View {
     package let entry: TaskbarEntryModel
     package let onTogglePin: () -> Void
+    package let onCloseWindow: () -> Void
     package let onQuit: () -> Void
 
     package var body: some View {
@@ -13,6 +14,13 @@ package struct TaskbarEntryMenu: View {
                     ? TaskbarMenuMetrics.unpinSymbol
                     : TaskbarMenuMetrics.pinSymbol
             )
+        }
+        if !entry.isLauncher {
+            Divider()
+            Button(action: onCloseWindow) {
+                Label("taskbar.menu.close", systemImage: TaskbarMenuMetrics.closeSymbol)
+            }
+            .keyboardShortcut("w")
         }
         if entry.instanceCount > 0 {
             Divider()

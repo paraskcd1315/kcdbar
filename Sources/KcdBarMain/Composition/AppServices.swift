@@ -261,6 +261,13 @@ package final class AppServices {
         }
     }
 
+    package func closeWindow(entry: TaskbarEntryModel) {
+        guard let window = registry.window(withEntryId: entry.id), control.close(window) else {
+            return
+        }
+        scheduleRefresh()
+    }
+
     package func quit(entry: TaskbarEntryModel) {
         guard let bundleIdentifier = entry.bundleIdentifier,
               terminator.quit(bundleIdentifier: bundleIdentifier)
@@ -300,6 +307,7 @@ package final class AppServices {
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
             onOpenStart: { [spotlight] in _ = spotlight.openApplications() },
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
+            onCloseWindow: { [weak self] entry in self?.closeWindow(entry: entry) },
             onQuit: { [weak self] entry in self?.quit(entry: entry) },
             onDropPin: { [weak self] dropped, target in
                 self?.reorder(draggedKey: dropped, onto: target)

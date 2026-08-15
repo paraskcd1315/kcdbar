@@ -7,6 +7,7 @@ package struct TaskbarEntryBand: View {
     package let isDragging: Bool
     package let onActivate: (TaskbarEntryModel) -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
 
@@ -19,6 +20,7 @@ package struct TaskbarEntryBand: View {
                     isDragging: isDragging,
                     onActivate: { onActivate(entry) },
                     onTogglePin: { onTogglePin(entry) },
+                    onCloseWindow: { onCloseWindow(entry) },
                     onQuit: { onQuit(entry) },
                     onMiddleClick: { onMiddleClick(entry) }
                 )

@@ -7,6 +7,7 @@ package struct TaskbarEntryView: View {
     package let isDragging: Bool
     package let onActivate: () -> Void
     package let onTogglePin: () -> Void
+    package let onCloseWindow: () -> Void
     package let onQuit: () -> Void
     package let onMiddleClick: () -> Void
 
@@ -41,7 +42,12 @@ package struct TaskbarEntryView: View {
         .task(id: isHovered) { await revealTooltip() }
         .contextMenu {
             if entry.bundleIdentifier != nil {
-                TaskbarEntryMenu(entry: entry, onTogglePin: onTogglePin, onQuit: onQuit)
+                TaskbarEntryMenu(
+                    entry: entry,
+                    onTogglePin: onTogglePin,
+                    onCloseWindow: onCloseWindow,
+                    onQuit: onQuit
+                )
             }
         }
     }

@@ -13,6 +13,7 @@ package struct TaskbarRootView: View {
     package let onRequestAccessibility: () -> Void
     package let onOpenStart: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
+    package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onToggleDesktop: () -> Void
@@ -31,6 +32,7 @@ package struct TaskbarRootView: View {
             onRequestAccessibility: onRequestAccessibility,
             onOpenStart: onOpenStart,
             onTogglePin: onTogglePin,
+            onCloseWindow: onCloseWindow,
             onQuit: onQuit,
             onDropPin: onDropPin,
             onMiddleClick: onMiddleClick,
