@@ -24,17 +24,23 @@ package struct ConnectivityRow<Glyph: View>: View {
                 Text(titleKey)
                     .font(KbTypography.tileTitle)
                     .foregroundStyle(KbColors.onSurface)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                 Text(statusKey)
                     .font(KbTypography.tileStatus)
                     .foregroundStyle(KbColors.onSurfaceMuted)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
-            Spacer(minLength: KbSpacing.s4)
+            .frame(maxWidth: .infinity, alignment: .leading)
             if onOpen != nil {
                 Image(systemName: KbControlCentreMetrics.chevronSymbol)
                     .font(KbTypography.tileStatus)
                     .foregroundStyle(KbColors.onSurfaceMuted)
+                    .fixedSize()
             }
         }
+        .frame(height: KbControlCentreMetrics.rowHeight)
         .contentShape(Rectangle())
         .onTapGesture { onOpen?() }
     }

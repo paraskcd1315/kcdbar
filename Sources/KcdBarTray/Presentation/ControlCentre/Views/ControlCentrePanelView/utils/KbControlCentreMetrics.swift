@@ -12,6 +12,7 @@ package enum KbControlCentreMetrics {
     package static let panelPadding: CGFloat = 10
     package static let tileGap: CGFloat = 8
     package static let rowGlyphSize: CGFloat = 34
+    package static let rowHeight: CGFloat = 38
     package static let chevronSymbol = "chevron.right"
     package static let backSymbol = "chevron.left"
     package static let settingsRowHeight: CGFloat = 28
