@@ -56,6 +56,8 @@ targets:
       - path: Sources/Shared/Presentation/Taskbar/Utils/TaskbarOrdering.swift
       - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragReorder.swift
       - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarDragHitTest.swift
+      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGroup.swift
+      - path: Sources/Shared/Presentation/Taskbar/Views/TaskbarView/components/TaskbarEntryStrip/utils/TaskbarEntryGrouping.swift
       - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarEntryModel.swift
       - path: Sources/Shared/Presentation/Taskbar/Models/TaskbarNotice.swift
     settings:

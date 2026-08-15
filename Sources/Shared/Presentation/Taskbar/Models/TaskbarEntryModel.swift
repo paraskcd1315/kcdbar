@@ -14,11 +14,7 @@ struct TaskbarEntryModel: Identifiable, Equatable {
     let instancesOnThisDisplay: Int
 
     var orderingKey: String {
-        TaskbarOrdering.orderingKey(
-            bundleIdentifier: bundleIdentifier,
-            entryId: id,
-            isPinned: isPinned
-        )
+        TaskbarOrdering.orderingKey(bundleIdentifier: bundleIdentifier, entryId: id)
     }
 
     static func == (lhs: TaskbarEntryModel, rhs: TaskbarEntryModel) -> Bool {

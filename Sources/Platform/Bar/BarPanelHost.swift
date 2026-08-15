@@ -8,6 +8,7 @@ final class BarPanelHost: BarPanelHostPort {
     private var pointerMonitor: Any?
     private var hiddenDisplays: Set<Int> = []
     private var revealedDisplays: Set<Int> = []
+    private var shown: [Int: Bool] = [:]
     private var activePreset = BarPresetCatalogue.default
 
     private let registry: WindowRegistry
@@ -78,18 +79,52 @@ final class BarPanelHost: BarPanelHostPort {
         )
         revealedDisplays.formIntersection(hiddenDisplays)
 
-        for (id, panel) in panels {
-            let showing = !hiddenDisplays.contains(id) || revealedDisplays.contains(id)
-            apply(showing: showing, to: panel)
+        for id in panels.keys {
+            apply(showing: !hiddenDisplays.contains(id) || revealedDisplays.contains(id), to: id)
         }
         updatePointerMonitor()
     }
 
-    private func apply(showing: Bool, to panel: BarPanel) {
-        if showing, !panel.isVisible {
+    private func apply(showing: Bool, to id: Int) {
+        guard shown[id] != showing else { return }
+        guard let panel = panels[id],
+              let display = registry.displays.first(where: { $0.id == id })
+        else {
+            return
+        }
+        shown[id] = showing
+
+        let settled = BarFrameCalculator.panelFrame(for: activePreset, on: display)
+        let offEdge = BarRevealPolicy.concealedFrame(settled, edge: activePreset.edge)
+
+        if showing {
+            panel.setFrame(offEdge, display: false)
+            panel.alphaValue = 0
             panel.orderFrontRegardless()
-        } else if !showing, panel.isVisible {
+        }
+        animate(panel, to: showing ? settled : offEdge, alpha: showing ? 1 : 0) {
+            guard !showing else { return }
             panel.orderOut(nil)
+            panel.setFrame(settled, display: false)
+            panel.alphaValue = 1
+        }
+    }
+
+    private func animate(
+        _ panel: BarPanel,
+        to frame: NSRect,
+        alpha: CGFloat,
+        completion: @escaping () -> Void
+    ) {
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = KbMotion.standardDuration
+            context.timingFunction = CAMediaTimingFunction(
+                controlPoints: KbMotion.curve.x1, KbMotion.curve.y1, KbMotion.curve.x2, KbMotion.curve.y2
+            )
+            panel.animator().setFrame(frame, display: true)
+            panel.animator().alphaValue = alpha
+        } completionHandler: {
+            MainActor.assumeIsolated(completion)
         }
     }
 
@@ -114,14 +149,11 @@ final class BarPanelHost: BarPanelHostPort {
 
     private func pointerMoved(to location: NSPoint) {
         for id in hiddenDisplays {
-            guard let panel = panels[id],
-                  let display = registry.displays.first(where: { $0.id == id })
-            else {
-                continue
-            }
+            guard let display = registry.displays.first(where: { $0.id == id }) else { continue }
+
             let reveal = BarRevealPolicy.shouldReveal(
                 pointer: location,
-                barFrame: panel.frame,
+                barFrame: BarFrameCalculator.panelFrame(for: activePreset, on: display),
                 display: display,
                 edge: activePreset.edge
             )
@@ -132,7 +164,7 @@ final class BarPanelHost: BarPanelHostPort {
             } else {
                 revealedDisplays.remove(id)
             }
-            apply(showing: reveal, to: panel)
+            apply(showing: reveal, to: id)
         }
     }
 
@@ -140,6 +172,7 @@ final class BarPanelHost: BarPanelHostPort {
         stopPointerMonitor()
         hiddenDisplays = []
         revealedDisplays = []
+        shown = [:]
         panels.values.forEach { $0.orderOut(nil) }
         panels = [:]
         if let screenObserver {
@@ -155,6 +188,7 @@ final class BarPanelHost: BarPanelHostPort {
         for (id, panel) in panels where !wanted.contains(id) {
             panel.orderOut(nil)
             panels.removeValue(forKey: id)
+            shown.removeValue(forKey: id)
         }
 
         for display in displays {
@@ -187,6 +221,7 @@ final class BarPanelHost: BarPanelHostPort {
             panel.contentView = BarHostingView(rootView: root)
             panel.orderFrontRegardless()
             panels[display.id] = panel
+            shown[display.id] = true
         }
     }
 

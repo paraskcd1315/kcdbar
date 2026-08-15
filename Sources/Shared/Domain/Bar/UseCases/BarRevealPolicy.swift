@@ -22,6 +22,15 @@ enum BarRevealPolicy {
         }
     }
 
+    static func concealedFrame(_ frame: CGRect, edge: BarEdge) -> CGRect {
+        switch edge {
+        case .bottom: frame.offsetBy(dx: 0, dy: -frame.height)
+        case .top: frame.offsetBy(dx: 0, dy: frame.height)
+        case .leading: frame.offsetBy(dx: -frame.width, dy: 0)
+        case .trailing: frame.offsetBy(dx: frame.width, dy: 0)
+        }
+    }
+
     private static func contains(_ frame: CGRect, _ point: CGPoint) -> Bool {
         point.x >= frame.minX && point.x <= frame.maxX
             && point.y >= frame.minY && point.y <= frame.maxY

@@ -57,16 +57,13 @@ final class AppServices {
     }
 
     private var orderingKeys: [String] {
-        let pinnedIdentifiers = Set(pins.apps.map(\.bundleIdentifier))
         let windowKeys = registry.taskbarEntries.map { window -> String in
-            let bundleIdentifier = registry.bundleIdentifiers[window.ownerPid]
-            return TaskbarOrdering.orderingKey(
-                bundleIdentifier: bundleIdentifier,
-                entryId: WindowEntryIdentifier.text(for: window.identity),
-                isPinned: bundleIdentifier.map(pinnedIdentifiers.contains) ?? false
+            TaskbarOrdering.orderingKey(
+                bundleIdentifier: registry.bundleIdentifiers[window.ownerPid],
+                entryId: WindowEntryIdentifier.text(for: window.identity)
             )
         }
-        let launcherKeys = pins.apps.map { "pin:\($0.bundleIdentifier)" }
+        let launcherKeys = pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) }
         let entryIds = registry.taskbarEntries.map { WindowEntryIdentifier.text(for: $0.identity) }
         let all = launcherKeys + windowKeys + entryIds
 
@@ -110,7 +107,7 @@ final class AppServices {
 
     private func persistPinnedOrder() {
         let pinnedByKey = Dictionary(
-            uniqueKeysWithValues: pins.apps.map { ("pin:\($0.bundleIdentifier)", $0) }
+            uniqueKeysWithValues: pins.apps.map { (TaskbarOrdering.applicationKey($0.bundleIdentifier), $0) }
         )
         let ordered = order.keys.compactMap { pinnedByKey[$0] }
         guard ordered.count == pins.apps.count else { return }

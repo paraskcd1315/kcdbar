@@ -45,6 +45,21 @@ struct BarRevealTests {
         )
     }
 
+    @Test func aConcealedBarSitsJustOffItsOwnEdge() {
+        #expect(
+            BarRevealPolicy.concealedFrame(barFrame, edge: .bottom)
+                == CGRect(x: 400, y: -52, width: 1120, height: 52)
+        )
+        #expect(
+            BarRevealPolicy.concealedFrame(barFrame, edge: .top)
+                == CGRect(x: 400, y: 52, width: 1120, height: 52)
+        )
+        #expect(
+            BarRevealPolicy.concealedFrame(barFrame, edge: .leading)
+                == CGRect(x: -720, y: 0, width: 1120, height: 52)
+        )
+    }
+
     @Test func eachEdgeRevealsFromItsOwnSide() {
         #expect(
             BarRevealPolicy.shouldReveal(

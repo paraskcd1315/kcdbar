@@ -29,6 +29,8 @@ enum TaskbarMetrics {
     static let showDesktopDividerWidth: CGFloat = 1
     static let draggingOpacity: Double = 0.35
     static let dragActivationDistance: CGFloat = 8
+    static let bandSpacing: CGFloat = 2
+    static let bandPadding: CGFloat = 4
     static let tooltipAllowance: CGFloat = 44
     static let tooltipGap: CGFloat = 8
     static let tooltipDelay: Duration = .milliseconds(400)
