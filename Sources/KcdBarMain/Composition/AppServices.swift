@@ -173,11 +173,24 @@ package final class AppServices {
             return
         }
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
-
-        if openNewWindowElsewhere(bundleIdentifier: bundleIdentifier, displayId: displayId) {
+        guard let window = LauncherWindowCycle.next(
+            pids: pids(of: bundleIdentifier),
+            onDisplay: displayId,
+            among: registry.windows,
+            displays: registry.displays,
+            frontmostPid: registry.frontmostPid
+        )
+        else {
+            launcher.launch(bundleIdentifier: bundleIdentifier)
             return
         }
-        launcher.launch(bundleIdentifier: bundleIdentifier)
+
+        _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
+        refreshAndEnforce()
+    }
+
+    private func pids(of bundleIdentifier: String) -> Set<pid_t> {
+        Set(registry.bundleIdentifiers.filter { $0.value == bundleIdentifier }.map(\.key))
     }
 
     package func openNewInstance(entry: TaskbarEntryModel, onDisplay displayId: Int) {
@@ -191,32 +204,6 @@ package final class AppServices {
         }
         _ = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
         scheduleRefresh()
-    }
-
-    private func openNewWindowElsewhere(bundleIdentifier: String, displayId: Int) -> Bool {
-        let pids = registry.bundleIdentifiers
-            .filter { $0.value == bundleIdentifier }
-            .map(\.key)
-        guard let pid = pids.first,
-              let display = registry.displays.first(where: { $0.id == displayId }),
-              newWindow.supportsNewWindow(pid: pid)
-        else {
-            return false
-        }
-        guard !NewWindowPlacement.hasWindow(
-            pid: pid,
-            onDisplay: displayId,
-            among: registry.taskbarEntries,
-            displays: registry.displays
-        ) else {
-            return false
-        }
-
-        let opened = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
-        if opened {
-            scheduleRefresh()
-        }
-        return opened
     }
 
     package func openBatteryPanel() {
