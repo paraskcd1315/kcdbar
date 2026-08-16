@@ -7,6 +7,7 @@ package struct StartMenuAppBand: View {
     package let showsHeading: Bool
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
+    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
 
@@ -18,6 +19,7 @@ package struct StartMenuAppBand: View {
                     showsHeading: showsHeading,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
+                    iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
                     onTogglePin: onTogglePin
                 )
@@ -27,6 +29,7 @@ package struct StartMenuAppBand: View {
                     showsHeading: showsHeading,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
+                    iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
                     onTogglePin: onTogglePin
                 )

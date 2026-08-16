@@ -10,6 +10,7 @@ package final class ApplicationCatalogueState {
     package private(set) var grouping: StartMenuGrouping = .alphabetical
     package private(set) var layout: StartMenuLayout = .list
     package private(set) var openedCategory: String?
+    package private(set) var visibleKey: String?
 
     private let catalogue: any ApplicationCataloguePort
     private let watcher: (any ApplicationCatalogueWatchPort)?
@@ -83,6 +84,14 @@ package final class ApplicationCatalogueState {
     package func choose(_ layout: StartMenuLayout) {
         self.layout = layout
         openedCategory = nil
+    }
+
+    package func note(visible key: String?) {
+        visibleKey = key
+    }
+
+    package var indexKey: String {
+        visibleKey ?? sections.first?.key ?? StartMenuMetrics.otherSectionKey
     }
 
     package func open(category: String) {

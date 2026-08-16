@@ -4,6 +4,7 @@ import SwiftUI
 package struct StartMenuCategoryFolder: View {
     package let section: ApplicationSection
     package let icons: any ApplicationIconPort
+    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onOpen: () -> Void
 
@@ -13,7 +14,12 @@ package struct StartMenuCategoryFolder: View {
         VStack(spacing: KbSpacing.s3) {
             LazyVGrid(columns: columns, spacing: StartMenuMetrics.folderInnerSpacing) {
                 ForEach(Array(cells.enumerated()), id: \.offset) { _, cell in
-                    StartMenuFolderCell(applications: cell, icons: icons, onLaunch: onLaunch)
+                    StartMenuFolderCell(
+                        applications: cell,
+                        icons: icons,
+                        iconNamespace: iconNamespace,
+                        onLaunch: onLaunch
+                    )
                 }
             }
             .padding(StartMenuMetrics.folderInnerSpacing)
@@ -47,7 +53,7 @@ package struct StartMenuCategoryFolder: View {
     private var columns: [GridItem] {
         Array(
             repeating: GridItem(.flexible(), spacing: StartMenuMetrics.folderInnerSpacing),
-            count: StartMenuMetrics.folderColumns
+            count: StartMenuMetrics.folderFaceColumns
         )
     }
 

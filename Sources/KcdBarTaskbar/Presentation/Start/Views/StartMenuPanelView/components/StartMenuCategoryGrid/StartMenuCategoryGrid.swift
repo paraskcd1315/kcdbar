@@ -4,6 +4,7 @@ import SwiftUI
 package struct StartMenuCategoryGrid: View {
     package let sections: [ApplicationSection]
     package let icons: any ApplicationIconPort
+    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onOpen: (String) -> Void
 
@@ -13,6 +14,7 @@ package struct StartMenuCategoryGrid: View {
                 StartMenuCategoryFolder(
                     section: section,
                     icons: icons,
+                    iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
                     onOpen: { onOpen(section.key) }
                 )

@@ -4,6 +4,7 @@ import SwiftUI
 package struct StartMenuAppTile: View {
     package let application: InstalledApplication
     package let icon: Image?
+    package let iconNamespace: Namespace.ID
     package let isPinned: Bool
     package let onLaunch: () -> Void
     package let onTogglePin: () -> Void
@@ -13,6 +14,7 @@ package struct StartMenuAppTile: View {
     package var body: some View {
         VStack(spacing: KbSpacing.s3) {
             StartMenuAppIcon(icon: icon, size: StartMenuMetrics.gridIconSize)
+                .matchedGeometryEffect(id: application.bundleIdentifier, in: iconNamespace)
             Text(application.displayName)
                 .font(KbTypography.entryTitle)
                 .foregroundStyle(KbColors.onSurface)

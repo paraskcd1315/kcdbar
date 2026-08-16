@@ -9,6 +9,7 @@ package struct StartMenuScroller: View {
     package let height: CGFloat
     package let showsRail: Bool
     package let availableKeys: Set<String>
+    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onPower: (StartPowerAction) -> Void
@@ -29,14 +30,20 @@ package struct StartMenuScroller: View {
                     catalogue: catalogue,
                     pinnedIdentifiers: Set(pinned.apps.map(\.bundleIdentifier)),
                     icons: icons,
+                    iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
                     onTogglePin: onTogglePin
                 )
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
+            .scrollTargetLayout()
+        }
+        .onScrollTargetVisibilityChange(idType: String.self) { keys in
+            catalogue.note(visible: keys.first)
         }
         .frame(height: height)
+        .animation(KbMotion.standard, value: height)
         .overlay(alignment: .trailing) {
             StartMenuRailSlot(
                 isShowing: showsRail,
@@ -49,6 +56,7 @@ package struct StartMenuScroller: View {
                 grouping: catalogue.grouping,
                 layout: catalogue.layout,
                 showsIndexButton: showsRail,
+                indexKey: catalogue.indexKey,
                 onSearch: onSearch,
                 onGrouping: { catalogue.choose($0) },
                 onLayout: { catalogue.choose($0) },

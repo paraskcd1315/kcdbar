@@ -5,6 +5,7 @@ package struct StartMenuCatalogueContent: View {
     package let catalogue: ApplicationCatalogueState
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
+    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onOpenCategory: (String) -> Void
@@ -16,6 +17,7 @@ package struct StartMenuCatalogueContent: View {
             StartMenuCategoryGrid(
                 sections: catalogue.sections,
                 icons: icons,
+                iconNamespace: iconNamespace,
                 onLaunch: onLaunch,
                 onOpen: onOpenCategory
             )
@@ -27,6 +29,7 @@ package struct StartMenuCatalogueContent: View {
                     showsHeading: catalogue.openedSection == nil,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
+                    iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
                     onTogglePin: onTogglePin
                 )

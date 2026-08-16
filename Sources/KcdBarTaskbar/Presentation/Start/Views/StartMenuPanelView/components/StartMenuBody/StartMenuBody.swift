@@ -12,6 +12,7 @@ package struct StartMenuBody: View {
     package let onSearch: () -> Void
 
     @State private var isShowingIndex = false
+    @Namespace private var iconNamespace
 
     package var body: some View {
         ScrollViewReader { proxy in
@@ -23,6 +24,7 @@ package struct StartMenuBody: View {
                 height: height,
                 showsRail: showsIndex,
                 availableKeys: availableKeys,
+                iconNamespace: iconNamespace,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
                 onPower: onPower,
@@ -30,6 +32,10 @@ package struct StartMenuBody: View {
                 onIndex: { isShowingIndex = true },
                 onJump: { proxy.scrollTo($0, anchor: .top) }
             )
+            .animation(KbMotion.standard, value: catalogue.grouping)
+            .animation(KbMotion.standard, value: catalogue.layout)
+            .animation(KbMotion.standard, value: catalogue.openedCategory)
+            .animation(KbMotion.quick, value: isShowingIndex)
             .overlay {
                 StartMenuIndexOverlay(
                     isShowing: isShowingIndex,

@@ -6,6 +6,7 @@ package struct StartMenuAppGridSection: View {
     package let showsHeading: Bool
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
+    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
 
@@ -17,6 +18,7 @@ package struct StartMenuAppGridSection: View {
                     StartMenuAppTile(
                         application: application,
                         icon: icons.icon(forBundleIdentifier: application.bundleIdentifier),
+                        iconNamespace: iconNamespace,
                         isPinned: pinnedIdentifiers.contains(application.bundleIdentifier),
                         onLaunch: { onLaunch(application.bundleIdentifier) },
                         onTogglePin: { onTogglePin(application.bundleIdentifier) }

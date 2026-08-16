@@ -6,6 +6,7 @@ package struct StartMenuAppSection: View {
     package let showsHeading: Bool
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
+    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
 
