@@ -14,6 +14,7 @@ package struct StartMenuPinnedPane: View {
     package let onToggle: (String) -> Void
     package let onAdd: () -> Void
     package let onCancel: () -> Void
+    package let canRemove: Bool
     package let onMove: (String, String, String?) -> Void
 
     @State private var dragged: String?
@@ -54,6 +55,7 @@ package struct StartMenuPinnedPane: View {
             .scrollBounceBehavior(.basedOnSize)
             StartMenuPinnedBar(
                 isEditing: editing != nil,
+                showsRemove: canRemove,
                 onAdd: onAdd,
                 onRemove: { if let editing { onRemove(editing) } },
                 onCancel: onCancel

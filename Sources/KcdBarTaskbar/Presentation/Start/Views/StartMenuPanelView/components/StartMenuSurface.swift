@@ -72,6 +72,7 @@ package struct StartMenuSurface: View {
                     editor.endEditing()
                     Task { await groups.cancelEditing() }
                 },
+                canRemove: groups.editing != nil && !groups.isEditingNew,
                 onMove: { moved, group, target in
                     Task {
                         await groups.move(

@@ -3,6 +3,7 @@ import SwiftUI
 
 package struct StartMenuPinnedBar: View {
     package let isEditing: Bool
+    package let showsRemove: Bool
     package let onAdd: () -> Void
     package let onRemove: () -> Void
     package let onCancel: () -> Void
@@ -11,12 +12,14 @@ package struct StartMenuPinnedBar: View {
         HStack(spacing: KbSpacing.s3) {
             Spacer(minLength: 0)
             if isEditing {
-                StartMenuHeaderButton(
-                    glyph: StartMenuMetrics.trashGlyph,
-                    titleKey: "start.group.remove",
-                    isDestructive: true,
-                    action: onRemove
-                )
+                if showsRemove {
+                    StartMenuHeaderButton(
+                        glyph: StartMenuMetrics.trashGlyph,
+                        titleKey: "start.group.remove",
+                        isDestructive: true,
+                        action: onRemove
+                    )
+                }
                 StartMenuHeaderButton(
                     glyph: StartMenuMetrics.cancelGlyph,
                     titleKey: "start.group.cancel",
@@ -34,5 +37,6 @@ package struct StartMenuPinnedBar: View {
         .padding(.vertical, KbSpacing.s4)
         .frame(maxWidth: .infinity, alignment: .trailing)
         .animation(KbMotion.quick, value: isEditing)
+        .animation(KbMotion.quick, value: showsRemove)
     }
 }

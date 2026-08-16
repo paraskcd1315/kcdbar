@@ -45,6 +45,12 @@ package final class StartGroupState {
         editing = id
     }
 
+    package var isEditingNew: Bool {
+        guard let editing, let held = groups.first(where: { $0.id == editing }) else { return false }
+
+        return held.title == nil && !memberships.contains { $0.groupId == editing }
+    }
+
     package func endEditing() {
         editing = nil
     }
