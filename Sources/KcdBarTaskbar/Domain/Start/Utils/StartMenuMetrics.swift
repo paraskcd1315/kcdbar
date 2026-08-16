@@ -62,7 +62,6 @@ package enum StartMenuMetrics {
     package static let groupingTitlePrefix = "start.group."
     package static let listGlyph = "list.bullet"
     package static let gridGlyph = "square.grid.2x2"
-    package static let indexButtonWidth: CGFloat = 34
     package static let controlsHeight: CGFloat = 24
     package static let gridColumns = 4
     package static let gridIconSize: CGFloat = 52

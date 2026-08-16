@@ -89,6 +89,8 @@ package struct StartMenuSurface: View {
         .task {
             await catalogue.load()
             await groups.load()
+        }
+        .task(id: pinned.apps.map(\.bundleIdentifier)) {
             await groups.seed(pins: pinned.apps)
         }
     }

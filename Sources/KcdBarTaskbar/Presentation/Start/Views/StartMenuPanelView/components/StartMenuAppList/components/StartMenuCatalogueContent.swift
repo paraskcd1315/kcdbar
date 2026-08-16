@@ -9,6 +9,7 @@ package struct StartMenuCatalogueContent: View {
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onOpenCategory: (String) -> Void
+    package let onIndex: () -> Void
 
     package var body: some View {
         if catalogue.isLoading {
@@ -27,6 +28,7 @@ package struct StartMenuCatalogueContent: View {
                     section: section,
                     layout: catalogue.layout,
                     showsHeading: catalogue.openedSection == nil,
+                    onIndex: onIndex,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
                     iconNamespace: iconNamespace,

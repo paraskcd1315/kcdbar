@@ -26,15 +26,13 @@ package struct StartMenuScroller: View {
                     icons: icons,
                     iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
-                    onTogglePin: onTogglePin
+                    onTogglePin: onTogglePin,
+                    onIndex: onIndex
                 )
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
             .scrollTargetLayout()
-        }
-        .onScrollTargetVisibilityChange(idType: String.self) { keys in
-            catalogue.note(visible: keys.first)
         }
         .frame(height: height)
         .animation(KbMotion.standard, value: height)
@@ -49,12 +47,9 @@ package struct StartMenuScroller: View {
             StartMenuHeader(
                 grouping: catalogue.grouping,
                 layout: catalogue.layout,
-                showsIndexButton: showsRail,
-                indexKey: catalogue.indexKey,
                 onSearch: onSearch,
                 onGrouping: { catalogue.choose($0) },
-                onLayout: { catalogue.choose($0) },
-                onIndex: onIndex
+                onLayout: { catalogue.choose($0) }
             )
         }
         .safeAreaBar(edge: .bottom) {

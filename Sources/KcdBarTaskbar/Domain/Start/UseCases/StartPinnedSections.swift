@@ -67,11 +67,29 @@ package enum StartPinnedSections {
         memberships: [StartGroupMembership]
     ) -> [StartPinnedBand] {
         let names = Dictionary(pins.map { ($0.bundleIdentifier, $0) }, uniquingKeysWith: { first, _ in first })
-        let byGroup = Dictionary(grouping: memberships.filter { names[$0.bundleIdentifier] != nil }) {
-            $0.groupId
+        let held = Set(memberships.map(\.bundleIdentifier))
+        let homeless = pins
+            .filter { !held.contains($0.bundleIdentifier) }
+            .sorted { $0.order < $1.order }
+        let placed = memberships.filter { names[$0.bundleIdentifier] != nil } + homeless.enumerated().map {
+            StartGroupMembership(
+                bundleIdentifier: $1.bundleIdentifier,
+                groupId: StartGroupMetrics.defaultGroupId,
+                order: countsByGroup(memberships)[StartGroupMetrics.defaultGroupId, default: 0] + $0
+            )
         }
+        let byGroup = Dictionary(grouping: placed) { $0.groupId }
+        let known = homeless.isEmpty || groups.contains { $0.id == StartGroupMetrics.defaultGroupId }
+            ? groups
+            : groups + [
+                StartGroup(
+                    id: StartGroupMetrics.defaultGroupId,
+                    titleKey: StartGroupMetrics.defaultGroupTitleKey,
+                    order: -1
+                )
+            ]
 
-        return groups.sorted { $0.order < $1.order }.map { group in
+        return known.sorted { $0.order < $1.order }.map { group in
             let applications = (byGroup[group.id] ?? [])
                 .sorted { $0.order < $1.order }
                 .compactMap { membership -> InstalledApplication? in

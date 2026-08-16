@@ -10,7 +10,6 @@ package final class ApplicationCatalogueState {
     package private(set) var grouping: StartMenuGrouping = .alphabetical
     package private(set) var layout: StartMenuLayout = .list
     package private(set) var openedCategory: String?
-    package private(set) var visibleKey: String?
 
     private let catalogue: any ApplicationCataloguePort
     private let watcher: (any ApplicationCatalogueWatchPort)?
@@ -123,14 +122,6 @@ package final class ApplicationCatalogueState {
             applications.map { ($0.bundleIdentifier, $0.category) },
             uniquingKeysWith: { first, _ in first }
         )
-    }
-
-    package func note(visible key: String?) {
-        visibleKey = key
-    }
-
-    package var indexKey: String {
-        visibleKey ?? sections.first?.key ?? StartMenuMetrics.otherSectionKey
     }
 
     package func open(category: String) {
