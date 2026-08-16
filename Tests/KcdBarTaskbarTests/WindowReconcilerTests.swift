@@ -44,6 +44,38 @@ struct WindowReconcilerTests {
         #expect(WindowPresentationPolicy.isTaskbarEntry(result[0]) == false)
     }
 
+    @Test func keepsAConfirmedWindowWhenAccessibilityAnswersNothingThisPass() {
+        let cg = WindowFixtures.cgRecord(windowId: 20, pid: 5, title: "Console")
+        let ax = WindowFixtures.axRecord(pid: 5, cgWindowId: 20, title: "Console")
+        let confirmed = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: [ax], previous: [])
+
+        let silent = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: [], previous: confirmed)
+
+        #expect(silent.count == 1)
+        #expect(silent[0].source == .both)
+        #expect(WindowPresentationPolicy.isTaskbarEntry(silent[0]))
+    }
+
+    @Test func keepsAConfirmedWindowMinimizedWhileAccessibilityIsSilent() {
+        let cg = WindowFixtures.cgRecord(windowId: 21, pid: 6, title: "Console")
+        let ax = WindowFixtures.axRecord(pid: 6, cgWindowId: 21, title: "Console", isMinimized: true)
+        let confirmed = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: [ax], previous: [])
+
+        let silent = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: [], previous: confirmed)
+
+        #expect(silent[0].isMinimized)
+    }
+
+    @Test func stillReportsCoreGraphicsOnlyForAWindowAccessibilityNeverConfirmed() {
+        let cg = WindowFixtures.cgRecord(windowId: 22, pid: 7, title: nil)
+        let first = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: [], previous: [])
+
+        let second = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: [], previous: first)
+
+        #expect(second[0].source == .coreGraphicsOnly)
+        #expect(WindowPresentationPolicy.isTaskbarEntry(second[0]) == false)
+    }
+
     @Test func matchesByTitleWhenTheBridgeGivesNoWindowId() {
         let cg = WindowFixtures.cgRecord(windowId: 12, pid: 3, title: "Notes")
         let ax = WindowFixtures.axRecord(pid: 3, cgWindowId: nil, title: "Notes", isMinimized: false)
