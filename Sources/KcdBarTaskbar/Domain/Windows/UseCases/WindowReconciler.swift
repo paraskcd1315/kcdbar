@@ -63,17 +63,20 @@ package enum WindowReconciler {
             cgWindowId: record.windowId,
             fallbackKey: fallbackKey(pid: record.ownerPid, bounds: record.bounds)
         )
+        let earlier = previous.first { $0.identity == identity }
+        let wasConfirmed = earlier?.source == .both
+
         return ManagedWindow(
             identity: identity,
             ownerPid: record.ownerPid,
             ownerName: record.ownerName,
             title: preferredTitle(record.title, match?.title, previous: previous, identity: identity),
             bounds: record.bounds,
-            isMinimized: match?.isMinimized ?? false,
-            isFullScreen: match?.isFullScreen ?? false,
+            isMinimized: match?.isMinimized ?? earlier?.isMinimized ?? false,
+            isFullScreen: match?.isFullScreen ?? earlier?.isFullScreen ?? false,
             isOnScreen: record.isOnScreen,
             zOrder: record.zOrder,
-            source: match == nil ? .coreGraphicsOnly : .both
+            source: match == nil && !wasConfirmed ? .coreGraphicsOnly : .both
         )
     }
 
