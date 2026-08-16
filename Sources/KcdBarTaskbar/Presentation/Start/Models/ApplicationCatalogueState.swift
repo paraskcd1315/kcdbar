@@ -8,8 +8,15 @@ package final class ApplicationCatalogueState {
     package private(set) var applications: [InstalledApplication] = []
     package private(set) var isLoading = true
     package private(set) var grouping: StartMenuGrouping = .alphabetical
-    package private(set) var layout: StartMenuLayout = .list
     package private(set) var openedCategory: String?
+    private var layouts: [StartMenuGrouping: StartMenuLayout] = [
+        .alphabetical: .list,
+        .category: .grid
+    ]
+
+    package var layout: StartMenuLayout {
+        layouts[grouping] ?? .list
+    }
 
     private let catalogue: any ApplicationCataloguePort
     private let watcher: (any ApplicationCatalogueWatchPort)?
@@ -75,13 +82,10 @@ package final class ApplicationCatalogueState {
     package func choose(_ grouping: StartMenuGrouping) {
         self.grouping = grouping
         openedCategory = nil
-        guard grouping == .category else { return }
-
-        layout = .grid
     }
 
     package func choose(_ layout: StartMenuLayout) {
-        self.layout = layout
+        layouts[grouping] = layout
         openedCategory = nil
     }
 

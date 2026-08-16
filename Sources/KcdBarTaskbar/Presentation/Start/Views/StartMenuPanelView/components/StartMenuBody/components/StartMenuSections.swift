@@ -22,6 +22,7 @@ package struct StartMenuSections: View {
         ) {
             Color.clear
                 .frame(height: 0)
+                .padding(.bottom, -KbSpacing.s5)
                 .id(StartMenuMetrics.topAnchorKey)
             if !recents.isEmpty {
                 Section {
