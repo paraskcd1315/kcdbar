@@ -67,8 +67,14 @@ package struct StartMenuScroller: View {
                 grouping: catalogue.grouping,
                 layout: catalogue.layout,
                 onSearch: onSearch,
-                onGrouping: { catalogue.choose($0) },
-                onLayout: { catalogue.choose($0) }
+                onGrouping: {
+                    catalogue.choose($0)
+                    onJump(StartMenuMetrics.topAnchorKey)
+                },
+                onLayout: {
+                    catalogue.choose($0)
+                    onJump(StartMenuMetrics.topAnchorKey)
+                }
             )
         }
         .safeAreaBar(edge: .bottom) {
