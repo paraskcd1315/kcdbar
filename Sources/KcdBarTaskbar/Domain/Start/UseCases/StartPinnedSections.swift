@@ -39,6 +39,27 @@ package enum StartPinnedSections {
         to groupId: String,
         before target: String?
     ) -> [StartGroupMembership] {
+        rearranged(bands, moving: bundleIdentifier, to: groupId, before: target)
+            .flatMap { reordered($1, in: $0) }
+    }
+
+    package static func previewing(
+        _ bands: [StartPinnedBand],
+        moving bundleIdentifier: String,
+        to groupId: String,
+        before target: String?
+    ) -> [StartPinnedBand] {
+        let members = rearranged(bands, moving: bundleIdentifier, to: groupId, before: target)
+
+        return bands.map { StartPinnedBand(group: $0.group, applications: members[$0.group.id] ?? []) }
+    }
+
+    private static func rearranged(
+        _ bands: [StartPinnedBand],
+        moving bundleIdentifier: String,
+        to groupId: String,
+        before target: String?
+    ) -> [String: [InstalledApplication]] {
         var members = Dictionary(
             bands.map { ($0.group.id, $0.applications) },
             uniquingKeysWith: { first, _ in first }
@@ -46,7 +67,7 @@ package enum StartPinnedSections {
         guard let carried = members.values.flatMap({ $0 })
             .first(where: { $0.bundleIdentifier == bundleIdentifier })
         else {
-            return []
+            return members
         }
         for key in members.keys {
             members[key]?.removeAll { $0.bundleIdentifier == bundleIdentifier }
@@ -58,7 +79,7 @@ package enum StartPinnedSections {
         destination.insert(carried, at: index)
         members[groupId] = destination
 
-        return members.flatMap { reordered($1, in: $0) }
+        return members
     }
 
     package static func bands(

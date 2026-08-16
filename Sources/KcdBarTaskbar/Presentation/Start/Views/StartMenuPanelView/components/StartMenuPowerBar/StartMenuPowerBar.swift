@@ -3,10 +3,12 @@ import SwiftUI
 
 package struct StartMenuPowerBar: View {
     package let userName: String
+    package let avatar: Image?
     package let onPower: (StartPowerAction) -> Void
 
     package var body: some View {
-        HStack(spacing: KbSpacing.s2) {
+        HStack(spacing: KbSpacing.s3) {
+            StartMenuAvatar(image: avatar)
             Text(userName)
                 .font(KbTypography.menuItem)
                 .foregroundStyle(KbColors.onSurface)

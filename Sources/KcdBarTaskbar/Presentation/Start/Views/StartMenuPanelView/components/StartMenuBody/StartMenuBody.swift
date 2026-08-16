@@ -6,6 +6,7 @@ package struct StartMenuBody: View {
     package let icons: any ApplicationIconPort
     package let pinnedIdentifiers: Set<String>
     package let userName: String
+    package let avatar: Image?
     package let height: CGFloat
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
@@ -22,6 +23,7 @@ package struct StartMenuBody: View {
                 icons: icons,
                 pinnedIdentifiers: pinnedIdentifiers,
                 userName: userName,
+                avatar: avatar,
                 height: height,
                 showsRail: showsIndex,
                 availableKeys: availableKeys,

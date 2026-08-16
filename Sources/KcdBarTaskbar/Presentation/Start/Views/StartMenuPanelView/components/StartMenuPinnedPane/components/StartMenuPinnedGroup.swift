@@ -15,6 +15,7 @@ package struct StartMenuPinnedGroup: View {
     package let onFrame: (String, CGRect) -> Void
     package let onBandFrame: (CGRect) -> Void
     package let onPickUp: (String) -> Void
+    package let onDragOver: (String, CGPoint) -> Void
     package let onDrop: (CGPoint) -> Void
 
     package var body: some View {
@@ -77,7 +78,10 @@ package struct StartMenuPinnedGroup: View {
             minimumDistance: StartMenuMetrics.dragThreshold,
             coordinateSpace: .named(StartMenuMetrics.pinnedDragSpace)
         )
-        .onChanged { _ in onPickUp(bundleIdentifier) }
+        .onChanged {
+            onPickUp(bundleIdentifier)
+            onDragOver(bundleIdentifier, $0.location)
+        }
         .onEnded { onDrop($0.location) }
     }
 }

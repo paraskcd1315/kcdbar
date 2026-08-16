@@ -8,6 +8,7 @@ package struct StartMenuSurface: View {
     package let editor: any PanelTextEditingPort
     package let icons: any ApplicationIconPort
     package let userName: String
+    package let avatar: Image?
     package let arrowX: CGFloat
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
@@ -27,6 +28,7 @@ package struct StartMenuSurface: View {
                 icons: icons,
                 pinnedIdentifiers: Set(pinned.apps.map(\.bundleIdentifier)),
                 userName: userName,
+                avatar: avatar,
                 height: catalogue.bodyHeight,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,

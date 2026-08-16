@@ -20,12 +20,13 @@ package struct StartMenuPinnedPane: View {
     @State private var dragged: String?
     @State private var tiles: [String: CGRect] = [:]
     @State private var bandFrames: [String: CGRect] = [:]
+    @State private var rehearsal: [StartPinnedBand]?
 
     package var body: some View {
         ZStack(alignment: .topTrailing) {
             ScrollView {
             LazyVStack(alignment: .leading, spacing: KbSpacing.s5) {
-                ForEach(bands) { band in
+                ForEach(shown) { band in
                     StartMenuPinnedGroup(
                         band: band,
                         icons: icons,
@@ -40,6 +41,7 @@ package struct StartMenuPinnedPane: View {
                         onFrame: { tiles[$0] = $1 },
                         onBandFrame: { bandFrames[band.group.id] = $0 },
                         onPickUp: { dragged = $0 },
+                        onDragOver: preview(of:at:),
                         onDrop: drop(at:)
                     )
                 }
@@ -64,21 +66,46 @@ package struct StartMenuPinnedPane: View {
         }
         .frame(width: StartMenuMetrics.pinnedPaneWidth, height: height, alignment: .top)
         .animation(KbMotion.quick, value: dragged)
+        .onChange(of: bands) { rehearsal = nil }
+    }
+
+    private var shown: [StartPinnedBand] {
+        rehearsal ?? bands
+    }
+
+    private func preview(of bundleIdentifier: String, at location: CGPoint) {
+        guard let group = group(holding: onto(bundleIdentifier, at: location), at: location) else {
+            return
+        }
+
+        rehearsal = StartPinnedSections.previewing(
+            shown,
+            moving: bundleIdentifier,
+            to: group,
+            before: onto(bundleIdentifier, at: location)
+        )
+    }
+
+    private func onto(_ carried: String, at location: CGPoint) -> String? {
+        tiles.first { $0.key != carried && $0.value.contains(location) }?.key
     }
 
     private func drop(at location: CGPoint) {
         guard let carried = dragged else { return }
         dragged = nil
 
-        let onto = tiles.first { $0.key != carried && $0.value.contains(location) }?.key
-        guard let group = group(holding: onto, at: location) else { return }
+        let target = onto(carried, at: location)
+        guard let group = group(holding: target, at: location) else {
+            rehearsal = nil
+            return
+        }
 
-        onMove(carried, group, onto)
+        onMove(carried, group, target)
     }
 
     private func group(holding target: String?, at location: CGPoint) -> String? {
         if let target {
-            return bands.first { band in
+            return shown.first { band in
                 band.applications.contains { $0.bundleIdentifier == target }
             }?.group.id
         }

@@ -9,6 +9,7 @@ package struct StartMenuPanelView: View {
     package let editor: any PanelTextEditingPort
     package let icons: any ApplicationIconPort
     package let userName: String
+    package let avatar: Image?
     package let arrowX: CGFloat
     package let presentation: PopoverPresentation
     package let onLaunch: (String) -> Void
@@ -23,6 +24,7 @@ package struct StartMenuPanelView: View {
         editor: any PanelTextEditingPort,
         icons: any ApplicationIconPort,
         userName: String,
+        avatar: Image?,
         arrowX: CGFloat,
         presentation: PopoverPresentation,
         onLaunch: @escaping (String) -> Void,
@@ -36,6 +38,7 @@ package struct StartMenuPanelView: View {
         self.editor = editor
         self.icons = icons
         self.userName = userName
+        self.avatar = avatar
         self.arrowX = arrowX
         self.presentation = presentation
         self.onLaunch = onLaunch
@@ -53,6 +56,7 @@ package struct StartMenuPanelView: View {
                 editor: editor,
                 icons: icons,
                 userName: userName,
+                avatar: avatar,
                 arrowX: arrowX,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,

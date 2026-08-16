@@ -6,6 +6,7 @@ package struct StartMenuScroller: View {
     package let icons: any ApplicationIconPort
     package let pinnedIdentifiers: Set<String>
     package let userName: String
+    package let avatar: Image?
     package let height: CGFloat
     package let showsRail: Bool
     package let availableKeys: Set<String>
@@ -53,7 +54,7 @@ package struct StartMenuScroller: View {
             )
         }
         .safeAreaBar(edge: .bottom) {
-            StartMenuPowerBar(userName: userName, onPower: onPower)
+            StartMenuPowerBar(userName: userName, avatar: avatar, onPower: onPower)
                 .padding(.horizontal, KbSpacing.s6)
                 .padding(.top, KbSpacing.s5)
                 .padding(.bottom, KbSpacing.s5 + KbPopoverMetrics.arrowSize.height)

@@ -43,6 +43,7 @@ package final class AppServices {
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
     package let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
     package let power: any PowerActionPort = LoginWindowPowerControl()
+    package let userPicture: any UserPicturePort = CollaborationUserPicture()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -265,7 +266,7 @@ package final class AppServices {
         }
 
         popover.present(.start, anchor: popoverAnchor()) {
-            [applications, startPins, startGroups, panelEditor, icons, launcher, power, popover, spotlight]
+            [applications, startPins, startGroups, panelEditor, icons, launcher, power, popover, spotlight, userPicture]
             presentation, arrowX in
             StartMenuPresentation.content(
                 catalogue: applications,
@@ -274,6 +275,7 @@ package final class AppServices {
                 editor: panelEditor,
                 icons: icons,
                 userName: NSFullUserName(),
+                avatar: userPicture.picture(),
                 presentation: presentation,
                 arrowX: arrowX,
                 onLaunch: { launcher.launch(bundleIdentifier: $0) },
