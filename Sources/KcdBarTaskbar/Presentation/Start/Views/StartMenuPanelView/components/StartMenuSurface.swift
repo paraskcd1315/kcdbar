@@ -3,6 +3,7 @@ import SwiftUI
 
 package struct StartMenuSurface: View {
     package let catalogue: ApplicationCatalogueState
+    package let usage: ApplicationUsageState
     package let pinned: PinnedAppState
     package let groups: StartGroupState
     package let editor: any PanelTextEditingPort
@@ -25,6 +26,7 @@ package struct StartMenuSurface: View {
         HStack(alignment: .top, spacing: 0) {
             StartMenuBody(
                 catalogue: catalogue,
+                usage: usage,
                 icons: icons,
                 pinnedIdentifiers: Set(pinned.apps.map(\.bundleIdentifier)),
                 userName: userName,

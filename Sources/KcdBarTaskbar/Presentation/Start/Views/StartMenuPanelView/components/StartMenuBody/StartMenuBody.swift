@@ -3,6 +3,7 @@ import SwiftUI
 
 package struct StartMenuBody: View {
     package let catalogue: ApplicationCatalogueState
+    package let usage: ApplicationUsageState
     package let icons: any ApplicationIconPort
     package let pinnedIdentifiers: Set<String>
     package let userName: String
@@ -20,39 +21,35 @@ package struct StartMenuBody: View {
         ScrollViewReader { proxy in
             StartMenuScroller(
                 catalogue: catalogue,
+                usage: usage,
                 icons: icons,
                 pinnedIdentifiers: pinnedIdentifiers,
                 userName: userName,
                 avatar: avatar,
                 height: height,
                 showsRail: showsIndex,
+                isShowingIndex: isShowingIndex,
                 availableKeys: availableKeys,
                 iconNamespace: iconNamespace,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
                 onPower: onPower,
                 onSearch: onSearch,
-                onIndex: { isShowingIndex = true },
-                onJump: { proxy.scrollTo($0, anchor: .top) }
+                onIndex: { isShowingIndex.toggle() },
+                onJump: { key in
+                    isShowingIndex = false
+                    proxy.scrollTo(key, anchor: .top)
+                }
             )
             .animation(KbMotion.standard, value: catalogue.grouping)
             .animation(KbMotion.standard, value: catalogue.layout)
             .animation(KbMotion.standard, value: catalogue.openedCategory)
-            .animation(KbMotion.quick, value: isShowingIndex)
-            .overlay {
-                StartMenuIndexOverlay(
-                    isShowing: isShowingIndex,
-                    availableKeys: availableKeys,
-                    onJump: { proxy.scrollTo($0, anchor: .top) },
-                    onDismiss: { isShowingIndex = false }
-                )
-            }
         }
         .frame(width: StartMenuMetrics.sidebarWidth)
     }
 
     private var showsIndex: Bool {
-        catalogue.grouping == .alphabetical && !catalogue.isLoading
+        catalogue.grouping == .alphabetical && !catalogue.isLoading && !isShowingIndex
     }
 
     private var availableKeys: Set<String> {

@@ -1,7 +1,12 @@
+import Foundation
 import KcdBarTaskbar
 
 /** Stands in when the store file cannot be opened, so the bar still runs. */
-package actor EphemeralPinnedAppStore: PinnedAppStorePort, StartPinStorePort, StartGroupStorePort {
+package actor EphemeralPinnedAppStore:
+    PinnedAppStorePort,
+    StartPinStorePort,
+    StartGroupStorePort,
+    ApplicationUsageStorePort {
     package init() {}
 
     private var apps: [PinnedApp] = []
@@ -69,5 +74,23 @@ package actor EphemeralPinnedAppStore: PinnedAppStorePort, StartPinStorePort, St
 
     package func clearStartGroupMembership(bundleIdentifier: String) async {
         memberships.removeAll { $0.bundleIdentifier == bundleIdentifier }
+    }
+
+    private var usage: [ApplicationUsage] = []
+
+    package func applicationUsage() async -> [ApplicationUsage] {
+        usage
+    }
+
+    package func recordLaunch(bundleIdentifier: String, at moment: Date) async {
+        let held = usage.first { $0.bundleIdentifier == bundleIdentifier }
+        usage.removeAll { $0.bundleIdentifier == bundleIdentifier }
+        usage.append(
+            ApplicationUsage(
+                bundleIdentifier: bundleIdentifier,
+                count: (held?.count ?? 0) + 1,
+                lastLaunchedAt: moment
+            )
+        )
     }
 }

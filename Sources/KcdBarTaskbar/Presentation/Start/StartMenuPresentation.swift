@@ -6,6 +6,7 @@ import SwiftUI
 package enum StartMenuPresentation {
     package static func content(
         catalogue: ApplicationCatalogueState,
+        usage: ApplicationUsageState,
         pinned: PinnedAppState,
         groups: StartGroupState,
         editor: any PanelTextEditingPort,
@@ -22,6 +23,7 @@ package enum StartMenuPresentation {
         AnyView(
             StartMenuPanelView(
                 catalogue: catalogue,
+                usage: usage,
                 pinned: pinned,
                 groups: groups,
                 editor: editor,

@@ -880,6 +880,17 @@
           }
         }
       }
+    },
+    "start.recent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent apps"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

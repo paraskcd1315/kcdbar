@@ -33,6 +33,7 @@ package final class AppServices {
     package let startGroups: StartGroupState
     package let panelEditor: any PanelTextEditingPort = AppKitPanelTextEditing()
     package let applications: ApplicationCatalogueState
+    package let usage: ApplicationUsageState
     package let order = EntryOrderMemory()
     package let desktop = ShowDesktopState()
     package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
@@ -174,6 +175,7 @@ package final class AppServices {
         pins = PinnedAppState(store: opened)
         startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
         startGroups = StartGroupState(store: opened)
+        usage = ApplicationUsageState(store: opened)
 
         let indexed = SpotlightApplicationSource()
         applications = ApplicationCatalogueState(
@@ -185,6 +187,7 @@ package final class AppServices {
     package func loadPreferences() async {
         await pins.load()
         await startPins.load()
+        await usage.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
         refreshAndEnforce()
     }
@@ -204,6 +207,7 @@ package final class AppServices {
         )
         else {
             launcher.launch(bundleIdentifier: bundleIdentifier)
+            usage.note(launchOf: bundleIdentifier)
             return
         }
 
@@ -222,6 +226,7 @@ package final class AppServices {
               newWindow.supportsNewWindow(pid: pid)
         else {
             launcher.launch(bundleIdentifier: bundleIdentifier)
+            usage.note(launchOf: bundleIdentifier)
             return
         }
         _ = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
@@ -266,10 +271,11 @@ package final class AppServices {
         }
 
         popover.present(.start, anchor: popoverAnchor()) {
-            [applications, startPins, startGroups, panelEditor, icons, launcher, power, popover, spotlight, userPicture]
+            [applications, usage, startPins, startGroups, panelEditor, icons, launcher, power, popover, spotlight, userPicture]
             presentation, arrowX in
             StartMenuPresentation.content(
                 catalogue: applications,
+                usage: usage,
                 pinned: startPins,
                 groups: startGroups,
                 editor: panelEditor,
@@ -278,7 +284,10 @@ package final class AppServices {
                 avatar: userPicture.picture(),
                 presentation: presentation,
                 arrowX: arrowX,
-                onLaunch: { launcher.launch(bundleIdentifier: $0) },
+                onLaunch: { [usage] identifier in
+                    launcher.launch(bundleIdentifier: identifier)
+                    usage.note(launchOf: identifier)
+                },
                 onTogglePin: { [weak self] in self?.toggleStartPin(bundleIdentifier: $0) },
                 onPower: { action in
                     popover.dismiss()

@@ -3,12 +3,14 @@ import SwiftUI
 
 package struct StartMenuScroller: View {
     package let catalogue: ApplicationCatalogueState
+    package let usage: ApplicationUsageState
     package let icons: any ApplicationIconPort
     package let pinnedIdentifiers: Set<String>
     package let userName: String
     package let avatar: Image?
     package let height: CGFloat
     package let showsRail: Bool
+    package let isShowingIndex: Bool
     package let availableKeys: Set<String>
     package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
@@ -20,16 +22,31 @@ package struct StartMenuScroller: View {
 
     package var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: KbSpacing.s5) {
-                StartMenuAppList(
-                    catalogue: catalogue,
-                    pinnedIdentifiers: pinnedIdentifiers,
-                    icons: icons,
-                    iconNamespace: iconNamespace,
-                    onLaunch: onLaunch,
-                    onTogglePin: onTogglePin,
-                    onIndex: onIndex
-                )
+            ZStack(alignment: .top) {
+                if isShowingIndex {
+                    StartMenuLetterGrid(
+                        keys: ApplicationIndexKeys.all,
+                        available: availableKeys,
+                        recents: recents,
+                        icons: icons,
+                        onSelect: onJump,
+                        onLaunch: onLaunch
+                    )
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                } else {
+                    StartMenuSections(
+                        catalogue: catalogue,
+                        usage: usage,
+                        recents: recents,
+                        pinnedIdentifiers: pinnedIdentifiers,
+                        icons: icons,
+                        iconNamespace: iconNamespace,
+                        onLaunch: onLaunch,
+                        onTogglePin: onTogglePin,
+                        onIndex: onIndex
+                    )
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
@@ -37,10 +54,12 @@ package struct StartMenuScroller: View {
         }
         .frame(height: height)
         .animation(KbMotion.standard, value: height)
+        .animation(KbMotion.standard, value: isShowingIndex)
         .overlay(alignment: .trailing) {
             StartMenuRailSlot(
                 isShowing: showsRail,
                 availableKeys: availableKeys,
+                showsRecent: !recents.isEmpty,
                 onJump: onJump
             )
         }
@@ -62,5 +81,9 @@ package struct StartMenuScroller: View {
                 .glassEffect(.regular.interactive(), in: Rectangle())
         }
         .scrollBounceBehavior(.basedOnSize)
+    }
+
+    private var recents: [InstalledApplication] {
+        usage.recents(among: catalogue.applications)
     }
 }

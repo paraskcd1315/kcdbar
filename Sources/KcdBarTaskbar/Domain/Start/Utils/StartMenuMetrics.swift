@@ -84,6 +84,12 @@ package enum StartMenuMetrics {
     package static let avatarSize: CGFloat = 24
     package static let avatarScale: CGFloat = 2
     package static let avatarGlyph = "person.crop.circle"
+    package static let recentLimit = 10
+    package static let recentGlyph = "clock"
+    package static let recentIconSize: CGFloat = 34
+    package static let stickyFillOpacity: Double = 0.92
+    package static let recentSectionKey = "recent"
+    package static let allSectionKey = "all"
     package static let cancelGlyph = "xmark"
     package static let emptyBandHeight: CGFloat = 60
     package static let pinnedDragSpace = "start.pinned.drag."

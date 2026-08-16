@@ -4,31 +4,31 @@ import SwiftUI
 package struct StartMenuLetterGrid: View {
     package let keys: [String]
     package let available: Set<String>
+    package let recents: [InstalledApplication]
+    package let icons: any ApplicationIconPort
     package let onSelect: (String) -> Void
-    package let onDismiss: () -> Void
+    package let onLaunch: (String) -> Void
 
     package var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(KbColors.scrim)
-                .kbTappable(in: Rectangle(), perform: onDismiss)
+        VStack(alignment: .leading, spacing: KbSpacing.s5) {
+            StartMenuLetterRecents(
+                applications: recents,
+                icons: icons,
+                onLaunch: onLaunch
+            )
             LazyVGrid(columns: columns, spacing: KbSpacing.s3) {
                 ForEach(keys, id: \.self) { key in
                     StartMenuLetterCell(
                         key: key,
                         isAvailable: available.contains(key),
-                        onSelect: {
-                            onSelect(key)
-                            onDismiss()
-                        }
+                        onSelect: { onSelect(key) }
                     )
                 }
             }
-            .padding(KbSpacing.s5)
-            .glassEffect(.regular.interactive(), in: shape)
-            .overlay(shape.stroke(KbColors.separator, lineWidth: KbEdgeMetrics.width))
-            .padding(KbSpacing.s6)
         }
+        .padding(.horizontal, KbSpacing.s6)
+        .padding(.vertical, KbSpacing.s5)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var columns: [GridItem] {
@@ -36,9 +36,5 @@ package struct StartMenuLetterGrid: View {
             repeating: GridItem(.flexible(), spacing: KbSpacing.s3),
             count: StartMenuMetrics.letterGridColumns
         )
-    }
-
-    private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: KbRadii.lg, style: .continuous)
     }
 }

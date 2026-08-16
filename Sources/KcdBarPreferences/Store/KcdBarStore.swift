@@ -9,7 +9,8 @@ actor KcdBarStore:
     DockSnapshotStorePort,
     PinnedAppStorePort,
     StartPinStorePort,
-    StartGroupStorePort {
+    StartGroupStorePort,
+    ApplicationUsageStorePort {
     package static let fileName = "kcdbar.store"
 
     static func container(at url: URL? = nil, inMemory: Bool = false) throws -> ModelContainer {
@@ -20,7 +21,8 @@ actor KcdBarStore:
             StoredPinnedApp.self,
             StoredStartPin.self,
             StoredStartGroup.self,
-            StoredStartGroupMembership.self
+            StoredStartGroupMembership.self,
+            StoredApplicationUsage.self
         ])
         let configuration = inMemory
             ? ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -282,6 +284,43 @@ actor KcdBarStore:
 
         modelContext.delete(held)
         try? modelContext.save()
+    }
+
+    func applicationUsage() async -> [ApplicationUsage] {
+        let stored = (try? modelContext.fetch(FetchDescriptor<StoredApplicationUsage>())) ?? []
+
+        return stored.map {
+            ApplicationUsage(
+                bundleIdentifier: $0.bundleIdentifier,
+                count: $0.count,
+                lastLaunchedAt: $0.lastLaunchedAt
+            )
+        }
+    }
+
+    func recordLaunch(bundleIdentifier: String, at moment: Date) async {
+        if let held = storedUsage(bundleIdentifier: bundleIdentifier) {
+            held.count += 1
+            held.lastLaunchedAt = moment
+        } else {
+            modelContext.insert(
+                StoredApplicationUsage(
+                    bundleIdentifier: bundleIdentifier,
+                    count: 1,
+                    lastLaunchedAt: moment
+                )
+            )
+        }
+        try? modelContext.save()
+    }
+
+    private func storedUsage(bundleIdentifier: String) -> StoredApplicationUsage? {
+        var query = FetchDescriptor<StoredApplicationUsage>(
+            predicate: #Predicate { $0.bundleIdentifier == bundleIdentifier }
+        )
+        query.fetchLimit = 1
+
+        return try? modelContext.fetch(query).first
     }
 
     private func storedGroup(id: String) -> StoredStartGroup? {

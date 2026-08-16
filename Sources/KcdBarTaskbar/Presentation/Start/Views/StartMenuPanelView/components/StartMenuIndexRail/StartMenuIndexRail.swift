@@ -4,6 +4,7 @@ import SwiftUI
 package struct StartMenuIndexRail: View {
     package let keys: [String]
     package let available: Set<String>
+    package let showsRecent: Bool
     package let onSelect: (String) -> Void
 
     @State private var lastSent: String?
@@ -11,6 +12,15 @@ package struct StartMenuIndexRail: View {
     package var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
+                if showsRecent {
+                    Image(systemName: StartMenuMetrics.recentGlyph)
+                        .font(.system(size: StartMenuMetrics.railLetterHeight, weight: .semibold))
+                        .foregroundStyle(KbColors.onSurfaceMuted)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .kbTappable(in: Rectangle()) {
+                            onSelect(StartMenuMetrics.recentSectionKey)
+                        }
+                }
                 ForEach(keys, id: \.self) { key in
                     Text(key)
                         .font(.system(size: StartMenuMetrics.railLetterHeight, weight: .semibold))
@@ -31,7 +41,8 @@ package struct StartMenuIndexRail: View {
 
     private func send(at y: CGFloat, in height: CGFloat) {
         guard height > 0, !keys.isEmpty else { return }
-        let index = Int(y / (height / CGFloat(keys.count)))
+        let slots = keys.count + (showsRecent ? 1 : 0)
+        let index = Int(y / (height / CGFloat(slots))) - (showsRecent ? 1 : 0)
         guard keys.indices.contains(index) else { return }
 
         let key = keys[index]

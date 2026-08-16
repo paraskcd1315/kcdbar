@@ -4,6 +4,7 @@ import SwiftUI
 
 package struct StartMenuPanelView: View {
     package let catalogue: ApplicationCatalogueState
+    package let usage: ApplicationUsageState
     package let pinned: PinnedAppState
     package let groups: StartGroupState
     package let editor: any PanelTextEditingPort
@@ -19,6 +20,7 @@ package struct StartMenuPanelView: View {
 
     package init(
         catalogue: ApplicationCatalogueState,
+        usage: ApplicationUsageState,
         pinned: PinnedAppState,
         groups: StartGroupState,
         editor: any PanelTextEditingPort,
@@ -33,6 +35,7 @@ package struct StartMenuPanelView: View {
         onSearch: @escaping () -> Void
     ) {
         self.catalogue = catalogue
+        self.usage = usage
         self.pinned = pinned
         self.groups = groups
         self.editor = editor
@@ -51,6 +54,7 @@ package struct StartMenuPanelView: View {
         GlassEffectContainer {
             StartMenuSurface(
                 catalogue: catalogue,
+                usage: usage,
                 pinned: pinned,
                 groups: groups,
                 editor: editor,

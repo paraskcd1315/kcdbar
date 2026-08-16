@@ -12,7 +12,7 @@ package struct StartMenuAppList: View {
 
     package var body: some View {
         VStack(alignment: .leading, spacing: StartMenuMetrics.sectionSpacing) {
-            StartMenuListHeading(
+            StartMenuOpenedHeading(
                 opened: catalogue.openedSection,
                 onBack: { catalogue.closeCategory() }
             )

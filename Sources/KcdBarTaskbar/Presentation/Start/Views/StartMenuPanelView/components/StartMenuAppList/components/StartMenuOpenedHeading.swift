@@ -1,7 +1,7 @@
 import KcdBarDesignSystem
 import SwiftUI
 
-package struct StartMenuListHeading: View {
+package struct StartMenuOpenedHeading: View {
     package let opened: ApplicationSection?
     package let onBack: () -> Void
 
@@ -12,8 +12,6 @@ package struct StartMenuListHeading: View {
                     .font(KbTypography.menuHeading)
                     .foregroundStyle(KbColors.onSurfaceMuted)
                 StartMenuSectionHeading(title: LocalizedStringKey(opened.titleKey ?? opened.key))
-            } else {
-                StartMenuSectionHeading(title: "start.all")
             }
             Spacer(minLength: 0)
         }
