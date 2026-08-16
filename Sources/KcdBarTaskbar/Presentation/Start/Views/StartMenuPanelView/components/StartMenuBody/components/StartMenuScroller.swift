@@ -47,7 +47,7 @@ package struct StartMenuScroller: View {
                         onLaunch: onLaunch,
                         onTogglePin: onTogglePin,
                         onIndex: onIndex,
-                        onScrollTop: { onJump(StartMenuMetrics.recentSectionKey) }
+                        onScrollTop: { onJump(StartMenuMetrics.topAnchorKey) }
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
                     .onAppear(perform: onSectionsAppear)

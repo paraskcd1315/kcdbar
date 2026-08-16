@@ -5,6 +5,7 @@ package enum StartMenuMetrics {
     package static let sidebarWidth: CGFloat = 340
     package static let pinnedPaneWidth: CGFloat = 580
     package static let panelWidth: CGFloat = sidebarWidth + pinnedPaneWidth
+    package static let pinnedRevealScale: CGFloat = 0.96
     package static let bodyMaxHeight: CGFloat = 660
     package static let pinnedColumns = 4
     package static let pinnedIconSize: CGFloat = 52
@@ -87,6 +88,7 @@ package enum StartMenuMetrics {
     package static let recentLimit = 10
     package static let recentGlyph = "clock"
     package static let recentIconSize: CGFloat = 34
+    package static let topAnchorKey = "top"
     package static let recentSectionKey = "recent"
     package static let allSectionKey = "all"
     package static let cancelGlyph = "xmark"

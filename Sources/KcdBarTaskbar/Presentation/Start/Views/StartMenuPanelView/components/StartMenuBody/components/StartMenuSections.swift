@@ -20,6 +20,9 @@ package struct StartMenuSections: View {
             spacing: KbSpacing.s5,
             pinnedViews: [.sectionHeaders]
         ) {
+            Color.clear
+                .frame(height: 0)
+                .id(StartMenuMetrics.topAnchorKey)
             if !recents.isEmpty {
                 Section {
                     if !usage.isRecentCollapsed {
@@ -44,6 +47,7 @@ package struct StartMenuSections: View {
                         }
                     )
                     .id(StartMenuMetrics.recentSectionKey)
+                    .onAppear(perform: onScrollTop)
                 }
             }
             Section {

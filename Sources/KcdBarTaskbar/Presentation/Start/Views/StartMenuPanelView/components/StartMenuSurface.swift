@@ -37,8 +37,7 @@ package struct StartMenuSurface: View {
                 onPower: onPower,
                 onSearch: onSearch
             )
-            if hasPinned {
-                StartMenuPaneDivider()
+            StartMenuPinnedSlot(isShown: hasPinned) {
                 StartMenuPinnedPane(
                 bands: groups.bands(of: pinned.apps),
                 icons: icons,
