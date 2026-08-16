@@ -19,7 +19,6 @@ package struct TaskbarNoticeView: View {
             }
             .buttonStyle(.plain)
             .foregroundStyle(KbColors.brand)
-            .kbClickable()
         }
         .padding(.horizontal, KbSpacing.s4)
     }

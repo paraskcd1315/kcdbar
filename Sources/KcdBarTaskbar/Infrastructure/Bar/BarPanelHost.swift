@@ -300,7 +300,6 @@ package final class BarPanelHost: BarPanelHostPort {
             .environment(\.middleClickCatcher) { action in
                 AnyView(MiddleClickView(action: action))
             }
-            .environment(\.pointerCatcher) { AppKitPointer.set(isInside: $0) }
 
             let panel = BarPanel(contentRect: frame)
             panel.contentView = BarHostingView(rootView: root)
