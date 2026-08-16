@@ -21,7 +21,7 @@ package struct StartMenuSurface: View {
     }
 
     package var body: some View {
-        HStack(spacing: 0) {
+        HStack(alignment: .top, spacing: 0) {
             StartMenuBody(
                 catalogue: catalogue,
                 icons: icons,

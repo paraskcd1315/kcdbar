@@ -6,5 +6,6 @@ package struct StartMenuPaneDivider: View {
         Rectangle()
             .fill(KbColors.separator)
             .frame(width: KbEdgeMetrics.width)
+            .frame(maxHeight: .infinity)
     }
 }

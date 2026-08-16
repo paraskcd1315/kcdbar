@@ -24,8 +24,7 @@ package struct StartMenuPinnedBar: View {
                 .onHover { isHovered = $0 }
                 .animation(KbMotion.quick, value: isHovered)
         }
-        .padding(.horizontal, KbSpacing.s5)
-        .padding(.top, KbSpacing.s3)
+        .padding(.horizontal, KbSpacing.s4)
         .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
