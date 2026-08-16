@@ -43,7 +43,8 @@ package struct StartMenuScroller: View {
                         iconNamespace: iconNamespace,
                         onLaunch: onLaunch,
                         onTogglePin: onTogglePin,
-                        onIndex: onIndex
+                        onIndex: onIndex,
+                        onScrollTop: { onJump(StartMenuMetrics.recentSectionKey) }
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }

@@ -14,26 +14,14 @@ package struct StartMenuAppGridSection: View {
     package var body: some View {
         VStack(alignment: .leading, spacing: StartMenuMetrics.rowSpacing) {
             StartMenuBandHeading(section: section, isShowing: showsHeading, onIndex: onIndex)
-            LazyVGrid(columns: columns, spacing: KbSpacing.s3) {
-                ForEach(section.applications) { application in
-                    StartMenuAppTile(
-                        application: application,
-                        icon: icons.icon(forBundleIdentifier: application.bundleIdentifier),
-                        iconNamespace: iconNamespace,
-                        isPinned: pinnedIdentifiers.contains(application.bundleIdentifier),
-                        onLaunch: { onLaunch(application.bundleIdentifier) },
-                        onTogglePin: { onTogglePin(application.bundleIdentifier) }
-                    )
-                }
-            }
-            .padding(.horizontal, KbSpacing.s5)
+            StartMenuAppGrid(
+                applications: section.applications,
+                pinnedIdentifiers: pinnedIdentifiers,
+                icons: icons,
+                iconNamespace: iconNamespace,
+                onLaunch: onLaunch,
+                onTogglePin: onTogglePin
+            )
         }
-    }
-
-    private var columns: [GridItem] {
-        Array(
-            repeating: GridItem(.flexible(), spacing: KbSpacing.s3),
-            count: StartMenuMetrics.gridColumns
-        )
     }
 }

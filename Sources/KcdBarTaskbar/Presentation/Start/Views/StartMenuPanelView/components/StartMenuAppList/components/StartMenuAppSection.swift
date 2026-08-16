@@ -14,15 +14,13 @@ package struct StartMenuAppSection: View {
     package var body: some View {
         VStack(alignment: .leading, spacing: StartMenuMetrics.rowSpacing) {
             StartMenuBandHeading(section: section, isShowing: showsHeading, onIndex: onIndex)
-            ForEach(section.applications) { application in
-                StartMenuAppRow(
-                    application: application,
-                    icon: icons.icon(forBundleIdentifier: application.bundleIdentifier),
-                    isPinned: pinnedIdentifiers.contains(application.bundleIdentifier),
-                    onLaunch: { onLaunch(application.bundleIdentifier) },
-                    onTogglePin: { onTogglePin(application.bundleIdentifier) }
-                )
-            }
+            StartMenuAppRows(
+                applications: section.applications,
+                pinnedIdentifiers: pinnedIdentifiers,
+                icons: icons,
+                onLaunch: onLaunch,
+                onTogglePin: onTogglePin
+            )
         }
     }
 }

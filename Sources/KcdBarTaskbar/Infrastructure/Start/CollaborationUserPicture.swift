@@ -22,6 +22,8 @@ package struct CollaborationUserPicture: UserPicturePort {
         let drawn = NSImage(size: size)
 
         drawn.lockFocus()
+        NSGraphicsContext.current?.imageInterpolation = .high
+        NSBezierPath(ovalIn: NSRect(origin: .zero, size: size)).addClip()
         image.draw(in: NSRect(origin: .zero, size: size))
         drawn.unlockFocus()
         drawn.size = NSSize(width: StartMenuMetrics.avatarSize, height: StartMenuMetrics.avatarSize)

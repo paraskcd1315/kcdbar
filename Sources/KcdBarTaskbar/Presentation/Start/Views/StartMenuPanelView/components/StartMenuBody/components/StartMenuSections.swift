@@ -11,6 +11,7 @@ package struct StartMenuSections: View {
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onIndex: () -> Void
+    package let onScrollTop: () -> Void
 
     package var body: some View {
         LazyVStack(
@@ -21,10 +22,12 @@ package struct StartMenuSections: View {
             if !recents.isEmpty {
                 Section {
                     if !usage.isRecentCollapsed {
-                        StartMenuRecentRows(
+                        StartMenuRecents(
                             applications: recents,
+                            layout: catalogue.layout,
                             pinnedIdentifiers: pinnedIdentifiers,
                             icons: icons,
+                            iconNamespace: iconNamespace,
                             onLaunch: onLaunch,
                             onTogglePin: onTogglePin
                         )
@@ -34,34 +37,29 @@ package struct StartMenuSections: View {
                         titleKey: "start.recent",
                         glyph: StartMenuMetrics.recentGlyph,
                         isCollapsed: usage.isRecentCollapsed,
-                        onToggle: { usage.isRecentCollapsed.toggle() }
+                        onToggle: {
+                            usage.isRecentCollapsed.toggle()
+                            onScrollTop()
+                        }
                     )
                     .id(StartMenuMetrics.recentSectionKey)
                 }
             }
             Section {
-                if !usage.isAllCollapsed {
-                    StartMenuAppList(
-                        catalogue: catalogue,
-                        pinnedIdentifiers: pinnedIdentifiers,
-                        icons: icons,
-                        iconNamespace: iconNamespace,
-                        onLaunch: onLaunch,
-                        onTogglePin: onTogglePin,
-                        onIndex: onIndex
-                    )
-                }
-            } header: {
-                StartMenuStickyBar(
-                    titleKey: "start.all",
-                    glyph: nil,
-                    isCollapsed: usage.isAllCollapsed,
-                    onToggle: { usage.isAllCollapsed.toggle() }
+                StartMenuAppList(
+                    catalogue: catalogue,
+                    pinnedIdentifiers: pinnedIdentifiers,
+                    icons: icons,
+                    iconNamespace: iconNamespace,
+                    onLaunch: onLaunch,
+                    onTogglePin: onTogglePin,
+                    onIndex: onIndex
                 )
-                .id(StartMenuMetrics.allSectionKey)
+            } header: {
+                StartMenuStickyBar(titleKey: "start.all", glyph: nil)
+                    .id(StartMenuMetrics.allSectionKey)
             }
         }
         .animation(KbMotion.standard, value: usage.isRecentCollapsed)
-        .animation(KbMotion.standard, value: usage.isAllCollapsed)
     }
 }

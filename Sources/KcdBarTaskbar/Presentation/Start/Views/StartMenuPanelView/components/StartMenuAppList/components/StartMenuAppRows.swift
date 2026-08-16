@@ -1,7 +1,7 @@
 import KcdBarDesignSystem
 import SwiftUI
 
-package struct StartMenuRecentRows: View {
+package struct StartMenuAppRows: View {
     package let applications: [InstalledApplication]
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
@@ -20,6 +20,5 @@ package struct StartMenuRecentRows: View {
                 )
             }
         }
-        .transition(.move(edge: .top).combined(with: .opacity))
     }
 }

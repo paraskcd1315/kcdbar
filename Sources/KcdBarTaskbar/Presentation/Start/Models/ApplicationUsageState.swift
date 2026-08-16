@@ -7,7 +7,6 @@ import Observation
 package final class ApplicationUsageState {
     package private(set) var usage: [ApplicationUsage] = []
     package var isRecentCollapsed = false
-    package var isAllCollapsed = false
 
     private let store: any ApplicationUsageStorePort
 

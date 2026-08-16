@@ -271,7 +271,7 @@ package final class AppServices {
             return
         }
 
-        popover.present(.start, anchor: popoverAnchor()) {
+        popover.present(.start, anchor: popoverAnchor(), takesFocus: true) {
             [applications, usage, startPins, startGroups, panelEditor, icons, launcher, power, popover, spotlight, userPicture]
             presentation, arrowX in
             StartMenuPresentation.content(

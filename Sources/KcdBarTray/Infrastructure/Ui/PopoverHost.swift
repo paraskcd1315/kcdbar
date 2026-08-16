@@ -12,6 +12,7 @@ package final class PopoverHost {
     private var dismissMonitor: Any?
     private var anchor: NSPoint = .zero
     private var isClosing = false
+    private var takesFocus = false
 
     package private(set) var presented: TrayPopover?
 
@@ -26,6 +27,7 @@ package final class PopoverHost {
     package func present(
         _ key: TrayPopover,
         anchor: NSPoint,
+        takesFocus: Bool = false,
         content: @escaping (PopoverPresentation, CGFloat) -> AnyView
     ) {
         closeImmediately()
@@ -51,6 +53,11 @@ package final class PopoverHost {
         }
         panel.contentView = hosting
         panel.orderFrontRegardless()
+        if takesFocus {
+            self.takesFocus = true
+            NSApp.activate(ignoringOtherApps: true)
+            panel.makeKeyAndOrderFront(nil)
+        }
         withAnimation(KbMotion.standard) { presentation.isExpanded = true }
 
         dismissMonitor = NSEvent.addGlobalMonitorForEvents(
@@ -65,6 +72,7 @@ package final class PopoverHost {
 
         stopMonitor()
         isClosing = true
+        releaseFocus()
         withAnimation(KbMotion.standard) { presentation.isExpanded = false }
 
         Task { [weak self] in
@@ -88,8 +96,15 @@ package final class PopoverHost {
         panel.setFrame(NSRect(origin: settled, size: wanted), display: true)
     }
 
+    private func releaseFocus() {
+        guard takesFocus else { return }
+        takesFocus = false
+        NSApp.deactivate()
+    }
+
     private func closeImmediately() {
         stopMonitor()
+        releaseFocus()
         panel?.orderOut(nil)
         panel = nil
         presentation = nil
