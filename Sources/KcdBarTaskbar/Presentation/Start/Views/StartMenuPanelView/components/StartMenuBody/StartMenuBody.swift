@@ -57,11 +57,18 @@ package struct StartMenuBody: View {
                 sections: StartMenuMetrics.skeletonBandCount
             )
         }
-        let sections = catalogue.sections
+        let sections = catalogue.visibleSections
+        guard !catalogue.showsFolders else {
+            return min(
+                StartMenuMetrics.pinnedHeight(pinned.apps.count)
+                    + StartMenuMetrics.folderHeight(folders: sections.count),
+                StartMenuMetrics.bodyMaxHeight
+            )
+        }
         guard catalogue.layout == .grid else {
             return StartMenuMetrics.bodyHeight(
                 pinned: pinned.apps.count,
-                rows: catalogue.applications.count,
+                rows: sections.reduce(0) { $0 + $1.applications.count },
                 sections: sections.count
             )
         }

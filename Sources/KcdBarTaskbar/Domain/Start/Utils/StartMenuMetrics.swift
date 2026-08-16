@@ -2,17 +2,17 @@ import CoreGraphics
 
 package enum StartMenuMetrics {
     package static let otherSectionKey = "#"
-    package static let panelWidth: CGFloat = 420
-    package static let bodyMaxHeight: CGFloat = 460
-    package static let pinnedColumns = 5
-    package static let pinnedIconSize: CGFloat = 44
-    package static let pinnedTileHeight: CGFloat = 92
-    package static let pinnedTilePadding: CGFloat = 8
-    package static let rowIconSize: CGFloat = 30
-    package static let rowSpacing: CGFloat = 2
-    package static let sectionSpacing: CGFloat = 6
-    package static let rowHeight: CGFloat = 44
-    package static let sectionHeadingHeight: CGFloat = 28
+    package static let panelWidth: CGFloat = 600
+    package static let bodyMaxHeight: CGFloat = 660
+    package static let pinnedColumns = 6
+    package static let pinnedIconSize: CGFloat = 52
+    package static let pinnedTileHeight: CGFloat = 104
+    package static let pinnedTilePadding: CGFloat = 10
+    package static let rowIconSize: CGFloat = 38
+    package static let rowSpacing: CGFloat = 3
+    package static let sectionSpacing: CGFloat = 10
+    package static let rowHeight: CGFloat = 54
+    package static let sectionHeadingHeight: CGFloat = 32
 
     package static func bodyHeight(pinned: Int, rows: Int, sections: Int) -> CGFloat {
         min(pinnedHeight(pinned) + listHeight(rows: rows, sections: sections), bodyMaxHeight)
@@ -62,17 +62,34 @@ package enum StartMenuMetrics {
     package static let gridGlyph = "square.grid.2x2"
     package static let indexGlyph = "textformat.abc"
     package static let controlsHeight: CGFloat = 24
-    package static let gridColumns = 4
-    package static let gridIconSize: CGFloat = 40
-    package static let gridTileHeight: CGFloat = 86
-    package static let railWidth: CGFloat = 14
-    package static let railLetterHeight: CGFloat = 11
-    package static let letterGridColumns = 4
-    package static let letterGridCellSize: CGFloat = 34
+    package static let gridColumns = 5
+    package static let gridIconSize: CGFloat = 52
+    package static let gridTileHeight: CGFloat = 106
+    package static let folderColumns = 2
+    package static let folderPreviewCount = 4
+    package static let folderCardSize: CGFloat = 196
+    package static let folderLabelHeight: CGFloat = 26
+    package static let folderIconSize: CGFloat = 70
+    package static let folderMiniIconSize: CGFloat = 30
+    package static let folderInnerSpacing: CGFloat = 12
+    package static let backGlyph = "chevron.left"
+    package static let folderFillOpacity: Double = 0.06
+    package static let railWidth: CGFloat = 18
+    package static let railLetterHeight: CGFloat = 12
+    package static let letterGridColumns = 5
+    package static let letterGridCellSize: CGFloat = 42
     package static let disabledLetterOpacity: Double = 0.25
 
     package static func gridLines(of sections: [ApplicationSection]) -> Int {
         sections.reduce(0) { $0 + (($1.applications.count + gridColumns - 1) / gridColumns) }
+    }
+
+    package static func folderHeight(folders: Int) -> CGFloat {
+        let lines = CGFloat((max(folders, 1) + folderColumns - 1) / folderColumns)
+
+        return sectionHeadingHeight
+            + lines * (folderCardSize + folderLabelHeight)
+            + max(lines - 1, 0) * sectionSpacing
     }
 
     package static func gridHeight(lines: Int, sections: Int) -> CGFloat {

@@ -4,6 +4,7 @@ import SwiftUI
 package struct StartMenuAppBand: View {
     package let section: ApplicationSection
     package let layout: StartMenuLayout
+    package let showsHeading: Bool
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
     package let onLaunch: (String) -> Void
@@ -14,6 +15,7 @@ package struct StartMenuAppBand: View {
             if layout == .list {
                 StartMenuAppSection(
                     section: section,
+                    showsHeading: showsHeading,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
                     onLaunch: onLaunch,
@@ -22,6 +24,7 @@ package struct StartMenuAppBand: View {
             } else {
                 StartMenuAppGridSection(
                     section: section,
+                    showsHeading: showsHeading,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
                     onLaunch: onLaunch,

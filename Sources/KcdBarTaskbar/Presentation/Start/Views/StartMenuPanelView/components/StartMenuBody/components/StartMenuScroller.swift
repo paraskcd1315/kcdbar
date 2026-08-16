@@ -50,8 +50,8 @@ package struct StartMenuScroller: View {
                 layout: catalogue.layout,
                 showsIndexButton: showsRail,
                 onSearch: onSearch,
-                onGrouping: { catalogue.grouping = $0 },
-                onLayout: { catalogue.layout = $0 },
+                onGrouping: { catalogue.choose($0) },
+                onLayout: { catalogue.choose($0) },
                 onIndex: onIndex
             )
         }

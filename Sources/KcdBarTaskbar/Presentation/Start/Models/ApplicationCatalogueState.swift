@@ -7,8 +7,9 @@ import Observation
 package final class ApplicationCatalogueState {
     package private(set) var applications: [InstalledApplication] = []
     package private(set) var isLoading = true
-    package var grouping: StartMenuGrouping = .alphabetical
-    package var layout: StartMenuLayout = .list
+    package private(set) var grouping: StartMenuGrouping = .alphabetical
+    package private(set) var layout: StartMenuLayout = .list
+    package private(set) var openedCategory: String?
 
     private let catalogue: any ApplicationCataloguePort
     private let watcher: (any ApplicationCatalogueWatchPort)?
@@ -55,6 +56,41 @@ package final class ApplicationCatalogueState {
             applications = await catalogue.installedApplications()
         } while reloadWanted
         isReloading = false
+    }
+
+    package var openedSection: ApplicationSection? {
+        guard let openedCategory else { return nil }
+
+        return sections.first { $0.key == openedCategory }
+    }
+
+    package var visibleSections: [ApplicationSection] {
+        openedSection.map { [$0] } ?? sections
+    }
+
+    package var showsFolders: Bool {
+        grouping == .category && layout == .grid && openedCategory == nil && !isLoading
+    }
+
+    package func choose(_ grouping: StartMenuGrouping) {
+        self.grouping = grouping
+        openedCategory = nil
+        guard grouping == .category else { return }
+
+        layout = .grid
+    }
+
+    package func choose(_ layout: StartMenuLayout) {
+        self.layout = layout
+        openedCategory = nil
+    }
+
+    package func open(category: String) {
+        openedCategory = category
+    }
+
+    package func closeCategory() {
+        openedCategory = nil
     }
 
     package func application(withBundleIdentifier identifier: String) -> InstalledApplication? {

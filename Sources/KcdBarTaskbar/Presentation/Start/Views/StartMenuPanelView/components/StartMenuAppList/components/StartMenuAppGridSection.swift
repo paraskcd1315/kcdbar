@@ -3,6 +3,7 @@ import SwiftUI
 
 package struct StartMenuAppGridSection: View {
     package let section: ApplicationSection
+    package let showsHeading: Bool
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
     package let onLaunch: (String) -> Void
@@ -10,7 +11,7 @@ package struct StartMenuAppGridSection: View {
 
     package var body: some View {
         VStack(alignment: .leading, spacing: StartMenuMetrics.rowSpacing) {
-            StartMenuBandHeading(section: section)
+            StartMenuBandHeading(section: section, isShowing: showsHeading)
             LazyVGrid(columns: columns, spacing: KbSpacing.s3) {
                 ForEach(section.applications) { application in
                     StartMenuAppTile(
