@@ -9,7 +9,7 @@ package struct TaskbarTotalsFigure: View {
     package var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: KbSpacing.s1) {
             Text(label)
-                .font(KbTypography.clockDate)
+                .font(KbTypography.trackingLabel)
                 .foregroundStyle(KbColors.onSurfaceMuted)
                 .textCase(.uppercase)
             Text(TimerFormatting.compact(seconds))
