@@ -51,9 +51,12 @@ package struct StartMenuPinnedGroup: View {
                 }
                 .padding(.horizontal, KbSpacing.s6)
                 .frame(minHeight: StartMenuMetrics.emptyBandHeight, alignment: .top)
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .clipped()
+        .animation(KbMotion.standard, value: band.group.isCollapsed)
         .onGeometryChange(for: CGRect.self) {
             $0.frame(in: .named(StartMenuMetrics.pinnedDragSpace))
         } action: {

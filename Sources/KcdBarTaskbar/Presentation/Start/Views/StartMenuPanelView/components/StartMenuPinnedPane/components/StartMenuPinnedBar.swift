@@ -2,29 +2,37 @@ import KcdBarDesignSystem
 import SwiftUI
 
 package struct StartMenuPinnedBar: View {
+    package let isEditing: Bool
     package let onAdd: () -> Void
-
-    @State private var isHovered = false
+    package let onRemove: () -> Void
+    package let onCancel: () -> Void
 
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
             Spacer(minLength: 0)
-            Image(systemName: StartMenuMetrics.addGlyph)
-                .font(.system(size: StartMenuMetrics.powerGlyphSize, weight: .semibold))
-                .foregroundStyle(KbColors.onSurfaceMuted)
-                .frame(
-                    width: StartMenuMetrics.powerButtonSize,
-                    height: StartMenuMetrics.powerButtonSize
+            if isEditing {
+                StartMenuHeaderButton(
+                    glyph: StartMenuMetrics.trashGlyph,
+                    titleKey: "start.group.remove",
+                    isDestructive: true,
+                    action: onRemove
                 )
-                .background(
-                    isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear,
-                    in: Circle()
+                StartMenuHeaderButton(
+                    glyph: StartMenuMetrics.cancelGlyph,
+                    titleKey: "start.group.cancel",
+                    action: onCancel
                 )
-                .kbTappable(in: Circle(), perform: onAdd)
-                .onHover { isHovered = $0 }
-                .animation(KbMotion.quick, value: isHovered)
+            } else {
+                StartMenuHeaderButton(
+                    glyph: StartMenuMetrics.addGlyph,
+                    titleKey: "start.group.add",
+                    action: onAdd
+                )
+            }
         }
-        .padding(.horizontal, KbSpacing.s4)
+        .padding(.horizontal, KbSpacing.s5)
+        .padding(.vertical, KbSpacing.s4)
         .frame(maxWidth: .infinity, alignment: .trailing)
+        .animation(KbMotion.quick, value: isEditing)
     }
 }

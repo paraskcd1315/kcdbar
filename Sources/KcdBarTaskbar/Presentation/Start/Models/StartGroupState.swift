@@ -49,6 +49,19 @@ package final class StartGroupState {
         editing = nil
     }
 
+    package func cancelEditing() async {
+        guard let id = editing else { return }
+        editing = nil
+        guard let held = groups.first(where: { $0.id == id }),
+              held.title == nil,
+              !memberships.contains(where: { $0.groupId == id })
+        else {
+            return
+        }
+
+        await remove(id)
+    }
+
     package func rename(_ id: String, to title: String) async {
         editing = nil
         guard let held = groups.first(where: { $0.id == id }) else { return }

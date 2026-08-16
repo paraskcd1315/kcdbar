@@ -68,6 +68,10 @@ package struct StartMenuSurface: View {
                     editor.beginEditing()
                     Task { await groups.create() }
                 },
+                onCancel: {
+                    editor.endEditing()
+                    Task { await groups.cancelEditing() }
+                },
                 onMove: { moved, group, target in
                     Task {
                         await groups.move(

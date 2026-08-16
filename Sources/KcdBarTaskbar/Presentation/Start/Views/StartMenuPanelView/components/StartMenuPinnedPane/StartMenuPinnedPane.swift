@@ -13,6 +13,7 @@ package struct StartMenuPinnedPane: View {
     package let onRemove: (String) -> Void
     package let onToggle: (String) -> Void
     package let onAdd: () -> Void
+    package let onCancel: () -> Void
     package let onMove: (String, String, String?) -> Void
 
     @State private var dragged: String?
@@ -51,7 +52,12 @@ package struct StartMenuPinnedPane: View {
                 Color.clear.frame(height: StartMenuMetrics.pinnedBarInset)
             }
             .scrollBounceBehavior(.basedOnSize)
-            StartMenuPinnedBar(onAdd: onAdd)
+            StartMenuPinnedBar(
+                isEditing: editing != nil,
+                onAdd: onAdd,
+                onRemove: { if let editing { onRemove(editing) } },
+                onCancel: onCancel
+            )
                 .zIndex(1)
         }
         .frame(width: StartMenuMetrics.pinnedPaneWidth, height: height, alignment: .top)
