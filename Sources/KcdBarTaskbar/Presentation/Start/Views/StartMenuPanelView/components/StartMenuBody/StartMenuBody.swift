@@ -44,6 +44,15 @@ package struct StartMenuBody: View {
                     proxy.scrollTo(key, anchor: .top)
                 }
             )
+            .task {
+                proxy.scrollTo(StartMenuMetrics.topAnchorKey, anchor: .top)
+            }
+            .onAppear {
+                proxy.scrollTo(StartMenuMetrics.topAnchorKey, anchor: .top)
+            }
+            .onDisappear {
+                proxy.scrollTo(StartMenuMetrics.topAnchorKey, anchor: .top)
+            }
             .onChange(of: catalogue.isLoading) { _, isLoading in
                 guard !isLoading else { return }
                 proxy.scrollTo(StartMenuMetrics.topAnchorKey, anchor: .top)
