@@ -5,7 +5,6 @@ package struct StartMenuCategoryGrid: View {
     package let sections: [ApplicationSection]
     package let icons: any ApplicationIconPort
     package let iconNamespace: Namespace.ID
-    package let onLaunch: (String) -> Void
     package let onOpen: (String) -> Void
 
     package var body: some View {
@@ -15,7 +14,6 @@ package struct StartMenuCategoryGrid: View {
                     section: section,
                     icons: icons,
                     iconNamespace: iconNamespace,
-                    onLaunch: onLaunch,
                     onOpen: { onOpen(section.key) }
                 )
             }

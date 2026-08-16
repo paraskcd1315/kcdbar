@@ -5,7 +5,6 @@ package struct StartMenuCategoryFolder: View {
     package let section: ApplicationSection
     package let icons: any ApplicationIconPort
     package let iconNamespace: Namespace.ID
-    package let onLaunch: (String) -> Void
     package let onOpen: () -> Void
 
     @State private var isHovered = false
@@ -17,8 +16,7 @@ package struct StartMenuCategoryFolder: View {
                     StartMenuFolderCell(
                         applications: cell,
                         icons: icons,
-                        iconNamespace: iconNamespace,
-                        onLaunch: onLaunch
+                        iconNamespace: iconNamespace
                     )
                 }
             }

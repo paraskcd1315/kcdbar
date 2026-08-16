@@ -19,7 +19,6 @@ package struct StartMenuCatalogueContent: View {
                 sections: catalogue.sections,
                 icons: icons,
                 iconNamespace: iconNamespace,
-                onLaunch: onLaunch,
                 onOpen: onOpenCategory
             )
         } else {
