@@ -93,27 +93,12 @@ package final class ApplicationCatalogueState {
                 sections: StartMenuMetrics.skeletonBandCount
             )
         }
-        let bands = visibleSections
-        guard !showsFolders else {
-            return min(
-                StartMenuMetrics.folderHeight(folders: bands.count),
-                StartMenuMetrics.bodyMaxHeight
-            )
-        }
-        guard layout == .grid else {
-            return StartMenuMetrics.bodyHeight(
-                pinned: 0,
-                rows: bands.reduce(0) { $0 + $1.applications.count },
-                sections: bands.count
-            )
-        }
+        let bands = ApplicationCatalogue.sections(of: applications)
 
-        return min(
-            StartMenuMetrics.gridHeight(
-                lines: StartMenuMetrics.gridLines(of: bands),
-                sections: bands.count
-            ),
-            StartMenuMetrics.bodyMaxHeight
+        return StartMenuMetrics.bodyHeight(
+            pinned: 0,
+            rows: bands.reduce(0) { $0 + $1.applications.count },
+            sections: bands.count
         )
     }
 

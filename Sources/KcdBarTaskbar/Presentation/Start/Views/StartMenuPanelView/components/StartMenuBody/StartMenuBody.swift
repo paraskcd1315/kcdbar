@@ -15,7 +15,9 @@ package struct StartMenuBody: View {
     package let onSearch: () -> Void
 
     @State private var isShowingIndex = false
+    @State private var pendingJump: String?
     @Namespace private var iconNamespace
+    @Namespace private var recentNamespace
 
     package var body: some View {
         ScrollViewReader { proxy in
@@ -31,14 +33,24 @@ package struct StartMenuBody: View {
                 isShowingIndex: isShowingIndex,
                 availableKeys: availableKeys,
                 iconNamespace: iconNamespace,
+                recentNamespace: recentNamespace,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
                 onPower: onPower,
                 onSearch: onSearch,
                 onIndex: { isShowingIndex.toggle() },
                 onJump: { key in
+                    guard isShowingIndex else {
+                        proxy.scrollTo(key, anchor: .top)
+                        return
+                    }
+                    pendingJump = key
                     isShowingIndex = false
-                    proxy.scrollTo(key, anchor: .top)
+                },
+                onSectionsAppear: {
+                    guard let pendingJump else { return }
+                    self.pendingJump = nil
+                    proxy.scrollTo(pendingJump, anchor: .top)
                 }
             )
             .animation(KbMotion.standard, value: catalogue.grouping)

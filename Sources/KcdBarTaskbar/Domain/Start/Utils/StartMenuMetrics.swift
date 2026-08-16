@@ -101,25 +101,4 @@ package enum StartMenuMetrics {
     package static let letterGridCellSize: CGFloat = 42
     package static let disabledLetterOpacity: Double = 0.25
 
-    package static func gridLines(of sections: [ApplicationSection]) -> Int {
-        sections.reduce(0) { $0 + (($1.applications.count + gridColumns - 1) / gridColumns) }
-    }
-
-    package static func folderHeight(folders: Int) -> CGFloat {
-        let lines = CGFloat((max(folders, 1) + folderColumns - 1) / folderColumns)
-
-        return sectionHeadingHeight
-            + lines * (folderCardSize + folderLabelHeight)
-            + max(lines - 1, 0) * sectionSpacing
-    }
-
-    package static func gridHeight(lines: Int, sections: Int) -> CGFloat {
-        let bands = CGFloat(max(sections, 0))
-        let rows = CGFloat(max(lines, 1))
-
-        return sectionHeadingHeight
-            + rows * gridTileHeight
-            + bands * sectionHeadingHeight
-            + max(bands - 1, 0) * sectionSpacing
-    }
 }

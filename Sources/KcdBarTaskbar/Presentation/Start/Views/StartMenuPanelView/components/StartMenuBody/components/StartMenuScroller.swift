@@ -13,12 +13,14 @@ package struct StartMenuScroller: View {
     package let isShowingIndex: Bool
     package let availableKeys: Set<String>
     package let iconNamespace: Namespace.ID
+    package let recentNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onPower: (StartPowerAction) -> Void
     package let onSearch: () -> Void
     package let onIndex: () -> Void
     package let onJump: (String) -> Void
+    package let onSectionsAppear: () -> Void
 
     package var body: some View {
         ScrollView {
@@ -41,18 +43,21 @@ package struct StartMenuScroller: View {
                         pinnedIdentifiers: pinnedIdentifiers,
                         icons: icons,
                         iconNamespace: iconNamespace,
+                        recentNamespace: recentNamespace,
                         onLaunch: onLaunch,
                         onTogglePin: onTogglePin,
                         onIndex: onIndex,
                         onScrollTop: { onJump(StartMenuMetrics.recentSectionKey) }
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
+                    .onAppear(perform: onSectionsAppear)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
             .scrollTargetLayout()
         }
+        .defaultScrollAnchor(.top)
         .frame(height: height)
         .animation(KbMotion.standard, value: height)
         .animation(KbMotion.standard, value: isShowingIndex)
