@@ -12,6 +12,7 @@ package struct StartMenuPanelView: View {
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onPower: (StartPowerAction) -> Void
+    package let onSearch: () -> Void
 
     package init(
         catalogue: ApplicationCatalogueState,
@@ -22,7 +23,8 @@ package struct StartMenuPanelView: View {
         presentation: PopoverPresentation,
         onLaunch: @escaping (String) -> Void,
         onTogglePin: @escaping (String) -> Void,
-        onPower: @escaping (StartPowerAction) -> Void
+        onPower: @escaping (StartPowerAction) -> Void,
+        onSearch: @escaping () -> Void
     ) {
         self.catalogue = catalogue
         self.pinned = pinned
@@ -33,6 +35,7 @@ package struct StartMenuPanelView: View {
         self.onLaunch = onLaunch
         self.onTogglePin = onTogglePin
         self.onPower = onPower
+        self.onSearch = onSearch
     }
 
     package var body: some View {
@@ -45,7 +48,8 @@ package struct StartMenuPanelView: View {
                 arrowX: arrowX,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
-                onPower: onPower
+                onPower: onPower,
+                onSearch: onSearch
             )
         }
         .scaleEffect(

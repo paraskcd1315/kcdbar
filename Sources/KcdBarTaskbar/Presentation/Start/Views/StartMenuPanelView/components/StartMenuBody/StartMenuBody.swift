@@ -9,6 +9,7 @@ package struct StartMenuBody: View {
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onPower: (StartPowerAction) -> Void
+    package let onSearch: () -> Void
 
     package var body: some View {
         ScrollView {
@@ -35,7 +36,7 @@ package struct StartMenuBody: View {
         }
         .frame(height: height)
         .safeAreaBar(edge: .top) {
-            StartMenuSearchField()
+            StartMenuSearchField(onOpen: onSearch)
                 .padding(.horizontal, KbSpacing.s6)
                 .padding(.vertical, KbSpacing.s5)
         }

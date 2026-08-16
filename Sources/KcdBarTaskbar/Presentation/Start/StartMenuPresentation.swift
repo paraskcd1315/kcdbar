@@ -13,7 +13,8 @@ package enum StartMenuPresentation {
         arrowX: CGFloat,
         onLaunch: @escaping (String) -> Void,
         onTogglePin: @escaping (String) -> Void,
-        onPower: @escaping (StartPowerAction) -> Void
+        onPower: @escaping (StartPowerAction) -> Void,
+        onSearch: @escaping () -> Void
     ) -> AnyView {
         AnyView(
             StartMenuPanelView(
@@ -25,7 +26,8 @@ package enum StartMenuPresentation {
                 presentation: presentation,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
-                onPower: onPower
+                onPower: onPower,
+                onSearch: onSearch
             )
         )
     }

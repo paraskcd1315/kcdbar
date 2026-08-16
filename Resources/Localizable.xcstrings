@@ -156,10 +156,10 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Display" } }
       }
     },
-    "start.search.placeholder" : {
+    "start.search.spotlight" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search applications" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search with Spotlight" } }
       }
     },
     "start.pinned" : {

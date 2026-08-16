@@ -262,7 +262,7 @@ package final class AppServices {
         }
 
         popover.present(.start, anchor: popoverAnchor()) {
-            [applications, startPins, icons, launcher, power, popover] presentation, arrowX in
+            [applications, startPins, icons, launcher, power, popover, spotlight] presentation, arrowX in
             StartMenuPresentation.content(
                 catalogue: applications,
                 pinned: startPins,
@@ -275,6 +275,10 @@ package final class AppServices {
                 onPower: { action in
                     popover.dismiss()
                     _ = power.perform(action)
+                },
+                onSearch: {
+                    popover.dismiss()
+                    _ = spotlight.openApplications()
                 }
             )
         }

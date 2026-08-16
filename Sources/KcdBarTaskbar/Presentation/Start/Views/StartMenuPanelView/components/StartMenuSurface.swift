@@ -10,6 +10,7 @@ package struct StartMenuSurface: View {
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onPower: (StartPowerAction) -> Void
+    package let onSearch: () -> Void
 
     package var body: some View {
         StartMenuBody(
@@ -19,7 +20,8 @@ package struct StartMenuSurface: View {
             userName: userName,
             onLaunch: onLaunch,
             onTogglePin: onTogglePin,
-            onPower: onPower
+            onPower: onPower,
+            onSearch: onSearch
         )
         .frame(width: StartMenuMetrics.panelWidth, alignment: .leading)
         .clipShape(KbPopoverShape(arrowX: arrowX))
