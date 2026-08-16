@@ -207,13 +207,26 @@ package final class AppServices {
             frontmostPid: registry.frontmostPid
         )
         else {
-            launcher.launch(bundleIdentifier: bundleIdentifier)
-            usage.note(launchOf: bundleIdentifier)
+            openWindow(bundleIdentifier: bundleIdentifier, onDisplay: displayId)
             return
         }
 
         _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
         refreshAndEnforce()
+    }
+
+    private func openWindow(bundleIdentifier: String, onDisplay displayId: Int) {
+        usage.note(launchOf: bundleIdentifier)
+
+        guard let pid = registry.bundleIdentifiers.first(where: { $0.value == bundleIdentifier })?.key,
+              let display = registry.displays.first(where: { $0.id == displayId }),
+              newWindow.supportsNewWindow(pid: pid),
+              newWindow.openNewWindow(pid: pid, placingOn: display.frame)
+        else {
+            launcher.launch(bundleIdentifier: bundleIdentifier)
+            return
+        }
+        scheduleRefresh()
     }
 
     private func pids(of bundleIdentifier: String) -> Set<pid_t> {
@@ -222,16 +235,8 @@ package final class AppServices {
 
     package func openNewInstance(entry: TaskbarEntryModel, onDisplay displayId: Int) {
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
-        guard let pid = registry.bundleIdentifiers.first(where: { $0.value == bundleIdentifier })?.key,
-              let display = registry.displays.first(where: { $0.id == displayId }),
-              newWindow.supportsNewWindow(pid: pid)
-        else {
-            launcher.launch(bundleIdentifier: bundleIdentifier)
-            usage.note(launchOf: bundleIdentifier)
-            return
-        }
-        _ = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
-        scheduleRefresh()
+
+        openWindow(bundleIdentifier: bundleIdentifier, onDisplay: displayId)
     }
 
     package func openBatteryPanel() {
