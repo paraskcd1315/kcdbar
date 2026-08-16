@@ -18,7 +18,7 @@ package enum BarPresetCatalogue {
         windowScope: .thisDisplay,
         overlap: .pushDisplayFillingWindows,
         dockHandling: .hide,
-        thickness: 52,
+        thickness: BarStrutMetrics.dockStrutHeight,
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
         cornerRadius: KbRadii.lg,
