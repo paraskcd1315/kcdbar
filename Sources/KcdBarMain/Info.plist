@@ -24,6 +24,8 @@
 	<string>26.0</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>KCDBar asks macOS to sleep, restart, shut down or log out from the Start menu, so the system shows its own confirmation.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>KCDBar shows Bluetooth in its Control Center and turns it on and off.</string>
 	<key>NSHumanReadableCopyright</key>

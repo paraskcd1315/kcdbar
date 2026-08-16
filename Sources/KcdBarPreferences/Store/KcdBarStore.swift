@@ -4,7 +4,7 @@ import SwiftData
 
 /** Everything KCDBar remembers between launches. */
 @ModelActor
-actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort {
+actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort, StartPinStorePort {
     package static let fileName = "kcdbar.store"
 
     static func container(at url: URL? = nil, inMemory: Bool = false) throws -> ModelContainer {
@@ -12,7 +12,8 @@ actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort {
             StoredPreset.self,
             StoredDockSnapshot.self,
             StoredPreferences.self,
-            StoredPinnedApp.self
+            StoredPinnedApp.self,
+            StoredStartPin.self
         ])
         let configuration = inMemory
             ? ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -146,6 +147,59 @@ actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort {
             storedPin(bundleIdentifier: app.bundleIdentifier)?.order = app.order
         }
         try? modelContext.save()
+    }
+
+    func startPins() async -> [PinnedApp] {
+        let stored = (try? modelContext.fetch(FetchDescriptor<StoredStartPin>())) ?? []
+
+        return stored
+            .sorted { $0.order < $1.order }
+            .map {
+                PinnedApp(
+                    bundleIdentifier: $0.bundleIdentifier,
+                    displayName: $0.displayName,
+                    order: $0.order
+                )
+            }
+    }
+
+    func pinToStart(_ app: PinnedApp) async {
+        if let held = storedStartPin(bundleIdentifier: app.bundleIdentifier) {
+            held.order = app.order
+            held.displayName = app.displayName
+        } else {
+            modelContext.insert(
+                StoredStartPin(
+                    bundleIdentifier: app.bundleIdentifier,
+                    order: app.order,
+                    displayName: app.displayName
+                )
+            )
+        }
+        try? modelContext.save()
+    }
+
+    func unpinFromStart(bundleIdentifier: String) async {
+        guard let held = storedStartPin(bundleIdentifier: bundleIdentifier) else { return }
+
+        modelContext.delete(held)
+        try? modelContext.save()
+    }
+
+    func reorderStartPins(_ apps: [PinnedApp]) async {
+        for app in apps {
+            storedStartPin(bundleIdentifier: app.bundleIdentifier)?.order = app.order
+        }
+        try? modelContext.save()
+    }
+
+    private func storedStartPin(bundleIdentifier: String) -> StoredStartPin? {
+        var query = FetchDescriptor<StoredStartPin>(
+            predicate: #Predicate { $0.bundleIdentifier == bundleIdentifier }
+        )
+        query.fetchLimit = 1
+
+        return try? modelContext.fetch(query).first
     }
 
     private func preferences() -> StoredPreferences {

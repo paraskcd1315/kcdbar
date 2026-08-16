@@ -105,7 +105,7 @@ package final class PopoverHost {
             defer: false
         )
         panel.isOpaque = false
-        panel.backgroundColor = .clear
+        panel.backgroundColor = .black.withAlphaComponent(KbPopoverMetrics.hitTestAlpha)
         panel.hasShadow = false
         panel.level = .popUpMenu
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]

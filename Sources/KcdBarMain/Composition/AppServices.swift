@@ -29,6 +29,8 @@ package final class AppServices {
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
     package let pins: PinnedAppState
+    package let startPins: PinnedAppState
+    package let applications = ApplicationCatalogueState(catalogue: DirectoryApplicationSource())
     package let order = EntryOrderMemory()
     package let desktop = ShowDesktopState()
     package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
@@ -38,6 +40,7 @@ package final class AppServices {
     package let pasteboard: any PasteboardPort = AppKitPasteboard()
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
     package let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
+    package let power: any PowerActionPort = LoginWindowPowerControl()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -163,12 +166,15 @@ package final class AppServices {
             displaySource: ScreenGeometrySource(),
             authorization: AccessibilityAuthorization()
         )
-        store = PreferencesStore.opened()
-        pins = PinnedAppState(store: store)
+        let opened = PreferencesStore.opened()
+        store = opened
+        pins = PinnedAppState(store: opened)
+        startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
     }
 
     package func loadPreferences() async {
         await pins.load()
+        await startPins.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
         refreshAndEnforce()
     }
@@ -240,6 +246,46 @@ package final class AppServices {
                 presentation: presentation,
                 arrowX: arrowX
             )
+        }
+    }
+
+    package func openStartMenu() {
+        guard !popover.isPresenting(.start) else {
+            popover.dismiss()
+            return
+        }
+
+        popover.present(.start, anchor: popoverAnchor()) {
+            [applications, startPins, icons, launcher, power, popover] presentation, arrowX in
+            StartMenuPresentation.content(
+                catalogue: applications,
+                pinned: startPins,
+                icons: icons,
+                userName: NSFullUserName(),
+                presentation: presentation,
+                arrowX: arrowX,
+                onLaunch: { launcher.launch(bundleIdentifier: $0) },
+                onTogglePin: { [weak self] in self?.toggleStartPin(bundleIdentifier: $0) },
+                onPower: { action in
+                    popover.dismiss()
+                    _ = power.perform(action)
+                }
+            )
+        }
+    }
+
+    package func toggleStartPin(bundleIdentifier: String) {
+        let name = applications.application(withBundleIdentifier: bundleIdentifier)?.displayName
+
+        Task {
+            if startPins.apps.contains(where: { $0.bundleIdentifier == bundleIdentifier }) {
+                await startPins.unpin(bundleIdentifier: bundleIdentifier)
+            } else {
+                await startPins.pin(
+                    bundleIdentifier: bundleIdentifier,
+                    displayName: name ?? bundleIdentifier
+                )
+            }
         }
     }
 
@@ -326,7 +372,7 @@ package final class AppServices {
                 self?.activate(entry: entry, onDisplay: displayId)
             },
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
-            onOpenStart: { [spotlight] in _ = spotlight.openApplications() },
+            onOpenStart: { [weak self] in self?.openStartMenu() },
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onCloseWindow: { [weak self] entry in self?.closeWindow(entry: entry) },
             onQuit: { [weak self] entry in self?.quit(entry: entry) },

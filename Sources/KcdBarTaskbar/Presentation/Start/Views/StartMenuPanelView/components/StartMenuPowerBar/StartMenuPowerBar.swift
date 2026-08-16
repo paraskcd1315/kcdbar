@@ -1,0 +1,21 @@
+import KcdBarDesignSystem
+import SwiftUI
+
+package struct StartMenuPowerBar: View {
+    package let userName: String
+    package let onPower: (StartPowerAction) -> Void
+
+    package var body: some View {
+        HStack(spacing: KbSpacing.s2) {
+            Text(userName)
+                .font(KbTypography.menuItem)
+                .foregroundStyle(KbColors.onSurface)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            Spacer(minLength: KbSpacing.s4)
+            ForEach(StartPowerAction.allCases) { action in
+                StartMenuPowerButton(action: action, onPower: { onPower(action) })
+            }
+        }
+    }
+}

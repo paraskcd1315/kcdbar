@@ -156,6 +156,60 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Display" } }
       }
     },
+    "start.search.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search applications" } }
+      }
+    },
+    "start.pinned" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pinned" } }
+      }
+    },
+    "start.pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pin to Start" } }
+      }
+    },
+    "start.unpin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unpin from Start" } }
+      }
+    },
+    "start.all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All applications" } }
+      }
+    },
+    "start.power.lock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lock Screen" } }
+      }
+    },
+    "start.power.sleep" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sleep" } }
+      }
+    },
+    "start.power.restart" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Restart" } }
+      }
+    },
+    "start.power.shutDown" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shut Down" } }
+      }
+    },
     "wifi.status.on" : {
       "extractionState" : "manual",
       "localizations" : {
