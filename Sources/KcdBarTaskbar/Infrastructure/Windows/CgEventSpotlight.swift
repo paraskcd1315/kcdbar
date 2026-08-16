@@ -1,19 +1,12 @@
 import AppKit
 
-/** Opens Spotlight and switches it to Applications, since no API exposes either. */
+/** Opens Spotlight, since no API exposes it. */
 @MainActor
 package struct CgEventSpotlight: SpotlightPort {
     package init() {}
 
-    package func openApplications() -> Bool {
-        guard press(SpotlightMetrics.spaceKey) else { return false }
-
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(SpotlightMetrics.applicationsDelay))
-            _ = press(SpotlightMetrics.oneKey)
-        }
-
-        return true
+    package func open() -> Bool {
+        press(SpotlightMetrics.spaceKey)
     }
 
     private func press(_ key: CGKeyCode) -> Bool {

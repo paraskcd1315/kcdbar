@@ -278,7 +278,7 @@ package final class AppServices {
                 },
                 onSearch: {
                     popover.dismiss()
-                    _ = spotlight.openApplications()
+                    _ = spotlight.open()
                 }
             )
         }
