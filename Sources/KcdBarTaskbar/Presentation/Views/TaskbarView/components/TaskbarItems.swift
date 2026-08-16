@@ -18,12 +18,13 @@ package struct TaskbarItems: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
+    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
             if viewModel.preset.startButton != .hidden {
-                TaskbarStartButton(onOpen: onOpenStart)
+                TaskbarStartButton(onOpen: onOpenStart, loginItem: loginItem)
             }
             TaskbarEntryStrip(
                 entries: viewModel.entries,

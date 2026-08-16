@@ -25,6 +25,7 @@ package final class AppServices {
         tickets: ConsoleTicketOpener()
     )
     package let totals = TotalsMonitor(source: KcdSignalTotalsSource())
+    package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
@@ -390,6 +391,8 @@ package final class AppServices {
             trash: trash,
             timer: timer,
             totals: totals,
+
+            loginItem: loginItem,
             pins: pins,
             order: order,
             desktop: desktop,

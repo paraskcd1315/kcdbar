@@ -19,6 +19,8 @@ package struct TaskbarView: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
+
+    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
@@ -51,6 +53,8 @@ package struct TaskbarView: View {
                 trash: trash,
                 timer: timer,
                 totals: totals,
+
+                loginItem: loginItem,
                 onOpenTimer: onOpenTimer,
                 onToggleDesktop: onToggleDesktop
             )

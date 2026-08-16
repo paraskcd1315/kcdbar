@@ -3,6 +3,7 @@ import SwiftUI
 
 package struct TaskbarStartButton: View {
     package let onOpen: () -> Void
+    package let loginItem: LoginItemState
 
     @State private var isHovered = false
 
@@ -19,5 +20,13 @@ package struct TaskbarStartButton: View {
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: .rect(cornerRadius: KbRadii.md))
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }
+        .contextMenu {
+            Toggle("taskbar.menu.launchAtLogin", isOn: launchAtLogin)
+        }
+        .onAppear { loginItem.refresh() }
+    }
+
+    private var launchAtLogin: Binding<Bool> {
+        Binding(get: { loginItem.isEnabled }, set: { _ in loginItem.toggle() })
     }
 }
