@@ -57,4 +57,7 @@ package enum StartMenuMetrics {
     }
     package static let powerGlyphSize: CGFloat = 13
     package static let powerButtonSize: CGFloat = 28
+    package static let nameStartRank = 0
+    package static let wordStartRank = 1
+    package static let anywhereRank = 2
 }
