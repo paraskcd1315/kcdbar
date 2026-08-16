@@ -20,8 +20,7 @@ package struct StartMenuPinnedPane: View {
     @State private var bandFrames: [String: CGRect] = [:]
 
     package var body: some View {
-        VStack(spacing: 0) {
-            StartMenuPinnedBar(onAdd: onAdd)
+        ZStack(alignment: .topTrailing) {
             ScrollView {
             LazyVStack(alignment: .leading, spacing: KbSpacing.s5) {
                 ForEach(bands) { band in
@@ -48,7 +47,11 @@ package struct StartMenuPinnedPane: View {
             .contentShape(Rectangle())
             .coordinateSpace(.named(StartMenuMetrics.pinnedDragSpace))
         }
+            .safeAreaBar(edge: .top) {
+                Color.clear.frame(height: StartMenuMetrics.pinnedBarInset)
+            }
             .scrollBounceBehavior(.basedOnSize)
+            StartMenuPinnedBar(onAdd: onAdd)
         }
         .frame(width: StartMenuMetrics.pinnedPaneWidth, height: height, alignment: .top)
         .animation(KbMotion.quick, value: dragged)

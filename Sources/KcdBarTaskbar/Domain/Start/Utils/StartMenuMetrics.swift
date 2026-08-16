@@ -79,6 +79,7 @@ package enum StartMenuMetrics {
     package static let disclosureGlyph = "chevron.right"
     package static let disclosureSize: CGFloat = 11
     package static let addGlyph = "plus"
+    package static let pinnedBarInset: CGFloat = 44
     package static let emptyBandHeight: CGFloat = 60
     package static let pinnedDragSpace = "start.pinned.drag."
     package static let dragThreshold: CGFloat = 6
