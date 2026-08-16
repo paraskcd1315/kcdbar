@@ -19,10 +19,13 @@ package enum ApplicationBundleReader {
             return nil
         }
 
+        let raw = bundle.object(forInfoDictionaryKey: ApplicationBundleMetrics.categoryKey) as? String
+
         return InstalledApplication(
             bundleIdentifier: identifier,
             displayName: BundleDisplayName.of(bundle, url: url),
-            path: url.path
+            path: url.path,
+            category: ApplicationCategory.of(raw)
         )
     }
 }

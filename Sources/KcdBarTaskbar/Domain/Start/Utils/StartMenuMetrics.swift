@@ -57,4 +57,31 @@ package enum StartMenuMetrics {
     }
     package static let powerGlyphSize: CGFloat = 13
     package static let powerButtonSize: CGFloat = 28
+    package static let groupingTitlePrefix = "start.group."
+    package static let listGlyph = "list.bullet"
+    package static let gridGlyph = "square.grid.2x2"
+    package static let indexGlyph = "textformat.abc"
+    package static let controlsHeight: CGFloat = 24
+    package static let gridColumns = 4
+    package static let gridIconSize: CGFloat = 40
+    package static let gridTileHeight: CGFloat = 86
+    package static let railWidth: CGFloat = 14
+    package static let railLetterHeight: CGFloat = 11
+    package static let letterGridColumns = 4
+    package static let letterGridCellSize: CGFloat = 34
+    package static let disabledLetterOpacity: Double = 0.25
+
+    package static func gridLines(of sections: [ApplicationSection]) -> Int {
+        sections.reduce(0) { $0 + (($1.applications.count + gridColumns - 1) / gridColumns) }
+    }
+
+    package static func gridHeight(lines: Int, sections: Int) -> CGFloat {
+        let bands = CGFloat(max(sections, 0))
+        let rows = CGFloat(max(lines, 1))
+
+        return sectionHeadingHeight
+            + rows * gridTileHeight
+            + bands * sectionHeadingHeight
+            + max(bands - 1, 0) * sectionSpacing
+    }
 }

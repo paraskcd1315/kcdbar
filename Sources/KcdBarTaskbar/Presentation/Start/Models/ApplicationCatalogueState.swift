@@ -7,6 +7,8 @@ import Observation
 package final class ApplicationCatalogueState {
     package private(set) var applications: [InstalledApplication] = []
     package private(set) var isLoading = true
+    package var grouping: StartMenuGrouping = .alphabetical
+    package var layout: StartMenuLayout = .list
 
     private let catalogue: any ApplicationCataloguePort
     private let watcher: (any ApplicationCatalogueWatchPort)?
@@ -22,7 +24,10 @@ package final class ApplicationCatalogueState {
     }
 
     package var sections: [ApplicationSection] {
-        ApplicationCatalogue.sections(of: applications)
+        switch grouping {
+        case .alphabetical: ApplicationCatalogue.sections(of: applications)
+        case .category: ApplicationCatalogue.categorySections(of: applications)
+        }
     }
 
     package func load() async {

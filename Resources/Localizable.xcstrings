@@ -162,6 +162,66 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Search with Spotlight" } }
       }
     },
+    "start.group.alphabetical" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A–Z" } }
+      }
+    },
+    "start.group.category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Categories" } }
+      }
+    },
+    "start.category.productivity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Productivity & Finance" } }
+      }
+    },
+    "start.category.creativity" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Creativity" } }
+      }
+    },
+    "start.category.developer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Developer Tools" } }
+      }
+    },
+    "start.category.social" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Social" } }
+      }
+    },
+    "start.category.entertainment" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Entertainment" } }
+      }
+    },
+    "start.category.utilities" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Utilities" } }
+      }
+    },
+    "start.category.reference" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reference & Education" } }
+      }
+    },
+    "start.category.other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } }
+      }
+    },
     "start.pinned" : {
       "extractionState" : "manual",
       "localizations" : {

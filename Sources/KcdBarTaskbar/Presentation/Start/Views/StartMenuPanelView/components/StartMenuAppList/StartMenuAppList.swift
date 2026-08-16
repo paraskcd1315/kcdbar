@@ -16,13 +16,15 @@ package struct StartMenuAppList: View {
                 StartMenuAppListSkeleton()
             } else {
                 ForEach(catalogue.sections) { section in
-                    StartMenuAppSection(
+                    StartMenuAppBand(
                         section: section,
+                        layout: catalogue.layout,
                         pinnedIdentifiers: pinnedIdentifiers,
                         icons: icons,
                         onLaunch: onLaunch,
                         onTogglePin: onTogglePin
                     )
+                    .id(section.key)
                 }
             }
         }

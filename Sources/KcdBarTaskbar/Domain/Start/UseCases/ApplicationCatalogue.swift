@@ -26,4 +26,20 @@ package enum ApplicationCatalogue {
             ApplicationSection(key: key, applications: sorted(grouped[key] ?? []))
         }
     }
+
+    package static func categorySections(
+        of applications: [InstalledApplication]
+    ) -> [ApplicationSection] {
+        let grouped = Dictionary(grouping: applications, by: \.category)
+
+        return ApplicationCategory.allCases.compactMap { category in
+            guard let members = grouped[category], !members.isEmpty else { return nil }
+
+            return ApplicationSection(
+                key: category.rawValue,
+                titleKey: category.titleKey,
+                applications: sorted(members)
+            )
+        }
+    }
 }

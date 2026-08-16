@@ -11,48 +11,42 @@ package struct StartMenuBody: View {
     package let onPower: (StartPowerAction) -> Void
     package let onSearch: () -> Void
 
+    @State private var isShowingIndex = false
+
     package var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: KbSpacing.s5) {
-                if !pinned.apps.isEmpty {
-                    StartMenuPinnedGrid(
-                        pinned: pinned.apps,
-                        icons: icons,
-                        onLaunch: onLaunch,
-                        onTogglePin: onTogglePin
-                    )
-                    StartMenuDivider()
-                }
-                StartMenuAppList(
-                    catalogue: catalogue,
-                    pinnedIdentifiers: pinnedIdentifiers,
-                    icons: icons,
-                    onLaunch: onLaunch,
-                    onTogglePin: onTogglePin
+        ScrollViewReader { proxy in
+            StartMenuScroller(
+                catalogue: catalogue,
+                pinned: pinned,
+                icons: icons,
+                userName: userName,
+                height: height,
+                showsRail: showsIndex,
+                availableKeys: availableKeys,
+                onLaunch: onLaunch,
+                onTogglePin: onTogglePin,
+                onPower: onPower,
+                onSearch: onSearch,
+                onIndex: { isShowingIndex = true },
+                onJump: { proxy.scrollTo($0, anchor: .top) }
+            )
+            .overlay {
+                StartMenuIndexOverlay(
+                    isShowing: isShowingIndex,
+                    availableKeys: availableKeys,
+                    onJump: { proxy.scrollTo($0, anchor: .top) },
+                    onDismiss: { isShowingIndex = false }
                 )
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
         }
-        .frame(height: height)
-        .safeAreaBar(edge: .top) {
-            StartMenuSearchField(onOpen: onSearch)
-                .padding(.horizontal, KbSpacing.s6)
-                .padding(.vertical, KbSpacing.s5)
-        }
-        .safeAreaBar(edge: .bottom) {
-            StartMenuPowerBar(userName: userName, onPower: onPower)
-                .padding(.horizontal, KbSpacing.s6)
-                .padding(.top, KbSpacing.s5)
-                .padding(.bottom, KbSpacing.s5 + KbPopoverMetrics.arrowSize.height)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .glassEffect(.regular.interactive(), in: Rectangle())
-        }
-        .scrollBounceBehavior(.basedOnSize)
     }
 
-    private var pinnedIdentifiers: Set<String> {
-        Set(pinned.apps.map(\.bundleIdentifier))
+    private var showsIndex: Bool {
+        catalogue.grouping == .alphabetical && !catalogue.isLoading
+    }
+
+    private var availableKeys: Set<String> {
+        Set(catalogue.sections.map(\.key))
     }
 
     private var height: CGFloat {
@@ -63,11 +57,22 @@ package struct StartMenuBody: View {
                 sections: StartMenuMetrics.skeletonBandCount
             )
         }
+        let sections = catalogue.sections
+        guard catalogue.layout == .grid else {
+            return StartMenuMetrics.bodyHeight(
+                pinned: pinned.apps.count,
+                rows: catalogue.applications.count,
+                sections: sections.count
+            )
+        }
 
-        return StartMenuMetrics.bodyHeight(
-            pinned: pinned.apps.count,
-            rows: catalogue.applications.count,
-            sections: catalogue.sections.count
+        return min(
+            StartMenuMetrics.pinnedHeight(pinned.apps.count)
+                + StartMenuMetrics.gridHeight(
+                    lines: StartMenuMetrics.gridLines(of: sections),
+                    sections: sections.count
+                ),
+            StartMenuMetrics.bodyMaxHeight
         )
     }
 }

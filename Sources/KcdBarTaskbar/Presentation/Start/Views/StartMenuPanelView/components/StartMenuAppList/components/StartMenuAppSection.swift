@@ -10,11 +10,7 @@ package struct StartMenuAppSection: View {
 
     package var body: some View {
         VStack(alignment: .leading, spacing: StartMenuMetrics.rowSpacing) {
-            Text(section.key)
-                .font(KbTypography.panelDetail)
-                .foregroundStyle(KbColors.onSurfaceMuted)
-                .padding(.horizontal, KbSpacing.s6)
-                .padding(.top, KbSpacing.s3)
+            StartMenuBandHeading(section: section)
             ForEach(section.applications) { application in
                 StartMenuAppRow(
                     application: application,
