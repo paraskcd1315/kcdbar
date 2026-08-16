@@ -27,6 +27,6 @@ package struct ControlCentreAccordionHeader: View {
                 .fill(isHovered ? KbColors.onSurface.opacity(KbControlCentreMetrics.hoverOpacity) : .clear)
         )
         .onHover { isHovered = $0 }
-        .onTapGesture(perform: onToggle)
+        .kbTappable(in: Rectangle(), perform: onToggle)
     }
 }

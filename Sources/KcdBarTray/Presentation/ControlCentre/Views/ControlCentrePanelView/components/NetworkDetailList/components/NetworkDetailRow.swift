@@ -23,8 +23,7 @@ package struct NetworkDetailRow: View {
                 .font(KbTypography.tileStatus)
                 .foregroundStyle(KbColors.onSurfaceMuted)
                 .opacity(isHovered || hasCopied ? 1 : 0)
-                .contentShape(Rectangle())
-                .onTapGesture(perform: copy)
+                .kbTappable(in: Rectangle(), perform: copy)
         }
         .padding(.horizontal, KbSpacing.s4)
         .padding(.vertical, KbSpacing.s2)

@@ -24,8 +24,7 @@ package struct TaskbarTrash: View {
         }
         .frame(width: TrashMetrics.iconSize, height: TrashMetrics.iconSize)
         .padding(TrashMetrics.glyphInset)
-        .contentShape(shape)
-        .onTapGesture { monitor.open() }
+        .kbTappable(in: shape) { monitor.open() }
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }

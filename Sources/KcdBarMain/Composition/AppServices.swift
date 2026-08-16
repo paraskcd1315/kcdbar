@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
-import KcdBarBar
 import KcdBarPreferences
+import KcdBarTaskbar
 import KcdBarTray
 import SwiftUI
 
@@ -14,13 +14,17 @@ package final class AppServices {
     package let changes: any WindowChangeObserverPort = WorkspaceWindowChangeObserver()
     package let registry: WindowRegistry
     package let battery = BatteryMonitor(source: IoKitBatterySource())
-    package let batteryPanel = PopoverHost()
-    package let controlCentrePanel = PopoverHost()
+    package let popover = PopoverHost()
     package let wifi = WifiMonitor(
         source: CoreWlanSource(),
         links: SystemConfigurationLinkSource()
     )
     package let trash = TrashMonitor(source: FileManagerTrashSource())
+    package let timer = TimerMonitor(
+        source: KcdSignalTimerSource(),
+        tickets: ConsoleTicketOpener()
+    )
+    package let totals = TotalsMonitor(source: KcdSignalTotalsSource())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
@@ -33,6 +37,7 @@ package final class AppServices {
     package let spotlight: any SpotlightPort = CgEventSpotlight()
     package let pasteboard: any PasteboardPort = AppKitPasteboard()
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
+    package let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -174,11 +179,24 @@ package final class AppServices {
             return
         }
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
-
-        if openNewWindowElsewhere(bundleIdentifier: bundleIdentifier, displayId: displayId) {
+        guard let window = LauncherWindowCycle.next(
+            pids: pids(of: bundleIdentifier),
+            onDisplay: displayId,
+            among: registry.windows,
+            displays: registry.displays,
+            frontmostPid: registry.frontmostPid
+        )
+        else {
+            launcher.launch(bundleIdentifier: bundleIdentifier)
             return
         }
-        launcher.launch(bundleIdentifier: bundleIdentifier)
+
+        _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
+        refreshAndEnforce()
+    }
+
+    private func pids(of bundleIdentifier: String) -> Set<pid_t> {
+        Set(registry.bundleIdentifiers.filter { $0.value == bundleIdentifier }.map(\.key))
     }
 
     package func openNewInstance(entry: TaskbarEntryModel, onDisplay displayId: Int) {
@@ -194,39 +212,13 @@ package final class AppServices {
         scheduleRefresh()
     }
 
-    private func openNewWindowElsewhere(bundleIdentifier: String, displayId: Int) -> Bool {
-        let pids = registry.bundleIdentifiers
-            .filter { $0.value == bundleIdentifier }
-            .map(\.key)
-        guard let pid = pids.first,
-              let display = registry.displays.first(where: { $0.id == displayId }),
-              newWindow.supportsNewWindow(pid: pid)
-        else {
-            return false
-        }
-        guard !NewWindowPlacement.hasWindow(
-            pid: pid,
-            onDisplay: displayId,
-            among: registry.taskbarEntries,
-            displays: registry.displays
-        ) else {
-            return false
-        }
-
-        let opened = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
-        if opened {
-            scheduleRefresh()
-        }
-        return opened
-    }
-
     package func openBatteryPanel() {
-        guard !batteryPanel.isPresented else {
-            batteryPanel.dismiss()
+        guard !popover.isPresenting(.battery) else {
+            popover.dismiss()
             return
         }
         battery.refresh()
-        batteryPanel.present(anchor: NSEvent.mouseLocation) { [battery] presentation, arrowX in
+        popover.present(.battery, anchor: popoverAnchor()) { [battery] presentation, arrowX in
             BatteryPanelPresentation.content(
                 monitor: battery,
                 presentation: presentation,
@@ -236,16 +228,31 @@ package final class AppServices {
         Task { await battery.sampleEnergy() }
     }
 
+    package func openTimerPanel() {
+        guard !popover.isPresenting(.timer) else {
+            popover.dismiss()
+            return
+        }
+
+        popover.present(.timer, anchor: popoverAnchor()) { [timer] presentation, arrowX in
+            TimerPanelPresentation.content(
+                monitor: timer,
+                presentation: presentation,
+                arrowX: arrowX
+            )
+        }
+    }
+
     package func openControlCentre() {
-        guard !controlCentrePanel.isPresented else {
-            controlCentrePanel.dismiss()
+        guard !popover.isPresenting(.controlCentre) else {
+            popover.dismiss()
             return
         }
         wifi.refresh()
         bluetooth.refresh()
         sound.refresh()
         brightness.refresh()
-        controlCentrePanel.present(anchor: NSEvent.mouseLocation) {
+        popover.present(.controlCentre, anchor: popoverAnchor()) {
             [wifi, bluetooth, sound, brightness, pasteboard] presentation, _ in
             ControlCentrePresentation.content(
                 wifi: wifi,
@@ -259,6 +266,25 @@ package final class AppServices {
                 onCopy: { [pasteboard] in pasteboard.copy($0) }
             )
         }
+    }
+
+    private func popoverAnchor() -> NSPoint {
+        let pointer = NSEvent.mouseLocation
+        guard let display = registry.displays.first(where: { $0.frame.contains(pointer) }) else {
+            return pointer
+        }
+
+        return NSPoint(
+            x: pointer.x,
+            y: BarFrameCalculator.frame(for: activePreset, on: display).maxY
+        )
+    }
+
+    package func closeWindow(entry: TaskbarEntryModel) {
+        guard let window = registry.window(withEntryId: entry.id), control.close(window) else {
+            return
+        }
+        scheduleRefresh()
     }
 
     package func quit(entry: TaskbarEntryModel) {
@@ -289,6 +315,8 @@ package final class AppServices {
             registry: registry,
             battery: battery,
             trash: trash,
+            timer: timer,
+            totals: totals,
             pins: pins,
             order: order,
             desktop: desktop,
@@ -300,6 +328,7 @@ package final class AppServices {
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
             onOpenStart: { [spotlight] in _ = spotlight.openApplications() },
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
+            onCloseWindow: { [weak self] entry in self?.closeWindow(entry: entry) },
             onQuit: { [weak self] entry in self?.quit(entry: entry) },
             onDropPin: { [weak self] dropped, target in
                 self?.reorder(draggedKey: dropped, onto: target)
@@ -309,8 +338,11 @@ package final class AppServices {
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
             },
             onOpenBattery: { [weak self] in self?.openBatteryPanel() },
-            onOpenNotifications: {},
-            onOpenControlCentre: { [weak self] in self?.openControlCentre() }
+            onOpenNotifications: { [menuExtras] in
+                _ = menuExtras.press(BarControlMetrics.clockIdentifier)
+            },
+            onOpenControlCentre: { [weak self] in self?.openControlCentre() },
+            onOpenTimer: { [weak self] in self?.openTimerPanel() }
         )
         host.present(preset: preset)
         bar = host

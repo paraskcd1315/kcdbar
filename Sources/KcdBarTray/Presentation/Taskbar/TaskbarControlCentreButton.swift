@@ -16,8 +16,7 @@ package struct TaskbarControlCentreButton: View {
             .foregroundStyle(KbColors.onSurface)
             .frame(width: TrayItemMetrics.controlCentreWidth)
             .padding(.vertical, KbSpacing.s2)
-            .contentShape(shape)
-            .onTapGesture(perform: onOpen)
+            .kbTappable(in: shape, perform: onOpen)
             .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
             .animation(KbMotion.quick, value: isHovered)
             .onHover { isHovered = $0 }

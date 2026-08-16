@@ -59,7 +59,7 @@ targets:
       - path: Tests
     dependencies:
       - package: KcdBar
-        product: KcdBarBar
+        product: KcdBarTaskbar
       - package: KcdBar
         product: KcdBarTray
       - package: KcdBar

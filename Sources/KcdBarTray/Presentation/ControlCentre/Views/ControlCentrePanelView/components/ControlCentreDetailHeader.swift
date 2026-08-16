@@ -29,8 +29,7 @@ package struct ControlCentreDetailHeader: View {
                             : .clear
                     )
             )
-            .contentShape(Rectangle())
-            .onTapGesture(perform: onBack)
+            .kbTappable(in: Rectangle(), perform: onBack)
             .onHover { isHovered = $0 }
             Spacer(minLength: KbSpacing.s5)
             WifiToggle(isOn: isOn, onToggle: onSetPower)

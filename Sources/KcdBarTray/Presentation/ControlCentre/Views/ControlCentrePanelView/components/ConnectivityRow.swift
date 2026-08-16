@@ -18,8 +18,7 @@ package struct ConnectivityRow<Glyph: View>: View {
                     height: KbControlCentreMetrics.rowGlyphSize
                 )
                 .background(Circle().fill(isOn ? KbColors.brand : KbColors.surfaceRaised))
-                .contentShape(Circle())
-                .onTapGesture(perform: onToggle)
+                .kbTappable(in: Circle(), perform: onToggle)
             VStack(alignment: .leading, spacing: 0) {
                 Text(titleKey)
                     .font(KbTypography.tileTitle)
@@ -41,7 +40,6 @@ package struct ConnectivityRow<Glyph: View>: View {
             }
         }
         .frame(height: KbControlCentreMetrics.rowHeight)
-        .contentShape(Rectangle())
-        .onTapGesture { onOpen?() }
+        .kbTappable(in: Rectangle()) { onOpen?() }
     }
 }
