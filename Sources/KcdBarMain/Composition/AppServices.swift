@@ -50,6 +50,7 @@ package final class AppServices {
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
     private lazy var overlap = WindowOverlapEnforcer(control: control)
+    private let reservation: (any ScreenReservationPort)? = DockRectScreenReservation()
     private lazy var solo = SoloWindowEnforcer(control: control)
     private var activePreset = BarPresetCatalogue.default
     private lazy var coalesced = CoalescedTrigger(
@@ -67,6 +68,7 @@ package final class AppServices {
     package func refreshAndEnforce(now: Date = Date()) {
         registry.refresh()
         battery.refresh()
+        reserveBarStrip()
         overlap.enforce(
             preset: activePreset,
             windows: registry.windows,
@@ -90,6 +92,16 @@ package final class AppServices {
         coalesced.cancel()
         geometry.stop()
         changes.stopObserving()
+        reservation?.release()
+    }
+
+    private func reserveBarStrip() {
+        guard let reservation, reservation.isAvailable,
+              let display = registry.displays.first(where: \.isPrimary) ?? registry.displays.first
+        else {
+            return
+        }
+        _ = reservation.reserve(BarFrameCalculator.frame(for: activePreset, on: display))
     }
 
     private var observedPids: [pid_t] {
