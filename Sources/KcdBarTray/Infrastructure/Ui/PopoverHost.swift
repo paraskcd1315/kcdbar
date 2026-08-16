@@ -93,7 +93,15 @@ package final class PopoverHost {
         guard panel.frame.size != wanted else { return }
 
         let settled = origin(for: wanted, anchor: anchor)
-        panel.setFrame(NSRect(origin: settled, size: wanted), display: true)
+        let frame = NSRect(origin: settled, size: wanted)
+
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = KbMotion.standardDuration
+            context.timingFunction = CAMediaTimingFunction(
+                controlPoints: KbMotion.curve.x1, KbMotion.curve.y1, KbMotion.curve.x2, KbMotion.curve.y2
+            )
+            panel.animator().setFrame(frame, display: true)
+        }
     }
 
     private func releaseFocus() {

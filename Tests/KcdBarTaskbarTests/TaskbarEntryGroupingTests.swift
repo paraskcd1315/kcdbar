@@ -13,6 +13,8 @@ struct TaskbarEntryGroupingTests {
             isFrontmost: false,
             isPinned: false,
             isLauncher: false,
+
+            isRunning: true,
             instanceCount: 1,
             instancesOnThisDisplay: 1
         )

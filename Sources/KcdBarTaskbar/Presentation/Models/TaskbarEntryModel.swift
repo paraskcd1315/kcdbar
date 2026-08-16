@@ -10,6 +10,7 @@ package struct TaskbarEntryModel: Identifiable, Equatable {
     package let isFrontmost: Bool
     package let isPinned: Bool
     package let isLauncher: Bool
+    package let isRunning: Bool
     package let instanceCount: Int
     package let instancesOnThisDisplay: Int
 
@@ -26,6 +27,7 @@ package struct TaskbarEntryModel: Identifiable, Equatable {
             && lhs.isFrontmost == rhs.isFrontmost
             && lhs.isPinned == rhs.isPinned
             && lhs.isLauncher == rhs.isLauncher
+            && lhs.isRunning == rhs.isRunning
             && lhs.instanceCount == rhs.instanceCount
             && lhs.instancesOnThisDisplay == rhs.instancesOnThisDisplay
     }

@@ -52,11 +52,13 @@ package struct TaskbarViewModel {
                 ),
                 isPinned: bundleIdentifier.map(pinnedIdentifiers.contains) ?? false,
                 isLauncher: false,
+                isRunning: true,
                 instanceCount: bundleIdentifier.flatMap { windowsPerApplication[$0] } ?? 1,
                 instancesOnThisDisplay: bundleIdentifier.flatMap { windowsHerePerApplication[$0] } ?? 1
             )
         }
 
+        let runningIdentifiers = Set(bundleIdentifiers.values)
         let representedIdentifiers = Set(windowEntries.compactMap(\.bundleIdentifier))
         let launchers = pinnedApps
             .filter { !representedIdentifiers.contains($0.bundleIdentifier) }
@@ -71,6 +73,7 @@ package struct TaskbarViewModel {
                     isFrontmost: false,
                     isPinned: true,
                     isLauncher: true,
+                    isRunning: runningIdentifiers.contains(app.bundleIdentifier),
                     instanceCount: windowsPerApplication[app.bundleIdentifier] ?? 0,
                     instancesOnThisDisplay: 0
                 )

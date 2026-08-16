@@ -90,7 +90,6 @@ package struct StartMenuSurface: View {
             }
         }
         .frame(width: width, alignment: .leading)
-        .animation(KbMotion.standard, value: hasPinned)
         .clipShape(KbPopoverShape(arrowX: arrowX))
         .glassEffect(.regular.interactive(), in: KbPopoverShape(arrowX: arrowX))
         .overlay { KbPopoverEdge(arrowX: arrowX) }

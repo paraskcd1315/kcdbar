@@ -13,6 +13,8 @@ struct TaskbarDragReorderTests {
             isFrontmost: false,
             isPinned: pinned,
             isLauncher: false,
+
+            isRunning: true,
             instanceCount: 1,
             instancesOnThisDisplay: 1
         )
