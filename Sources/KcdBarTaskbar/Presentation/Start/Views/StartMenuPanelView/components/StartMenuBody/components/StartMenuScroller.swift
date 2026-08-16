@@ -13,44 +13,37 @@ package struct StartMenuScroller: View {
     package let isShowingIndex: Bool
     package let availableKeys: Set<String>
     package let iconNamespace: Namespace.ID
-    package let recentNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onPower: (StartPowerAction) -> Void
     package let onSearch: () -> Void
     package let onIndex: () -> Void
     package let onJump: (String) -> Void
-    package let onSectionsAppear: () -> Void
 
     package var body: some View {
         ScrollView {
             ZStack(alignment: .top) {
+                StartMenuSections(
+                    catalogue: catalogue,
+                    usage: usage,
+                    recents: recents,
+                    pinnedIdentifiers: pinnedIdentifiers,
+                    icons: icons,
+                    iconNamespace: iconNamespace,
+                    onLaunch: onLaunch,
+                    onTogglePin: onTogglePin,
+                    onIndex: onIndex,
+                    onScrollTop: { onJump(StartMenuMetrics.topAnchorKey) }
+                )
+                .opacity(isShowingIndex ? 0 : 1)
+                .allowsHitTesting(!isShowingIndex)
                 if isShowingIndex {
                     StartMenuLetterGrid(
                         keys: ApplicationIndexKeys.all,
                         available: availableKeys,
-                        recents: recents,
-                        icons: icons,
-                        onSelect: onJump,
-                        onLaunch: onLaunch
+                        onSelect: onJump
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
-                } else {
-                    StartMenuSections(
-                        catalogue: catalogue,
-                        usage: usage,
-                        recents: recents,
-                        pinnedIdentifiers: pinnedIdentifiers,
-                        icons: icons,
-                        iconNamespace: iconNamespace,
-                        recentNamespace: recentNamespace,
-                        onLaunch: onLaunch,
-                        onTogglePin: onTogglePin,
-                        onIndex: onIndex,
-                        onScrollTop: { onJump(StartMenuMetrics.topAnchorKey) }
-                    )
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                    .onAppear(perform: onSectionsAppear)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

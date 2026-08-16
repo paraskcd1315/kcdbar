@@ -6,7 +6,6 @@ package struct StartMenuRecents: View {
     package let layout: StartMenuLayout
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
-    package let iconNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
 
@@ -17,7 +16,7 @@ package struct StartMenuRecents: View {
                     applications: applications,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
-                    iconNamespace: iconNamespace,
+                    iconNamespace: nil,
                     onLaunch: onLaunch,
                     onTogglePin: onTogglePin
                 )

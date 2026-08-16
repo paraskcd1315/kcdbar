@@ -8,7 +8,6 @@ package struct StartMenuSections: View {
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
     package let iconNamespace: Namespace.ID
-    package let recentNamespace: Namespace.ID
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onIndex: () -> Void
@@ -31,7 +30,6 @@ package struct StartMenuSections: View {
                             layout: catalogue.layout,
                             pinnedIdentifiers: pinnedIdentifiers,
                             icons: icons,
-                            iconNamespace: recentNamespace,
                             onLaunch: onLaunch,
                             onTogglePin: onTogglePin
                         )
