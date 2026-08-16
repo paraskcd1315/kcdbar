@@ -2,8 +2,8 @@ import CoreGraphics
 
 package enum StartMenuMetrics {
     package static let otherSectionKey = "#"
-    package static let sidebarWidth: CGFloat = 560
-    package static let pinnedPaneWidth: CGFloat = 420
+    package static let sidebarWidth: CGFloat = 460
+    package static let pinnedPaneWidth: CGFloat = 520
     package static let panelWidth: CGFloat = sidebarWidth + pinnedPaneWidth
     package static let bodyMaxHeight: CGFloat = 660
     package static let pinnedColumns = 4
@@ -64,10 +64,10 @@ package enum StartMenuMetrics {
     package static let gridGlyph = "square.grid.2x2"
     package static let indexButtonWidth: CGFloat = 34
     package static let controlsHeight: CGFloat = 24
-    package static let gridColumns = 5
+    package static let gridColumns = 4
     package static let gridIconSize: CGFloat = 52
     package static let gridTileHeight: CGFloat = 106
-    package static let folderColumns = 4
+    package static let folderColumns = 3
     package static let folderFaceColumns = 2
     package static let folderPreviewCount = 4
     package static let folderCardSize: CGFloat = 124

@@ -14,6 +14,12 @@ package struct StartMenuSurface: View {
     package let onPower: (StartPowerAction) -> Void
     package let onSearch: () -> Void
 
+    private var hasPinned: Bool { !pinned.apps.isEmpty }
+
+    private var width: CGFloat {
+        hasPinned ? StartMenuMetrics.panelWidth : StartMenuMetrics.sidebarWidth
+    }
+
     package var body: some View {
         HStack(spacing: 0) {
             StartMenuBody(
@@ -27,8 +33,9 @@ package struct StartMenuSurface: View {
                 onPower: onPower,
                 onSearch: onSearch
             )
-            StartMenuPaneDivider()
-            StartMenuPinnedPane(
+            if hasPinned {
+                StartMenuPaneDivider()
+                StartMenuPinnedPane(
                 bands: groups.bands(of: pinned.apps),
                 icons: icons,
                 editing: groups.editing,
@@ -71,9 +78,11 @@ package struct StartMenuSurface: View {
                         )
                     }
                 }
-            )
+                )
+            }
         }
-        .frame(width: StartMenuMetrics.panelWidth, alignment: .leading)
+        .frame(width: width, alignment: .leading)
+        .animation(KbMotion.standard, value: hasPinned)
         .clipShape(KbPopoverShape(arrowX: arrowX))
         .glassEffect(.regular.interactive(), in: KbPopoverShape(arrowX: arrowX))
         .overlay { KbPopoverEdge(arrowX: arrowX) }
