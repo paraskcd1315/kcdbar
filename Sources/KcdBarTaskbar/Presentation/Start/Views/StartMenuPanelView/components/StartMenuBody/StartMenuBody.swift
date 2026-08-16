@@ -44,6 +44,13 @@ package struct StartMenuBody: View {
                     proxy.scrollTo(key, anchor: .top)
                 }
             )
+            .onChange(of: catalogue.isLoading) { _, isLoading in
+                guard !isLoading else { return }
+                proxy.scrollTo(StartMenuMetrics.topAnchorKey, anchor: .top)
+            }
+            .onChange(of: recentCount) { _, _ in
+                proxy.scrollTo(StartMenuMetrics.topAnchorKey, anchor: .top)
+            }
             .animation(KbMotion.standard, value: catalogue.grouping)
             .animation(KbMotion.standard, value: catalogue.layout)
             .animation(KbMotion.standard, value: catalogue.openedCategory)
@@ -53,6 +60,10 @@ package struct StartMenuBody: View {
 
     private var showsIndex: Bool {
         catalogue.grouping == .alphabetical && !catalogue.isLoading && !isShowingIndex
+    }
+
+    private var recentCount: Int {
+        usage.recents(among: catalogue.applications).count
     }
 
     private var availableKeys: Set<String> {

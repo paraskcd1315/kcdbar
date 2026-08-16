@@ -9,12 +9,16 @@ package struct StartMenuAppList: View {
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onIndex: () -> Void
+    package let onScrollTop: () -> Void
 
     package var body: some View {
         VStack(alignment: .leading, spacing: StartMenuMetrics.sectionSpacing) {
             StartMenuOpenedHeading(
                 opened: catalogue.openedSection,
-                onBack: { catalogue.closeCategory() }
+                onBack: {
+                    catalogue.closeCategory()
+                    onScrollTop()
+                }
             )
             StartMenuCatalogueContent(
                 catalogue: catalogue,
@@ -23,7 +27,10 @@ package struct StartMenuAppList: View {
                 iconNamespace: iconNamespace,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
-                onOpenCategory: { catalogue.open(category: $0) },
+                onOpenCategory: {
+                    catalogue.open(category: $0)
+                    onScrollTop()
+                },
                 onIndex: onIndex
             )
         }

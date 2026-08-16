@@ -30,6 +30,6 @@ package struct StartMenuRecents: View {
                 )
             }
         }
-        .transition(.move(edge: .top).combined(with: .opacity))
+        .id(layout)
     }
 }

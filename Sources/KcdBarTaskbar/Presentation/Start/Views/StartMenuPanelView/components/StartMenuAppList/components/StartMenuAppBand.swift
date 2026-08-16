@@ -13,7 +13,7 @@ package struct StartMenuAppBand: View {
     package let onTogglePin: (String) -> Void
 
     package var body: some View {
-        ZStack {
+        Group {
             if layout == .list {
                 StartMenuAppSection(
                     section: section,
