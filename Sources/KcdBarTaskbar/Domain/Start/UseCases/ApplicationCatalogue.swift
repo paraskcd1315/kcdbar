@@ -11,7 +11,8 @@ package enum ApplicationCatalogue {
 
     package static func sorted(_ applications: [InstalledApplication]) -> [InstalledApplication] {
         applications.sorted {
-            let names = $0.displayName.localizedCaseInsensitiveCompare($1.displayName)
+            let names = ApplicationSortKey.of($0.displayName)
+                .localizedCaseInsensitiveCompare(ApplicationSortKey.of($1.displayName))
             guard names == .orderedSame else { return names == .orderedAscending }
 
             return $0.bundleIdentifier < $1.bundleIdentifier

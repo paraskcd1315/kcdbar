@@ -12,9 +12,9 @@ struct ApplicationSectionKeyTests {
         #expect(ApplicationSectionKey.of("Über") == "U")
     }
 
-    @Test func digitsAndSymbolsShareTheOtherBand() {
+    @Test func digitsTakeTheOtherBandAndSymbolsDeferToTheLetterBehindThem() {
         #expect(ApplicationSectionKey.of("1Password") == StartMenuMetrics.otherSectionKey)
-        #expect(ApplicationSectionKey.of("+Music") == StartMenuMetrics.otherSectionKey)
+        #expect(ApplicationSectionKey.of("+Music") == "M")
     }
 
     @Test func anEmptyNameBandsAsOther() {

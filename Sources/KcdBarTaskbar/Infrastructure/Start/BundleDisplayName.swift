@@ -8,6 +8,8 @@ package enum BundleDisplayName {
         let display = bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         let name = bundle.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String
 
-        return localized ?? display ?? name ?? FileManager.default.displayName(atPath: url.path)
+        let found = localized ?? display ?? name ?? FileManager.default.displayName(atPath: url.path)
+
+        return ApplicationDisplayName.cleaned(found)
     }
 }
