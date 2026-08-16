@@ -47,7 +47,7 @@ package struct StartMenuPinnedPane: View {
             .coordinateSpace(.named(StartMenuMetrics.pinnedDragSpace))
         }
         .frame(width: StartMenuMetrics.pinnedPaneWidth, height: height)
-        .safeAreaBar(edge: .top) {
+        .overlay(alignment: .topTrailing) {
             StartMenuPinnedBar(onAdd: onAdd)
         }
         .scrollBounceBehavior(.basedOnSize)

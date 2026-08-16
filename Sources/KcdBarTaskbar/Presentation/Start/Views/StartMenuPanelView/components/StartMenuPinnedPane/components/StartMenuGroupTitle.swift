@@ -11,7 +11,7 @@ package struct StartMenuGroupTitle: View {
             } else if let titleKey = group.titleKey {
                 Text(LocalizedStringKey(titleKey))
             } else {
-                Text(group.id)
+                Text("start.group.untitled")
             }
         }
         .font(KbTypography.panelDetail)

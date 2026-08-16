@@ -836,6 +836,17 @@
           }
         }
       }
+    },
+    "start.group.untitled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New category"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

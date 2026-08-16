@@ -7,10 +7,17 @@ package struct AppKitPanelTextEditing: PanelTextEditingPort {
 
     package func beginEditing() {
         NSApp.activate(ignoringOtherApps: true)
-        NSApp.keyWindow?.makeFirstResponder(nil)
+        editable?.makeKeyAndOrderFront(nil)
     }
 
     package func endEditing() {
+        editable?.resignKey()
         NSApp.deactivate()
+    }
+
+    private var editable: NSPanel? {
+        NSApp.windows
+            .compactMap { $0 as? NSPanel }
+            .first { $0.isVisible && $0.canBecomeKey }
     }
 }
