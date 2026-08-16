@@ -8,7 +8,6 @@ package struct StartMenuPinnedBar: View {
 
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
-            StartMenuSectionHeading(title: "start.pinned")
             Spacer(minLength: 0)
             Image(systemName: StartMenuMetrics.addGlyph)
                 .font(.system(size: StartMenuMetrics.powerGlyphSize, weight: .semibold))
@@ -27,7 +26,6 @@ package struct StartMenuPinnedBar: View {
         }
         .padding(.horizontal, KbSpacing.s6)
         .padding(.vertical, KbSpacing.s5)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular.interactive(), in: Rectangle())
+        .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
