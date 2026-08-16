@@ -17,12 +17,11 @@ package struct StartMenuSections: View {
     package var body: some View {
         LazyVStack(
             alignment: .leading,
-            spacing: KbSpacing.s5,
+            spacing: 0,
             pinnedViews: [.sectionHeaders]
         ) {
             Color.clear
                 .frame(height: 0)
-                .padding(.bottom, -KbSpacing.s5)
                 .id(StartMenuMetrics.topAnchorKey)
             if !recents.isEmpty {
                 Section {
@@ -36,6 +35,7 @@ package struct StartMenuSections: View {
                             onLaunch: onLaunch,
                             onTogglePin: onTogglePin
                         )
+                        .padding(.vertical, KbSpacing.s5)
                     }
                 } header: {
                     StartMenuStickyBar(
@@ -61,6 +61,7 @@ package struct StartMenuSections: View {
                     onTogglePin: onTogglePin,
                     onIndex: onIndex
                 )
+                .padding(.top, KbSpacing.s5)
             } header: {
                 StartMenuStickyBar(titleKey: "start.all", glyph: nil)
                     .id(StartMenuMetrics.allSectionKey)
