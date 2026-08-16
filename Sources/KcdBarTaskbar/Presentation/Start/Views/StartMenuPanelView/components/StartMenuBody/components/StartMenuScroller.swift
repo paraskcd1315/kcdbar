@@ -50,7 +50,6 @@ package struct StartMenuScroller: View {
             .contentShape(Rectangle())
             .scrollTargetLayout()
         }
-        .defaultScrollAnchor(.top)
         .frame(height: height)
         .animation(KbMotion.standard, value: height)
         .animation(KbMotion.standard, value: isShowingIndex)
