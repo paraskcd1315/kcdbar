@@ -3,9 +3,10 @@ import SwiftUI
 
 package struct StartMenuBody: View {
     package let catalogue: ApplicationCatalogueState
-    package let pinned: PinnedAppState
     package let icons: any ApplicationIconPort
+    package let pinnedIdentifiers: Set<String>
     package let userName: String
+    package let height: CGFloat
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
     package let onPower: (StartPowerAction) -> Void
@@ -18,8 +19,8 @@ package struct StartMenuBody: View {
         ScrollViewReader { proxy in
             StartMenuScroller(
                 catalogue: catalogue,
-                pinned: pinned,
                 icons: icons,
+                pinnedIdentifiers: pinnedIdentifiers,
                 userName: userName,
                 height: height,
                 showsRail: showsIndex,
@@ -45,6 +46,7 @@ package struct StartMenuBody: View {
                 )
             }
         }
+        .frame(width: StartMenuMetrics.sidebarWidth)
     }
 
     private var showsIndex: Bool {
@@ -53,39 +55,5 @@ package struct StartMenuBody: View {
 
     private var availableKeys: Set<String> {
         Set(catalogue.sections.map(\.key))
-    }
-
-    private var height: CGFloat {
-        guard !catalogue.isLoading else {
-            return StartMenuMetrics.bodyHeight(
-                pinned: pinned.apps.count,
-                rows: StartMenuMetrics.skeletonRowCount,
-                sections: StartMenuMetrics.skeletonBandCount
-            )
-        }
-        let sections = catalogue.visibleSections
-        guard !catalogue.showsFolders else {
-            return min(
-                StartMenuMetrics.pinnedHeight(pinned.apps.count)
-                    + StartMenuMetrics.folderHeight(folders: sections.count),
-                StartMenuMetrics.bodyMaxHeight
-            )
-        }
-        guard catalogue.layout == .grid else {
-            return StartMenuMetrics.bodyHeight(
-                pinned: pinned.apps.count,
-                rows: sections.reduce(0) { $0 + $1.applications.count },
-                sections: sections.count
-            )
-        }
-
-        return min(
-            StartMenuMetrics.pinnedHeight(pinned.apps.count)
-                + StartMenuMetrics.gridHeight(
-                    lines: StartMenuMetrics.gridLines(of: sections),
-                    sections: sections.count
-                ),
-            StartMenuMetrics.bodyMaxHeight
-        )
     }
 }

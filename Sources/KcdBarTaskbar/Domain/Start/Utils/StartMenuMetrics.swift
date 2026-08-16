@@ -2,9 +2,11 @@ import CoreGraphics
 
 package enum StartMenuMetrics {
     package static let otherSectionKey = "#"
-    package static let panelWidth: CGFloat = 600
+    package static let sidebarWidth: CGFloat = 560
+    package static let pinnedPaneWidth: CGFloat = 420
+    package static let panelWidth: CGFloat = sidebarWidth + pinnedPaneWidth
     package static let bodyMaxHeight: CGFloat = 660
-    package static let pinnedColumns = 6
+    package static let pinnedColumns = 4
     package static let pinnedIconSize: CGFloat = 52
     package static let pinnedTileHeight: CGFloat = 104
     package static let pinnedTilePadding: CGFloat = 10

@@ -86,6 +86,45 @@ package final class ApplicationCatalogueState {
         openedCategory = nil
     }
 
+    package var bodyHeight: CGFloat {
+        guard !isLoading else {
+            return StartMenuMetrics.bodyHeight(
+                pinned: 0,
+                rows: StartMenuMetrics.skeletonRowCount,
+                sections: StartMenuMetrics.skeletonBandCount
+            )
+        }
+        let bands = visibleSections
+        guard !showsFolders else {
+            return min(
+                StartMenuMetrics.folderHeight(folders: bands.count),
+                StartMenuMetrics.bodyMaxHeight
+            )
+        }
+        guard layout == .grid else {
+            return StartMenuMetrics.bodyHeight(
+                pinned: 0,
+                rows: bands.reduce(0) { $0 + $1.applications.count },
+                sections: bands.count
+            )
+        }
+
+        return min(
+            StartMenuMetrics.gridHeight(
+                lines: StartMenuMetrics.gridLines(of: bands),
+                sections: bands.count
+            ),
+            StartMenuMetrics.bodyMaxHeight
+        )
+    }
+
+    package var categoriesByBundleIdentifier: [String: ApplicationCategory] {
+        Dictionary(
+            applications.map { ($0.bundleIdentifier, $0.category) },
+            uniquingKeysWith: { first, _ in first }
+        )
+    }
+
     package func note(visible key: String?) {
         visibleKey = key
     }

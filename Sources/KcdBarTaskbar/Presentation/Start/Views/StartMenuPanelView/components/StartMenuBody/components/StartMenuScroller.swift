@@ -3,8 +3,8 @@ import SwiftUI
 
 package struct StartMenuScroller: View {
     package let catalogue: ApplicationCatalogueState
-    package let pinned: PinnedAppState
     package let icons: any ApplicationIconPort
+    package let pinnedIdentifiers: Set<String>
     package let userName: String
     package let height: CGFloat
     package let showsRail: Bool
@@ -20,15 +20,9 @@ package struct StartMenuScroller: View {
     package var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: KbSpacing.s5) {
-                StartMenuPinnedBand(
-                    pinned: pinned,
-                    icons: icons,
-                    onLaunch: onLaunch,
-                    onTogglePin: onTogglePin
-                )
                 StartMenuAppList(
                     catalogue: catalogue,
-                    pinnedIdentifiers: Set(pinned.apps.map(\.bundleIdentifier)),
+                    pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
                     iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
