@@ -13,6 +13,19 @@ package struct CollaborationUserPicture: UserPicturePort {
         )
         guard let image = identity?.image else { return nil }
 
-        return Image(nsImage: image)
+        return Image(nsImage: scaled(image))
+    }
+
+    private func scaled(_ image: NSImage) -> NSImage {
+        let side = StartMenuMetrics.avatarSize * StartMenuMetrics.avatarScale
+        let size = NSSize(width: side, height: side)
+        let drawn = NSImage(size: size)
+
+        drawn.lockFocus()
+        image.draw(in: NSRect(origin: .zero, size: size))
+        drawn.unlockFocus()
+        drawn.size = NSSize(width: StartMenuMetrics.avatarSize, height: StartMenuMetrics.avatarSize)
+
+        return drawn
     }
 }

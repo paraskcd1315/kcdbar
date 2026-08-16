@@ -36,7 +36,7 @@ package struct StartMenuAccountMenu: View {
         }
         .menuStyle(.borderlessButton)
         .menuIndicator(.hidden)
-        .fixedSize()
+        .frame(height: StartMenuMetrics.powerButtonSize)
         .onHover { isHovered = $0 }
         .animation(KbMotion.quick, value: isHovered)
     }
