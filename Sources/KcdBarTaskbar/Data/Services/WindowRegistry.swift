@@ -61,7 +61,7 @@ package final class WindowRegistry {
             applications: applications.count,
             coreGraphicsRecords: coreGraphics.count,
             manageableCoreGraphicsRecords: coreGraphics.filter(WindowReconciler.isManageable).count,
-            accessibilityRecords: accessibility.count
+            accessibilityRecords: accessibility.records.count
         )
 
         windows = WindowReconciler

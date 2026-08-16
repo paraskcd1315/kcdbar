@@ -13,7 +13,7 @@ struct WindowOverlapTests {
     private func window(_ bounds: CGRect, minimized: Bool = false) -> ManagedWindow {
         let cg = WindowFixtures.cgRecord(windowId: 1, pid: 1, title: "W", bounds: bounds)
         let ax = WindowFixtures.axRecord(pid: 1, cgWindowId: 1, title: "W", bounds: bounds, isMinimized: minimized)
-        return WindowReconciler.reconcile(coreGraphics: minimized ? [] : [cg], accessibility: [ax], previous: [])[0]
+        return WindowReconciler.reconcile(coreGraphics: minimized ? [] : [cg], accessibility: .answered([ax]), previous: [])[0]
     }
 
     @Test func zoomedWindowIsPushedAboveABottomBar() {

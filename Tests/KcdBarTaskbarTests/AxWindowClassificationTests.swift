@@ -42,7 +42,7 @@ struct AxWindowClassificationTests {
 
         let reconciled = WindowReconciler.reconcile(
             coreGraphics: [real, popup],
-            accessibility: accessibility,
+            accessibility: .answered(accessibility),
             previous: []
         )
         let entries = WindowPresentationPolicy.taskbarEntries(from: reconciled)

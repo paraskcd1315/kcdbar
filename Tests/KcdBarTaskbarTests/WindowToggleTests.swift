@@ -18,7 +18,7 @@ struct WindowToggleTests {
                 isMinimized: minimized.contains($0.id)
             )
         }
-        return WindowReconciler.reconcile(coreGraphics: cg, accessibility: ax, previous: [])
+        return WindowReconciler.reconcile(coreGraphics: cg, accessibility: .answered(ax), previous: [])
     }
 
     @Test func frontWindowOfTheFrontmostApplicationMinimizes() {
