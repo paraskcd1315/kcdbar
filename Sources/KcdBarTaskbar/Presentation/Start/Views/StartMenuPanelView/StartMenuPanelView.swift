@@ -5,6 +5,8 @@ import SwiftUI
 package struct StartMenuPanelView: View {
     package let catalogue: ApplicationCatalogueState
     package let pinned: PinnedAppState
+    package let groups: StartGroupState
+    package let editor: any PanelTextEditingPort
     package let icons: any ApplicationIconPort
     package let userName: String
     package let arrowX: CGFloat
@@ -17,6 +19,8 @@ package struct StartMenuPanelView: View {
     package init(
         catalogue: ApplicationCatalogueState,
         pinned: PinnedAppState,
+        groups: StartGroupState,
+        editor: any PanelTextEditingPort,
         icons: any ApplicationIconPort,
         userName: String,
         arrowX: CGFloat,
@@ -28,6 +32,8 @@ package struct StartMenuPanelView: View {
     ) {
         self.catalogue = catalogue
         self.pinned = pinned
+        self.groups = groups
+        self.editor = editor
         self.icons = icons
         self.userName = userName
         self.arrowX = arrowX
@@ -43,6 +49,8 @@ package struct StartMenuPanelView: View {
             StartMenuSurface(
                 catalogue: catalogue,
                 pinned: pinned,
+                groups: groups,
+                editor: editor,
                 icons: icons,
                 userName: userName,
                 arrowX: arrowX,

@@ -4,6 +4,8 @@ import SwiftUI
 package struct StartMenuSurface: View {
     package let catalogue: ApplicationCatalogueState
     package let pinned: PinnedAppState
+    package let groups: StartGroupState
+    package let editor: any PanelTextEditingPort
     package let icons: any ApplicationIconPort
     package let userName: String
     package let arrowX: CGFloat
@@ -27,20 +29,58 @@ package struct StartMenuSurface: View {
             )
             StartMenuPaneDivider()
             StartMenuPinnedPane(
-                sections: StartPinnedSections.of(
-                    pinned.apps,
-                    categories: catalogue.categoriesByBundleIdentifier
-                ),
+                bands: groups.bands(of: pinned.apps),
                 icons: icons,
+                editing: groups.editing,
                 height: catalogue.bodyHeight,
                 onLaunch: onLaunch,
-                onTogglePin: onTogglePin
+                onTogglePin: onTogglePin,
+                onRename: {
+                    editor.beginEditing()
+                    groups.beginEditing($0)
+                },
+                onCommit: { id, title in
+                    editor.endEditing()
+                    Task { await groups.rename(id, to: title) }
+                },
+                onRemove: { id in
+                    let members = groups.bands(of: pinned.apps)
+                        .first { $0.group.id == id }?
+                        .applications ?? []
+                    Task {
+                        for member in members {
+                            await pinned.unpin(bundleIdentifier: member.bundleIdentifier)
+                        }
+                        await groups.remove(id)
+                    }
+                },
+                onToggle: { id in
+                    Task { await groups.toggleCollapse(id) }
+                },
+                onAdd: {
+                    editor.beginEditing()
+                    Task { await groups.create() }
+                },
+                onMove: { moved, group, target in
+                    Task {
+                        await groups.move(
+                            moved,
+                            to: group,
+                            before: target,
+                            among: groups.bands(of: pinned.apps)
+                        )
+                    }
+                }
             )
         }
         .frame(width: StartMenuMetrics.panelWidth, alignment: .leading)
         .clipShape(KbPopoverShape(arrowX: arrowX))
         .glassEffect(.regular.interactive(), in: KbPopoverShape(arrowX: arrowX))
         .overlay { KbPopoverEdge(arrowX: arrowX) }
-        .task { await catalogue.load() }
+        .task {
+            await catalogue.load()
+            await groups.load()
+            await groups.seed(pins: pinned.apps)
+        }
     }
 }

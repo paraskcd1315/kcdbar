@@ -76,6 +76,14 @@ package enum StartMenuMetrics {
     package static let folderMiniIconSize: CGFloat = 19
     package static let folderInnerSpacing: CGFloat = 8
     package static let backGlyph = "chevron.left"
+    package static let kebabGlyph = "ellipsis"
+    package static let disclosureGlyph = "chevron.right"
+    package static let disclosureSize: CGFloat = 11
+    package static let addGlyph = "plus"
+    package static let emptyBandHeight: CGFloat = 60
+    package static let pinnedDragSpace = "start.pinned.drag."
+    package static let dragThreshold: CGFloat = 6
+    package static let draggingOpacity: Double = 0.4
     package static let folderFillOpacity: Double = 0.06
     package static let railWidth: CGFloat = 18
     package static let railLetterHeight: CGFloat = 12

@@ -222,6 +222,30 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } }
       }
     },
+    "start.group.pinned" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pinned apps" } }
+      }
+    },
+    "start.group.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Category name" } }
+      }
+    },
+    "start.group.rename" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Rename category" } }
+      }
+    },
+    "start.group.remove" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove category" } }
+      }
+    },
     "start.pinned" : {
       "extractionState" : "manual",
       "localizations" : {

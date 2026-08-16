@@ -7,6 +7,8 @@ package enum StartMenuPresentation {
     package static func content(
         catalogue: ApplicationCatalogueState,
         pinned: PinnedAppState,
+        groups: StartGroupState,
+        editor: any PanelTextEditingPort,
         icons: any ApplicationIconPort,
         userName: String,
         presentation: PopoverPresentation,
@@ -20,6 +22,8 @@ package enum StartMenuPresentation {
             StartMenuPanelView(
                 catalogue: catalogue,
                 pinned: pinned,
+                groups: groups,
+                editor: editor,
                 icons: icons,
                 userName: userName,
                 arrowX: arrowX,

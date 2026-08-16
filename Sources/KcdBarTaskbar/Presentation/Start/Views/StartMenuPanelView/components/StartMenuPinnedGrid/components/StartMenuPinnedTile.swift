@@ -4,6 +4,7 @@ import SwiftUI
 package struct StartMenuPinnedTile: View {
     package let app: PinnedApp
     package let icon: Image?
+    package let isDragging: Bool
     package let onLaunch: () -> Void
     package let onUnpin: () -> Void
 
@@ -25,6 +26,7 @@ package struct StartMenuPinnedTile: View {
             isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear,
             in: shape
         )
+        .opacity(isDragging ? StartMenuMetrics.draggingOpacity : 1)
         .kbTappable(in: shape, perform: onLaunch)
         .contextMenu { Button("start.unpin", action: onUnpin) }
         .onHover { isHovered = $0 }

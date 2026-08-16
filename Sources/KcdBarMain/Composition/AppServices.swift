@@ -30,6 +30,8 @@ package final class AppServices {
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
     package let pins: PinnedAppState
     package let startPins: PinnedAppState
+    package let startGroups: StartGroupState
+    package let panelEditor: any PanelTextEditingPort = AppKitPanelTextEditing()
     package let applications: ApplicationCatalogueState
     package let order = EntryOrderMemory()
     package let desktop = ShowDesktopState()
@@ -170,6 +172,7 @@ package final class AppServices {
         store = opened
         pins = PinnedAppState(store: opened)
         startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
+        startGroups = StartGroupState(store: opened)
 
         let indexed = SpotlightApplicationSource()
         applications = ApplicationCatalogueState(
@@ -262,10 +265,13 @@ package final class AppServices {
         }
 
         popover.present(.start, anchor: popoverAnchor()) {
-            [applications, startPins, icons, launcher, power, popover, spotlight] presentation, arrowX in
+            [applications, startPins, startGroups, panelEditor, icons, launcher, power, popover, spotlight]
+            presentation, arrowX in
             StartMenuPresentation.content(
                 catalogue: applications,
                 pinned: startPins,
+                groups: startGroups,
+                editor: panelEditor,
                 icons: icons,
                 userName: NSFullUserName(),
                 presentation: presentation,
