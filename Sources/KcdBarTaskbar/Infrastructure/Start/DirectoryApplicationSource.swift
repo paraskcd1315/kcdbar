@@ -1,40 +1,40 @@
-import AppKit
 import Foundation
 
-/** Reads the application directories on disk, which is every app installed in a standard place. */
+/** Reads the application directories on disk, one level into the folders vendors install into. */
 package struct DirectoryApplicationSource: ApplicationCataloguePort {
     package init() {}
 
     package func installedApplications() async -> [InstalledApplication] {
         let manager = FileManager.default
         let roots = ApplicationDirectories.roots(home: manager.homeDirectoryForCurrentUser)
-        let found = roots.flatMap { bundles(under: $0, manager: manager) }
+        let found = roots.flatMap { bundles(under: $0, manager: manager, descending: true) }
 
-        return ApplicationCatalogue.merged(found.compactMap(application(at:)))
+        return ApplicationCatalogue.merged(
+            ApplicationBundleReader.applications(atPaths: found.map(\.path))
+        )
     }
 
-    private func bundles(under root: URL, manager: FileManager) -> [URL] {
-        guard let contents = try? manager.contentsOfDirectory(
-            at: root,
-            includingPropertiesForKeys: nil,
+    private func bundles(under root: URL, manager: FileManager, descending: Bool) -> [URL] {
+        let contents = contentsOf(root, manager: manager)
+        let here = contents.filter { $0.pathExtension == ApplicationDirectories.bundleExtension }
+        guard descending else { return here }
+
+        let folders = contents.filter {
+            $0.pathExtension != ApplicationDirectories.bundleExtension && isDirectory($0)
+        }
+
+        return here + folders.flatMap { bundles(under: $0, manager: manager, descending: false) }
+    }
+
+    private func contentsOf(_ url: URL, manager: FileManager) -> [URL] {
+        (try? manager.contentsOfDirectory(
+            at: url,
+            includingPropertiesForKeys: [.isDirectoryKey],
             options: [.skipsHiddenFiles]
-        )
-        else {
-            return []
-        }
-
-        return contents.filter { $0.pathExtension == ApplicationDirectories.bundleExtension }
+        )) ?? []
     }
 
-    private func application(at url: URL) -> InstalledApplication? {
-        guard let bundle = Bundle(url: url), let identifier = bundle.bundleIdentifier else {
-            return nil
-        }
-
-        return InstalledApplication(
-            bundleIdentifier: identifier,
-            displayName: BundleDisplayName.of(bundle, url: url),
-            path: url.path
-        )
+    private func isDirectory(_ url: URL) -> Bool {
+        (try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true
     }
 }

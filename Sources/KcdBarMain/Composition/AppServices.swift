@@ -30,7 +30,7 @@ package final class AppServices {
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
     package let pins: PinnedAppState
     package let startPins: PinnedAppState
-    package let applications = ApplicationCatalogueState(catalogue: DirectoryApplicationSource())
+    package let applications: ApplicationCatalogueState
     package let order = EntryOrderMemory()
     package let desktop = ShowDesktopState()
     package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
@@ -170,6 +170,12 @@ package final class AppServices {
         store = opened
         pins = PinnedAppState(store: opened)
         startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
+
+        let indexed = SpotlightApplicationSource()
+        applications = ApplicationCatalogueState(
+            catalogue: MergedApplicationSource([DirectoryApplicationSource(), indexed]),
+            watcher: indexed
+        )
     }
 
     package func loadPreferences() async {
