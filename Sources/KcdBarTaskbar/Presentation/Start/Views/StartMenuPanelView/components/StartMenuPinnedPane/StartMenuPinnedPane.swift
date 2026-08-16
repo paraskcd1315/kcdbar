@@ -42,7 +42,7 @@ package struct StartMenuPinnedPane: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.vertical, KbSpacing.s5)
+            .padding(.bottom, KbSpacing.s5)
             .contentShape(Rectangle())
             .coordinateSpace(.named(StartMenuMetrics.pinnedDragSpace))
         }
