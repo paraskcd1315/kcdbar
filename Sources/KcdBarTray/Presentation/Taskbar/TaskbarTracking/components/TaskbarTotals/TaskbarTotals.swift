@@ -26,7 +26,6 @@ package struct TaskbarTotals: View {
                 }
             }
             .padding(.horizontal, KbSpacing.s4)
-            .padding(.vertical, KbSpacing.s1)
             .fixedSize(horizontal: true, vertical: false)
         }
     }

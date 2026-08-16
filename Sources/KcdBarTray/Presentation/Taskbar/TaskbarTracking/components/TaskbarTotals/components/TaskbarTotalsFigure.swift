@@ -13,7 +13,7 @@ package struct TaskbarTotalsFigure: View {
                 .foregroundStyle(KbColors.onSurfaceMuted)
                 .textCase(.uppercase)
             Text(TimerFormatting.compact(seconds))
-                .font(KbTypography.clockTime)
+                .font(KbTypography.clockDate)
                 .foregroundStyle(tone)
                 .monospacedDigit()
         }
