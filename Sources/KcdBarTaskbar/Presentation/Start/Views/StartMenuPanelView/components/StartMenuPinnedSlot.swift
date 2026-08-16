@@ -5,6 +5,7 @@ package struct StartMenuPinnedSlot<Content: View>: View {
     package let isShown: Bool
     @ViewBuilder package let content: () -> Content
 
+    @State private var isExpanded = false
     @State private var showsContent = false
 
     package var body: some View {
@@ -18,12 +19,22 @@ package struct StartMenuPinnedSlot<Content: View>: View {
                     anchor: .leading
                 )
         }
-        .frame(width: isShown ? slotWidth : 0, alignment: .leading)
+        .frame(width: isExpanded ? slotWidth : 0, alignment: .leading)
         .clipped()
-        .onAppear { showsContent = isShown }
+        .onAppear {
+            isExpanded = isShown
+            showsContent = isShown
+        }
         .onChange(of: isShown) { _, shown in
-            withAnimation(shown ? KbMotion.standard.delay(KbMotion.standardDuration) : KbMotion.quick) {
-                showsContent = shown
+            guard shown else {
+                withAnimation(KbMotion.quick) { showsContent = false } completion: {
+                    isExpanded = false
+                }
+                return
+            }
+            isExpanded = true
+            withAnimation(KbMotion.standard.delay(KbMotion.standardDuration)) {
+                showsContent = true
             }
         }
     }
