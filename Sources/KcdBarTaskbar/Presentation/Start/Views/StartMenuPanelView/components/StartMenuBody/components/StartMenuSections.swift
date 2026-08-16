@@ -39,15 +39,24 @@ package struct StartMenuSections: View {
                     .id(StartMenuMetrics.recentSectionKey)
                 }
             }
-            if !usage.isAllCollapsed {
-                StartMenuAppList(
+            Section {
+                if !usage.isAllCollapsed {
+                    StartMenuAppList(
                         catalogue: catalogue,
                         pinnedIdentifiers: pinnedIdentifiers,
                         icons: icons,
                         iconNamespace: iconNamespace,
                         onLaunch: onLaunch,
                         onTogglePin: onTogglePin,
-                    onIndex: onIndex
+                        onIndex: onIndex
+                    )
+                }
+            } header: {
+                StartMenuStickyBar(
+                    titleKey: "start.all",
+                    glyph: nil,
+                    isCollapsed: usage.isAllCollapsed,
+                    onToggle: { usage.isAllCollapsed.toggle() }
                 )
                 .id(StartMenuMetrics.allSectionKey)
             }

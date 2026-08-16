@@ -25,23 +25,11 @@ package struct StartMenuStickyBar: View {
         }
         .padding(.horizontal, KbSpacing.s6)
         .padding(.vertical, KbSpacing.s3)
-        .background(KbColors.surface.opacity(StartMenuMetrics.stickyFillOpacity))
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear
         )
-        .overlay(alignment: .bottom) {
-            LinearGradient(
-                colors: [
-                    KbColors.surface.opacity(StartMenuMetrics.stickyFillOpacity),
-                    KbColors.surface.opacity(0)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .frame(height: StartMenuMetrics.stickyFadeHeight)
-            .offset(y: StartMenuMetrics.stickyFadeHeight)
-            .allowsHitTesting(false)
-        }
+        .glassEffect(.regular.interactive(), in: Rectangle())
         .contentShape(Rectangle())
         .onTapGesture(perform: onToggle)
         .onHover { isHovered = $0 }
