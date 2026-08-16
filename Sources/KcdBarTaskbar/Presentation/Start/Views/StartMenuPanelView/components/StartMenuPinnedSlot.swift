@@ -8,7 +8,7 @@ package struct StartMenuPinnedSlot<Content: View>: View {
     @State private var showsContent = false
 
     package var body: some View {
-        HStack(spacing: 0) {
+        HStack(alignment: .top, spacing: 0) {
             StartMenuPaneDivider()
             content()
                 .frame(width: StartMenuMetrics.pinnedPaneWidth, alignment: .leading)
