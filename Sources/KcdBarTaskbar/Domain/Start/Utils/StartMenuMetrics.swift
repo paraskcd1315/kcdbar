@@ -87,7 +87,8 @@ package enum StartMenuMetrics {
     package static let recentLimit = 10
     package static let recentGlyph = "clock"
     package static let recentIconSize: CGFloat = 34
-    package static let stickyFillOpacity: Double = 0.98
+    package static let stickyFillOpacity: Double = 0.9
+    package static let stickyFadeHeight: CGFloat = 16
     package static let recentSectionKey = "recent"
     package static let allSectionKey = "all"
     package static let cancelGlyph = "xmark"

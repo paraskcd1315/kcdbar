@@ -30,9 +30,17 @@ package struct StartMenuStickyBar: View {
             isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear
         )
         .overlay(alignment: .bottom) {
-            Rectangle()
-                .fill(KbColors.separator)
-                .frame(height: KbEdgeMetrics.width)
+            LinearGradient(
+                colors: [
+                    KbColors.surface.opacity(StartMenuMetrics.stickyFillOpacity),
+                    KbColors.surface.opacity(0)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: StartMenuMetrics.stickyFadeHeight)
+            .offset(y: StartMenuMetrics.stickyFadeHeight)
+            .allowsHitTesting(false)
         }
         .contentShape(Rectangle())
         .onTapGesture(perform: onToggle)
