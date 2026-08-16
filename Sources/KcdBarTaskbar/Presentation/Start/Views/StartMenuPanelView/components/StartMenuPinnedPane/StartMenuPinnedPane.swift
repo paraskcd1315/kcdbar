@@ -52,6 +52,7 @@ package struct StartMenuPinnedPane: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             StartMenuPinnedBar(onAdd: onAdd)
+                .zIndex(1)
         }
         .frame(width: StartMenuMetrics.pinnedPaneWidth, height: height, alignment: .top)
         .animation(KbMotion.quick, value: dragged)
