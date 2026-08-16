@@ -40,12 +40,12 @@ package struct TaskbarItems: View {
             TaskbarTrash(monitor: trash)
             TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
             if viewModel.preset.showsStatusArea {
-                TaskbarTracking(timer: timer, totals: totals, onOpenTimer: onOpenTimer)
                 if battery.isPresent {
                     TaskbarBattery(state: battery, onOpen: onOpenBattery)
                 }
                 TaskbarControlCentreButton(onOpen: onOpenControlCentre)
                 TaskbarClock(onOpen: onOpenNotifications)
+                TaskbarTracking(timer: timer, totals: totals, onOpenTimer: onOpenTimer)
             }
         }
     }
