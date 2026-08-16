@@ -8,14 +8,9 @@ package struct StartMenuPowerBar: View {
 
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
-            StartMenuAvatar(image: avatar)
-            Text(userName)
-                .font(KbTypography.menuItem)
-                .foregroundStyle(KbColors.onSurface)
-                .lineLimit(1)
-                .truncationMode(.tail)
+            StartMenuAccountMenu(userName: userName, avatar: avatar, onPower: onPower)
             Spacer(minLength: KbSpacing.s4)
-            ForEach(StartPowerAction.allCases) { action in
+            ForEach(StartPowerAction.barActions) { action in
                 StartMenuPowerButton(action: action, onPower: { onPower(action) })
             }
         }

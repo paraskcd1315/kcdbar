@@ -4,8 +4,13 @@ package enum StartPowerAction: String, CaseIterable, Sendable, Identifiable {
     case sleep
     case restart
     case shutDown
+    case logOut
 
     package var id: String { rawValue }
+
+    package static var barActions: [StartPowerAction] { [.lock, .sleep, .restart, .shutDown] }
+
+    package static var accountActions: [StartPowerAction] { [.lock, .logOut] }
 
     package var symbol: String {
         switch self {
@@ -13,6 +18,7 @@ package enum StartPowerAction: String, CaseIterable, Sendable, Identifiable {
         case .sleep: "moon"
         case .restart: "arrow.clockwise"
         case .shutDown: "power"
+        case .logOut: "rectangle.portrait.and.arrow.right"
         }
     }
 
@@ -22,6 +28,7 @@ package enum StartPowerAction: String, CaseIterable, Sendable, Identifiable {
         case .sleep: "start.power.sleep"
         case .restart: "start.power.restart"
         case .shutDown: "start.power.shutDown"
+        case .logOut: "start.power.logOut"
         }
     }
 }

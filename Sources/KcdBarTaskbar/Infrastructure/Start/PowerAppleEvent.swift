@@ -7,6 +7,7 @@ package enum PowerAppleEvent {
         case .sleep: code(PowerActionMetrics.sleepEvent)
         case .restart: code(PowerActionMetrics.showRestartDialogEvent)
         case .shutDown: code(PowerActionMetrics.showShutdownDialogEvent)
+        case .logOut: code(PowerActionMetrics.logOutEvent)
         case .lock: nil
         }
     }
