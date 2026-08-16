@@ -22,7 +22,7 @@ package struct TaskbarEntryMenu: View {
             }
             .keyboardShortcut("w")
         }
-        if entry.isRunning {
+        if entry.isRunning, ApplicationQuitPolicy.canQuit(bundleIdentifier: entry.bundleIdentifier) {
             Divider()
             Button(role: .destructive, action: onQuit) {
                 Label("taskbar.menu.quit", systemImage: TaskbarMenuMetrics.quitSymbol)
