@@ -11,29 +11,36 @@ package struct StartMenuBandHeading: View {
     package var body: some View {
         ZStack {
             if isShowing {
-                Group {
-                    if let titleKey = section.titleKey {
-                        Text(LocalizedStringKey(titleKey))
-                    } else {
-                        Text(section.key)
+                HStack(spacing: 0) {
+                    Group {
+                        if let titleKey = section.titleKey {
+                            Text(LocalizedStringKey(titleKey))
+                        } else {
+                            Text(section.key)
+                        }
                     }
+                    .font(KbTypography.panelDetail)
+                    .foregroundStyle(isHovered ? KbColors.onSurface : KbColors.onSurfaceMuted)
+                    .padding(.horizontal, KbSpacing.s3)
+                    .padding(.vertical, KbSpacing.s2)
+                    .background(
+                        isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear,
+                        in: shape
+                    )
+                    Spacer(minLength: 0)
                 }
-                .font(KbTypography.panelDetail)
-                .foregroundStyle(isHovered ? KbColors.onSurface : KbColors.onSurfaceMuted)
-                .padding(.horizontal, KbSpacing.s3)
-                .padding(.vertical, KbSpacing.s2)
-                .background(
-                    isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear,
-                    in: shape
-                )
-                .kbTappable(in: shape) { if section.titleKey == nil { onIndex() } }
-                .onHover { isHovered = section.titleKey == nil && $0 }
-                .animation(KbMotion.quick, value: isHovered)
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, KbSpacing.s5)
                 .padding(.top, KbSpacing.s3)
+                .contentShape(Rectangle())
+                .onTapGesture { if isIndexable { onIndex() } }
+                .onHover { isHovered = isIndexable && $0 }
+                .animation(KbMotion.quick, value: isHovered)
             }
         }
+    }
+
+    private var isIndexable: Bool {
+        section.titleKey == nil
     }
 
     private var shape: RoundedRectangle {
