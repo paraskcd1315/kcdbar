@@ -19,9 +19,6 @@ package struct StartMenuSections: View {
             spacing: 0,
             pinnedViews: [.sectionHeaders]
         ) {
-            Color.clear
-                .frame(height: 0)
-                .id(StartMenuMetrics.topAnchorKey)
             if !recents.isEmpty {
                 Section {
                     if !usage.isRecentCollapsed {
@@ -65,6 +62,11 @@ package struct StartMenuSections: View {
                 StartMenuStickyBar(titleKey: "start.all", glyph: nil)
                     .id(StartMenuMetrics.allSectionKey)
             }
+        }
+        .overlay(alignment: .top) {
+            Color.clear
+                .frame(width: 0, height: 0)
+                .id(StartMenuMetrics.topAnchorKey)
         }
         .animation(KbMotion.standard, value: usage.isRecentCollapsed)
     }
