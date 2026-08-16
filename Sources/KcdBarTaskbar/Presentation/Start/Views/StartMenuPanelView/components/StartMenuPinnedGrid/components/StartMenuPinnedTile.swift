@@ -21,7 +21,6 @@ package struct StartMenuPinnedTile: View {
         }
         .padding(StartMenuMetrics.pinnedTilePadding)
         .frame(maxWidth: .infinity)
-        .frame(height: StartMenuMetrics.pinnedTileHeight)
         .background(
             isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear,
             in: shape
