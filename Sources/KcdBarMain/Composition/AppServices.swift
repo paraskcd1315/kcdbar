@@ -202,7 +202,7 @@ package final class AppServices {
         guard let window = LauncherWindowCycle.next(
             pids: pids(of: bundleIdentifier),
             onDisplay: displayId,
-            among: registry.windows,
+            among: registry.taskbarEntries,
             displays: registry.displays,
             frontmostPid: registry.frontmostPid
         )

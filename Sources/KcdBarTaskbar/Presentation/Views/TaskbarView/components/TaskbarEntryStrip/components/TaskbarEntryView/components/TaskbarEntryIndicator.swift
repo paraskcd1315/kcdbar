@@ -23,7 +23,8 @@ package struct TaskbarEntryIndicator: View {
             .animation(KbMotion.quick, value: entry.isFrontmost)
         } else if entry.instanceCount > 0 || entry.isRunning {
             TaskbarInstanceDots(
-                count: max(entry.instanceCount, 1),
+                count: entry.instanceCount,
+                isRunning: entry.isRunning,
                 isFrontmost: entry.isFrontmost
             )
             .padding(.bottom, TaskbarMetrics.instanceDotInset)
