@@ -98,7 +98,7 @@ package final class PopoverHost {
     }
 
     private func makePanel() -> NSPanel {
-        let panel = NSPanel(
+        let panel = PopoverPanel(
             contentRect: .zero,
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
