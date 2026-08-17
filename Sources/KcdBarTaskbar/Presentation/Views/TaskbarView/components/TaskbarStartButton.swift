@@ -22,8 +22,6 @@ package struct TaskbarStartButton: View {
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }
         .contextMenu {
-            Button("taskbar.menu.settings", action: onOpenSettings)
-            Divider()
             Toggle("taskbar.menu.launchAtLogin", isOn: launchAtLogin)
         }
         .onAppear { loginItem.refresh() }
