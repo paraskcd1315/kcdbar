@@ -5,6 +5,7 @@ package enum KbTypography {
     package static let entryTitleActive = Font.system(size: 12, weight: .medium)
     package static let clockTime = Font.system(size: 12, weight: .medium)
     package static let clockDate = Font.system(size: 10, weight: .regular)
+    package static let trackingLabel = Font.system(size: 8, weight: .semibold)
     package static let menuHeading = Font.system(size: 13, weight: .semibold)
     package static let menuItem = Font.system(size: 13, weight: .regular)
     package static let probeLabel = Font.system(size: 13, weight: .medium)

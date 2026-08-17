@@ -12,6 +12,7 @@ package final class PopoverHost {
     private var dismissMonitor: Any?
     private var anchor: NSPoint = .zero
     private var isClosing = false
+    private var takesFocus = false
 
     package private(set) var presented: TrayPopover?
 
@@ -26,6 +27,7 @@ package final class PopoverHost {
     package func present(
         _ key: TrayPopover,
         anchor: NSPoint,
+        takesFocus: Bool = false,
         content: @escaping (PopoverPresentation, CGFloat) -> AnyView
     ) {
         closeImmediately()
@@ -51,6 +53,11 @@ package final class PopoverHost {
         }
         panel.contentView = hosting
         panel.orderFrontRegardless()
+        if takesFocus {
+            self.takesFocus = true
+            NSApp.activate(ignoringOtherApps: true)
+            panel.makeKeyAndOrderFront(nil)
+        }
         withAnimation(KbMotion.standard) { presentation.isExpanded = true }
 
         dismissMonitor = NSEvent.addGlobalMonitorForEvents(
@@ -65,6 +72,7 @@ package final class PopoverHost {
 
         stopMonitor()
         isClosing = true
+        releaseFocus()
         withAnimation(KbMotion.standard) { presentation.isExpanded = false }
 
         Task { [weak self] in
@@ -85,11 +93,26 @@ package final class PopoverHost {
         guard panel.frame.size != wanted else { return }
 
         let settled = origin(for: wanted, anchor: anchor)
-        panel.setFrame(NSRect(origin: settled, size: wanted), display: true)
+        let frame = NSRect(origin: settled, size: wanted)
+
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = KbMotion.standardDuration
+            context.timingFunction = CAMediaTimingFunction(
+                controlPoints: KbMotion.curve.x1, KbMotion.curve.y1, KbMotion.curve.x2, KbMotion.curve.y2
+            )
+            panel.animator().setFrame(frame, display: true)
+        }
+    }
+
+    private func releaseFocus() {
+        guard takesFocus else { return }
+        takesFocus = false
+        NSApp.deactivate()
     }
 
     private func closeImmediately() {
         stopMonitor()
+        releaseFocus()
         panel?.orderOut(nil)
         panel = nil
         presentation = nil
@@ -98,14 +121,14 @@ package final class PopoverHost {
     }
 
     private func makePanel() -> NSPanel {
-        let panel = NSPanel(
+        let panel = PopoverPanel(
             contentRect: .zero,
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
         panel.isOpaque = false
-        panel.backgroundColor = .clear
+        panel.backgroundColor = .black.withAlphaComponent(KbPopoverMetrics.hitTestAlpha)
         panel.hasShadow = false
         panel.level = .popUpMenu
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]

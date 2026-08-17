@@ -25,12 +25,12 @@ struct WindowFilteringTests {
     @Test func taskbarShowsOnlyWindowsAccessibilityConfirms() {
         let confirmed = WindowReconciler.reconcile(
             coreGraphics: [WindowFixtures.cgRecord(windowId: 33, pid: 23, title: "Real")],
-            accessibility: [WindowFixtures.axRecord(pid: 23, cgWindowId: 33, title: "Real")],
+            accessibility: .answered([WindowFixtures.axRecord(pid: 23, cgWindowId: 33, title: "Real")]),
             previous: []
         )
         let helperSurface = WindowReconciler.reconcile(
             coreGraphics: [WindowFixtures.cgRecord(windowId: 34, pid: 24, title: nil)],
-            accessibility: [],
+            accessibility: .silent,
             previous: []
         )
 
@@ -41,7 +41,7 @@ struct WindowFilteringTests {
     @Test func minimizedWindowsRemainTaskbarEntries() {
         let minimized = WindowReconciler.reconcile(
             coreGraphics: [],
-            accessibility: [WindowFixtures.axRecord(pid: 25, cgWindowId: nil, title: "Away", isMinimized: true)],
+            accessibility: .answered([WindowFixtures.axRecord(pid: 25, cgWindowId: nil, title: "Away", isMinimized: true)]),
             previous: []
         )
 

@@ -21,9 +21,13 @@ package struct TaskbarEntryIndicator: View {
             }
             .frame(height: TaskbarMetrics.focusedBorderHeight)
             .animation(KbMotion.quick, value: entry.isFrontmost)
-        } else if entry.instanceCount > 0 {
-            TaskbarInstanceDots(count: entry.instanceCount, isFrontmost: entry.isFrontmost)
-                .padding(.bottom, TaskbarMetrics.instanceDotInset)
+        } else if entry.instanceCount > 0 || entry.isRunning {
+            TaskbarInstanceDots(
+                count: entry.instanceCount,
+                isRunning: entry.isRunning,
+                isFrontmost: entry.isFrontmost
+            )
+            .padding(.bottom, TaskbarMetrics.instanceDotInset)
         }
     }
 }

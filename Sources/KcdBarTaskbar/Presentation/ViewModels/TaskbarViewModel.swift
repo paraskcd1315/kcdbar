@@ -14,6 +14,7 @@ package struct TaskbarViewModel {
         frontmostPid: pid_t?,
         bundleIdentifiers: [pid_t: String],
         pinnedApps: [PinnedApp],
+        runningApplications: [RunningApplication],
         ranks: [String: Int],
         hasAccessibility: Bool,
         icons: any ApplicationIconPort
@@ -52,11 +53,13 @@ package struct TaskbarViewModel {
                 ),
                 isPinned: bundleIdentifier.map(pinnedIdentifiers.contains) ?? false,
                 isLauncher: false,
+                isRunning: true,
                 instanceCount: bundleIdentifier.flatMap { windowsPerApplication[$0] } ?? 1,
                 instancesOnThisDisplay: bundleIdentifier.flatMap { windowsHerePerApplication[$0] } ?? 1
             )
         }
 
+        let runningIdentifiers = Set(bundleIdentifiers.values)
         let representedIdentifiers = Set(windowEntries.compactMap(\.bundleIdentifier))
         let launchers = pinnedApps
             .filter { !representedIdentifiers.contains($0.bundleIdentifier) }
@@ -71,12 +74,41 @@ package struct TaskbarViewModel {
                     isFrontmost: false,
                     isPinned: true,
                     isLauncher: true,
+                    isRunning: runningIdentifiers.contains(app.bundleIdentifier),
                     instanceCount: windowsPerApplication[app.bundleIdentifier] ?? 0,
                     instancesOnThisDisplay: 0
                 )
             }
 
-        entries = TaskbarOrdering.ordered(entries: launchers + windowEntries, ranks: ranks)
+        let pinnedRepresented = Set(launchers.compactMap(\.bundleIdentifier))
+        let windowless = runningApplications
+            .filter { application in
+                guard let identifier = application.bundleIdentifier else { return false }
+
+                return !representedIdentifiers.contains(identifier)
+                    && !pinnedRepresented.contains(identifier)
+            }
+            .map { application in
+                TaskbarEntryModel(
+                    id: "app:\(application.bundleIdentifier ?? "")",
+                    title: application.localizedName ?? "",
+                    applicationName: application.localizedName ?? "",
+                    bundleIdentifier: application.bundleIdentifier,
+                    icon: icons.icon(forPid: application.pid),
+                    isMinimized: false,
+                    isFrontmost: false,
+                    isPinned: false,
+                    isLauncher: true,
+                    isRunning: true,
+                    instanceCount: 0,
+                    instancesOnThisDisplay: 0
+                )
+            }
+
+        entries = TaskbarOrdering.ordered(
+            entries: launchers + windowless + windowEntries,
+            ranks: ranks
+        )
         notice = hasAccessibility ? nil : .accessibilityMissing
     }
 }

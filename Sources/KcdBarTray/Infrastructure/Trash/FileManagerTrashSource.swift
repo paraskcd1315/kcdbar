@@ -6,6 +6,7 @@ import SwiftUI
 package final class FileManagerTrashSource: TrashPort {
     private var watcher: DispatchSourceFileSystemObject?
     private var descriptor: Int32 = -1
+    private var emptySound: NSSound?
 
     package init() {}
 
@@ -40,13 +41,23 @@ package final class FileManagerTrashSource: TrashPort {
                   at: url,
                   includingPropertiesForKeys: nil,
                   options: []
-              )
+              ),
+              !items.isEmpty
         else {
             return
         }
         for item in items {
             try? FileManager.default.removeItem(at: item)
         }
+        playEmptySound()
+    }
+
+    private func playEmptySound() {
+        let wanted = UserDefaults.standard.object(forKey: TrashSounds.interfaceEffectsKey) as? Bool
+        guard wanted ?? true else { return }
+
+        emptySound = NSSound(contentsOfFile: TrashSounds.empty, byReference: true)
+        emptySound?.play()
     }
 
     package func watch(_ onChange: @escaping () -> Void) {

@@ -15,20 +15,34 @@ package struct AccessibilityWindowSource: AxWindowSourcePort {
         WindowMatchingMetrics.fullScreenAttribute
     ]
 
-    package func windows(forPids pids: [pid_t]) -> [AxWindowRecord] {
-        pids.flatMap(windows(forPid:))
+    package func windows(forPids pids: [pid_t]) -> AxWindowScan {
+        var records: [AxWindowRecord] = []
+        var answered: Set<pid_t> = []
+
+        for pid in pids {
+            guard let elements = windowElements(forPid: pid) else { continue }
+            answered.insert(pid)
+            records.append(contentsOf: elements.enumerated().compactMap { index, element in
+                record(of: element, pid: pid, index: index)
+            })
+        }
+
+        return AxWindowScan(records: records, answeredPids: answered)
     }
 
-    private func windows(forPid pid: pid_t) -> [AxWindowRecord] {
+    private func windowElements(forPid pid: pid_t) -> [AXUIElement]? {
         let application = AXUIElementCreateApplication(pid)
         AXUIElementSetMessagingTimeout(application, WindowMatchingMetrics.accessibilityTimeout)
+        var value: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(
+            application,
+            kAXWindowsAttribute as CFString,
+            &value
+        ) == .success else {
+            return nil
+        }
 
-        guard let elements = copyValue(from: application, attribute: kAXWindowsAttribute) as? [AXUIElement] else {
-            return []
-        }
-        return elements.enumerated().compactMap { index, element in
-            record(of: element, pid: pid, index: index)
-        }
+        return value as? [AXUIElement] ?? []
     }
 
     private func record(of element: AXUIElement, pid: pid_t, index: Int) -> AxWindowRecord? {
@@ -73,11 +87,4 @@ package struct AccessibilityWindowSource: AxWindowSourcePort {
         return CGRect(origin: origin, size: extent)
     }
 
-    private func copyValue(from element: AXUIElement, attribute: String) -> CFTypeRef? {
-        var value: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(element, attribute as CFString, &value) == .success else {
-            return nil
-        }
-        return value
-    }
 }

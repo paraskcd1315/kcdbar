@@ -7,6 +7,7 @@ package struct TaskbarView: View {
     package let onActivate: (TaskbarEntryModel) -> Void
     package let onRequestAccessibility: () -> Void
     package let onOpenStart: () -> Void
+    package let onOpenSettings: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
     package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
@@ -19,6 +20,8 @@ package struct TaskbarView: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
+
+    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
@@ -39,6 +42,7 @@ package struct TaskbarView: View {
                 onActivate: onActivate,
                 onRequestAccessibility: onRequestAccessibility,
                 onOpenStart: onOpenStart,
+                onOpenSettings: onOpenSettings,
                 onTogglePin: onTogglePin,
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,
@@ -51,6 +55,8 @@ package struct TaskbarView: View {
                 trash: trash,
                 timer: timer,
                 totals: totals,
+
+                loginItem: loginItem,
                 onOpenTimer: onOpenTimer,
                 onToggleDesktop: onToggleDesktop
             )

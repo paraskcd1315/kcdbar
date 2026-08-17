@@ -34,7 +34,7 @@ package enum SoloWindowPolicy {
         }
     }
 
-    private static func focused(
+    package static func focused(
         frontmostPid: pid_t?,
         among windows: [ManagedWindow]
     ) -> ManagedWindow? {

@@ -1,14 +1,20 @@
 import Foundation
 
-/** Keeps one window per display, and hands the last one back when it is left alone. */
+/** Keeps one window per display, acting only when the user moves focus, and hands the last one back. */
 @MainActor
 package final class SoloWindowEnforcer {
     private let control: any WindowControlPort
+    private let isEnabled: () -> Bool
     private var memory = SoloWindowMemory()
-    private var lastEnforced: Date?
+    private var firstSeen: [WindowIdentity: Date] = [:]
+    private var lastFocus: WindowIdentity?
 
-    package init(control: any WindowControlPort) {
+    package init(
+        control: any WindowControlPort,
+        isEnabled: @escaping () -> Bool = { SoloWindowPreference.isEnabled }
+    ) {
         self.control = control
+        self.isEnabled = isEnabled
     }
 
     package func enforce(
@@ -17,23 +23,45 @@ package final class SoloWindowEnforcer {
         displays: [DisplayGeometry],
         now: Date = Date()
     ) {
-        memory.drop(identitiesNotIn: Set(windows.map(\.identity)))
+        guard isEnabled() else { return }
 
-        if let lastEnforced, now.timeIntervalSince(lastEnforced) < SoloWindowMetrics.interval {
+        let alive = Set(windows.map(\.identity))
+        note(windows, at: now)
+        memory.drop(identitiesNotIn: alive)
+
+        guard let focus = SoloWindowPolicy.focused(frontmostPid: frontmostPid, among: windows),
+              focus.identity != lastFocus
+        else {
             return
         }
-        lastEnforced = now
+        lastFocus = focus.identity
 
         let crowd = SoloWindowPolicy.toMinimise(
             frontmostPid: frontmostPid,
             among: windows,
             displays: displays
         )
+        .filter { settled($0, at: now) }
+
         guard crowd.isEmpty else {
             minimise(crowd, displays: displays)
             return
         }
         restoreIfDisplayIsBare(windows: windows, displays: displays)
+    }
+
+    private func note(_ windows: [ManagedWindow], at now: Date) {
+        let alive = Set(windows.map(\.identity))
+        firstSeen = firstSeen.filter { alive.contains($0.key) }
+        for window in windows where firstSeen[window.identity] == nil {
+            firstSeen[window.identity] = now
+        }
+    }
+
+    private func settled(_ window: ManagedWindow, at now: Date) -> Bool {
+        guard let seen = firstSeen[window.identity] else { return false }
+
+        return now.timeIntervalSince(seen) >= SoloWindowMetrics.grace
     }
 
     private func minimise(_ crowd: [ManagedWindow], displays: [DisplayGeometry]) {

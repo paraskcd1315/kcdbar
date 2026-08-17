@@ -5,16 +5,12 @@ package struct WorkspaceApplicationLauncher: ApplicationLaunchPort {
     package init() {}
 
     package func launch(bundleIdentifier: String) {
-        if let running = NSRunningApplication
-            .runningApplications(withBundleIdentifier: bundleIdentifier)
-            .first {
-            running.activate()
-            return
-        }
         guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier)
         else {
             return
         }
-        NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration())
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.activates = true
+        NSWorkspace.shared.openApplication(at: url, configuration: configuration)
     }
 }

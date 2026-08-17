@@ -19,16 +19,26 @@ package final class AppServices {
         source: CoreWlanSource(),
         links: SystemConfigurationLinkSource()
     )
-    package let trash = TrashMonitor(source: FileManagerTrashSource())
+    package let trash = TrashMonitor(
+        source: FileManagerTrashSource(),
+        confirmation: AlertTrashConfirmation()
+    )
     package let timer = TimerMonitor(
         source: KcdSignalTimerSource(),
         tickets: ConsoleTicketOpener()
     )
     package let totals = TotalsMonitor(source: KcdSignalTotalsSource())
+    package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
+    package let settings: BarSettingsState
     package let pins: PinnedAppState
+    package let startPins: PinnedAppState
+    package let startGroups: StartGroupState
+    package let panelEditor: any PanelTextEditingPort = AppKitPanelTextEditing()
+    package let applications: ApplicationCatalogueState
+    package let usage: ApplicationUsageState
     package let order = EntryOrderMemory()
     package let desktop = ShowDesktopState()
     package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
@@ -38,6 +48,9 @@ package final class AppServices {
     package let pasteboard: any PasteboardPort = AppKitPasteboard()
     package let newWindow: any NewWindowPort = AccessibilityNewWindow()
     package let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
+    package let power: any PowerActionPort = LoginWindowPowerControl()
+    package let userPicture: any UserPicturePort = CollaborationUserPicture()
+    package let settingsWindow = SettingsWindowHost()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -61,13 +74,13 @@ package final class AppServices {
         battery.refresh()
         overlap.enforce(
             preset: activePreset,
-            windows: registry.windows,
+            windows: registry.taskbarEntries,
             displays: registry.displays,
             now: now
         )
         solo.enforce(
             frontmostPid: registry.frontmostPid,
-            windows: registry.windows,
+            windows: registry.taskbarEntries,
             displays: registry.displays,
             now: now
         )
@@ -163,12 +176,27 @@ package final class AppServices {
             displaySource: ScreenGeometrySource(),
             authorization: AccessibilityAuthorization()
         )
-        store = PreferencesStore.opened()
-        pins = PinnedAppState(store: store)
+        let opened = PreferencesStore.opened()
+        store = opened
+        settings = BarSettingsState(store: opened)
+        pins = PinnedAppState(store: opened)
+        startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
+        startGroups = StartGroupState(store: opened)
+        usage = ApplicationUsageState(store: opened)
+
+        let indexed = SpotlightApplicationSource()
+        applications = ApplicationCatalogueState(
+            catalogue: MergedApplicationSource([DirectoryApplicationSource(), indexed]),
+            watcher: indexed
+        )
     }
 
     package func loadPreferences() async {
+        settings.observe { [weak self] preset in self?.apply(preset: preset) }
+        await settings.load()
         await pins.load()
+        await startPins.load()
+        await usage.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
         refreshAndEnforce()
     }
@@ -182,12 +210,13 @@ package final class AppServices {
         guard let window = LauncherWindowCycle.next(
             pids: pids(of: bundleIdentifier),
             onDisplay: displayId,
-            among: registry.windows,
+            among: registry.taskbarEntries,
             displays: registry.displays,
             frontmostPid: registry.frontmostPid
         )
         else {
             launcher.launch(bundleIdentifier: bundleIdentifier)
+            usage.note(launchOf: bundleIdentifier)
             return
         }
 
@@ -206,6 +235,7 @@ package final class AppServices {
               newWindow.supportsNewWindow(pid: pid)
         else {
             launcher.launch(bundleIdentifier: bundleIdentifier)
+            usage.note(launchOf: bundleIdentifier)
             return
         }
         _ = newWindow.openNewWindow(pid: pid, placingOn: display.frame)
@@ -240,6 +270,58 @@ package final class AppServices {
                 presentation: presentation,
                 arrowX: arrowX
             )
+        }
+    }
+
+    package func openStartMenu() {
+        guard !popover.isPresenting(.start) else {
+            popover.dismiss()
+            return
+        }
+
+        popover.present(.start, anchor: popoverAnchor(), takesFocus: true) {
+            [applications, usage, startPins, startGroups, panelEditor, icons, launcher, power, popover, spotlight, userPicture]
+            presentation, arrowX in
+            StartMenuPresentation.content(
+                catalogue: applications,
+                usage: usage,
+                pinned: startPins,
+                groups: startGroups,
+                editor: panelEditor,
+                icons: icons,
+                userName: NSFullUserName(),
+                avatar: userPicture.picture(),
+                presentation: presentation,
+                arrowX: arrowX,
+                onLaunch: { [usage] identifier in
+                    launcher.launch(bundleIdentifier: identifier)
+                    usage.note(launchOf: identifier)
+                },
+                onTogglePin: { [weak self] in self?.toggleStartPin(bundleIdentifier: $0) },
+                onPower: { action in
+                    popover.dismiss()
+                    _ = power.perform(action)
+                },
+                onSearch: {
+                    popover.dismiss()
+                    _ = spotlight.open()
+                }
+            )
+        }
+    }
+
+    package func toggleStartPin(bundleIdentifier: String) {
+        let name = applications.application(withBundleIdentifier: bundleIdentifier)?.displayName
+
+        Task {
+            if startPins.apps.contains(where: { $0.bundleIdentifier == bundleIdentifier }) {
+                await startPins.unpin(bundleIdentifier: bundleIdentifier)
+            } else {
+                await startPins.pin(
+                    bundleIdentifier: bundleIdentifier,
+                    displayName: name ?? bundleIdentifier
+                )
+            }
         }
     }
 
@@ -309,6 +391,20 @@ package final class AppServices {
         }
     }
 
+    package func openSettings() {
+        settingsWindow.present { [settings, loginItem] in
+            SettingsRootView(settings: settings, loginItem: loginItem)
+        }
+    }
+
+    package func apply(preset: BarPreset) {
+        guard preset != activePreset else { return }
+
+        activePreset = preset
+        bar?.present(preset: preset)
+        refreshAndEnforce()
+    }
+
     package func startBar(preset: BarPreset) {
         activePreset = preset
         let host = BarPanelHost(
@@ -317,6 +413,8 @@ package final class AppServices {
             trash: trash,
             timer: timer,
             totals: totals,
+
+            loginItem: loginItem,
             pins: pins,
             order: order,
             desktop: desktop,
@@ -326,7 +424,8 @@ package final class AppServices {
                 self?.activate(entry: entry, onDisplay: displayId)
             },
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
-            onOpenStart: { [spotlight] in _ = spotlight.openApplications() },
+            onOpenStart: { [weak self] in self?.openStartMenu() },
+            onOpenSettings: { [weak self] in self?.openSettings() },
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onCloseWindow: { [weak self] entry in self?.closeWindow(entry: entry) },
             onQuit: { [weak self] entry in self?.quit(entry: entry) },

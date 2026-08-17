@@ -1,0 +1,41 @@
+import KcdBarDesignSystem
+import SwiftUI
+
+package struct StartMenuCatalogueContent: View {
+    package let catalogue: ApplicationCatalogueState
+    package let pinnedIdentifiers: Set<String>
+    package let icons: any ApplicationIconPort
+    package let iconNamespace: Namespace.ID
+    package let onLaunch: (String) -> Void
+    package let onTogglePin: (String) -> Void
+    package let onOpenCategory: (String) -> Void
+    package let onIndex: () -> Void
+
+    package var body: some View {
+        if catalogue.isLoading {
+            StartMenuAppListSkeleton()
+        } else if catalogue.showsFolders {
+            StartMenuCategoryGrid(
+                sections: catalogue.sections,
+                icons: icons,
+                iconNamespace: iconNamespace,
+                onOpen: onOpenCategory
+            )
+        } else {
+            ForEach(catalogue.visibleSections) { section in
+                StartMenuAppBand(
+                    section: section,
+                    layout: catalogue.layout,
+                    showsHeading: catalogue.openedSection == nil,
+                    onIndex: onIndex,
+                    pinnedIdentifiers: pinnedIdentifiers,
+                    icons: icons,
+                    iconNamespace: iconNamespace,
+                    onLaunch: onLaunch,
+                    onTogglePin: onTogglePin
+                )
+                .id(section.key)
+            }
+        }
+    }
+}

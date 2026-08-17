@@ -6,6 +6,7 @@ package struct TaskbarItems: View {
     package let viewModel: TaskbarViewModel
     package let onActivate: (TaskbarEntryModel) -> Void
     package let onOpenStart: () -> Void
+    package let onOpenSettings: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
     package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
@@ -18,12 +19,17 @@ package struct TaskbarItems: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
+    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
             if viewModel.preset.startButton != .hidden {
-                TaskbarStartButton(onOpen: onOpenStart)
+                TaskbarStartButton(
+                    onOpen: onOpenStart,
+                    onOpenSettings: onOpenSettings,
+                    loginItem: loginItem
+                )
             }
             TaskbarEntryStrip(
                 entries: viewModel.entries,
@@ -39,13 +45,12 @@ package struct TaskbarItems: View {
             TaskbarTrash(monitor: trash)
             TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
             if viewModel.preset.showsStatusArea {
-                TaskbarTotals(monitor: totals)
-                TaskbarTimer(monitor: timer, onOpen: onOpenTimer)
                 if battery.isPresent {
                     TaskbarBattery(state: battery, onOpen: onOpenBattery)
                 }
                 TaskbarControlCentreButton(onOpen: onOpenControlCentre)
                 TaskbarClock(onOpen: onOpenNotifications)
+                TaskbarTracking(timer: timer, totals: totals, onOpenTimer: onOpenTimer)
             }
         }
     }

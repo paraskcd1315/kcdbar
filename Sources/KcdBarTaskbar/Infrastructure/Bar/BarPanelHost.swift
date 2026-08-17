@@ -20,6 +20,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let trash: TrashMonitor
     private let timer: TimerMonitor
     private let totals: TotalsMonitor
+    private let loginItem: LoginItemState
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -28,6 +29,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onActivate: (TaskbarEntryModel, Int) -> Void
     private let onRequestAccessibility: () -> Void
     private let onOpenStart: () -> Void
+    private let onOpenSettings: () -> Void
     private let onTogglePin: (TaskbarEntryModel) -> Void
     private let onCloseWindow: (TaskbarEntryModel) -> Void
     private let onQuit: (TaskbarEntryModel) -> Void
@@ -45,6 +47,7 @@ package final class BarPanelHost: BarPanelHostPort {
         trash: TrashMonitor,
         timer: TimerMonitor,
         totals: TotalsMonitor,
+        loginItem: LoginItemState,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -53,6 +56,7 @@ package final class BarPanelHost: BarPanelHostPort {
         onActivate: @escaping (TaskbarEntryModel, Int) -> Void,
         onRequestAccessibility: @escaping () -> Void,
         onOpenStart: @escaping () -> Void,
+        onOpenSettings: @escaping () -> Void,
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
         onCloseWindow: @escaping (TaskbarEntryModel) -> Void,
         onQuit: @escaping (TaskbarEntryModel) -> Void,
@@ -76,6 +80,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.trash = trash
         self.timer = timer
         self.totals = totals
+        self.loginItem = loginItem
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -87,6 +92,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.onActivate = onActivate
         self.onRequestAccessibility = onRequestAccessibility
         self.onOpenStart = onOpenStart
+        self.onOpenSettings = onOpenSettings
     }
 
     package func present(preset: BarPreset) {
@@ -281,6 +287,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 onActivate: { [onActivate] in onActivate($0, display.id) },
                 onRequestAccessibility: onRequestAccessibility,
                 onOpenStart: onOpenStart,
+                onOpenSettings: onOpenSettings,
                 onTogglePin: onTogglePin,
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,
@@ -294,6 +301,8 @@ package final class BarPanelHost: BarPanelHostPort {
                 trash: trash,
                 timer: timer,
                 totals: totals,
+
+                loginItem: loginItem,
                 onOpenTimer: onOpenTimer,
                 onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
             )

@@ -3,17 +3,24 @@ import CoreGraphics
 package enum WindowReconciler {
     package static func reconcile(
         coreGraphics: [CgWindowRecord],
-        accessibility: [AxWindowRecord],
+        accessibility: AxWindowScan,
         previous: [ManagedWindow]
     ) -> [ManagedWindow] {
         let manageable = coreGraphics.filter(isManageable)
-        var unmatched = accessibility.filter(AxWindowClassification.isSwitchable)
+        var unmatched = accessibility.records.filter(AxWindowClassification.isSwitchable)
         var reconciled: [ManagedWindow] = []
 
         for record in manageable.sorted(by: { $0.zOrder < $1.zOrder }) {
             let matchIndex = indexOfMatch(for: record, in: unmatched)
             let match = matchIndex.map { unmatched.remove(at: $0) }
-            reconciled.append(merge(coreGraphics: record, accessibility: match, previous: previous))
+            reconciled.append(
+                merge(
+                    coreGraphics: record,
+                    accessibility: match,
+                    answered: accessibility.answeredPids.contains(record.ownerPid),
+                    previous: previous
+                )
+            )
         }
 
         for record in unmatched where record.isMinimized {
@@ -33,7 +40,9 @@ package enum WindowReconciler {
         if let index = candidates.firstIndex(where: { $0.cgWindowId == record.windowId }) {
             return index
         }
-        let samePid = candidates.enumerated().filter { $0.element.ownerPid == record.ownerPid }
+        let samePid = candidates.enumerated().filter {
+            $0.element.ownerPid == record.ownerPid && $0.element.cgWindowId == nil
+        }
         if let title = record.title, !title.isEmpty,
            let entry = samePid.first(where: { $0.element.title == title }) {
             return entry.offset
@@ -56,6 +65,7 @@ package enum WindowReconciler {
     private static func merge(
         coreGraphics record: CgWindowRecord,
         accessibility match: AxWindowRecord?,
+        answered: Bool,
         previous: [ManagedWindow]
     ) -> ManagedWindow {
         let identity = WindowIdentity(
@@ -64,7 +74,7 @@ package enum WindowReconciler {
             fallbackKey: fallbackKey(pid: record.ownerPid, bounds: record.bounds)
         )
         let earlier = previous.first { $0.identity == identity }
-        let wasConfirmed = earlier?.source == .both
+        let wasConfirmed = earlier?.source == .both && !answered
 
         return ManagedWindow(
             identity: identity,

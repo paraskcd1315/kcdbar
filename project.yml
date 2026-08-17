@@ -47,6 +47,7 @@ targets:
         LSUIElement: true
         NSHumanReadableCopyright: ""
         NSBluetoothAlwaysUsageDescription: "KCDBar shows Bluetooth in its Control Center and turns it on and off."
+        NSAppleEventsUsageDescription: "KCDBar asks macOS to sleep, restart, shut down or log out from the Start menu, so the system shows its own confirmation."
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar

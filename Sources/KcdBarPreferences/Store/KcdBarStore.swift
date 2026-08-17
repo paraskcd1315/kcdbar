@@ -4,7 +4,13 @@ import SwiftData
 
 /** Everything KCDBar remembers between launches. */
 @ModelActor
-actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort {
+actor KcdBarStore:
+    PresetStorePort,
+    DockSnapshotStorePort,
+    PinnedAppStorePort,
+    StartPinStorePort,
+    StartGroupStorePort,
+    ApplicationUsageStorePort {
     package static let fileName = "kcdbar.store"
 
     static func container(at url: URL? = nil, inMemory: Bool = false) throws -> ModelContainer {
@@ -12,7 +18,11 @@ actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort {
             StoredPreset.self,
             StoredDockSnapshot.self,
             StoredPreferences.self,
-            StoredPinnedApp.self
+            StoredPinnedApp.self,
+            StoredStartPin.self,
+            StoredStartGroup.self,
+            StoredStartGroupMembership.self,
+            StoredApplicationUsage.self
         ])
         let configuration = inMemory
             ? ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -146,6 +156,196 @@ actor KcdBarStore: PresetStorePort, DockSnapshotStorePort, PinnedAppStorePort {
             storedPin(bundleIdentifier: app.bundleIdentifier)?.order = app.order
         }
         try? modelContext.save()
+    }
+
+    func startPins() async -> [PinnedApp] {
+        let stored = (try? modelContext.fetch(FetchDescriptor<StoredStartPin>())) ?? []
+
+        return stored
+            .sorted { $0.order < $1.order }
+            .map {
+                PinnedApp(
+                    bundleIdentifier: $0.bundleIdentifier,
+                    displayName: $0.displayName,
+                    order: $0.order
+                )
+            }
+    }
+
+    func pinToStart(_ app: PinnedApp) async {
+        if let held = storedStartPin(bundleIdentifier: app.bundleIdentifier) {
+            held.order = app.order
+            held.displayName = app.displayName
+        } else {
+            modelContext.insert(
+                StoredStartPin(
+                    bundleIdentifier: app.bundleIdentifier,
+                    order: app.order,
+                    displayName: app.displayName
+                )
+            )
+        }
+        try? modelContext.save()
+    }
+
+    func unpinFromStart(bundleIdentifier: String) async {
+        guard let held = storedStartPin(bundleIdentifier: bundleIdentifier) else { return }
+
+        modelContext.delete(held)
+        try? modelContext.save()
+    }
+
+    func reorderStartPins(_ apps: [PinnedApp]) async {
+        for app in apps {
+            storedStartPin(bundleIdentifier: app.bundleIdentifier)?.order = app.order
+        }
+        try? modelContext.save()
+    }
+
+    func startGroups() async -> [StartGroup] {
+        let stored = (try? modelContext.fetch(FetchDescriptor<StoredStartGroup>())) ?? []
+
+        return stored
+            .sorted { $0.order < $1.order }
+            .map {
+                StartGroup(
+                    id: $0.id,
+                    title: $0.title,
+                    titleKey: $0.titleKey,
+                    order: $0.order,
+                    isCollapsed: $0.isCollapsed
+                )
+            }
+    }
+
+    func saveStartGroup(_ group: StartGroup) async {
+        if let held = storedGroup(id: group.id) {
+            held.title = group.title
+            held.titleKey = group.titleKey
+            held.order = group.order
+            held.isCollapsed = group.isCollapsed
+        } else {
+            modelContext.insert(
+                StoredStartGroup(
+                    id: group.id,
+                    title: group.title,
+                    titleKey: group.titleKey,
+                    order: group.order,
+                    isCollapsed: group.isCollapsed
+                )
+            )
+        }
+        try? modelContext.save()
+    }
+
+    func deleteStartGroup(id: String) async {
+        if let held = storedGroup(id: id) {
+            modelContext.delete(held)
+        }
+        let members = (try? modelContext.fetch(
+            FetchDescriptor<StoredStartGroupMembership>(predicate: #Predicate { $0.groupId == id })
+        )) ?? []
+        for member in members {
+            modelContext.delete(member)
+        }
+        try? modelContext.save()
+    }
+
+    func startGroupMemberships() async -> [StartGroupMembership] {
+        let stored = (try? modelContext.fetch(FetchDescriptor<StoredStartGroupMembership>())) ?? []
+
+        return stored.map {
+            StartGroupMembership(
+                bundleIdentifier: $0.bundleIdentifier,
+                groupId: $0.groupId,
+                order: $0.order
+            )
+        }
+    }
+
+    func saveStartGroupMembership(_ membership: StartGroupMembership) async {
+        if let held = storedMembership(bundleIdentifier: membership.bundleIdentifier) {
+            held.groupId = membership.groupId
+            held.order = membership.order
+        } else {
+            modelContext.insert(
+                StoredStartGroupMembership(
+                    bundleIdentifier: membership.bundleIdentifier,
+                    groupId: membership.groupId,
+                    order: membership.order
+                )
+            )
+        }
+        try? modelContext.save()
+    }
+
+    func clearStartGroupMembership(bundleIdentifier: String) async {
+        guard let held = storedMembership(bundleIdentifier: bundleIdentifier) else { return }
+
+        modelContext.delete(held)
+        try? modelContext.save()
+    }
+
+    func applicationUsage() async -> [ApplicationUsage] {
+        let stored = (try? modelContext.fetch(FetchDescriptor<StoredApplicationUsage>())) ?? []
+
+        return stored.map {
+            ApplicationUsage(
+                bundleIdentifier: $0.bundleIdentifier,
+                count: $0.count,
+                lastLaunchedAt: $0.lastLaunchedAt
+            )
+        }
+    }
+
+    func recordLaunch(bundleIdentifier: String, at moment: Date) async {
+        if let held = storedUsage(bundleIdentifier: bundleIdentifier) {
+            held.count += 1
+            held.lastLaunchedAt = moment
+        } else {
+            modelContext.insert(
+                StoredApplicationUsage(
+                    bundleIdentifier: bundleIdentifier,
+                    count: 1,
+                    lastLaunchedAt: moment
+                )
+            )
+        }
+        try? modelContext.save()
+    }
+
+    private func storedUsage(bundleIdentifier: String) -> StoredApplicationUsage? {
+        var query = FetchDescriptor<StoredApplicationUsage>(
+            predicate: #Predicate { $0.bundleIdentifier == bundleIdentifier }
+        )
+        query.fetchLimit = 1
+
+        return try? modelContext.fetch(query).first
+    }
+
+    private func storedGroup(id: String) -> StoredStartGroup? {
+        var query = FetchDescriptor<StoredStartGroup>(predicate: #Predicate { $0.id == id })
+        query.fetchLimit = 1
+
+        return try? modelContext.fetch(query).first
+    }
+
+    private func storedMembership(bundleIdentifier: String) -> StoredStartGroupMembership? {
+        var query = FetchDescriptor<StoredStartGroupMembership>(
+            predicate: #Predicate { $0.bundleIdentifier == bundleIdentifier }
+        )
+        query.fetchLimit = 1
+
+        return try? modelContext.fetch(query).first
+    }
+
+    private func storedStartPin(bundleIdentifier: String) -> StoredStartPin? {
+        var query = FetchDescriptor<StoredStartPin>(
+            predicate: #Predicate { $0.bundleIdentifier == bundleIdentifier }
+        )
+        query.fetchLimit = 1
+
+        return try? modelContext.fetch(query).first
     }
 
     private func preferences() -> StoredPreferences {

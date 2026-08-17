@@ -1,5 +1,5 @@
 import Foundation
 
 package protocol AxWindowSourcePort: Sendable {
-    func windows(forPids pids: [pid_t]) -> [AxWindowRecord]
+    func windows(forPids pids: [pid_t]) -> AxWindowScan
 }

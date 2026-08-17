@@ -8,9 +8,11 @@ package final class TrashMonitor {
     package private(set) var state: TrashState = .empty
 
     private let source: any TrashPort
+    private let confirmation: any TrashConfirmationPort
 
-    package init(source: any TrashPort) {
+    package init(source: any TrashPort, confirmation: any TrashConfirmationPort) {
         self.source = source
+        self.confirmation = confirmation
     }
 
     package var icon: Image? {
@@ -31,6 +33,8 @@ package final class TrashMonitor {
     }
 
     package func empty() {
+        guard confirmation.confirmEmpty() else { return }
+
         source.empty()
         refresh()
     }

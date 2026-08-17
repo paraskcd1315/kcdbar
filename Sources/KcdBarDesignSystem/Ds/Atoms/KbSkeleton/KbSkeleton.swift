@@ -4,16 +4,22 @@ import SwiftUI
 package struct KbSkeleton: View {
     package var width: CGFloat?
     package var height: CGFloat = KbSkeletonMetrics.lineHeight
+    package var shape: AnyShape = AnyShape(Capsule())
 
     @State private var isShimmering = false
 
-    package init(width: CGFloat? = nil, height: CGFloat = KbSkeletonMetrics.lineHeight) {
+    package init(
+        width: CGFloat? = nil,
+        height: CGFloat = KbSkeletonMetrics.lineHeight,
+        shape: AnyShape = AnyShape(Capsule())
+    ) {
         self.width = width
         self.height = height
+        self.shape = shape
     }
 
     package var body: some View {
-        Capsule()
+        shape
             .fill(KbColors.onSurface.opacity(KbSkeletonMetrics.baseOpacity))
             .frame(width: width, height: height)
             .frame(maxWidth: width == nil ? .infinity : nil, alignment: .leading)

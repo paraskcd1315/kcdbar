@@ -13,7 +13,8 @@ struct BarVisibilityTests {
         bounds: CGRect,
         isFullScreen: Bool,
         isMinimized: Bool = false,
-        isOnScreen: Bool = true
+        isOnScreen: Bool = true,
+        zOrder: Int? = 0
     ) -> ManagedWindow {
         ManagedWindow(
             identity: WindowIdentity(ownerPid: 1, cgWindowId: id, fallbackKey: "1:\(id)"),
@@ -24,7 +25,7 @@ struct BarVisibilityTests {
             isMinimized: isMinimized,
             isFullScreen: isFullScreen,
             isOnScreen: isOnScreen,
-            zOrder: 0,
+            zOrder: zOrder,
             source: .both
         )
     }
@@ -55,9 +56,34 @@ struct BarVisibilityTests {
         #expect(BarVisibilityPolicy.isHidden(onDisplay: 1, windows: windows, displays: displays) == false)
     }
 
-    @Test func anOffScreenFullScreenWindowOnAnotherSpaceDoesNotHideTheBar() {
-        let windows = [window(id: 10, bounds: displays[0].frame, isFullScreen: true, isOnScreen: false)]
+    @Test func aFullScreenWindowOnAnotherSpaceDoesNotHideTheBar() {
+        let windows = [
+            window(id: 10, bounds: displays[0].frame, isFullScreen: true, zOrder: Int.max),
+            window(id: 11, bounds: CGRect(x: 40, y: 40, width: 800, height: 600), isFullScreen: false)
+        ]
 
         #expect(BarVisibilityPolicy.isHidden(onDisplay: 1, windows: windows, displays: displays) == false)
+    }
+
+    @Test func aFullScreenWindowBehindAnOrdinaryOneDoesNotHideTheBar() {
+        let windows = [
+            window(id: 10, bounds: displays[0].frame, isFullScreen: true, zOrder: 4),
+            window(id: 11, bounds: CGRect(x: 40, y: 40, width: 800, height: 600), isFullScreen: false, zOrder: 1)
+        ]
+
+        #expect(BarVisibilityPolicy.isHidden(onDisplay: 1, windows: windows, displays: displays) == false)
+    }
+
+    @Test func aFullScreenWindowInFrontOfAnOrdinaryOneHidesTheBar() {
+        let windows = [
+            window(id: 10, bounds: displays[0].frame, isFullScreen: true, zOrder: 1),
+            window(id: 11, bounds: CGRect(x: 40, y: 40, width: 800, height: 600), isFullScreen: false, zOrder: 4)
+        ]
+
+        #expect(BarVisibilityPolicy.isHidden(onDisplay: 1, windows: windows, displays: displays))
+    }
+
+    @Test func anEmptyDisplayKeepsItsBar() {
+        #expect(BarVisibilityPolicy.isHidden(onDisplay: 1, windows: [], displays: displays) == false)
     }
 }

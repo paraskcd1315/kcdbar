@@ -9,4 +9,5 @@ package enum KbPopoverMetrics {
     package static let dividerHeight: CGFloat = 1
     package static let centringDivisor: CGFloat = 2
     package static let unanchoredArrowX: CGFloat = 0
+    package static let hitTestAlpha: CGFloat = 0.004
 }

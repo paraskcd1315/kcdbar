@@ -3,6 +3,7 @@ import SwiftUI
 
 package struct TaskbarInstanceDots: View {
     package let count: Int
+    package let isRunning: Bool
     package let isFrontmost: Bool
 
     package var body: some View {
@@ -17,6 +18,9 @@ package struct TaskbarInstanceDots: View {
     }
 
     private var shownCount: Int {
-        min(TaskbarDotCount.dots(windows: count), TaskbarMetrics.maximumInstanceDots)
+        min(
+            TaskbarDotCount.dots(windows: count, isRunning: isRunning),
+            TaskbarMetrics.maximumInstanceDots
+        )
     }
 }
