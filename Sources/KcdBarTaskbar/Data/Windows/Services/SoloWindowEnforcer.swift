@@ -17,6 +17,8 @@ package final class SoloWindowEnforcer {
         displays: [DisplayGeometry],
         now: Date = Date()
     ) {
+        guard SoloWindowPreference.isEnabled else { return }
+
         memory.drop(identitiesNotIn: Set(windows.map(\.identity)))
 
         if let lastEnforced, now.timeIntervalSince(lastEnforced) < SoloWindowMetrics.interval {
