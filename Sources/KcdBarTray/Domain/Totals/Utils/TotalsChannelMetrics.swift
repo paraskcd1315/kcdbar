@@ -1,4 +1,4 @@
-/** One channel per tracker, so a reader is never woken by the other one's week. */
+/** One channel per tracker, and the bar follows whichever of them published last. */
 package enum TotalsChannelMetrics {
-    package static let channelName = "totals.kimai"
+    package static let channelNames = ["totals.toggl", "totals.kimai"]
 }
