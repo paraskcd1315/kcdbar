@@ -6,6 +6,7 @@ package struct TaskbarItems: View {
     package let viewModel: TaskbarViewModel
     package let onActivate: (TaskbarEntryModel) -> Void
     package let onOpenStart: () -> Void
+    package let onOpenSettings: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
     package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
@@ -24,7 +25,11 @@ package struct TaskbarItems: View {
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
             if viewModel.preset.startButton != .hidden {
-                TaskbarStartButton(onOpen: onOpenStart, loginItem: loginItem)
+                TaskbarStartButton(
+                    onOpen: onOpenStart,
+                    onOpenSettings: onOpenSettings,
+                    loginItem: loginItem
+                )
             }
             TaskbarEntryStrip(
                 entries: viewModel.entries,

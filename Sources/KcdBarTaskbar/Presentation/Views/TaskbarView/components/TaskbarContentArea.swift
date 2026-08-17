@@ -7,6 +7,7 @@ package struct TaskbarContentArea: View {
     package let onActivate: (TaskbarEntryModel) -> Void
     package let onRequestAccessibility: () -> Void
     package let onOpenStart: () -> Void
+    package let onOpenSettings: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
     package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
@@ -31,6 +32,7 @@ package struct TaskbarContentArea: View {
                     viewModel: viewModel,
                     onActivate: onActivate,
                     onOpenStart: onOpenStart,
+                    onOpenSettings: onOpenSettings,
                     onTogglePin: onTogglePin,
                     onCloseWindow: onCloseWindow,
                     onQuit: onQuit,

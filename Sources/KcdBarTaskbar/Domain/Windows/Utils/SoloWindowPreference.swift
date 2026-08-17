@@ -7,4 +7,8 @@ package enum SoloWindowPreference {
     package static var isEnabled: Bool {
         UserDefaults.standard.bool(forKey: key)
     }
+
+    package static func set(_ enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: key)
+    }
 }

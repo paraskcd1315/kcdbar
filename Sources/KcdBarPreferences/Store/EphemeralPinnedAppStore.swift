@@ -6,8 +6,35 @@ package actor EphemeralPinnedAppStore:
     PinnedAppStorePort,
     StartPinStorePort,
     StartGroupStorePort,
-    ApplicationUsageStorePort {
+    ApplicationUsageStorePort,
+    PresetStorePort {
     package init() {}
+
+    private var savedPresets: [BarPreset] = []
+    private var activePresetName = BarPresetCatalogue.default.name
+
+    package func presets() async -> [BarPreset] {
+        let savedNames = Set(savedPresets.map(\.name))
+
+        return BarPresetCatalogue.all.filter { !savedNames.contains($0.name) } + savedPresets
+    }
+
+    package func save(_ preset: BarPreset) async {
+        savedPresets.removeAll { $0.name == preset.name }
+        savedPresets.append(preset)
+    }
+
+    package func remove(named name: String) async {
+        savedPresets.removeAll { $0.name == name }
+    }
+
+    package func activePreset() async -> BarPreset {
+        await presets().first { $0.name == activePresetName } ?? BarPresetCatalogue.default
+    }
+
+    package func setActivePreset(named name: String) async {
+        activePresetName = name
+    }
 
     private var apps: [PinnedApp] = []
     private var startApps: [PinnedApp] = []

@@ -32,6 +32,7 @@ package final class AppServices {
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
+    package let settings: BarSettingsState
     package let pins: PinnedAppState
     package let startPins: PinnedAppState
     package let startGroups: StartGroupState
@@ -49,6 +50,7 @@ package final class AppServices {
     package let menuExtras: any SystemMenuExtraPort = AccessibilitySystemMenuExtras()
     package let power: any PowerActionPort = LoginWindowPowerControl()
     package let userPicture: any UserPicturePort = CollaborationUserPicture()
+    package let settingsWindow = SettingsWindowHost()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -176,6 +178,7 @@ package final class AppServices {
         )
         let opened = PreferencesStore.opened()
         store = opened
+        settings = BarSettingsState(store: opened)
         pins = PinnedAppState(store: opened)
         startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
         startGroups = StartGroupState(store: opened)
@@ -189,6 +192,8 @@ package final class AppServices {
     }
 
     package func loadPreferences() async {
+        settings.observe { [weak self] preset in self?.apply(preset: preset) }
+        await settings.load()
         await pins.load()
         await startPins.load()
         await usage.load()
@@ -386,6 +391,20 @@ package final class AppServices {
         }
     }
 
+    package func openSettings() {
+        settingsWindow.present { [settings, loginItem] in
+            SettingsRootView(settings: settings, loginItem: loginItem)
+        }
+    }
+
+    package func apply(preset: BarPreset) {
+        guard preset != activePreset else { return }
+
+        activePreset = preset
+        bar?.present(preset: preset)
+        refreshAndEnforce()
+    }
+
     package func startBar(preset: BarPreset) {
         activePreset = preset
         let host = BarPanelHost(
@@ -406,6 +425,7 @@ package final class AppServices {
             },
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
             onOpenStart: { [weak self] in self?.openStartMenu() },
+            onOpenSettings: { [weak self] in self?.openSettings() },
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onCloseWindow: { [weak self] entry in self?.closeWindow(entry: entry) },
             onQuit: { [weak self] entry in self?.quit(entry: entry) },
