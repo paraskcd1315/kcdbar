@@ -1,5 +1,5 @@
 import Foundation
 
 package enum SoloWindowMetrics {
-    package static let interval: TimeInterval = 0.35
+    package static let grace: TimeInterval = 2
 }
