@@ -69,13 +69,13 @@ package final class AppServices {
         battery.refresh()
         overlap.enforce(
             preset: activePreset,
-            windows: registry.windows,
+            windows: registry.taskbarEntries,
             displays: registry.displays,
             now: now
         )
         solo.enforce(
             frontmostPid: registry.frontmostPid,
-            windows: registry.windows,
+            windows: registry.taskbarEntries,
             displays: registry.displays,
             now: now
         )
