@@ -19,7 +19,10 @@ package final class AppServices {
         source: CoreWlanSource(),
         links: SystemConfigurationLinkSource()
     )
-    package let trash = TrashMonitor(source: FileManagerTrashSource())
+    package let trash = TrashMonitor(
+        source: FileManagerTrashSource(),
+        confirmation: AlertTrashConfirmation()
+    )
     package let timer = TimerMonitor(
         source: KcdSignalTimerSource(),
         tickets: ConsoleTicketOpener()
