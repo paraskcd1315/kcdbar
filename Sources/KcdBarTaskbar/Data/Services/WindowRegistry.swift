@@ -9,6 +9,7 @@ package final class WindowRegistry {
     package private(set) var frontmostPid: pid_t?
     package private(set) var hasAccessibility = false
     package private(set) var bundleIdentifiers: [pid_t: String] = [:]
+    package private(set) var applications: [RunningApplication] = []
     package private(set) var lastRefreshDuration: TimeInterval = 0
     package private(set) var lastScanCounts: WindowScanCounts = .empty
 
@@ -52,7 +53,9 @@ package final class WindowRegistry {
         displays = displaySource.currentDisplays()
         frontmostPid = applicationsSource.frontmostPid
         let applications = applicationsSource.currentApplications()
+            .filter { $0.pid != ProcessInfo.processInfo.processIdentifier }
         let byPid = Dictionary(uniqueKeysWithValues: applications.map { ($0.pid, $0) })
+        self.applications = applications
         bundleIdentifiers = byPid.compactMapValues(\.bundleIdentifier)
         let coreGraphics = coreGraphicsSource.currentWindows()
         let accessibility = accessibilitySource.windows(forPids: pidsWorthAsking(in: coreGraphics))

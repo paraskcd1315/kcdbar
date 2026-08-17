@@ -66,6 +66,7 @@ package struct TaskbarRootView: View {
             frontmostPid: registry.frontmostPid,
             bundleIdentifiers: registry.bundleIdentifiers,
             pinnedApps: pins.apps,
+            runningApplications: registry.applications,
             ranks: order.ranks,
             hasAccessibility: registry.hasAccessibility,
             icons: icons
