@@ -8,6 +8,8 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
     package func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
 
+        LoginItem.enableOnce()
+
         if !services.authorization.isTrusted {
             services.authorization.requestTrust()
         }
