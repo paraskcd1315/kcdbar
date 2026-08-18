@@ -23,6 +23,8 @@ package struct TaskbarStartButton: View {
         .onHover { isHovered = $0 }
         .contextMenu {
             Toggle("taskbar.menu.launchAtLogin", isOn: launchAtLogin)
+            Divider()
+            Button("taskbar.menu.settings", action: onOpenSettings)
         }
         .onAppear { loginItem.refresh() }
     }
