@@ -1,4 +1,4 @@
-/** One channel per tracker, so a reader is never woken by the other one's week. */
+/** Totals are totals, whoever tracked them: every channel under this prefix counts. */
 package enum TotalsChannelMetrics {
-    package static let channelName = "totals.kimai"
+    package static let channelPrefix = "totals"
 }
