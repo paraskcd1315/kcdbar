@@ -6,9 +6,9 @@ package enum SettingsPane: String, CaseIterable, Identifiable, Sendable {
 
     package var id: String { rawValue }
 
-    package var title: LocalizedStringKey { LocalizedStringKey("settings.pane.\(rawValue)") }
+    package var title: LocalizedStringKey { .catalogue("settings", "pane", rawValue) }
 
-    package var detail: LocalizedStringKey { LocalizedStringKey("settings.pane.\(rawValue).detail") }
+    package var detail: LocalizedStringKey { .catalogue("settings", "pane", rawValue, "detail") }
 
     package var symbol: String {
         switch self {

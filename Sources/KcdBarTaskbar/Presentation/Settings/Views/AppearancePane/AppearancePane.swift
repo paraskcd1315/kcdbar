@@ -12,7 +12,7 @@ package struct AppearancePane: View {
             Section("settings.appearance.preset") {
                 Picker("settings.appearance.preset", selection: presetName) {
                     ForEach(settings.presets, id: \.name) { preset in
-                        Text(LocalizedStringKey("bar.preset.\(preset.name)")).tag(preset.name)
+                        Text(LocalizedStringKey.catalogue("bar", "preset", preset.name)).tag(preset.name)
                     }
                 }
                 .labelsHidden()
