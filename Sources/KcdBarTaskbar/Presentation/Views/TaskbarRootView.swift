@@ -6,7 +6,7 @@ package struct TaskbarRootView: View {
     package let pins: PinnedAppState
     package let order: EntryOrderMemory
     package let desktop: ShowDesktopState
-    package let preset: BarPreset
+    package let presetState: BarPresetState
     package let displayId: Int
     package let icons: any ApplicationIconPort
     package let onActivate: (TaskbarEntryModel) -> Void
@@ -61,7 +61,7 @@ package struct TaskbarRootView: View {
 
     private var viewModel: TaskbarViewModel {
         TaskbarViewModel(
-            preset: preset,
+            preset: presetState.preset,
             windows: registry.taskbarEntries,
             displayId: displayId,
             displays: registry.displays,

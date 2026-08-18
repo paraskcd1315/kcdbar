@@ -13,7 +13,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private var hiddenDisplays: Set<Int> = []
     private var revealedDisplays: Set<Int> = []
     private var shown: [Int: Bool] = [:]
-    private var activePreset = BarPresetCatalogue.default
+    private let presetState = BarPresetState(preset: BarPresetCatalogue.default)
 
     private let registry: WindowRegistry
     private let battery: BatteryMonitor
@@ -96,15 +96,22 @@ package final class BarPanelHost: BarPanelHostPort {
     }
 
     package func present(preset: BarPreset) {
-        activePreset = preset
+        presetState.apply(preset)
         rebuild(preset: preset)
         startClickThroughMonitors()
+
+        guard screenObserver == nil else { return }
+
         screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            MainActor.assumeIsolated { self?.rebuild(preset: preset) }
+            MainActor.assumeIsolated {
+                guard let self else { return }
+
+                self.rebuild(preset: self.presetState.preset)
+            }
         }
     }
 
@@ -135,8 +142,8 @@ package final class BarPanelHost: BarPanelHostPort {
         }
         shown[id] = showing
 
-        let settled = BarFrameCalculator.panelFrame(for: activePreset, on: display)
-        let offEdge = BarRevealPolicy.concealedFrame(settled, edge: activePreset.edge)
+        let settled = BarFrameCalculator.panelFrame(for: presetState.preset, on: display)
+        let offEdge = BarRevealPolicy.concealedFrame(settled, edge: presetState.preset.edge)
 
         if showing {
             panel.setFrame(offEdge, display: false)
@@ -228,9 +235,9 @@ package final class BarPanelHost: BarPanelHostPort {
 
             let reveal = BarRevealPolicy.shouldReveal(
                 pointer: location,
-                barFrame: BarFrameCalculator.panelFrame(for: activePreset, on: display),
+                barFrame: BarFrameCalculator.panelFrame(for: presetState.preset, on: display),
                 display: display,
-                edge: activePreset.edge
+                edge: presetState.preset.edge
             )
             guard reveal != revealedDisplays.contains(id) else { continue }
 
@@ -281,7 +288,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 pins: pins,
                 order: order,
                 desktop: desktop,
-                preset: preset,
+                presetState: presetState,
                 displayId: display.id,
                 icons: icons,
                 onActivate: { [onActivate] in onActivate($0, display.id) },
