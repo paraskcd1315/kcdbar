@@ -5,6 +5,8 @@ package struct TaskbarStartButton: View {
     package let mark: BarStartMark
     package let iconSize: CGFloat
     package let cornerRadius: CGFloat
+    package let isVertical: Bool
+    package let isFilled: Bool
     package let onOpen: () -> Void
     package let onOpenSettings: () -> Void
 
@@ -15,7 +17,7 @@ package struct TaskbarStartButton: View {
             TaskbarStartMarkView(mark: mark, size: iconSize)
                 .foregroundStyle(KbColors.onSurface)
                 .frame(width: iconSize, height: iconSize)
-                .padding(KbSpacing.s3)
+                .kbBarItem(isVertical: isVertical, isFilled: isFilled, isSquare: true)
                 .contentShape(.rect(cornerRadius: cornerRadius))
         }
         .buttonStyle(.plain)

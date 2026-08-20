@@ -28,6 +28,8 @@ package struct TaskbarItems: View {
                     mark: viewModel.preset.startMark,
                     iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
                     cornerRadius: viewModel.preset.entryCornerRadius,
+                    isVertical: viewModel.preset.edge.isVertical,
+                    isFilled: viewModel.preset.entryFit == .edgeToEdge,
                     onOpen: onOpenStart,
                     onOpenSettings: onOpenSettings
                 )
@@ -44,7 +46,12 @@ package struct TaskbarItems: View {
             )
             if viewModel.preset.showsTrash {
                 TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
-                TaskbarTrash(monitor: trash, iconSize: BarEntryMetrics.iconSize(for: viewModel.preset))
+                TaskbarTrash(
+                    monitor: trash,
+                    iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
+                    isVertical: viewModel.preset.edge.isVertical,
+                    isFilled: viewModel.preset.entryFit == .edgeToEdge
+                )
             }
             TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
             if viewModel.preset.showsBattery, battery.isPresent {

@@ -64,6 +64,11 @@ package struct AppearancePane: View {
                     keyPrefix: "bar.entrySizing",
                     selection: settings.binding(\.entrySizing)
                 )
+                SettingsEnumPicker(
+                    title: "settings.appearance.entryFit",
+                    keyPrefix: "bar.entryFit",
+                    selection: settings.binding(\.entryFit)
+                )
                 SettingsSliderRow(
                     title: "settings.appearance.entryCornerRadius",
                     range: SettingsMetrics.entryCornerRadius,

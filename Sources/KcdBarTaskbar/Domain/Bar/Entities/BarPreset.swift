@@ -8,6 +8,7 @@ package struct BarPreset: Codable, Equatable, Sendable {
     package var attachment: BarAttachment
     package var entryContent: BarEntryContent
     package var entrySizing: BarEntrySizing
+    package var entryFit: BarEntryFit
     package var grouping: BarGrouping
     package var material: BarMaterial
     package var startButton: BarStartButtonPlacement
@@ -49,6 +50,7 @@ extension BarPreset {
         entryContent = try container.decodeIfPresent(BarEntryContent.self, forKey: .entryContent)
             ?? fallback.entryContent
         entrySizing = try container.decodeIfPresent(BarEntrySizing.self, forKey: .entrySizing) ?? fallback.entrySizing
+        entryFit = try container.decodeIfPresent(BarEntryFit.self, forKey: .entryFit) ?? fallback.entryFit
         grouping = try container.decodeIfPresent(BarGrouping.self, forKey: .grouping) ?? fallback.grouping
         material = try container.decodeIfPresent(BarMaterial.self, forKey: .material) ?? fallback.material
         startButton = try container.decodeIfPresent(BarStartButtonPlacement.self, forKey: .startButton)

@@ -21,6 +21,21 @@ package enum TaskbarEntryStyle {
         return isHovered ? .regular.interactive() : .identity
     }
 
+    package static func magnification(sizing: BarEntrySizing, isHovered: Bool) -> CGFloat {
+        guard isHovered else { return 1 }
+
+        return sizing == .magnifying ? TaskbarMetrics.magnificationScale : TaskbarMetrics.hoverScale
+    }
+
+    package static func magnificationAnchor(edge: BarEdge) -> UnitPoint {
+        switch edge {
+        case .bottom: .bottom
+        case .top: .top
+        case .leading: .leading
+        case .trailing: .trailing
+        }
+    }
+
     package static func showsTitle(content: BarEntryContent, isLauncher: Bool) -> Bool {
         content != .iconOnly && !isLauncher
     }
