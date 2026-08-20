@@ -12,9 +12,10 @@ package struct TaskbarEntryView: View {
     package let onMiddleClick: () -> Void
 
     @Environment(\.middleClickCatcher) private var middleClickCatcher
+    @Environment(\.taskbarHover) private var hover
 
     @State private var isHovered = false
-    @State private var showsTooltip = false
+    @State private var frame: CGRect = .zero
 
     package var body: some View {
         TaskbarEntryLabel(
@@ -22,24 +23,38 @@ package struct TaskbarEntryView: View {
             showsTitle: TaskbarEntryStyle.showsTitle(
                 content: preset.entryContent,
                 isLauncher: entry.isLauncher
-            )
+            ),
+            iconSize: BarEntryMetrics.iconSize(for: preset),
+            isVertical: preset.edge.isVertical,
+            side: BarEntryMetrics.itemSide(for: preset)
         )
+        .scaleEffect(
+            TaskbarEntryStyle.magnification(sizing: preset.entrySizing, isHovered: isHovered),
+            anchor: TaskbarEntryStyle.magnificationAnchor(edge: preset.edge)
+        )
+        .background {
+            shape.fill(
+                TaskbarEntryStyle.fill(
+                    sizing: preset.entrySizing,
+                    isFrontmost: entry.isFrontmost,
+                    isHovered: isHovered
+                )
+            )
+        }
         .overlay(alignment: .bottom) { TaskbarEntryIndicator(entry: entry) }
         .contentShape(shape)
         .overlay { middleClickCatcher(onMiddleClick) }
         .onTapGesture(perform: onActivate)
-        .glassEffect(TaskbarEntryStyle.glass(isFrontmost: entry.isFrontmost, isHovered: isHovered), in: shape)
         .opacity(isDragging ? TaskbarMetrics.draggingOpacity : 1)
         .animation(KbMotion.quick, value: isHovered)
         .animation(KbMotion.quick, value: entry.isFrontmost)
         .animation(KbMotion.quick, value: isDragging)
-        .overlay(alignment: TaskbarEntryStyle.tooltipAlignment(edge: preset.edge)) {
-            if showsTooltip, !isDragging {
-                TaskbarEntryTooltip(entry: entry, edge: preset.edge)
-            }
-        }
+        .onGeometryChange(for: CGRect.self) { proxy in
+            proxy.frame(in: .named(TaskbarBarLayout.coordinateSpace))
+        } action: { frame = $0 }
         .onHover { isHovered = $0 }
         .task(id: isHovered) { await revealTooltip() }
+        .onDisappear { hover?.leave(entry) }
         .contextMenu {
             if entry.bundleIdentifier != nil {
                 TaskbarEntryMenu(
@@ -53,16 +68,20 @@ package struct TaskbarEntryView: View {
     }
 
     private var shape: AnyShape {
-        TaskbarEntryStyle.shape(isOpenHere: TaskbarEntryStyle.isOpenHere(entry))
+        TaskbarEntryStyle.shape(
+            isOpenHere: TaskbarEntryStyle.isOpenHere(entry),
+            cornerRadius: preset.entryCornerRadius
+        )
     }
 
     private func revealTooltip() async {
-        guard isHovered, !entry.applicationName.isEmpty || !entry.title.isEmpty else {
-            showsTooltip = false
+        guard isHovered, !isDragging, !entry.applicationName.isEmpty || !entry.title.isEmpty else {
+            hover?.leave(entry)
             return
         }
         try? await Task.sleep(for: TaskbarMetrics.tooltipDelay)
         guard !Task.isCancelled else { return }
-        withAnimation(KbMotion.quick) { showsTooltip = true }
+
+        hover?.enter(entry, at: frame)
     }
 }

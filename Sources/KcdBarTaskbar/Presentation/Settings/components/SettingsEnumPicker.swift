@@ -18,7 +18,7 @@ where
     package var body: some View {
         Picker(title, selection: $selection) {
             ForEach(Value.allCases, id: \.self) { value in
-                Text(LocalizedStringKey("\(keyPrefix).\(value.rawValue)")).tag(value)
+                Text(LocalizedStringKey.catalogue(keyPrefix, value.rawValue)).tag(value)
             }
         }
     }

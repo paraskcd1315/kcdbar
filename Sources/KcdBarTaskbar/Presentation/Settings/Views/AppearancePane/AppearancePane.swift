@@ -12,10 +12,12 @@ package struct AppearancePane: View {
             Section("settings.appearance.preset") {
                 Picker("settings.appearance.preset", selection: presetName) {
                     ForEach(settings.presets, id: \.name) { preset in
-                        Text(LocalizedStringKey("bar.preset.\(preset.name)")).tag(preset.name)
+                        SettingsPresetLabel(name: preset.name).tag(preset.name)
                     }
                 }
                 .labelsHidden()
+                Button("settings.preset.rename", action: settings.requestRename)
+                    .disabled(BarPresetCatalogue.isBuiltIn(named: settings.preset.name))
             }
 
             Section("settings.appearance.placement") {
@@ -44,6 +46,11 @@ package struct AppearancePane: View {
                     keyPrefix: "bar.startButton",
                     selection: settings.binding(\.startButton)
                 )
+                SettingsEnumPicker(
+                    title: "settings.appearance.startMark",
+                    keyPrefix: "bar.startMark",
+                    selection: settings.binding(\.startMark)
+                )
             }
 
             Section("settings.appearance.entries") {
@@ -56,6 +63,21 @@ package struct AppearancePane: View {
                     title: "settings.appearance.entrySizing",
                     keyPrefix: "bar.entrySizing",
                     selection: settings.binding(\.entrySizing)
+                )
+                SettingsEnumPicker(
+                    title: "settings.appearance.entryFit",
+                    keyPrefix: "bar.entryFit",
+                    selection: settings.binding(\.entryFit)
+                )
+                SettingsSliderRow(
+                    title: "settings.appearance.entryCornerRadius",
+                    range: SettingsMetrics.entryCornerRadius,
+                    value: settings.binding(\.entryCornerRadius)
+                )
+                SettingsSliderRow(
+                    title: "settings.appearance.iconSize",
+                    range: SettingsMetrics.iconSize,
+                    value: settings.binding(\.iconSize)
                 )
             }
 
@@ -88,6 +110,25 @@ package struct AppearancePane: View {
             }
         }
         .formStyle(.grouped)
+        .sheet(item: naming) { request in
+            PresetNameSheet(
+                request: request,
+                isAcceptable: settings.isAcceptableName,
+                onCommit: { name in Task { await settings.commitNaming(name) } },
+                onCancel: { Task { await settings.cancelNaming() } }
+            )
+        }
+    }
+
+    private var naming: Binding<BarPresetNamingRequest?> {
+        Binding(
+            get: { settings.naming },
+            set: { request in
+                guard request == nil else { return }
+
+                Task { await settings.cancelNaming() }
+            }
+        )
     }
 
     private var presetName: Binding<String> {

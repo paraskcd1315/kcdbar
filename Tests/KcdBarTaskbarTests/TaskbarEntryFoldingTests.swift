@@ -1,0 +1,80 @@
+import Testing
+
+@testable import KcdBarTaskbar
+
+@MainActor
+struct TaskbarEntryFoldingTests {
+    private func entry(
+        _ id: String,
+        bundle: String?,
+        frontmost: Bool = false,
+        minimized: Bool = false,
+        launcher: Bool = false
+    ) -> TaskbarEntryModel {
+        TaskbarEntryModel(
+            id: id,
+            title: id,
+            applicationName: bundle ?? "",
+            bundleIdentifier: bundle,
+            icon: nil,
+            isMinimized: minimized,
+            isFrontmost: frontmost,
+            isPinned: false,
+            isLauncher: launcher,
+            isRunning: true,
+            instanceCount: 2,
+            instancesOnThisDisplay: 2
+        )
+    }
+
+    @Test func perWindowLeavesEveryEntryWhereItIs() {
+        let entries = [entry("a1", bundle: "app"), entry("a2", bundle: "app")]
+
+        #expect(TaskbarEntryFolding.folded(entries, grouping: .perWindow) == entries)
+    }
+
+    @Test func perApplicationKeepsOneEntryPerApplication() {
+        let entries = [
+            entry("a1", bundle: "app"),
+            entry("b1", bundle: "other"),
+            entry("a2", bundle: "app")
+        ]
+
+        let folded = TaskbarEntryFolding.folded(entries, grouping: .perApplication)
+
+        #expect(folded.count == 2)
+        #expect(folded.map(\.bundleIdentifier) == ["app", "other"])
+    }
+
+    @Test func theFrontmostWindowRepresentsItsApplication() {
+        let entries = [
+            entry("a1", bundle: "app"),
+            entry("a2", bundle: "app", frontmost: true)
+        ]
+
+        let folded = TaskbarEntryFolding.folded(entries, grouping: .perApplication)
+
+        #expect(folded.first?.id == "a2")
+        #expect(folded.first?.isFrontmost == true)
+    }
+
+    @Test func aFoldedEntryReadsMinimizedOnlyWhenEveryWindowIs() {
+        let some = [
+            entry("a1", bundle: "app", minimized: true),
+            entry("a2", bundle: "app")
+        ]
+        let all = [
+            entry("a1", bundle: "app", minimized: true),
+            entry("a2", bundle: "app", minimized: true)
+        ]
+
+        #expect(TaskbarEntryFolding.folded(some, grouping: .perApplication).first?.isMinimized == false)
+        #expect(TaskbarEntryFolding.folded(all, grouping: .perApplication).first?.isMinimized == true)
+    }
+
+    @Test func anEntryWithNoBundleIdentifierIsNeverFoldedAway() {
+        let entries = [entry("w1", bundle: nil), entry("w2", bundle: nil)]
+
+        #expect(TaskbarEntryFolding.folded(entries, grouping: .perApplication).count == 2)
+    }
+}

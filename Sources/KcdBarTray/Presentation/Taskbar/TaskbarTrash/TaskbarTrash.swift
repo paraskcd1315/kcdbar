@@ -3,11 +3,22 @@ import SwiftUI
 
 package struct TaskbarTrash: View {
     package let monitor: TrashMonitor
+    package let iconSize: CGFloat
+    package let isVertical: Bool
+    package let side: CGFloat
 
     @State private var isHovered = false
 
-    package init(monitor: TrashMonitor) {
+    package init(
+        monitor: TrashMonitor,
+        iconSize: CGFloat = TrashMetrics.iconSize,
+        isVertical: Bool = false,
+        side: CGFloat = TrashMetrics.iconSize + TrashMetrics.glyphInset * 2
+    ) {
         self.monitor = monitor
+        self.iconSize = iconSize
+        self.isVertical = isVertical
+        self.side = side
     }
 
     package var body: some View {
@@ -21,8 +32,8 @@ package struct TaskbarTrash: View {
                     .foregroundStyle(KbColors.onSurface)
             }
         }
-        .frame(width: TrashMetrics.iconSize, height: TrashMetrics.iconSize)
-        .padding(TrashMetrics.glyphInset)
+        .frame(width: iconSize, height: iconSize)
+        .kbBarItem(isVertical: isVertical, side: side)
         .kbTappable(in: shape) { monitor.open() }
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)

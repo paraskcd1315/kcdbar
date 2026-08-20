@@ -14,7 +14,7 @@ package struct SettingsSliderRow: View {
     package var body: some View {
         LabeledContent {
             HStack {
-                Slider(value: $value, in: range, step: 1)
+                Slider(value: rounded, in: range)
                 Text(verbatim: "\(Int(value))")
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
@@ -22,5 +22,9 @@ package struct SettingsSliderRow: View {
         } label: {
             Text(title)
         }
+    }
+
+    private var rounded: Binding<CGFloat> {
+        Binding(get: { value }, set: { value = $0.rounded() })
     }
 }

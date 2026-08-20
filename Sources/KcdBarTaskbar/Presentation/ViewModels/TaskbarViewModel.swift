@@ -105,9 +105,12 @@ package struct TaskbarViewModel {
                 )
             }
 
-        entries = TaskbarOrdering.ordered(
-            entries: launchers + windowless + windowEntries,
-            ranks: ranks
+        entries = TaskbarEntryFolding.folded(
+            TaskbarOrdering.ordered(
+                entries: launchers + windowless + windowEntries,
+                ranks: ranks
+            ),
+            grouping: preset.grouping
         )
         notice = hasAccessibility ? nil : .accessibilityMissing
     }

@@ -6,7 +6,7 @@ package struct TaskbarRootView: View {
     package let pins: PinnedAppState
     package let order: EntryOrderMemory
     package let desktop: ShowDesktopState
-    package let preset: BarPreset
+    package let presetState: BarPresetState
     package let displayId: Int
     package let icons: any ApplicationIconPort
     package let onActivate: (TaskbarEntryModel) -> Void
@@ -27,7 +27,6 @@ package struct TaskbarRootView: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
 
-    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
     package let onBarFrameChange: (CGRect) -> Void
 
@@ -51,7 +50,6 @@ package struct TaskbarRootView: View {
             timer: timer,
             totals: totals,
 
-            loginItem: loginItem,
             onOpenTimer: onOpenTimer,
             isShowingDesktop: desktop.isShowingDesktop,
             onToggleDesktop: onToggleDesktop,
@@ -61,7 +59,7 @@ package struct TaskbarRootView: View {
 
     private var viewModel: TaskbarViewModel {
         TaskbarViewModel(
-            preset: preset,
+            preset: presetState.preset,
             windows: registry.taskbarEntries,
             displayId: displayId,
             displays: registry.displays,

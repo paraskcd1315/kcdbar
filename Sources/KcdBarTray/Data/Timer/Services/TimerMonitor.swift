@@ -9,10 +9,18 @@ package final class TimerMonitor {
 
     private let source: any TimerSignalPort
     private let tickets: any TicketOpenerPort
+    private let availability: any SignalAvailabilityPort
 
-    package init(source: any TimerSignalPort, tickets: any TicketOpenerPort) {
+    package var isAvailable: Bool { availability.isPresent }
+
+    package init(
+        source: any TimerSignalPort,
+        tickets: any TicketOpenerPort,
+        availability: any SignalAvailabilityPort = KcdSignalAvailability()
+    ) {
         self.source = source
         self.tickets = tickets
+        self.availability = availability
     }
 
     package func open(_ timer: RunningTimer) {

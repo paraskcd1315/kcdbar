@@ -20,6 +20,34 @@
     "settings.appearance.material": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Material" } } } },
     "settings.appearance.thickness": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Thickness" } } } },
     "settings.appearance.cornerRadius": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Corner radius" } } } },
+    "bar.preset.KCD": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "KCD" } } } },
+    "settings.appearance.entryFit": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Fit" } } } },
+    "bar.entryFit.edgeToEdge": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Edge to edge" } } } },
+    "bar.entryFit.inset": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Inset" } } } },
+    "settings.behaviour.stageManager": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "macOS Stage Manager" } } } },
+    "settings.behaviour.trash": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Trash" } } } },
+    "settings.behaviour.battery": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Battery" } } } },
+    "settings.behaviour.controlCentre": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Control Centre" } } } },
+    "settings.behaviour.clock": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Clock" } } } },
+    "settings.behaviour.tracking": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Time tracking" } } } },
+    "settings.appearance.startMark": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Start button mark" } } } },
+    "bar.startMark.bars": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Bars" } } } },
+    "bar.startMark.apple": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Apple" } } } },
+    "bar.startMark.windows11": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Windows 11" } } } },
+    "bar.startMark.windows10": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Windows 10" } } } },
+    "bar.startMark.grid": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Grid" } } } },
+    "bar.startMark.power": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Power" } } } },
+    "settings.preset.rename": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Rename…" } } } },
+    "settings.preset.name": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Name" } } } },
+    "settings.preset.cancel": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Cancel" } } } },
+    "settings.preset.fork.title": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Change this preset?" } } } },
+    "settings.preset.fork.detail": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "The presets KCDBar ships are never changed. Confirming keeps your change as a new preset of your own, and leaves this one as it was." } } } },
+    "settings.preset.fork.confirm": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Create Preset" } } } },
+    "settings.preset.rename.title": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Rename preset" } } } },
+    "settings.preset.rename.detail": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Give this preset a name of your own. It has to differ from every other preset's." } } } },
+    "settings.preset.rename.confirm": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Rename" } } } },
+    "settings.appearance.entryCornerRadius": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Entry corner radius" } } } },
+    "settings.appearance.iconSize": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Icon size" } } } },
     "settings.appearance.entrySpacing": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Entry spacing" } } } },
     "settings.appearance.contentPadding": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Content padding" } } } },
     "settings.behaviour.windows": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Windows" } } } },
@@ -31,7 +59,6 @@
     "settings.behaviour.displayPolicy": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Show the bar on" } } } },
     "settings.behaviour.autoHide": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Auto-hide" } } } },
     "settings.behaviour.contents": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Contents" } } } },
-    "settings.behaviour.statusArea": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Status area" } } } },
     "settings.behaviour.desktopButton": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Show desktop button" } } } },
     "settings.behaviour.system": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "System" } } } },
     "settings.behaviour.launchAtLogin": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Launch at login" } } } },
@@ -851,17 +878,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Running"
-          }
-        }
-      }
-    },
-    "taskbar.menu.launchAtLogin": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Launch at Login"
           }
         }
       }

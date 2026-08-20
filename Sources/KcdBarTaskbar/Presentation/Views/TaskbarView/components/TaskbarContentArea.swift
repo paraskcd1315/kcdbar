@@ -20,7 +20,6 @@ package struct TaskbarContentArea: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
-    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
 
     package var body: some View {
@@ -46,12 +45,17 @@ package struct TaskbarContentArea: View {
                     timer: timer,
                     totals: totals,
 
-                    loginItem: loginItem,
-                    onOpenTimer: onOpenTimer,
+                    onOpenTimer: onOpenTimer
                 )
             }
         }
-        .padding(viewModel.preset.contentPadding)
+        .padding(contentEdges, viewModel.preset.contentPadding)
         .animation(KbMotion.standard, value: viewModel.entries)
+    }
+
+    private var contentEdges: Edge.Set {
+        guard viewModel.preset.entryFit == .edgeToEdge else { return .all }
+
+        return viewModel.preset.edge.isVertical ? .vertical : .horizontal
     }
 }

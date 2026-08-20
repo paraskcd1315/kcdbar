@@ -10,9 +10,11 @@ package enum BarPresetCatalogue {
         attachment: .edgeAttached,
         entryContent: .iconOnly,
         entrySizing: .fixed,
+        entryFit: .inset,
         grouping: .perWindow,
         material: .liquidGlass,
         startButton: .leading,
+        startMark: .windows11,
         autoHide: .never,
         displays: .allDisplays,
         windowScope: .thisDisplay,
@@ -22,7 +24,13 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
         cornerRadius: KbRadii.lg,
-        showsStatusArea: true,
+        entryCornerRadius: KbRadii.md,
+        iconSize: BarEntryMetrics.iconSize,
+        showsTrash: true,
+        showsBattery: true,
+        showsControlCentre: true,
+        showsClock: true,
+        showsTracking: true,
         showsDesktopButton: true
     )
 
@@ -34,9 +42,11 @@ package enum BarPresetCatalogue {
         attachment: .edgeAttached,
         entryContent: .iconAndTitle,
         entrySizing: .fixed,
+        entryFit: .edgeToEdge,
         grouping: .perWindow,
         material: .vibrancy,
         startButton: .leading,
+        startMark: .windows10,
         autoHide: .never,
         displays: .allDisplays,
         windowScope: .thisDisplay,
@@ -46,7 +56,13 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s1,
         contentPadding: KbSpacing.s2,
         cornerRadius: KbRadii.none,
-        showsStatusArea: true,
+        entryCornerRadius: KbRadii.none,
+        iconSize: 24,
+        showsTrash: true,
+        showsBattery: true,
+        showsControlCentre: true,
+        showsClock: true,
+        showsTracking: true,
         showsDesktopButton: true
     )
 
@@ -58,9 +74,11 @@ package enum BarPresetCatalogue {
         attachment: .floating,
         entryContent: .iconOnly,
         entrySizing: .magnifying,
+        entryFit: .inset,
         grouping: .perApplication,
         material: .liquidGlass,
         startButton: .hidden,
+        startMark: .apple,
         autoHide: .never,
         displays: .primaryOnly,
         windowScope: .thisDisplay,
@@ -70,7 +88,13 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s3,
         contentPadding: KbSpacing.s4,
         cornerRadius: KbRadii.xl,
-        showsStatusArea: false,
+        entryCornerRadius: KbRadii.lg,
+        iconSize: 48,
+        showsTrash: true,
+        showsBattery: false,
+        showsControlCentre: false,
+        showsClock: false,
+        showsTracking: false,
         showsDesktopButton: false
     )
 
@@ -82,9 +106,11 @@ package enum BarPresetCatalogue {
         attachment: .floating,
         entryContent: .iconOnly,
         entrySizing: .fixed,
+        entryFit: .inset,
         grouping: .perWindow,
         material: .liquidGlass,
         startButton: .hidden,
+        startMark: .bars,
         autoHide: .always,
         displays: .primaryOnly,
         windowScope: .thisDisplay,
@@ -94,11 +120,53 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
         cornerRadius: KbRadii.lg,
-        showsStatusArea: false,
+        entryCornerRadius: KbRadii.sm,
+        iconSize: 22,
+        showsTrash: false,
+        showsBattery: false,
+        showsControlCentre: false,
+        showsClock: false,
+        showsTracking: false,
         showsDesktopButton: false
     )
 
-    package static let all: [BarPreset] = [windows11, windows10, dock, minimal]
+    package static let kcd = BarPreset(
+        name: "KCD",
+        edge: .bottom,
+        alignment: .leading,
+        widthMode: .fullEdge,
+        attachment: .edgeAttached,
+        entryContent: .iconOnly,
+        entrySizing: .fixed,
+        entryFit: .edgeToEdge,
+        grouping: .perWindow,
+        material: .vibrancy,
+        startButton: .leading,
+        startMark: .windows11,
+        autoHide: .never,
+        displays: .allDisplays,
+        windowScope: .thisDisplay,
+        overlap: .pushDisplayFillingWindows,
+        dockHandling: .hide,
+        thickness: 50,
+        entrySpacing: 0,
+        contentPadding: 0,
+        cornerRadius: 0,
+        entryCornerRadius: 0,
+        iconSize: 28,
+        showsTrash: true,
+        showsBattery: true,
+        showsControlCentre: true,
+        showsClock: true,
+        showsTracking: true,
+        showsDesktopButton: true
+    )
+
+    package static let all: [BarPreset] = [kcd, windows11, windows10, dock, minimal]
 
     package static let `default` = windows11
+
+    package static func isBuiltIn(named name: String) -> Bool {
+        all.contains { $0.name == name }
+    }
 }

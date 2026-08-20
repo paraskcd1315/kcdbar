@@ -19,39 +19,64 @@ package struct TaskbarItems: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
-    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
-            if viewModel.preset.startButton != .hidden {
+            if viewModel.preset.startButton == .leading {
                 TaskbarStartButton(
+                    mark: viewModel.preset.startMark,
+                    iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
+                    cornerRadius: viewModel.preset.entryCornerRadius,
+                    isVertical: viewModel.preset.edge.isVertical,
+                    side: BarEntryMetrics.itemSide(for: viewModel.preset),
                     onOpen: onOpenStart,
-                    onOpenSettings: onOpenSettings,
-                    loginItem: loginItem
+                    onOpenSettings: onOpenSettings
                 )
             }
-            TaskbarEntryStrip(
-                entries: viewModel.entries,
-                preset: viewModel.preset,
+            TaskbarLaunchGroup(
+                viewModel: viewModel,
                 onActivate: onActivate,
+                onOpenStart: onOpenStart,
+                onOpenSettings: onOpenSettings,
                 onTogglePin: onTogglePin,
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,
                 onDropPin: onDropPin,
                 onMiddleClick: onMiddleClick
             )
-            TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
-            TaskbarTrash(monitor: trash)
-            TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
-            if viewModel.preset.showsStatusArea {
-                if battery.isPresent {
-                    TaskbarBattery(state: battery, onOpen: onOpenBattery)
-                }
+            if viewModel.preset.showsTrash {
+                TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
+                TaskbarTrash(
+                    monitor: trash,
+                    iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
+                    isVertical: viewModel.preset.edge.isVertical,
+                    side: BarEntryMetrics.itemSide(for: viewModel.preset)
+                )
+            }
+            if showsStatusArea {
+                TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
+            }
+            if viewModel.preset.showsBattery, battery.isPresent {
+                TaskbarBattery(state: battery, onOpen: onOpenBattery)
+            }
+            if viewModel.preset.showsControlCentre {
                 TaskbarControlCentreButton(onOpen: onOpenControlCentre)
+            }
+            if viewModel.preset.showsClock {
                 TaskbarClock(onOpen: onOpenNotifications)
+            }
+            if viewModel.preset.showsTracking, timer.isAvailable {
                 TaskbarTracking(timer: timer, totals: totals, onOpenTimer: onOpenTimer)
             }
         }
+    }
+
+    private var showsStatusArea: Bool {
+        TaskbarStatusVisibility.showsAnything(
+            preset: viewModel.preset,
+            hasBattery: battery.isPresent,
+            hasTracking: timer.isAvailable
+        )
     }
 }

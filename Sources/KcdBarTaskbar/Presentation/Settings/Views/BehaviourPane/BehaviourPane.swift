@@ -3,10 +3,19 @@ import SwiftUI
 package struct BehaviourPane: View {
     package let settings: BarSettingsState
     package let loginItem: LoginItemState
+    package let stageManager: StageManagerState
+    package let isTrackingAvailable: Bool
 
-    package init(settings: BarSettingsState, loginItem: LoginItemState) {
+    package init(
+        settings: BarSettingsState,
+        loginItem: LoginItemState,
+        stageManager: StageManagerState,
+        isTrackingAvailable: Bool
+    ) {
         self.settings = settings
         self.loginItem = loginItem
+        self.stageManager = stageManager
+        self.isTrackingAvailable = isTrackingAvailable
     }
 
     package var body: some View {
@@ -44,16 +53,30 @@ package struct BehaviourPane: View {
             }
 
             Section("settings.behaviour.contents") {
-                Toggle("settings.behaviour.statusArea", isOn: settings.binding(\.showsStatusArea))
+                Toggle("settings.behaviour.trash", isOn: settings.binding(\.showsTrash))
+                Toggle("settings.behaviour.battery", isOn: settings.binding(\.showsBattery))
+                Toggle("settings.behaviour.controlCentre", isOn: settings.binding(\.showsControlCentre))
+                Toggle("settings.behaviour.clock", isOn: settings.binding(\.showsClock))
+                if isTrackingAvailable {
+                    Toggle("settings.behaviour.tracking", isOn: settings.binding(\.showsTracking))
+                }
                 Toggle("settings.behaviour.desktopButton", isOn: settings.binding(\.showsDesktopButton))
             }
 
             Section("settings.behaviour.system") {
                 Toggle("settings.behaviour.launchAtLogin", isOn: launchAtLogin)
+                Toggle("settings.behaviour.stageManager", isOn: stageManagerEnabled)
             }
         }
         .formStyle(.grouped)
-        .onAppear { loginItem.refresh() }
+        .onAppear {
+            loginItem.refresh()
+            stageManager.refresh()
+        }
+    }
+
+    private var stageManagerEnabled: Binding<Bool> {
+        Binding(get: { stageManager.isEnabled }, set: { _ in stageManager.toggle() })
     }
 
     private var launchAtLogin: Binding<Bool> {

@@ -5,12 +5,17 @@ import Foundation
 package final class WindowOverlapEnforcer {
     private let control: any WindowControlPort
     private var lastCorrection: [String: Date] = [:]
+    private var lastPreset: BarPreset?
 
     package init(control: any WindowControlPort) {
         self.control = control
     }
 
     package func enforce(preset: BarPreset, windows: [ManagedWindow], displays: [DisplayGeometry], now: Date) {
+        if lastPreset != preset {
+            lastPreset = preset
+            lastCorrection = [:]
+        }
         guard preset.overlap == .pushDisplayFillingWindows else { return }
 
         for window in windows {

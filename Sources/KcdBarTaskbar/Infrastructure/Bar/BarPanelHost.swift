@@ -13,14 +13,13 @@ package final class BarPanelHost: BarPanelHostPort {
     private var hiddenDisplays: Set<Int> = []
     private var revealedDisplays: Set<Int> = []
     private var shown: [Int: Bool] = [:]
-    private var activePreset = BarPresetCatalogue.default
+    private let presetState = BarPresetState(preset: BarPresetCatalogue.default)
 
     private let registry: WindowRegistry
     private let battery: BatteryMonitor
     private let trash: TrashMonitor
     private let timer: TimerMonitor
     private let totals: TotalsMonitor
-    private let loginItem: LoginItemState
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -47,7 +46,6 @@ package final class BarPanelHost: BarPanelHostPort {
         trash: TrashMonitor,
         timer: TimerMonitor,
         totals: TotalsMonitor,
-        loginItem: LoginItemState,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -80,7 +78,6 @@ package final class BarPanelHost: BarPanelHostPort {
         self.trash = trash
         self.timer = timer
         self.totals = totals
-        self.loginItem = loginItem
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -96,15 +93,22 @@ package final class BarPanelHost: BarPanelHostPort {
     }
 
     package func present(preset: BarPreset) {
-        activePreset = preset
+        presetState.apply(preset)
         rebuild(preset: preset)
         startClickThroughMonitors()
+
+        guard screenObserver == nil else { return }
+
         screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            MainActor.assumeIsolated { self?.rebuild(preset: preset) }
+            MainActor.assumeIsolated {
+                guard let self else { return }
+
+                self.rebuild(preset: self.presetState.preset)
+            }
         }
     }
 
@@ -112,6 +116,7 @@ package final class BarPanelHost: BarPanelHostPort {
         hiddenDisplays = Set(
             panels.keys.filter { id in
                 BarVisibilityPolicy.isHidden(
+                    preset: presetState.preset,
                     onDisplay: id,
                     windows: registry.windows,
                     displays: registry.displays
@@ -135,8 +140,8 @@ package final class BarPanelHost: BarPanelHostPort {
         }
         shown[id] = showing
 
-        let settled = BarFrameCalculator.panelFrame(for: activePreset, on: display)
-        let offEdge = BarRevealPolicy.concealedFrame(settled, edge: activePreset.edge)
+        let settled = BarFrameCalculator.panelFrame(for: presetState.preset, on: display)
+        let offEdge = BarRevealPolicy.concealedFrame(settled, edge: presetState.preset.edge)
 
         if showing {
             panel.setFrame(offEdge, display: false)
@@ -228,9 +233,9 @@ package final class BarPanelHost: BarPanelHostPort {
 
             let reveal = BarRevealPolicy.shouldReveal(
                 pointer: location,
-                barFrame: BarFrameCalculator.panelFrame(for: activePreset, on: display),
+                barFrame: BarFrameCalculator.frame(for: presetState.preset, on: display),
                 display: display,
-                edge: activePreset.edge
+                edge: presetState.preset.edge
             )
             guard reveal != revealedDisplays.contains(id) else { continue }
 
@@ -281,7 +286,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 pins: pins,
                 order: order,
                 desktop: desktop,
-                preset: preset,
+                presetState: presetState,
                 displayId: display.id,
                 icons: icons,
                 onActivate: { [onActivate] in onActivate($0, display.id) },
@@ -302,7 +307,6 @@ package final class BarPanelHost: BarPanelHostPort {
                 timer: timer,
                 totals: totals,
 
-                loginItem: loginItem,
                 onOpenTimer: onOpenTimer,
                 onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
             )

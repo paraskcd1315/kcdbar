@@ -6,41 +6,39 @@ package enum TaskbarEntryStyle {
         entry.instancesOnThisDisplay > 0
     }
 
-    package static func shape(isOpenHere: Bool) -> AnyShape {
-        guard isOpenHere else { return AnyShape(RoundedRectangle(cornerRadius: KbRadii.md)) }
+    package static func shape(isOpenHere: Bool, cornerRadius: CGFloat) -> AnyShape {
+        guard isOpenHere else { return AnyShape(RoundedRectangle(cornerRadius: cornerRadius)) }
 
         return AnyShape(
-            UnevenRoundedRectangle(topLeadingRadius: KbRadii.md, topTrailingRadius: KbRadii.md)
+            UnevenRoundedRectangle(topLeadingRadius: cornerRadius, topTrailingRadius: cornerRadius)
         )
     }
 
-    package static func glass(isFrontmost: Bool, isHovered: Bool) -> Glass {
+    package static func fill(sizing: BarEntrySizing, isFrontmost: Bool, isHovered: Bool) -> Color {
+        guard sizing != .magnifying else { return .clear }
+
         if isFrontmost {
-            return .regular.tint(KbColors.focusedFill).interactive()
+            return KbColors.onSurface.opacity(TaskbarMetrics.focusedFillOpacity)
         }
-        return isHovered ? .regular.interactive() : .identity
+        return isHovered ? KbColors.onSurface.opacity(TaskbarMetrics.hoverFillOpacity) : .clear
+    }
+
+    package static func magnification(sizing: BarEntrySizing, isHovered: Bool) -> CGFloat {
+        guard isHovered, sizing == .magnifying else { return 1 }
+
+        return TaskbarMetrics.magnificationScale
+    }
+
+    package static func magnificationAnchor(edge: BarEdge) -> UnitPoint {
+        switch edge {
+        case .bottom: .bottom
+        case .top: .top
+        case .leading: .leading
+        case .trailing: .trailing
+        }
     }
 
     package static func showsTitle(content: BarEntryContent, isLauncher: Bool) -> Bool {
         content != .iconOnly && !isLauncher
-    }
-
-    package static func tooltipAlignment(edge: BarEdge) -> Alignment {
-        switch edge {
-        case .bottom: .top
-        case .top: .bottom
-        case .leading: .trailing
-        case .trailing: .leading
-        }
-    }
-
-    package static func tooltipOffset(edge: BarEdge) -> CGSize {
-        let travel = TaskbarMetrics.tooltipAllowance - TaskbarMetrics.tooltipGap
-        switch edge {
-        case .bottom: return CGSize(width: 0, height: -travel)
-        case .top: return CGSize(width: 0, height: travel)
-        case .leading: return CGSize(width: travel, height: 0)
-        case .trailing: return CGSize(width: -travel, height: 0)
-        }
     }
 }

@@ -21,13 +21,13 @@ package struct TaskbarView: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
 
-    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
     package let onBarFrameChange: (CGRect) -> Void
 
     @State private var hasAppeared = false
+    @State private var hover = TaskbarHoverState()
 
     package var body: some View {
         KbBarSurface(
@@ -56,7 +56,6 @@ package struct TaskbarView: View {
                 timer: timer,
                 totals: totals,
 
-                loginItem: loginItem,
                 onOpenTimer: onOpenTimer,
                 onToggleDesktop: onToggleDesktop
             )
@@ -77,6 +76,8 @@ package struct TaskbarView: View {
             alignment: TaskbarBarLayout.contentAlignment(preset: viewModel.preset)
         )
         .coordinateSpace(.named(TaskbarBarLayout.coordinateSpace))
+        .environment(\.taskbarHover, hover)
+        .overlay { TaskbarTooltipLayer(hover: hover, edge: viewModel.preset.edge) }
         .onAppear {
             withAnimation(KbMotion.slow) { hasAppeared = true }
         }

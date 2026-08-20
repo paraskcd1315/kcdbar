@@ -5,6 +5,7 @@ import SwiftUI
 package enum BatteryTint {
     package static func colour(for tone: BatteryTone) -> Color {
         switch tone {
+        case .neutral: KbColors.onSurface
         case .full: KbColors.batteryFull
         case .warning: KbColors.batteryWarning
         case .critical: KbColors.batteryCritical

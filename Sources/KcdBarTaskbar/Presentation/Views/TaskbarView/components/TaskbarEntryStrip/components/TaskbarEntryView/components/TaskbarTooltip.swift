@@ -22,6 +22,11 @@ package struct TaskbarTooltip: View {
         .frame(maxWidth: TaskbarMetrics.tooltipMaxWidth, alignment: .leading)
         .fixedSize()
         .glassEffect(.regular, in: .rect(cornerRadius: KbRadii.md))
+        .shadow(
+            color: KbColors.scrim,
+            radius: TaskbarMetrics.tooltipShadowRadius,
+            y: TaskbarMetrics.tooltipShadowOffset
+        )
         .allowsHitTesting(false)
     }
 

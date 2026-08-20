@@ -20,8 +20,14 @@ struct BatteryStyleTests {
         )
     }
 
-    @Test func aHealthyBatteryReadsFull() {
-        #expect(BatteryStyle.tone(for: state(percentage: 80)) == .full)
+    @Test func aHealthyBatteryOnItsOwnPowerReadsNeutral() {
+        #expect(BatteryStyle.tone(for: state(percentage: 80)) == .neutral)
+        #expect(BatteryStyle.tone(for: state(percentage: 80, plugged: true)) == .neutral)
+    }
+
+    @Test func greenIsForChargingAndForACompletedCharge() {
+        #expect(BatteryStyle.tone(for: state(percentage: 80, charging: true, plugged: true)) == .full)
+        #expect(BatteryStyle.tone(for: state(percentage: 100, charged: true, plugged: true)) == .full)
     }
 
     @Test func itWarnsBeforeItGoesCritical() {
@@ -39,8 +45,8 @@ struct BatteryStyleTests {
         #expect(BatteryStyle.tone(for: state(percentage: 90, lowPower: true)) == .powerSave)
     }
 
-    @Test func chargingReadsFullEvenWhenTheChargeIsLow() {
-        #expect(BatteryStyle.tone(for: state(percentage: 4, charging: true, plugged: true)) == .full)
+    @Test func aLowChargeStaysCriticalWhileItCharges() {
+        #expect(BatteryStyle.tone(for: state(percentage: 4, charging: true, plugged: true)) == .critical)
     }
 
     @Test func pluggedInWithoutChargingIsItsOwnStatus() {
