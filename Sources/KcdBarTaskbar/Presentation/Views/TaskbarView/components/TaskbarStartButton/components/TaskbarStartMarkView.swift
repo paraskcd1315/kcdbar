@@ -23,6 +23,6 @@ package struct TaskbarStartMarkView: View {
     }
 
     private var markSize: CGFloat {
-        size * BarEntryMetrics.iconBodyRatio
+        size * BarEntryMetrics.markRatio
     }
 }

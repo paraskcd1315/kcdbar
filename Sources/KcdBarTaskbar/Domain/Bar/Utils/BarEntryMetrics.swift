@@ -4,6 +4,7 @@ package enum BarEntryMetrics {
     package static let iconSize: CGFloat = 34
     package static let minimumIconSize: CGFloat = 12
     package static let iconBodyRatio: CGFloat = 0.81
+    package static let markRatio: CGFloat = 0.76
 
     package static let inset: CGFloat = 6
 

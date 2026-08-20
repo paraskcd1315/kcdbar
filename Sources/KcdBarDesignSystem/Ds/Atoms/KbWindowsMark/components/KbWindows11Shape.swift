@@ -7,7 +7,7 @@ package struct KbWindows11Shape: Shape {
         let side = min(rect.width, rect.height)
         let pane = side * KbWindowsMarkMetrics.paneRatio
         let gap = side * KbWindowsMarkMetrics.gapRatio
-        let radius = side * KbWindowsMarkMetrics.paneRadiusRatio
+        let radius = pane * KbWindowsMarkMetrics.paneRadiusRatio
         let origin = CGPoint(
             x: rect.midX - (pane + gap / 2),
             y: rect.midY - (pane + gap / 2)
