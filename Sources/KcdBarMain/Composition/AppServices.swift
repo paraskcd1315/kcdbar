@@ -413,8 +413,6 @@ package final class AppServices {
             trash: trash,
             timer: timer,
             totals: totals,
-
-            loginItem: loginItem,
             pins: pins,
             order: order,
             desktop: desktop,

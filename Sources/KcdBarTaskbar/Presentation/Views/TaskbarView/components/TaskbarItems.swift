@@ -19,7 +19,6 @@ package struct TaskbarItems: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
-    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
 
     package var body: some View {
@@ -29,8 +28,7 @@ package struct TaskbarItems: View {
                     iconSize: viewModel.preset.iconSize,
                     cornerRadius: viewModel.preset.entryCornerRadius,
                     onOpen: onOpenStart,
-                    onOpenSettings: onOpenSettings,
-                    loginItem: loginItem
+                    onOpenSettings: onOpenSettings
                 )
             }
             TaskbarEntryStrip(

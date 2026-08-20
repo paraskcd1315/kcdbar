@@ -22,7 +22,6 @@ package struct TaskbarBody: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
 
-    package let loginItem: LoginItemState
     package let onOpenTimer: () -> Void
     package let onToggleDesktop: () -> Void
 
@@ -46,8 +45,7 @@ package struct TaskbarBody: View {
                 trash: trash,
                 timer: timer,
                 totals: totals,
-                loginItem: loginItem,
-                onOpenTimer: onOpenTimer,
+                onOpenTimer: onOpenTimer
             )
             if showsDesktopCap {
                 TaskbarDesktopCap(
