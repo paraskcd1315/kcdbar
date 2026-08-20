@@ -49,7 +49,13 @@ package struct TaskbarContentArea: View {
                 )
             }
         }
-        .padding(viewModel.preset.contentPadding)
+        .padding(contentEdges, viewModel.preset.contentPadding)
         .animation(KbMotion.standard, value: viewModel.entries)
+    }
+
+    private var contentEdges: Edge.Set {
+        guard viewModel.preset.entryFit == .edgeToEdge else { return .all }
+
+        return viewModel.preset.edge.isVertical ? .vertical : .horizontal
     }
 }

@@ -12,9 +12,10 @@ package struct TaskbarEntryView: View {
     package let onMiddleClick: () -> Void
 
     @Environment(\.middleClickCatcher) private var middleClickCatcher
+    @Environment(\.taskbarHover) private var hover
 
     @State private var isHovered = false
-    @State private var showsTooltip = false
+    @State private var frame: CGRect = .zero
 
     package var body: some View {
         TaskbarEntryLabel(
@@ -48,13 +49,12 @@ package struct TaskbarEntryView: View {
         .animation(KbMotion.quick, value: isHovered)
         .animation(KbMotion.quick, value: entry.isFrontmost)
         .animation(KbMotion.quick, value: isDragging)
-        .overlay(alignment: TaskbarEntryStyle.tooltipAlignment(edge: preset.edge)) {
-            if showsTooltip, !isDragging {
-                TaskbarEntryTooltip(entry: entry, edge: preset.edge)
-            }
-        }
+        .onGeometryChange(for: CGRect.self) { proxy in
+            proxy.frame(in: .named(TaskbarBarLayout.coordinateSpace))
+        } action: { frame = $0 }
         .onHover { isHovered = $0 }
         .task(id: isHovered) { await revealTooltip() }
+        .onDisappear { hover?.leave(entry) }
         .contextMenu {
             if entry.bundleIdentifier != nil {
                 TaskbarEntryMenu(
@@ -75,12 +75,13 @@ package struct TaskbarEntryView: View {
     }
 
     private func revealTooltip() async {
-        guard isHovered, !entry.applicationName.isEmpty || !entry.title.isEmpty else {
-            showsTooltip = false
+        guard isHovered, !isDragging, !entry.applicationName.isEmpty || !entry.title.isEmpty else {
+            hover?.leave(entry)
             return
         }
         try? await Task.sleep(for: TaskbarMetrics.tooltipDelay)
         guard !Task.isCancelled else { return }
-        withAnimation(KbMotion.quick) { showsTooltip = true }
+
+        hover?.enter(entry, at: frame)
     }
 }

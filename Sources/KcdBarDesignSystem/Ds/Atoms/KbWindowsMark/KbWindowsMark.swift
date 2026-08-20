@@ -12,8 +12,8 @@ package struct KbWindowsMark: View {
     package var body: some View {
         Group {
             switch generation {
-            case .eleven: KbWindows11Shape().fill(style: FillStyle(eoFill: false))
-            case .ten: KbWindows10Shape().fill(style: FillStyle(eoFill: false))
+            case .eleven: KbWindows11Shape().fill(KbGradients.mark)
+            case .ten: KbWindows10Shape().fill(KbGradients.mark)
             }
         }
         .frame(width: size * KbWindowsMarkMetrics.widthRatio, height: size)

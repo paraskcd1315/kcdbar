@@ -38,6 +38,7 @@ package enum TaskbarMetrics {
     package static let tooltipDelay: Duration = .milliseconds(400)
     package static let tooltipAppearScale: CGFloat = 0.9
     package static let tooltipMaxWidth: CGFloat = 320
+    package static let tooltipEdgeInset: CGFloat = 8
     package static let tooltipShadowRadius: CGFloat = 8
     package static let tooltipShadowOffset: CGFloat = 2
 }

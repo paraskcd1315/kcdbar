@@ -17,6 +17,6 @@ package enum BarEntryMetrics {
         guard preset.entryFit == .edgeToEdge else {
             return iconSize(for: preset) + inset * 2
         }
-        return preset.thickness - preset.contentPadding * 2
+        return preset.thickness
     }
 }
