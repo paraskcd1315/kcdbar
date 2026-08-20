@@ -6,8 +6,14 @@ CONFIG="${CONFIG:-Release}"
 APP="$ROOT/build/Build/Products/$CONFIG/KCDBar.app"
 OUT="$ROOT/dist"
 
-if ! command -v create-dmg >/dev/null 2>&1; then
-  echo "create-dmg not found — brew install create-dmg" >&2
+# dmgbuild rather than create-dmg on purpose. create-dmg drives Finder over
+# AppleScript to place the icons, which needs Automation permission and blocks
+# forever on the TCC prompt when nobody is at the screen. dmgbuild writes the
+# .DS_Store itself, so it needs no Finder and runs unattended.
+DMGBUILD="${DMGBUILD:-$(command -v dmgbuild || echo "$HOME/.local/bin/dmgbuild")}"
+
+if [ ! -x "$DMGBUILD" ]; then
+  echo "dmgbuild not found — pipx install dmgbuild" >&2
   exit 1
 fi
 
@@ -44,33 +50,25 @@ ditto "$APP" "$STAGE/KCDBar.app"
 
 # Icon positions match the zones drawn into the background image. Change both together.
 BACKGROUND="$ROOT/deploy/dmg-background.png"
-WINDOW_WIDTH=640
-WINDOW_HEIGHT=420
-ICON_SIZE=128
 APP_X=${APP_X:-176}
 APP_Y=${APP_Y:-182}
 DROP_X=${DROP_X:-464}
 DROP_Y=${DROP_Y:-182}
 
-ARGS=(
-  --volname "KCDBar $MARKETING"
-  --window-pos 200 120
-  --window-size "$WINDOW_WIDTH" "$WINDOW_HEIGHT"
-  --icon-size "$ICON_SIZE"
-  --icon "KCDBar.app" "$APP_X" "$APP_Y"
-  --app-drop-link "$DROP_X" "$DROP_Y"
-  --no-internet-enable
-)
-
-if [ -f "$BACKGROUND" ]; then
-  ARGS+=(--background "$BACKGROUND")
-else
-  echo "note: no background at $BACKGROUND — building a plain dmg" >&2
+if [ ! -f "$BACKGROUND" ]; then
+  echo "no background at $BACKGROUND — run rsvg-convert over deploy/dmg-background.svg" >&2
+  exit 1
 fi
 
-create-dmg "${ARGS[@]}" "$DMG" "$STAGE"
-
 codesign --verify --deep --strict "$STAGE/KCDBar.app"
+
+KCDBAR_APP="$STAGE/KCDBar.app" \
+KCDBAR_DMG_BACKGROUND="$BACKGROUND" \
+KCDBAR_APP_X="$APP_X" \
+KCDBAR_APP_Y="$APP_Y" \
+KCDBAR_DROP_X="$DROP_X" \
+KCDBAR_DROP_Y="$DROP_Y" \
+  "$DMGBUILD" -s "$ROOT/deploy/dmg-settings.py" "KCDBar $MARKETING" "$DMG"
 shasum -a 256 "$DMG" | tee "$DMG.sha256"
 
 echo
