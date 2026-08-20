@@ -130,7 +130,39 @@ package enum BarPresetCatalogue {
         showsDesktopButton: false
     )
 
-    package static let all: [BarPreset] = [windows11, windows10, dock, minimal]
+    package static let kcd = BarPreset(
+        name: "KCD",
+        edge: .bottom,
+        alignment: .leading,
+        widthMode: .fullEdge,
+        attachment: .edgeAttached,
+        entryContent: .iconOnly,
+        entrySizing: .fixed,
+        entryFit: .edgeToEdge,
+        grouping: .perWindow,
+        material: .vibrancy,
+        startButton: .leading,
+        startMark: .windows11,
+        autoHide: .never,
+        displays: .allDisplays,
+        windowScope: .thisDisplay,
+        overlap: .pushDisplayFillingWindows,
+        dockHandling: .hide,
+        thickness: 50,
+        entrySpacing: 0,
+        contentPadding: 0,
+        cornerRadius: 0,
+        entryCornerRadius: 0,
+        iconSize: 28,
+        showsTrash: true,
+        showsBattery: true,
+        showsControlCentre: true,
+        showsClock: true,
+        showsTracking: true,
+        showsDesktopButton: true
+    )
+
+    package static let all: [BarPreset] = [kcd, windows11, windows10, dock, minimal]
 
     package static let `default` = windows11
 
