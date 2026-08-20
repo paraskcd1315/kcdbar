@@ -20,6 +20,7 @@ package enum TaskbarMetrics {
     package static let maximumInstanceDots = 5
     package static let separatorThickness: CGFloat = 1
     package static let separatorInset: CGFloat = 6
+    package static let trayEndPadding: CGFloat = 10
     package static let showDesktopHoverOpacity: Double = 0.12
     package static let showDesktopActiveOpacity: Double = 0.20
     package static let instanceDotInset: CGFloat = 2

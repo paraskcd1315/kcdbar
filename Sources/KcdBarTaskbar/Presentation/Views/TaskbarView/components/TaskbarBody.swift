@@ -48,11 +48,14 @@ package struct TaskbarBody: View {
                 onOpenTimer: onOpenTimer
             )
             if showsDesktopCap {
-                TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
                 TaskbarDesktopCap(
                     preset: viewModel.preset,
                     isShowingDesktop: isShowingDesktop,
                     onToggle: onToggleDesktop
+                )
+                .padding(
+                    viewModel.preset.edge.isVertical ? .top : .leading,
+                    TaskbarMetrics.trayEndPadding
                 )
             }
         }
