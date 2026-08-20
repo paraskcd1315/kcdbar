@@ -23,7 +23,8 @@ package struct TaskbarEntryView: View {
                 content: preset.entryContent,
                 isLauncher: entry.isLauncher
             ),
-            iconSize: preset.iconSize
+            iconSize: BarEntryMetrics.iconSize(for: preset),
+            isVertical: preset.edge.isVertical
         )
         .overlay(alignment: .bottom) { TaskbarEntryIndicator(entry: entry) }
         .contentShape(shape)

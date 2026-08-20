@@ -5,6 +5,7 @@ package struct TaskbarEntryLabel: View {
     package let entry: TaskbarEntryModel
     package let showsTitle: Bool
     package let iconSize: CGFloat
+    package let isVertical: Bool
 
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
@@ -19,10 +20,13 @@ package struct TaskbarEntryLabel: View {
         }
         .frame(maxWidth: showsTitle ? .infinity : nil, alignment: showsTitle ? .leading : .center)
         .padding(.horizontal, showsTitle ? KbSpacing.s4 : KbSpacing.s3)
-        .padding(.vertical, KbSpacing.s3)
         .frame(
             minWidth: showsTitle ? TaskbarMetrics.entryCompactWidth : nil,
             maxWidth: showsTitle ? TaskbarMetrics.entryMaxWidth : nil
+        )
+        .frame(
+            maxWidth: isVertical ? .infinity : nil,
+            maxHeight: isVertical ? nil : .infinity
         )
     }
 }

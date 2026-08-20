@@ -8,6 +8,7 @@ package enum KbColors {
     package static let brand = Color.accentColor
     package static let onBrand = Color.white
     package static let separator = Color.white.opacity(0.12)
+    package static let bandFill = Color.white.opacity(0.08)
     package static let activeIndicator = Color.accentColor
     package static let focusedFill = Color.black.opacity(0.55)
     package static let scrim = Color.black.opacity(0.4)

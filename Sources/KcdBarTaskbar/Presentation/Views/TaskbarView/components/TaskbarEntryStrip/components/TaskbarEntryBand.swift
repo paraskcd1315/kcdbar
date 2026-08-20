@@ -26,15 +26,23 @@ package struct TaskbarEntryBand: View {
                 )
             }
         }
-        .padding(group.isBanded ? TaskbarMetrics.bandPadding : 0)
-        .glassEffect(group.isBanded ? .regular : .identity, in: bandShape)
+        .padding(alongBar, group.isBanded ? TaskbarMetrics.bandPadding : 0)
+        .background {
+            if group.isBanded {
+                bandShape.fill(KbColors.bandFill)
+            }
+        }
+    }
+
+    private var alongBar: Edge.Set {
+        preset.edge.isVertical ? .vertical : .horizontal
     }
 
     private var bandShape: AnyShape {
         KbBarShape.shape(
             edge: preset.edge,
             attachment: preset.attachment,
-            cornerRadius: preset.entryCornerRadius + TaskbarMetrics.bandPadding
+            cornerRadius: preset.entryCornerRadius
         )
     }
 }

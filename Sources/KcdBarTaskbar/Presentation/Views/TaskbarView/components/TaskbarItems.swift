@@ -26,7 +26,7 @@ package struct TaskbarItems: View {
             if viewModel.preset.startButton != .hidden {
                 TaskbarStartButton(
                     mark: viewModel.preset.startMark,
-                    iconSize: viewModel.preset.iconSize,
+                    iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
                     cornerRadius: viewModel.preset.entryCornerRadius,
                     onOpen: onOpenStart,
                     onOpenSettings: onOpenSettings
@@ -44,7 +44,7 @@ package struct TaskbarItems: View {
             )
             if viewModel.preset.showsTrash {
                 TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
-                TaskbarTrash(monitor: trash)
+                TaskbarTrash(monitor: trash, iconSize: BarEntryMetrics.iconSize(for: viewModel.preset))
             }
             TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
             if viewModel.preset.showsBattery, battery.isPresent {

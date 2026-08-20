@@ -13,12 +13,16 @@ package struct TaskbarStartMarkView: View {
     package var body: some View {
         switch mark {
         case .windows11:
-            KbWindowsMark(generation: .eleven, size: size * TaskbarMetrics.startMarkRatio)
+            KbWindowsMark(generation: .eleven, size: markSize)
         case .windows10:
-            KbWindowsMark(generation: .ten, size: size * TaskbarMetrics.startMarkRatio)
+            KbWindowsMark(generation: .ten, size: markSize)
         case .bars, .apple, .grid, .power:
             Image(systemName: TaskbarStartMarkSymbol.name(for: mark))
-                .font(.system(size: size * TaskbarMetrics.startMarkRatio, weight: .medium))
+                .font(.system(size: markSize, weight: .medium))
         }
+    }
+
+    private var markSize: CGFloat {
+        size * BarEntryMetrics.iconBodyRatio
     }
 }
