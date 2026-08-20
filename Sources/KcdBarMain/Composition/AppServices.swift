@@ -29,6 +29,7 @@ package final class AppServices {
     )
     package let totals = TotalsMonitor(source: KcdSignalTotalsSource())
     package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
+    package let stageManager = StageManagerState(port: WindowManagerStageManager())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
     package let sound = SoundMonitor(source: CoreAudioSoundSource())
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
@@ -392,8 +393,8 @@ package final class AppServices {
     }
 
     package func openSettings() {
-        settingsWindow.present { [settings, loginItem] in
-            SettingsRootView(settings: settings, loginItem: loginItem)
+        settingsWindow.present { [settings, loginItem, stageManager] in
+            SettingsRootView(settings: settings, loginItem: loginItem, stageManager: stageManager)
         }
     }
 

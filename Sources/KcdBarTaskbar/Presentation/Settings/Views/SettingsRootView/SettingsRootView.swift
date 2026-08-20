@@ -3,12 +3,14 @@ import SwiftUI
 package struct SettingsRootView: View {
     package let settings: BarSettingsState
     package let loginItem: LoginItemState
+    package let stageManager: StageManagerState
 
     @State private var pane: SettingsPane = .appearance
 
-    package init(settings: BarSettingsState, loginItem: LoginItemState) {
+    package init(settings: BarSettingsState, loginItem: LoginItemState, stageManager: StageManagerState) {
         self.settings = settings
         self.loginItem = loginItem
+        self.stageManager = stageManager
     }
 
     package var body: some View {
@@ -24,7 +26,12 @@ package struct SettingsRootView: View {
                 max: SettingsMetrics.sidebarMaxWidth
             )
         } detail: {
-            SettingsDetailView(pane: pane, settings: settings, loginItem: loginItem)
+            SettingsDetailView(
+                pane: pane,
+                settings: settings,
+                loginItem: loginItem,
+                stageManager: stageManager
+            )
                 .navigationTitle(pane.title)
         }
         .navigationSplitViewStyle(.balanced)

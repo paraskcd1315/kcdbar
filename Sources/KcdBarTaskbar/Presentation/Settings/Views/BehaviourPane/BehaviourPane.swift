@@ -3,10 +3,12 @@ import SwiftUI
 package struct BehaviourPane: View {
     package let settings: BarSettingsState
     package let loginItem: LoginItemState
+    package let stageManager: StageManagerState
 
-    package init(settings: BarSettingsState, loginItem: LoginItemState) {
+    package init(settings: BarSettingsState, loginItem: LoginItemState, stageManager: StageManagerState) {
         self.settings = settings
         self.loginItem = loginItem
+        self.stageManager = stageManager
     }
 
     package var body: some View {
@@ -54,10 +56,18 @@ package struct BehaviourPane: View {
 
             Section("settings.behaviour.system") {
                 Toggle("settings.behaviour.launchAtLogin", isOn: launchAtLogin)
+                Toggle("settings.behaviour.stageManager", isOn: stageManagerEnabled)
             }
         }
         .formStyle(.grouped)
-        .onAppear { loginItem.refresh() }
+        .onAppear {
+            loginItem.refresh()
+            stageManager.refresh()
+        }
+    }
+
+    private var stageManagerEnabled: Binding<Bool> {
+        Binding(get: { stageManager.isEnabled }, set: { _ in stageManager.toggle() })
     }
 
     private var launchAtLogin: Binding<Bool> {

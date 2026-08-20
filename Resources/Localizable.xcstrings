@@ -20,6 +20,7 @@
     "settings.appearance.material": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Material" } } } },
     "settings.appearance.thickness": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Thickness" } } } },
     "settings.appearance.cornerRadius": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Corner radius" } } } },
+    "settings.behaviour.stageManager": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "macOS Stage Manager" } } } },
     "settings.behaviour.trash": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Trash" } } } },
     "settings.behaviour.battery": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Battery" } } } },
     "settings.behaviour.controlCentre": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Control Centre" } } } },
