@@ -33,7 +33,7 @@ package enum TaskbarMetrics {
     package static let bandSpacing: CGFloat = 2
     package static let bandPadding: CGFloat = 4
     package static let controlCentreWidth: CGFloat = 24
-    package static let tooltipAllowance: CGFloat = 44
+    package static let tooltipAllowance: CGFloat = 88
     package static let tooltipGap: CGFloat = 8
     package static let tooltipDelay: Duration = .milliseconds(400)
     package static let tooltipAppearScale: CGFloat = 0.9

@@ -233,7 +233,7 @@ package final class BarPanelHost: BarPanelHostPort {
 
             let reveal = BarRevealPolicy.shouldReveal(
                 pointer: location,
-                barFrame: BarFrameCalculator.panelFrame(for: presetState.preset, on: display),
+                barFrame: BarFrameCalculator.frame(for: presetState.preset, on: display),
                 display: display,
                 edge: presetState.preset.edge
             )
