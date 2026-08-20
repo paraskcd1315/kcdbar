@@ -42,15 +42,21 @@ package struct TaskbarItems: View {
                 onDropPin: onDropPin,
                 onMiddleClick: onMiddleClick
             )
+            if viewModel.preset.showsTrash {
+                TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
+                TaskbarTrash(monitor: trash)
+            }
             TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
-            TaskbarTrash(monitor: trash)
-            TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
-            if viewModel.preset.showsStatusArea {
-                if battery.isPresent {
-                    TaskbarBattery(state: battery, onOpen: onOpenBattery)
-                }
+            if viewModel.preset.showsBattery, battery.isPresent {
+                TaskbarBattery(state: battery, onOpen: onOpenBattery)
+            }
+            if viewModel.preset.showsControlCentre {
                 TaskbarControlCentreButton(onOpen: onOpenControlCentre)
+            }
+            if viewModel.preset.showsClock {
                 TaskbarClock(onOpen: onOpenNotifications)
+            }
+            if viewModel.preset.showsTracking {
                 TaskbarTracking(timer: timer, totals: totals, onOpenTimer: onOpenTimer)
             }
         }

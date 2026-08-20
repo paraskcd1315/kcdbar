@@ -44,7 +44,11 @@ package struct BehaviourPane: View {
             }
 
             Section("settings.behaviour.contents") {
-                Toggle("settings.behaviour.statusArea", isOn: settings.binding(\.showsStatusArea))
+                Toggle("settings.behaviour.trash", isOn: settings.binding(\.showsTrash))
+                Toggle("settings.behaviour.battery", isOn: settings.binding(\.showsBattery))
+                Toggle("settings.behaviour.controlCentre", isOn: settings.binding(\.showsControlCentre))
+                Toggle("settings.behaviour.clock", isOn: settings.binding(\.showsClock))
+                Toggle("settings.behaviour.tracking", isOn: settings.binding(\.showsTracking))
                 Toggle("settings.behaviour.desktopButton", isOn: settings.binding(\.showsDesktopButton))
             }
 

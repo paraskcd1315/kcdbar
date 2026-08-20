@@ -23,13 +23,22 @@ package struct BarPreset: Codable, Equatable, Sendable {
     package var cornerRadius: CGFloat
     package var entryCornerRadius: CGFloat
     package var iconSize: CGFloat
-    package var showsStatusArea: Bool
+    package var showsTrash: Bool
+    package var showsBattery: Bool
+    package var showsControlCentre: Bool
+    package var showsClock: Bool
+    package var showsTracking: Bool
     package var showsDesktopButton: Bool
 }
 
 extension BarPreset {
+    private enum RetiredKeys: String, CodingKey {
+        case showsStatusArea
+    }
+
     package init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        let retired = try decoder.container(keyedBy: RetiredKeys.self)
         let fallback = BarPresetCatalogue.default
 
         name = try container.decode(String.self, forKey: .name)
@@ -57,7 +66,15 @@ extension BarPreset {
         entryCornerRadius = try container.decodeIfPresent(CGFloat.self, forKey: .entryCornerRadius)
             ?? fallback.entryCornerRadius
         iconSize = try container.decodeIfPresent(CGFloat.self, forKey: .iconSize) ?? fallback.iconSize
-        showsStatusArea = try container.decodeIfPresent(Bool.self, forKey: .showsStatusArea) ?? fallback.showsStatusArea
+        let statusArea = try retired.decodeIfPresent(Bool.self, forKey: .showsStatusArea)
+        showsTrash = try container.decodeIfPresent(Bool.self, forKey: .showsTrash) ?? fallback.showsTrash
+        showsBattery = try container.decodeIfPresent(Bool.self, forKey: .showsBattery)
+            ?? statusArea ?? fallback.showsBattery
+        showsControlCentre = try container.decodeIfPresent(Bool.self, forKey: .showsControlCentre)
+            ?? statusArea ?? fallback.showsControlCentre
+        showsClock = try container.decodeIfPresent(Bool.self, forKey: .showsClock) ?? statusArea ?? fallback.showsClock
+        showsTracking = try container.decodeIfPresent(Bool.self, forKey: .showsTracking)
+            ?? statusArea ?? fallback.showsTracking
         showsDesktopButton = try container.decodeIfPresent(Bool.self, forKey: .showsDesktopButton)
             ?? fallback.showsDesktopButton
     }

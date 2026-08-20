@@ -23,6 +23,18 @@ struct BarPresetDecodingTests {
         }
     }
 
+    @Test func aPayloadFromBeforeTheStatusAreaSplitCarriesItsOneAnswerToEveryItem() throws {
+        let hidden = Data(#"{"name":"stored","showsStatusArea":false}"#.utf8)
+
+        let preset = try JSONDecoder().decode(BarPreset.self, from: hidden)
+
+        #expect(!preset.showsBattery)
+        #expect(!preset.showsControlCentre)
+        #expect(!preset.showsClock)
+        #expect(!preset.showsTracking)
+        #expect(preset.showsTrash)
+    }
+
     @Test func everyAxisTheRoundTripCarriesSurvivesIt() throws {
         var edited = BarPresetCatalogue.dock
         edited.iconSize = 41

@@ -25,7 +25,11 @@ package enum BarPresetCatalogue {
         cornerRadius: KbRadii.lg,
         entryCornerRadius: KbRadii.md,
         iconSize: BarEntryMetrics.iconSize,
-        showsStatusArea: true,
+        showsTrash: true,
+        showsBattery: true,
+        showsControlCentre: true,
+        showsClock: true,
+        showsTracking: true,
         showsDesktopButton: true
     )
 
@@ -52,7 +56,11 @@ package enum BarPresetCatalogue {
         cornerRadius: KbRadii.none,
         entryCornerRadius: KbRadii.none,
         iconSize: 24,
-        showsStatusArea: true,
+        showsTrash: true,
+        showsBattery: true,
+        showsControlCentre: true,
+        showsClock: true,
+        showsTracking: true,
         showsDesktopButton: true
     )
 
@@ -79,7 +87,11 @@ package enum BarPresetCatalogue {
         cornerRadius: KbRadii.xl,
         entryCornerRadius: KbRadii.lg,
         iconSize: 48,
-        showsStatusArea: false,
+        showsTrash: true,
+        showsBattery: false,
+        showsControlCentre: false,
+        showsClock: false,
+        showsTracking: false,
         showsDesktopButton: false
     )
 
@@ -106,7 +118,11 @@ package enum BarPresetCatalogue {
         cornerRadius: KbRadii.lg,
         entryCornerRadius: KbRadii.sm,
         iconSize: 22,
-        showsStatusArea: false,
+        showsTrash: false,
+        showsBattery: false,
+        showsControlCentre: false,
+        showsClock: false,
+        showsTracking: false,
         showsDesktopButton: false
     )
 
