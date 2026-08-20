@@ -24,6 +24,14 @@ package enum BatteryStyle {
         return max(BatteryMetrics.minimumFill, min(1, fraction))
     }
 
+    package static func filledWidth(for state: BatteryState, in width: CGFloat) -> CGFloat {
+        width * fill(for: state)
+    }
+
+    package static func emptyWidth(for state: BatteryState, in width: CGFloat) -> CGFloat {
+        width * (1 - fill(for: state))
+    }
+
     package static func significant(_ users: [EnergyUser]) -> [EnergyUser] {
         users
             .filter { $0.impact >= BatteryMetrics.significantEnergyImpact }

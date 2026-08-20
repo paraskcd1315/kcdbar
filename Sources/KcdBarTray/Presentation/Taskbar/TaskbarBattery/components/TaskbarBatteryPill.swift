@@ -12,10 +12,21 @@ package struct TaskbarBatteryPill: View {
                 TaskbarBatteryFill(state: state)
                 Text(percentage)
                     .font(KbTypography.batteryReadout)
+                    .foregroundStyle(KbColors.surface)
+                    .frame(width: BatteryMetrics.pillWidth, height: BatteryMetrics.pillHeight)
+                    .mask(alignment: .leading) {
+                        Rectangle()
+                            .frame(width: BatteryStyle.filledWidth(for: state, in: BatteryMetrics.pillWidth))
+                    }
+                Text(percentage)
+                    .font(KbTypography.batteryReadout)
                     .foregroundStyle(KbColors.onSurface)
-                    .blendMode(.destinationOut)
+                    .frame(width: BatteryMetrics.pillWidth, height: BatteryMetrics.pillHeight)
+                    .mask(alignment: .trailing) {
+                        Rectangle()
+                            .frame(width: BatteryStyle.emptyWidth(for: state, in: BatteryMetrics.pillWidth))
+                    }
             }
-            .compositingGroup()
             .frame(width: BatteryMetrics.pillWidth, height: BatteryMetrics.pillHeight)
             RoundedRectangle(cornerRadius: BatteryMetrics.capWidth / 2)
                 .fill(KbColors.onSurfaceMuted)

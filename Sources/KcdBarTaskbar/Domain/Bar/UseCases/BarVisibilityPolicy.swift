@@ -33,6 +33,7 @@ package enum BarVisibilityPolicy {
 
         return windows.contains { window in
             guard !window.isMinimized, let bounds = window.bounds else { return false }
+            guard let order = window.zOrder, order != Int.max else { return false }
             guard WindowDisplayResolver.displayId(for: window, in: displays) == displayId else { return false }
 
             return bounds.intersects(bar)

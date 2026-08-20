@@ -41,6 +41,19 @@ struct BarAutoHideTests {
         )
     }
 
+    @Test func aWindowOnAnotherSpaceNeverCountsAsUnderneath() {
+        let elsewhere = [window(CGRect(x: 0, y: 0, width: 1920, height: 1080), order: Int.max)]
+
+        #expect(
+            !BarVisibilityPolicy.isHidden(
+                preset: preset(.whenOverlapped),
+                onDisplay: 1,
+                windows: elsewhere,
+                displays: displays
+            )
+        )
+    }
+
     @Test func whenOverlappedHidesOnlyWhileAWindowCoversTheBarsStrip() {
         let bar = BarFrameCalculator.frame(for: preset(.whenOverlapped), on: displays[0])
         let over = [window(CGRect(x: 0, y: 0, width: 1920, height: 1080))]

@@ -23,7 +23,7 @@ package struct TaskbarItems: View {
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
-            if viewModel.preset.startButton != .hidden {
+            if viewModel.preset.startButton == .leading {
                 TaskbarStartButton(
                     mark: viewModel.preset.startMark,
                     iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
@@ -34,10 +34,11 @@ package struct TaskbarItems: View {
                     onOpenSettings: onOpenSettings
                 )
             }
-            TaskbarEntryStrip(
-                entries: viewModel.entries,
-                preset: viewModel.preset,
+            TaskbarLaunchGroup(
+                viewModel: viewModel,
                 onActivate: onActivate,
+                onOpenStart: onOpenStart,
+                onOpenSettings: onOpenSettings,
                 onTogglePin: onTogglePin,
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,

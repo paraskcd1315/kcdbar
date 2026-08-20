@@ -41,11 +41,6 @@ package struct TaskbarEntryStrip: View {
         .coordinateSpace(.named(TaskbarStripLayout.coordinateSpace))
         .animation(KbMotion.standard, value: entries)
         .animation(KbMotion.standard, value: groups.map(\.id))
-        .frame(
-            maxWidth: expandsAlongBar && !preset.edge.isVertical ? .infinity : nil,
-            maxHeight: expandsAlongBar && preset.edge.isVertical ? .infinity : nil,
-            alignment: TaskbarStripLayout.alignment(preset: preset)
-        )
     }
 
     private var groups: [TaskbarEntryGroup] {
