@@ -51,12 +51,10 @@ package enum TaskbarBarLayout {
     }
 
     package static func crossAxisVertical(preset: BarPreset) -> VerticalAlignment {
-        guard preset.attachment == .edgeAttached else { return .center }
-        return preset.edge == .top ? .top : .bottom
+        preset.edge == .top ? .top : .bottom
     }
 
     package static func crossAxisHorizontal(preset: BarPreset) -> HorizontalAlignment {
-        guard preset.attachment == .edgeAttached else { return .center }
-        return preset.edge == .leading ? .leading : .trailing
+        preset.edge == .leading ? .leading : .trailing
     }
 }
