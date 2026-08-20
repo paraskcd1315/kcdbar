@@ -47,6 +47,7 @@ package final class PopoverHost {
 
         let hosting = PopoverHostingView(
             rootView: content(presentation, anchor.x - settled.x)
+                .environment(\.popoverRoom, room(above: anchor))
         )
         hosting.onContentSizeChange = { [weak self] size in
             self?.resize(to: size)
@@ -150,6 +151,12 @@ package final class PopoverHost {
 
     private func fitted(_ size: NSSize, anchor: NSPoint) -> NSSize {
         PopoverAnchor.fittedSize(size, anchor: anchor, within: bounds(containing: anchor))
+    }
+
+    private func room(above anchor: NSPoint) -> CGFloat {
+        let within = bounds(containing: anchor)
+
+        return max(within.maxY - (anchor.y + PopoverPlacementMetrics.gap), 0)
     }
 
     private func bounds(containing anchor: NSPoint) -> CGRect {

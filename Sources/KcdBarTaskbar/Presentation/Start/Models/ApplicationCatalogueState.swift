@@ -89,12 +89,13 @@ package final class ApplicationCatalogueState {
         openedCategory = nil
     }
 
-    package var bodyHeight: CGFloat {
+    package func bodyHeight(room: CGFloat) -> CGFloat {
         guard !isLoading else {
             return StartMenuMetrics.bodyHeight(
                 pinned: 0,
                 rows: StartMenuMetrics.skeletonRowCount,
-                sections: StartMenuMetrics.skeletonBandCount
+                sections: StartMenuMetrics.skeletonBandCount,
+                room: room
             )
         }
         let bands = ApplicationCatalogue.sections(of: applications)
@@ -102,7 +103,8 @@ package final class ApplicationCatalogueState {
         return StartMenuMetrics.bodyHeight(
             pinned: 0,
             rows: bands.reduce(0) { $0 + $1.applications.count },
-            sections: bands.count
+            sections: bands.count,
+            room: room
         )
     }
 
