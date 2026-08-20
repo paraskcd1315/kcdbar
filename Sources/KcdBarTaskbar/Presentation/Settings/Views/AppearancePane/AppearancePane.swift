@@ -46,6 +46,11 @@ package struct AppearancePane: View {
                     keyPrefix: "bar.startButton",
                     selection: settings.binding(\.startButton)
                 )
+                SettingsEnumPicker(
+                    title: "settings.appearance.startMark",
+                    keyPrefix: "bar.startMark",
+                    selection: settings.binding(\.startMark)
+                )
             }
 
             Section("settings.appearance.entries") {

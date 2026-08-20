@@ -25,6 +25,7 @@ package struct TaskbarItems: View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
             if viewModel.preset.startButton != .hidden {
                 TaskbarStartButton(
+                    mark: viewModel.preset.startMark,
                     iconSize: viewModel.preset.iconSize,
                     cornerRadius: viewModel.preset.entryCornerRadius,
                     onOpen: onOpenStart,

@@ -2,6 +2,7 @@ import KcdBarDesignSystem
 import SwiftUI
 
 package struct TaskbarStartButton: View {
+    package let mark: BarStartMark
     package let iconSize: CGFloat
     package let cornerRadius: CGFloat
     package let onOpen: () -> Void
@@ -11,8 +12,7 @@ package struct TaskbarStartButton: View {
 
     package var body: some View {
         Button(action: onOpen) {
-            Image(systemName: "line.3.horizontal")
-                .font(.system(size: TaskbarMetrics.startGlyphSize, weight: .medium))
+            TaskbarStartMarkView(mark: mark, size: iconSize)
                 .foregroundStyle(KbColors.onSurface)
                 .frame(width: iconSize, height: iconSize)
                 .padding(KbSpacing.s3)
