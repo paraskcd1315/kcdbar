@@ -52,6 +52,7 @@ package final class AppServices {
     package let power: any PowerActionPort = LoginWindowPowerControl()
     package let userPicture: any UserPicturePort = CollaborationUserPicture()
     package let settingsWindow = SettingsWindowHost()
+    package let aboutWindow = AboutWindowHost()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
@@ -422,6 +423,10 @@ package final class AppServices {
         }
     }
 
+    package func openAbout() {
+        aboutWindow.present()
+    }
+
     package func apply(preset: BarPreset) {
         guard preset != activePreset else { return }
 
@@ -449,6 +454,7 @@ package final class AppServices {
             onRequestAccessibility: { [authorization] in authorization.requestTrust() },
             onOpenStart: { [weak self] in self?.openStartMenu() },
             onOpenSettings: { [weak self] in self?.openSettings() },
+            onOpenAbout: { [weak self] in self?.openAbout() },
             onTogglePin: { [weak self] entry in self?.togglePin(entry: entry) },
             onCloseWindow: { [weak self] entry in self?.closeWindow(entry: entry) },
             onQuit: { [weak self] entry in self?.quit(entry: entry) },

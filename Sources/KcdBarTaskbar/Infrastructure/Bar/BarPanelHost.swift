@@ -29,6 +29,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onRequestAccessibility: () -> Void
     private let onOpenStart: () -> Void
     private let onOpenSettings: () -> Void
+    private let onOpenAbout: () -> Void
     private let onTogglePin: (TaskbarEntryModel) -> Void
     private let onCloseWindow: (TaskbarEntryModel) -> Void
     private let onQuit: (TaskbarEntryModel) -> Void
@@ -55,6 +56,7 @@ package final class BarPanelHost: BarPanelHostPort {
         onRequestAccessibility: @escaping () -> Void,
         onOpenStart: @escaping () -> Void,
         onOpenSettings: @escaping () -> Void,
+        onOpenAbout: @escaping () -> Void,
         onTogglePin: @escaping (TaskbarEntryModel) -> Void,
         onCloseWindow: @escaping (TaskbarEntryModel) -> Void,
         onQuit: @escaping (TaskbarEntryModel) -> Void,
@@ -90,6 +92,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.onRequestAccessibility = onRequestAccessibility
         self.onOpenStart = onOpenStart
         self.onOpenSettings = onOpenSettings
+        self.onOpenAbout = onOpenAbout
     }
 
     package func present(preset: BarPreset) {
@@ -293,6 +296,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 onRequestAccessibility: onRequestAccessibility,
                 onOpenStart: onOpenStart,
                 onOpenSettings: onOpenSettings,
+                onOpenAbout: onOpenAbout,
                 onTogglePin: onTogglePin,
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,

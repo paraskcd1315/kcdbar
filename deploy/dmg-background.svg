@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="640" y2="420" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#302E58"/>
+<stop offset="1" stop-color="#1A1930"/>
+</linearGradient>
+<radialGradient id="glow" cx="464" cy="182" r="210" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#007AFF" stop-opacity="0.30"/>
+<stop offset="1" stop-color="#007AFF" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="plate" x1="0" y1="92" x2="0" y2="340" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#605E88"/>
+<stop offset="1" stop-color="#7C7A9E"/>
+</linearGradient>
+<radialGradient id="pad" cx="0.5" cy="0.34" r="0.52">
+<stop offset="0" stop-color="#FFFFFF" stop-opacity="0.12"/>
+<stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+</radialGradient>
+</defs>
+
+<rect width="640" height="420" fill="url(#bg)"/>
+<rect width="640" height="420" fill="url(#glow)"/>
+
+<rect x="72" y="92" width="208" height="248" rx="24" fill="url(#plate)"/>
+<rect x="73" y="93" width="206" height="246" rx="23" fill="none" stroke="#8E8CB2" stroke-width="2"/>
+<rect x="72" y="92" width="208" height="248" rx="24" fill="url(#pad)"/>
+
+<rect x="360" y="92" width="208" height="248" rx="24" fill="url(#plate)"/>
+<rect x="361" y="93" width="206" height="246" rx="23" fill="none" stroke="#B6B4D8" stroke-width="2" stroke-dasharray="12 8"/>
+<rect x="360" y="92" width="208" height="248" rx="24" fill="url(#pad)"/>
+
+<path d="M286,176 H332 V164 L356,182 L332,200 V188 H286 Z" fill="#007AFF"/>
+</svg>
