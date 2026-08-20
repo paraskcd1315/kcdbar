@@ -14,17 +14,19 @@ package enum TaskbarEntryStyle {
         )
     }
 
-    package static func glass(isFrontmost: Bool, isHovered: Bool) -> Glass {
+    package static func fill(sizing: BarEntrySizing, isFrontmost: Bool, isHovered: Bool) -> Color {
+        guard sizing != .magnifying else { return .clear }
+
         if isFrontmost {
-            return .regular.tint(KbColors.focusedFill).interactive()
+            return KbColors.onSurface.opacity(TaskbarMetrics.focusedFillOpacity)
         }
-        return isHovered ? .regular.interactive() : .identity
+        return isHovered ? KbColors.onSurface.opacity(TaskbarMetrics.hoverFillOpacity) : .clear
     }
 
     package static func magnification(sizing: BarEntrySizing, isHovered: Bool) -> CGFloat {
-        guard isHovered else { return 1 }
+        guard isHovered, sizing == .magnifying else { return 1 }
 
-        return sizing == .magnifying ? TaskbarMetrics.magnificationScale : TaskbarMetrics.hoverScale
+        return TaskbarMetrics.magnificationScale
     }
 
     package static func magnificationAnchor(edge: BarEdge) -> UnitPoint {

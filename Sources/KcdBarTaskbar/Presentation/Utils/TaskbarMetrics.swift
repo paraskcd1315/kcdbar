@@ -11,7 +11,6 @@ package enum TaskbarMetrics {
     package static let indicatorWidth: CGFloat = 16
     package static let islandOutset: CGFloat = 6
     package static let magnificationScale: CGFloat = 1.35
-    package static let hoverScale: CGFloat = 1.04
     package static let hoverFillOpacity: Double = 0.10
     package static let focusedFillOpacity: Double = 0.16
     package static let insertionScale: CGFloat = 0.4

@@ -4,13 +4,20 @@ package struct SettingsRootView: View {
     package let settings: BarSettingsState
     package let loginItem: LoginItemState
     package let stageManager: StageManagerState
+    package let isTrackingAvailable: Bool
 
     @State private var pane: SettingsPane = .appearance
 
-    package init(settings: BarSettingsState, loginItem: LoginItemState, stageManager: StageManagerState) {
+    package init(
+        settings: BarSettingsState,
+        loginItem: LoginItemState,
+        stageManager: StageManagerState,
+        isTrackingAvailable: Bool
+    ) {
         self.settings = settings
         self.loginItem = loginItem
         self.stageManager = stageManager
+        self.isTrackingAvailable = isTrackingAvailable
     }
 
     package var body: some View {
@@ -30,7 +37,8 @@ package struct SettingsRootView: View {
                 pane: pane,
                 settings: settings,
                 loginItem: loginItem,
-                stageManager: stageManager
+                stageManager: stageManager,
+                isTrackingAvailable: isTrackingAvailable
             )
                 .navigationTitle(pane.title)
         }

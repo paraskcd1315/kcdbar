@@ -3,11 +3,11 @@ import CoreGraphics
 package enum BatteryStyle {
     package static func tone(for state: BatteryState) -> BatteryTone {
         if state.isLowPower { return .powerSave }
-        if state.isCharging || state.isCharged { return .full }
         if state.percentage <= BatteryMetrics.criticalPercentage { return .critical }
         if state.percentage <= BatteryMetrics.warningPercentage { return .warning }
+        if state.isCharging || state.isCharged { return .full }
 
-        return .full
+        return .neutral
     }
 
     package static func status(for state: BatteryState) -> BatteryStatus {

@@ -13,7 +13,9 @@ package struct TaskbarBatteryPill: View {
                 Text(percentage)
                     .font(KbTypography.batteryReadout)
                     .foregroundStyle(KbColors.onSurface)
+                    .blendMode(.destinationOut)
             }
+            .compositingGroup()
             .frame(width: BatteryMetrics.pillWidth, height: BatteryMetrics.pillHeight)
             RoundedRectangle(cornerRadius: BatteryMetrics.capWidth / 2)
                 .fill(KbColors.onSurfaceMuted)

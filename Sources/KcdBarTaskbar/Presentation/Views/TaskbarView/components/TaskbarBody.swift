@@ -48,6 +48,7 @@ package struct TaskbarBody: View {
                 onOpenTimer: onOpenTimer
             )
             if showsDesktopCap {
+                TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
                 TaskbarDesktopCap(
                     preset: viewModel.preset,
                     isShowingDesktop: isShowingDesktop,

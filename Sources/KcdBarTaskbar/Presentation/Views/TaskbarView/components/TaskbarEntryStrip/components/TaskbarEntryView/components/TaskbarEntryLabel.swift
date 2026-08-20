@@ -6,7 +6,7 @@ package struct TaskbarEntryLabel: View {
     package let showsTitle: Bool
     package let iconSize: CGFloat
     package let isVertical: Bool
-    package let isFilled: Bool
+    package let side: CGFloat?
 
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
@@ -24,11 +24,6 @@ package struct TaskbarEntryLabel: View {
             minWidth: showsTitle ? TaskbarMetrics.entryCompactWidth : nil,
             maxWidth: showsTitle ? TaskbarMetrics.entryMaxWidth : nil
         )
-        .kbBarItem(
-            isVertical: isVertical,
-            isFilled: isFilled,
-            isSquare: !showsTitle,
-            inset: showsTitle ? KbSpacing.s4 : KbSpacing.s3
-        )
+        .kbBarItem(isVertical: isVertical, side: showsTitle ? nil : side)
     }
 }

@@ -4,11 +4,18 @@ package struct BehaviourPane: View {
     package let settings: BarSettingsState
     package let loginItem: LoginItemState
     package let stageManager: StageManagerState
+    package let isTrackingAvailable: Bool
 
-    package init(settings: BarSettingsState, loginItem: LoginItemState, stageManager: StageManagerState) {
+    package init(
+        settings: BarSettingsState,
+        loginItem: LoginItemState,
+        stageManager: StageManagerState,
+        isTrackingAvailable: Bool
+    ) {
         self.settings = settings
         self.loginItem = loginItem
         self.stageManager = stageManager
+        self.isTrackingAvailable = isTrackingAvailable
     }
 
     package var body: some View {
@@ -50,7 +57,9 @@ package struct BehaviourPane: View {
                 Toggle("settings.behaviour.battery", isOn: settings.binding(\.showsBattery))
                 Toggle("settings.behaviour.controlCentre", isOn: settings.binding(\.showsControlCentre))
                 Toggle("settings.behaviour.clock", isOn: settings.binding(\.showsClock))
-                Toggle("settings.behaviour.tracking", isOn: settings.binding(\.showsTracking))
+                if isTrackingAvailable {
+                    Toggle("settings.behaviour.tracking", isOn: settings.binding(\.showsTracking))
+                }
                 Toggle("settings.behaviour.desktopButton", isOn: settings.binding(\.showsDesktopButton))
             }
 

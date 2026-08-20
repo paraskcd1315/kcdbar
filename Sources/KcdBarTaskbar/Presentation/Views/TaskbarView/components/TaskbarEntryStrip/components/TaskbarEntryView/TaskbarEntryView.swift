@@ -25,17 +25,25 @@ package struct TaskbarEntryView: View {
             ),
             iconSize: BarEntryMetrics.iconSize(for: preset),
             isVertical: preset.edge.isVertical,
-            isFilled: preset.entryFit == .edgeToEdge
+            side: BarEntryMetrics.itemSide(for: preset)
         )
-        .overlay(alignment: .bottom) { TaskbarEntryIndicator(entry: entry) }
-        .contentShape(shape)
-        .overlay { middleClickCatcher(onMiddleClick) }
-        .onTapGesture(perform: onActivate)
-        .glassEffect(TaskbarEntryStyle.glass(isFrontmost: entry.isFrontmost, isHovered: isHovered), in: shape)
         .scaleEffect(
             TaskbarEntryStyle.magnification(sizing: preset.entrySizing, isHovered: isHovered),
             anchor: TaskbarEntryStyle.magnificationAnchor(edge: preset.edge)
         )
+        .background {
+            shape.fill(
+                TaskbarEntryStyle.fill(
+                    sizing: preset.entrySizing,
+                    isFrontmost: entry.isFrontmost,
+                    isHovered: isHovered
+                )
+            )
+        }
+        .overlay(alignment: .bottom) { TaskbarEntryIndicator(entry: entry) }
+        .contentShape(shape)
+        .overlay { middleClickCatcher(onMiddleClick) }
+        .onTapGesture(perform: onActivate)
         .opacity(isDragging ? TaskbarMetrics.draggingOpacity : 1)
         .animation(KbMotion.quick, value: isHovered)
         .animation(KbMotion.quick, value: entry.isFrontmost)

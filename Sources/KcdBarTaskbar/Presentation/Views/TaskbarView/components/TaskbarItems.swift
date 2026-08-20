@@ -29,7 +29,7 @@ package struct TaskbarItems: View {
                     iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
                     cornerRadius: viewModel.preset.entryCornerRadius,
                     isVertical: viewModel.preset.edge.isVertical,
-                    isFilled: viewModel.preset.entryFit == .edgeToEdge,
+                    side: BarEntryMetrics.itemSide(for: viewModel.preset),
                     onOpen: onOpenStart,
                     onOpenSettings: onOpenSettings
                 )
@@ -50,10 +50,12 @@ package struct TaskbarItems: View {
                     monitor: trash,
                     iconSize: BarEntryMetrics.iconSize(for: viewModel.preset),
                     isVertical: viewModel.preset.edge.isVertical,
-                    isFilled: viewModel.preset.entryFit == .edgeToEdge
+                    side: BarEntryMetrics.itemSide(for: viewModel.preset)
                 )
             }
-            TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
+            if showsStatusArea {
+                TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)
+            }
             if viewModel.preset.showsBattery, battery.isPresent {
                 TaskbarBattery(state: battery, onOpen: onOpenBattery)
             }
@@ -63,9 +65,17 @@ package struct TaskbarItems: View {
             if viewModel.preset.showsClock {
                 TaskbarClock(onOpen: onOpenNotifications)
             }
-            if viewModel.preset.showsTracking {
+            if viewModel.preset.showsTracking, timer.isAvailable {
                 TaskbarTracking(timer: timer, totals: totals, onOpenTimer: onOpenTimer)
             }
         }
+    }
+
+    private var showsStatusArea: Bool {
+        TaskbarStatusVisibility.showsAnything(
+            preset: viewModel.preset,
+            hasBattery: battery.isPresent,
+            hasTracking: timer.isAvailable
+        )
     }
 }

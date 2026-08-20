@@ -5,7 +5,7 @@ package struct TaskbarTrash: View {
     package let monitor: TrashMonitor
     package let iconSize: CGFloat
     package let isVertical: Bool
-    package let isFilled: Bool
+    package let side: CGFloat
 
     @State private var isHovered = false
 
@@ -13,12 +13,12 @@ package struct TaskbarTrash: View {
         monitor: TrashMonitor,
         iconSize: CGFloat = TrashMetrics.iconSize,
         isVertical: Bool = false,
-        isFilled: Bool = false
+        side: CGFloat = TrashMetrics.iconSize + TrashMetrics.glyphInset * 2
     ) {
         self.monitor = monitor
         self.iconSize = iconSize
         self.isVertical = isVertical
-        self.isFilled = isFilled
+        self.side = side
     }
 
     package var body: some View {
@@ -33,7 +33,7 @@ package struct TaskbarTrash: View {
             }
         }
         .frame(width: iconSize, height: iconSize)
-        .kbBarItem(isVertical: isVertical, isFilled: isFilled, isSquare: true, inset: TrashMetrics.glyphInset)
+        .kbBarItem(isVertical: isVertical, side: side)
         .kbTappable(in: shape) { monitor.open() }
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)

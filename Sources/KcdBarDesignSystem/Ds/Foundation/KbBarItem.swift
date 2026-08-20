@@ -2,35 +2,35 @@ import SwiftUI
 
 package struct KbBarItem: ViewModifier {
     package let isVertical: Bool
-    package let isFilled: Bool
-    package let isSquare: Bool
+    package let side: CGFloat?
     package let inset: CGFloat
 
-    package init(isVertical: Bool, isFilled: Bool, isSquare: Bool, inset: CGFloat) {
+    package init(isVertical: Bool, side: CGFloat?, inset: CGFloat) {
         self.isVertical = isVertical
-        self.isFilled = isFilled
-        self.isSquare = isSquare
+        self.side = side
         self.inset = inset
     }
 
     package func body(content: Content) -> some View {
-        content
-            .padding(isSquare ? .all : .horizontal, isSquare && isFilled ? 0 : inset)
-            .frame(
-                maxWidth: isFilled && isVertical ? .infinity : nil,
-                maxHeight: isFilled && !isVertical ? .infinity : nil
-            )
-            .aspectRatio(isSquare ? 1 : nil, contentMode: .fit)
+        if let side {
+            content.frame(width: side, height: side)
+        } else {
+            content
+                .padding(.horizontal, inset)
+                .frame(
+                    maxWidth: isVertical ? .infinity : nil,
+                    maxHeight: isVertical ? nil : .infinity
+                )
+        }
     }
 }
 
 extension View {
     package func kbBarItem(
         isVertical: Bool,
-        isFilled: Bool,
-        isSquare: Bool,
-        inset: CGFloat = KbSpacing.s3
+        side: CGFloat?,
+        inset: CGFloat = KbSpacing.s4
     ) -> some View {
-        modifier(KbBarItem(isVertical: isVertical, isFilled: isFilled, isSquare: isSquare, inset: inset))
+        modifier(KbBarItem(isVertical: isVertical, side: side, inset: inset))
     }
 }

@@ -393,8 +393,13 @@ package final class AppServices {
     }
 
     package func openSettings() {
-        settingsWindow.present { [settings, loginItem, stageManager] in
-            SettingsRootView(settings: settings, loginItem: loginItem, stageManager: stageManager)
+        settingsWindow.present { [settings, loginItem, stageManager, timer] in
+            SettingsRootView(
+                settings: settings,
+                loginItem: loginItem,
+                stageManager: stageManager,
+                isTrackingAvailable: timer.isAvailable
+            )
         }
     }
 
