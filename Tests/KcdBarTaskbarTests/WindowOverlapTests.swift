@@ -24,12 +24,37 @@ struct WindowOverlapTests {
         #expect(corrected == CGRect(x: 0, y: 48, width: 1920, height: 1032))
     }
 
-    @Test func aWindowThatDoesNotFillTheDisplayIsLeftAlone() {
+    @Test func aWindowThatDoesNotFillTheDisplayIsMovedClearAndKeepsItsSize() {
         let small = window(CGRect(x: 100, y: 0, width: 600, height: 400))
 
         let corrected = WindowOverlapPolicy.correctedFrame(for: small, barFrame: bottomBar, display: display)
 
-        #expect(corrected == nil)
+        #expect(corrected == CGRect(x: 100, y: 48, width: 600, height: 400))
+    }
+
+    @Test func aWindowOverATopBarIsMovedDownRatherThanClipped() {
+        let topBar = CGRect(x: 0, y: 1032, width: 1920, height: 48)
+        let dialog = window(CGRect(x: 700, y: 900, width: 500, height: 300))
+
+        let corrected = WindowOverlapPolicy.correctedFrame(for: dialog, barFrame: topBar, display: display)
+
+        #expect(corrected == CGRect(x: 700, y: 732, width: 500, height: 300))
+    }
+
+    @Test func aWindowTallerThanWhatTheBarLeavesIsClipped() {
+        let topBar = CGRect(x: 0, y: 1032, width: 1920, height: 48)
+        let tall = window(CGRect(x: 700, y: 0, width: 500, height: 1080))
+
+        let corrected = WindowOverlapPolicy.correctedFrame(for: tall, barFrame: topBar, display: display)
+
+        #expect(corrected?.maxY == 1032)
+        #expect(corrected?.height == 1032)
+    }
+
+    @Test func aWindowAlreadyClearOfTheBarIsNeverTouched() {
+        let clear = window(CGRect(x: 100, y: 200, width: 600, height: 400))
+
+        #expect(WindowOverlapPolicy.correctedFrame(for: clear, barFrame: bottomBar, display: display) == nil)
     }
 
     @Test func aZoomedWindowClearOfTheBarIsLeftAlone() {
