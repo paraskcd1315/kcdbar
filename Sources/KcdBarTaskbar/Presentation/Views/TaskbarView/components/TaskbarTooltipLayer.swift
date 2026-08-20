@@ -26,11 +26,14 @@ package struct TaskbarTooltipLayer: View {
                             edge: edge
                         )
                     )
-                    .transition(.opacity.combined(with: .scale(scale: TaskbarMetrics.tooltipAppearScale)))
+                    .id(entry.id)
+                    .transition(
+                        .move(edge: TaskbarTooltipPlacement.arrival(for: edge)).combined(with: .opacity)
+                    )
             }
         }
         .allowsHitTesting(false)
-        .animation(KbMotion.quick, value: hover.entry)
+        .animation(KbMotion.quick, value: hover.entry?.id)
     }
 
     private var measured: CGSize {

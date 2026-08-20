@@ -1,4 +1,4 @@
-import CoreGraphics
+import SwiftUI
 
 package enum TaskbarTooltipPlacement {
     package static func x(over item: CGRect, tooltip: CGSize, panel: CGSize, edge: BarEdge) -> CGFloat {
@@ -17,6 +17,15 @@ package enum TaskbarTooltipPlacement {
                 : item.minY - TaskbarMetrics.tooltipGap - tooltip.height / 2
         }
         return clamped(item.midY, half: tooltip.height / 2, limit: panel.height)
+    }
+
+    package static func arrival(for edge: BarEdge) -> Edge {
+        switch edge {
+        case .bottom: .bottom
+        case .top: .top
+        case .leading: .leading
+        case .trailing: .trailing
+        }
     }
 
     private static func clamped(_ centre: CGFloat, half: CGFloat, limit: CGFloat) -> CGFloat {
