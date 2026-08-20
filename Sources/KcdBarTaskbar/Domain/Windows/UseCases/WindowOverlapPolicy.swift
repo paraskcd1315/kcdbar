@@ -7,14 +7,29 @@ package enum WindowOverlapPolicy {
         display: DisplayGeometry
     ) -> CGRect? {
         guard let bounds = window.bounds, !window.isMinimized, !window.isFullScreen else { return nil }
-        guard fillsDisplay(bounds, display: display) else { return nil }
         guard bounds.intersects(barFrame) else { return nil }
 
         let available = usableArea(of: display, excluding: barFrame)
-        let corrected = bounds.intersection(available)
+        let corrected = fillsDisplay(bounds, display: display)
+            ? bounds.intersection(available)
+            : fitted(bounds, into: available)
         guard !corrected.isNull, corrected.height > 0, corrected.width > 0 else { return nil }
         guard !isSame(corrected, bounds) else { return nil }
         return corrected
+    }
+
+    package static func fitted(_ bounds: CGRect, into available: CGRect) -> CGRect {
+        var moved = bounds
+
+        if moved.minX < available.minX { moved.origin.x = available.minX }
+        if moved.maxX > available.maxX { moved.origin.x = available.maxX - moved.width }
+        if moved.minY < available.minY { moved.origin.y = available.minY }
+        if moved.maxY > available.maxY { moved.origin.y = available.maxY - moved.height }
+
+        guard moved.width <= available.width, moved.height <= available.height else {
+            return moved.intersection(available)
+        }
+        return moved
     }
 
     package static func usableArea(of display: DisplayGeometry, excluding barFrame: CGRect) -> CGRect {
