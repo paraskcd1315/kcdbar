@@ -116,6 +116,7 @@ package final class BarPanelHost: BarPanelHostPort {
         hiddenDisplays = Set(
             panels.keys.filter { id in
                 BarVisibilityPolicy.isHidden(
+                    preset: presetState.preset,
                     onDisplay: id,
                     windows: registry.windows,
                     displays: registry.displays

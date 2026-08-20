@@ -1,13 +1,42 @@
 import CoreGraphics
 
-/** Whether the display's frontmost window is full screen, which is the only case the bar yields to. */
+/** Whether the bar yields its display. */
 package enum BarVisibilityPolicy {
     package static func isHidden(
+        preset: BarPreset,
         onDisplay displayId: Int,
         windows: [ManagedWindow],
         displays: [DisplayGeometry]
     ) -> Bool {
-        frontmost(onDisplay: displayId, windows: windows, displays: displays)?.isFullScreen ?? false
+        if frontmost(onDisplay: displayId, windows: windows, displays: displays)?.isFullScreen == true {
+            return true
+        }
+        switch preset.autoHide {
+        case .never:
+            return false
+        case .always:
+            return true
+        case .whenOverlapped:
+            return isOverlapped(preset: preset, onDisplay: displayId, windows: windows, displays: displays)
+        }
+    }
+
+    private static func isOverlapped(
+        preset: BarPreset,
+        onDisplay displayId: Int,
+        windows: [ManagedWindow],
+        displays: [DisplayGeometry]
+    ) -> Bool {
+        guard let display = displays.first(where: { $0.id == displayId }) else { return false }
+
+        let bar = BarFrameCalculator.frame(for: preset, on: display)
+
+        return windows.contains { window in
+            guard !window.isMinimized, let bounds = window.bounds else { return false }
+            guard WindowDisplayResolver.displayId(for: window, in: displays) == displayId else { return false }
+
+            return bounds.intersects(bar)
+        }
     }
 
     private static func frontmost(
