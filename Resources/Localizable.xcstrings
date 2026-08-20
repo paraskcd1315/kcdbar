@@ -20,6 +20,8 @@
     "settings.appearance.material": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Material" } } } },
     "settings.appearance.thickness": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Thickness" } } } },
     "settings.appearance.cornerRadius": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Corner radius" } } } },
+    "settings.appearance.entryCornerRadius": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Entry corner radius" } } } },
+    "settings.appearance.iconSize": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Icon size" } } } },
     "settings.appearance.entrySpacing": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Entry spacing" } } } },
     "settings.appearance.contentPadding": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Content padding" } } } },
     "settings.behaviour.windows": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Windows" } } } },

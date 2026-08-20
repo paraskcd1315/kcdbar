@@ -57,6 +57,16 @@ package struct AppearancePane: View {
                     keyPrefix: "bar.entrySizing",
                     selection: settings.binding(\.entrySizing)
                 )
+                SettingsSliderRow(
+                    title: "settings.appearance.entryCornerRadius",
+                    range: SettingsMetrics.entryCornerRadius,
+                    value: settings.binding(\.entryCornerRadius)
+                )
+                SettingsSliderRow(
+                    title: "settings.appearance.iconSize",
+                    range: SettingsMetrics.iconSize,
+                    value: settings.binding(\.iconSize)
+                )
             }
 
             Section("settings.appearance.shape") {

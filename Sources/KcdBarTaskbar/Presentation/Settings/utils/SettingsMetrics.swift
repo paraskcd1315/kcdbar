@@ -9,6 +9,8 @@ package enum SettingsMetrics {
     package static let symbolWidth: CGFloat = 24
     package static let thickness: ClosedRange<CGFloat> = 28...96
     package static let cornerRadius: ClosedRange<CGFloat> = 0...32
+    package static let entryCornerRadius: ClosedRange<CGFloat> = 0...32
+    package static let iconSize: ClosedRange<CGFloat> = 16...64
     package static let spacing: ClosedRange<CGFloat> = 0...24
     package static let padding: ClosedRange<CGFloat> = 0...24
 }

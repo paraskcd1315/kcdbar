@@ -22,7 +22,8 @@ package struct TaskbarEntryView: View {
             showsTitle: TaskbarEntryStyle.showsTitle(
                 content: preset.entryContent,
                 isLauncher: entry.isLauncher
-            )
+            ),
+            iconSize: preset.iconSize
         )
         .overlay(alignment: .bottom) { TaskbarEntryIndicator(entry: entry) }
         .contentShape(shape)
@@ -53,7 +54,10 @@ package struct TaskbarEntryView: View {
     }
 
     private var shape: AnyShape {
-        TaskbarEntryStyle.shape(isOpenHere: TaskbarEntryStyle.isOpenHere(entry))
+        TaskbarEntryStyle.shape(
+            isOpenHere: TaskbarEntryStyle.isOpenHere(entry),
+            cornerRadius: preset.entryCornerRadius
+        )
     }
 
     private func revealTooltip() async {

@@ -2,6 +2,7 @@ import SwiftUI
 
 package struct TaskbarEntryIcon: View {
     package let icon: Image?
+    package let size: CGFloat
 
     package var body: some View {
         Group {
@@ -12,6 +13,6 @@ package struct TaskbarEntryIcon: View {
             }
         }
         .aspectRatio(contentMode: .fit)
-        .frame(width: TaskbarMetrics.iconSize, height: TaskbarMetrics.iconSize)
+        .frame(width: size, height: size)
     }
 }

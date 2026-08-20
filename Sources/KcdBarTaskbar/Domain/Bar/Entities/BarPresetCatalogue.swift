@@ -13,6 +13,7 @@ package enum BarPresetCatalogue {
         grouping: .perWindow,
         material: .liquidGlass,
         startButton: .leading,
+        startMark: .windows11,
         autoHide: .never,
         displays: .allDisplays,
         windowScope: .thisDisplay,
@@ -22,6 +23,8 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
         cornerRadius: KbRadii.lg,
+        entryCornerRadius: KbRadii.md,
+        iconSize: BarEntryMetrics.iconSize,
         showsStatusArea: true,
         showsDesktopButton: true
     )
@@ -37,6 +40,7 @@ package enum BarPresetCatalogue {
         grouping: .perWindow,
         material: .vibrancy,
         startButton: .leading,
+        startMark: .windows10,
         autoHide: .never,
         displays: .allDisplays,
         windowScope: .thisDisplay,
@@ -46,6 +50,8 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s1,
         contentPadding: KbSpacing.s2,
         cornerRadius: KbRadii.none,
+        entryCornerRadius: KbRadii.none,
+        iconSize: 24,
         showsStatusArea: true,
         showsDesktopButton: true
     )
@@ -61,6 +67,7 @@ package enum BarPresetCatalogue {
         grouping: .perApplication,
         material: .liquidGlass,
         startButton: .hidden,
+        startMark: .apple,
         autoHide: .never,
         displays: .primaryOnly,
         windowScope: .thisDisplay,
@@ -70,6 +77,8 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s3,
         contentPadding: KbSpacing.s4,
         cornerRadius: KbRadii.xl,
+        entryCornerRadius: KbRadii.lg,
+        iconSize: 48,
         showsStatusArea: false,
         showsDesktopButton: false
     )
@@ -85,6 +94,7 @@ package enum BarPresetCatalogue {
         grouping: .perWindow,
         material: .liquidGlass,
         startButton: .hidden,
+        startMark: .bars,
         autoHide: .always,
         displays: .primaryOnly,
         windowScope: .thisDisplay,
@@ -94,6 +104,8 @@ package enum BarPresetCatalogue {
         entrySpacing: KbSpacing.s2,
         contentPadding: KbSpacing.s3,
         cornerRadius: KbRadii.lg,
+        entryCornerRadius: KbRadii.sm,
+        iconSize: 22,
         showsStatusArea: false,
         showsDesktopButton: false
     )

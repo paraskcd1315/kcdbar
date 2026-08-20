@@ -34,7 +34,7 @@ package struct TaskbarEntryBand: View {
         KbBarShape.shape(
             edge: preset.edge,
             attachment: preset.attachment,
-            cornerRadius: KbRadii.md
+            cornerRadius: preset.entryCornerRadius + TaskbarMetrics.bandPadding
         )
     }
 }

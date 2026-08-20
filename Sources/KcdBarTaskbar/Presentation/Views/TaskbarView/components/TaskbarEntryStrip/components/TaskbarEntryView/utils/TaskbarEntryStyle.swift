@@ -6,11 +6,11 @@ package enum TaskbarEntryStyle {
         entry.instancesOnThisDisplay > 0
     }
 
-    package static func shape(isOpenHere: Bool) -> AnyShape {
-        guard isOpenHere else { return AnyShape(RoundedRectangle(cornerRadius: KbRadii.md)) }
+    package static func shape(isOpenHere: Bool, cornerRadius: CGFloat) -> AnyShape {
+        guard isOpenHere else { return AnyShape(RoundedRectangle(cornerRadius: cornerRadius)) }
 
         return AnyShape(
-            UnevenRoundedRectangle(topLeadingRadius: KbRadii.md, topTrailingRadius: KbRadii.md)
+            UnevenRoundedRectangle(topLeadingRadius: cornerRadius, topTrailingRadius: cornerRadius)
         )
     }
 
