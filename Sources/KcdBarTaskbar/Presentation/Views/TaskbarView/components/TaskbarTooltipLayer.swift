@@ -15,13 +15,13 @@ package struct TaskbarTooltipLayer: View {
                     .position(
                         x: TaskbarTooltipPlacement.x(
                             over: hover.frame,
-                            tooltip: size,
+                            tooltip: measured,
                             panel: proxy.size,
                             edge: edge
                         ),
                         y: TaskbarTooltipPlacement.y(
                             over: hover.frame,
-                            tooltip: size,
+                            tooltip: measured,
                             panel: proxy.size,
                             edge: edge
                         )
@@ -31,5 +31,12 @@ package struct TaskbarTooltipLayer: View {
         }
         .allowsHitTesting(false)
         .animation(KbMotion.quick, value: hover.entry)
+    }
+
+    private var measured: CGSize {
+        guard size.width > 0, size.height > 0 else {
+            return CGSize(width: TaskbarMetrics.tooltipMaxWidth, height: TaskbarMetrics.tooltipAllowance)
+        }
+        return size
     }
 }
