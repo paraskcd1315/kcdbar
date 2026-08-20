@@ -7,6 +7,7 @@ package enum SettingsMetrics {
     package static let sidebarWidth: CGFloat = 220
     package static let sidebarMaxWidth: CGFloat = 280
     package static let symbolWidth: CGFloat = 24
+    package static let sheetWidth: CGFloat = 360
     package static let thickness: ClosedRange<CGFloat> = 28...96
     package static let cornerRadius: ClosedRange<CGFloat> = 0...32
     package static let entryCornerRadius: ClosedRange<CGFloat> = 0...32

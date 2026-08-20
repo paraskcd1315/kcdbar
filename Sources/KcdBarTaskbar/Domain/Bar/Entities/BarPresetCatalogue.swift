@@ -113,4 +113,8 @@ package enum BarPresetCatalogue {
     package static let all: [BarPreset] = [windows11, windows10, dock, minimal]
 
     package static let `default` = windows11
+
+    package static func isBuiltIn(named name: String) -> Bool {
+        all.contains { $0.name == name }
+    }
 }
