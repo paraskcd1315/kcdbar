@@ -58,6 +58,7 @@ package final class AppServices {
     private lazy var overlap = WindowOverlapEnforcer(control: control)
     private lazy var solo = SoloWindowEnforcer(control: control)
     private var activePreset = BarPresetCatalogue.default
+    private var lastReading: BarRefreshReading?
     private lazy var coalesced = CoalescedTrigger(
         interval: WindowOverlapMetrics.coalesceInterval
     ) { [weak self] in
@@ -68,6 +69,23 @@ package final class AppServices {
 
     package func scheduleRefresh() {
         coalesced.fire()
+    }
+
+    private func noteRefresh() {
+        let reading = BarRefreshReading(
+            windows: registry.taskbarEntries.count,
+            applications: registry.applications.count,
+            trusted: registry.hasAccessibility,
+            preset: activePreset.name,
+            battery: battery.state.isPresent
+        )
+        guard reading != lastReading else { return }
+
+        lastReading = reading
+        BarLog.bar.notice("""
+            refresh windows=\(reading.windows) apps=\(reading.applications) \
+            trusted=\(reading.trusted) preset=\(reading.preset, privacy: .public) battery=\(reading.battery)
+            """)
     }
 
     package func refreshAndEnforce(now: Date = Date()) {
@@ -86,6 +104,7 @@ package final class AppServices {
             now: now
         )
         order.note(keys: orderingKeys)
+        noteRefresh()
         bar?.syncVisibility()
         geometry.observe(pids: observedPids) { [weak self] in
             self?.scheduleRefresh()
