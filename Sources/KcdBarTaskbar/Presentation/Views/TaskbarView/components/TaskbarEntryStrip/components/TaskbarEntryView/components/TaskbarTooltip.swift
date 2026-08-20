@@ -24,7 +24,6 @@ package struct TaskbarTooltip: View {
         .background {
             RoundedRectangle(cornerRadius: KbRadii.md)
                 .fill(KbColors.surfaceRaised)
-                .strokeBorder(KbColors.separator, lineWidth: KbEdgeMetrics.width)
                 .shadow(
                     color: KbColors.scrim,
                     radius: TaskbarMetrics.tooltipShadowRadius,
