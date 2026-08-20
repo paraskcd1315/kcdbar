@@ -49,14 +49,16 @@ trap 'rm -rf "$STAGE"' EXIT
 ditto "$APP" "$STAGE/KCDBar.app"
 
 # Icon positions match the zones drawn into the background image. Change both together.
-BACKGROUND="$ROOT/deploy/dmg-background.png"
+# The background is a two-representation TIFF (640x420 @72dpi + 1280x840 @144dpi) built by
+# tiffutil -cathidpicheck. A plain 1x PNG renders soft on every Retina display.
+BACKGROUND="$ROOT/deploy/dmg-background.tiff"
 APP_X=${APP_X:-176}
 APP_Y=${APP_Y:-182}
 DROP_X=${DROP_X:-464}
 DROP_Y=${DROP_Y:-182}
 
 if [ ! -f "$BACKGROUND" ]; then
-  echo "no background at $BACKGROUND — run rsvg-convert over deploy/dmg-background.svg" >&2
+  echo "no background at $BACKGROUND — run deploy/dmg-background.sh" >&2
   exit 1
 fi
 
