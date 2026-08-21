@@ -21,6 +21,16 @@ if [ ! -f "$ROOT/VERSION" ]; then
 fi
 
 MARKETING=$(tr -d '[:space:]' < "$ROOT/VERSION")
+
+# milestone.feature.fix — the first is a milestone release, the second a feature
+# release within it, the third a fix release for that feature or an earlier one.
+# Rejected here rather than at release time, so a malformed version can never be
+# compiled into a binary at all.
+if ! printf '%s' "$MARKETING" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+  echo "VERSION is '$MARKETING' — must be milestone.feature.fix, three numbers" >&2
+  exit 1
+fi
+
 BUILD=$(git -C "$ROOT" rev-list --count HEAD 2>/dev/null || echo 0)
 COMMIT=$(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)
 
