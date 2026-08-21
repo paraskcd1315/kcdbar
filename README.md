@@ -47,9 +47,24 @@ other applications' windows.
 
 `KCDBar.xcodeproj` is generated from `project.yml` and is gitignored — **never hand-author it**.
 
-`VERSION` at the repo root is the only place the marketing version lives. `build.sh` takes the build
-number from `git rev-list --count HEAD` and the short hash from the tree, so every binary names the
-commit it came from — visible in the About window, reachable by right-clicking the Start button.
+### Versioning
+
+`VERSION` at the repo root is the only place the version lives, and it reads
+**`milestone.feature.fix`**:
+
+| Part | Bumped when | Resets |
+|---|---|---|
+| **milestone** | a milestone lands — the epics in `Backlog.md` | feature and fix to 0 |
+| **feature** | a major feature ships within that milestone | fix to 0 |
+| **fix** | bugs are fixed, in that feature or an earlier one | — |
+
+A `0` milestone means none has landed yet, which is why `0.0.1` is an alpha and the About window says
+so — `AppVersion.isPrerelease` reads the first number, nothing else.
+
+`build.sh` refuses a version that is not three integers, then takes the build number from
+`git rev-list --count HEAD` and the short hash from the tree, so **every binary names the commit it
+came from**. `release.sh` binds the two the other way as well: an annotated `v<version>` tag and a row
+in [`RELEASES.md`](RELEASES.md), and it refuses to reuse a tag that already points somewhere else.
 
 ## 🔴 KcdSignal — a private dependency you have to remove first
 

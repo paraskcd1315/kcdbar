@@ -64,6 +64,32 @@ fi
 
 codesign --verify --deep --strict "$STAGE/KCDBar.app"
 
+# A version is bound to the commit it was cut from in two places that outlive the
+# binary: an annotated tag, and a line in RELEASES.md. The tag is local until the
+# release is published, for the same reason the gh command below is not run.
+TAG="v$MARKETING"
+
+if git -C "$ROOT" rev-parse "$TAG" >/dev/null 2>&1; then
+  TAGGED=$(git -C "$ROOT" rev-list -n 1 "$TAG")
+  HEAD_SHA=$(git -C "$ROOT" rev-parse HEAD)
+
+  if [ "$TAGGED" != "$HEAD_SHA" ]; then
+    echo "$TAG already points at ${TAGGED:0:7}, not ${HEAD_SHA:0:7} — bump VERSION" >&2
+    exit 1
+  fi
+else
+  git -C "$ROOT" tag -a "$TAG" -m "KCDBar $MARKETING"
+  echo "tagged $TAG at $COMMIT"
+fi
+
+LEDGER="$ROOT/RELEASES.md"
+
+if ! grep -q "| \`$MARKETING\` |" "$LEDGER" 2>/dev/null; then
+  printf '| `%s` | `%s` | %s |\n' \
+    "$MARKETING" "$COMMIT" "$(git -C "$ROOT" log -1 --format=%cs)" >> "$LEDGER"
+  echo "recorded $MARKETING -> $COMMIT in RELEASES.md"
+fi
+
 KCDBAR_APP="$STAGE/KCDBar.app" \
 KCDBAR_DMG_BACKGROUND="$BACKGROUND" \
 KCDBAR_APP_X="$APP_X" \
