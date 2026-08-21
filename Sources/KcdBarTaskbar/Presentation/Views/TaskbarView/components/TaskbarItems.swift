@@ -7,6 +7,7 @@ package struct TaskbarItems: View {
     package let onActivate: (TaskbarEntryModel) -> Void
     package let onOpenStart: () -> Void
     package let onOpenSettings: () -> Void
+    package let onOpenAbout: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
     package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
@@ -31,7 +32,8 @@ package struct TaskbarItems: View {
                     isVertical: viewModel.preset.edge.isVertical,
                     side: BarEntryMetrics.itemSide(for: viewModel.preset),
                     onOpen: onOpenStart,
-                    onOpenSettings: onOpenSettings
+                    onOpenSettings: onOpenSettings,
+                    onOpenAbout: onOpenAbout
                 )
             }
             TaskbarLaunchGroup(
@@ -39,6 +41,7 @@ package struct TaskbarItems: View {
                 onActivate: onActivate,
                 onOpenStart: onOpenStart,
                 onOpenSettings: onOpenSettings,
+                onOpenAbout: onOpenAbout,
                 onTogglePin: onTogglePin,
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,

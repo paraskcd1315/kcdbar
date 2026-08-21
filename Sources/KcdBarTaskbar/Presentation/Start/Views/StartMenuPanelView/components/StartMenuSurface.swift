@@ -16,7 +16,11 @@ package struct StartMenuSurface: View {
     package let onPower: (StartPowerAction) -> Void
     package let onSearch: () -> Void
 
+    @Environment(\.popoverRoom) private var room
+
     private var hasPinned: Bool { !pinned.apps.isEmpty }
+
+    private var bodyHeight: CGFloat { catalogue.bodyHeight(room: room) }
 
     private var width: CGFloat {
         hasPinned ? StartMenuMetrics.panelWidth : StartMenuMetrics.sidebarWidth
@@ -31,7 +35,7 @@ package struct StartMenuSurface: View {
                 pinnedIdentifiers: Set(pinned.apps.map(\.bundleIdentifier)),
                 userName: userName,
                 avatar: avatar,
-                height: catalogue.bodyHeight,
+                height: bodyHeight,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
                 onPower: onPower,
@@ -42,7 +46,7 @@ package struct StartMenuSurface: View {
                 bands: groups.bands(of: pinned.apps),
                 icons: icons,
                 editing: groups.editing,
-                height: catalogue.bodyHeight,
+                height: bodyHeight,
                 onLaunch: onLaunch,
                 onTogglePin: onTogglePin,
                 onRename: {

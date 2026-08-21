@@ -1,6 +1,11 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "about.title": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "About KCDBar" } } } },
+    "about.name": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "KCDBar" } } } },
+    "about.tagline": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "A taskbar and Start menu for macOS" } } } },
+    "about.badge.alpha": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "ALPHA" } } } },
+    "taskbar.menu.about": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "About KCDBar" } } } },
     "settings.title": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "KCDBar Settings" } } } },
     "settings.pane.appearance": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Appearance" } } } },
     "settings.pane.appearance.detail": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Preset, placement, entries and shape" } } } },

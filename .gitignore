@@ -7,3 +7,4 @@ artifacts/
 .build/
 *.xcuserstate
 xcuserdata/
+dist/

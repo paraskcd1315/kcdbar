@@ -17,8 +17,25 @@ package enum StartMenuMetrics {
     package static let rowHeight: CGFloat = 54
     package static let sectionHeadingHeight: CGFloat = 32
 
+    package static let chromeHeight: CGFloat = 145
+    package static let minimumBodyHeight: CGFloat = 220
+
     package static func bodyHeight(pinned: Int, rows: Int, sections: Int) -> CGFloat {
-        min(pinnedHeight(pinned) + listHeight(rows: rows, sections: sections), bodyMaxHeight)
+        bodyHeight(pinned: pinned, rows: rows, sections: sections, room: 0)
+    }
+
+    package static func bodyHeight(pinned: Int, rows: Int, sections: Int, room: CGFloat)
+        -> CGFloat
+    {
+        let wanted = pinnedHeight(pinned) + listHeight(rows: rows, sections: sections)
+
+        return min(wanted, bodyMaxHeight, ceiling(within: room))
+    }
+
+    package static func ceiling(within room: CGFloat) -> CGFloat {
+        guard room > 0 else { return bodyMaxHeight }
+
+        return max(room - chromeHeight, minimumBodyHeight)
     }
 
     package static func pinnedHeight(_ pinned: Int) -> CGFloat {

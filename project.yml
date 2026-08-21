@@ -10,8 +10,9 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     SWIFT_STRICT_CONCURRENCY: complete
-    MARKETING_VERSION: "0.1.0"
+    MARKETING_VERSION: "0.0.1"
     CURRENT_PROJECT_VERSION: "1"
+    KCDBAR_GIT_COMMIT: "unknown"
     ENABLE_HARDENED_RUNTIME: NO
     ENABLE_APP_SANDBOX: NO
     CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
@@ -43,6 +44,7 @@ targets:
         CFBundleDisplayName: KCDBar
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        KCDBarGitCommit: $(KCDBAR_GIT_COMMIT)
         LSMinimumSystemVersion: "26.0"
         LSUIElement: true
         NSHumanReadableCopyright: ""
@@ -52,6 +54,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar
         INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        ASSETCATALOG_COMPILER_APPICON_NAME: KCDBar
 
   KCDBarTests:
     type: bundle.unit-test

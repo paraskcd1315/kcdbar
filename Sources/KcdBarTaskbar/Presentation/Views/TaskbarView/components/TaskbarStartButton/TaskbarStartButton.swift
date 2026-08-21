@@ -9,6 +9,7 @@ package struct TaskbarStartButton: View {
     package let side: CGFloat
     package let onOpen: () -> Void
     package let onOpenSettings: () -> Void
+    package let onOpenAbout: () -> Void
 
     @State private var isHovered = false
 
@@ -26,6 +27,8 @@ package struct TaskbarStartButton: View {
         .onHover { isHovered = $0 }
         .contextMenu {
             Button("taskbar.menu.settings", action: onOpenSettings)
+            Divider()
+            Button("taskbar.menu.about", action: onOpenAbout)
         }
     }
 }

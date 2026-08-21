@@ -9,6 +9,7 @@ package struct TaskbarBody: View {
     package let onRequestAccessibility: () -> Void
     package let onOpenStart: () -> Void
     package let onOpenSettings: () -> Void
+    package let onOpenAbout: () -> Void
     package let onTogglePin: (TaskbarEntryModel) -> Void
     package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
@@ -33,6 +34,7 @@ package struct TaskbarBody: View {
                 onRequestAccessibility: onRequestAccessibility,
                 onOpenStart: onOpenStart,
                 onOpenSettings: onOpenSettings,
+                onOpenAbout: onOpenAbout,
                 onTogglePin: onTogglePin,
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,
