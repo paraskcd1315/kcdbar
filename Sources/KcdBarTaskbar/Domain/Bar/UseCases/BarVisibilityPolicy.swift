@@ -8,7 +8,9 @@ package enum BarVisibilityPolicy {
         windows: [ManagedWindow],
         displays: [DisplayGeometry]
     ) -> Bool {
-        if frontmost(onDisplay: displayId, windows: windows, displays: displays)?.isFullScreen == true {
+        let confirmed = WindowPresentationPolicy.taskbarEntries(from: windows)
+
+        if frontmost(onDisplay: displayId, windows: confirmed, displays: displays)?.isFullScreen == true {
             return true
         }
         switch preset.autoHide {
@@ -17,7 +19,12 @@ package enum BarVisibilityPolicy {
         case .always:
             return true
         case .whenOverlapped:
-            return isOverlapped(preset: preset, onDisplay: displayId, windows: windows, displays: displays)
+            return isOverlapped(
+                preset: preset,
+                onDisplay: displayId,
+                windows: confirmed,
+                displays: displays
+            )
         }
     }
 

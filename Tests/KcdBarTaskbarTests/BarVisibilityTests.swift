@@ -14,7 +14,8 @@ struct BarVisibilityTests {
         isFullScreen: Bool,
         isMinimized: Bool = false,
         isOnScreen: Bool = true,
-        zOrder: Int? = 0
+        zOrder: Int? = 0,
+        source: WindowRecordSource = .both
     ) -> ManagedWindow {
         ManagedWindow(
             identity: WindowIdentity(ownerPid: 1, cgWindowId: id, fallbackKey: "1:\(id)"),
@@ -26,7 +27,64 @@ struct BarVisibilityTests {
             isFullScreen: isFullScreen,
             isOnScreen: isOnScreen,
             zOrder: zOrder,
-            source: .both
+            source: source
+        )
+    }
+
+    private var overlapping: BarPreset {
+        var preset = BarPresetCatalogue.default
+        preset.autoHide = .whenOverlapped
+
+        return preset
+    }
+
+    @Test func aCoreGraphicsOnlySurfaceOverTheBarDoesNotHideIt() {
+        let phantom = window(
+            id: 10,
+            bounds: displays[0].frame,
+            isFullScreen: false,
+            source: .coreGraphicsOnly
+        )
+
+        #expect(
+            BarVisibilityPolicy.isHidden(
+                preset: overlapping,
+                onDisplay: 1,
+                windows: [phantom],
+                displays: displays
+            ) == false
+        )
+    }
+
+    @Test func aConfirmedWindowOverTheBarStillHidesIt() {
+        let real = window(id: 11, bounds: displays[0].frame, isFullScreen: false)
+
+        #expect(
+            BarVisibilityPolicy.isHidden(
+                preset: overlapping,
+                onDisplay: 1,
+                windows: [real],
+                displays: displays
+            )
+        )
+    }
+
+    @Test func aCoreGraphicsOnlySurfaceCannotPoseAsTheFrontmostWindow() {
+        let phantom = window(
+            id: 12,
+            bounds: displays[0].frame,
+            isFullScreen: true,
+            zOrder: 0,
+            source: .coreGraphicsOnly
+        )
+
+        #expect(
+            BarVisibilityPolicy.isHidden(
+                preset: BarPresetCatalogue.default,
+                onDisplay: 1,
+                windows: [phantom],
+                displays: displays
+            ) == false
         )
     }
 
