@@ -27,8 +27,10 @@ package struct TaskbarRootView: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
+    package let sessions: SessionsMonitor
 
     package let onOpenDay: () -> Void
+    package let onOpenSessions: () -> Void
     package let onBarFrameChange: (CGRect) -> Void
 
     package var body: some View {
@@ -51,8 +53,10 @@ package struct TaskbarRootView: View {
             trash: trash,
             timer: timer,
             totals: totals,
+            sessions: sessions,
 
             onOpenDay: onOpenDay,
+            onOpenSessions: onOpenSessions,
             isShowingDesktop: desktop.isShowingDesktop,
             onToggleDesktop: onToggleDesktop,
             onBarFrameChange: onBarFrameChange

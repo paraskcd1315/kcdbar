@@ -21,8 +21,10 @@ package struct TaskbarView: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
+    package let sessions: SessionsMonitor
 
     package let onOpenDay: () -> Void
+    package let onOpenSessions: () -> Void
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
     package let onBarFrameChange: (CGRect) -> Void
@@ -57,8 +59,10 @@ package struct TaskbarView: View {
                 trash: trash,
                 timer: timer,
                 totals: totals,
+                sessions: sessions,
 
                 onOpenDay: onOpenDay,
+                onOpenSessions: onOpenSessions,
                 onToggleDesktop: onToggleDesktop
             )
         }

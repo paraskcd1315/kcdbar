@@ -32,6 +32,10 @@ package final class AppServices {
         source: KcdSignalDaySource(),
         tickets: ConsoleTicketOpener()
     )
+    package let sessions = SessionsMonitor(
+        source: KcdSignalSessionsSource(),
+        panes: TmuxPaneFocus()
+    )
     package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
     package let stageManager = StageManagerState(port: WindowManagerStageManager())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
@@ -300,6 +304,21 @@ package final class AppServices {
         }
     }
 
+    package func openSessionsPanel() {
+        guard !popover.isPresenting(.sessions) else {
+            popover.dismiss()
+            return
+        }
+
+        popover.present(.sessions, anchor: popoverAnchor()) { [sessions] presentation, arrowX in
+            SessionsPanelPresentation.content(
+                monitor: sessions,
+                presentation: presentation,
+                arrowX: arrowX
+            )
+        }
+    }
+
     package func openStartMenu() {
         guard !popover.isPresenting(.start) else {
             popover.dismiss()
@@ -449,6 +468,7 @@ package final class AppServices {
             trash: trash,
             timer: timer,
             totals: totals,
+            sessions: sessions,
             pins: pins,
             order: order,
             desktop: desktop,
@@ -476,7 +496,8 @@ package final class AppServices {
                 _ = menuExtras.press(BarControlMetrics.clockIdentifier)
             },
             onOpenControlCentre: { [weak self] in self?.openControlCentre() },
-            onOpenDay: { [weak self] in self?.openDayPanel() }
+            onOpenDay: { [weak self] in self?.openDayPanel() },
+            onOpenSessions: { [weak self] in self?.openSessionsPanel() }
         )
         host.present(preset: preset)
         bar = host

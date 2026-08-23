@@ -21,7 +21,9 @@ package struct TaskbarContentArea: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
+    package let sessions: SessionsMonitor
     package let onOpenDay: () -> Void
+    package let onOpenSessions: () -> Void
 
     package var body: some View {
         Group {
@@ -46,8 +48,10 @@ package struct TaskbarContentArea: View {
                     trash: trash,
                     timer: timer,
                     totals: totals,
+                    sessions: sessions,
 
-                    onOpenDay: onOpenDay
+                    onOpenDay: onOpenDay,
+                    onOpenSessions: onOpenSessions
                 )
             }
         }

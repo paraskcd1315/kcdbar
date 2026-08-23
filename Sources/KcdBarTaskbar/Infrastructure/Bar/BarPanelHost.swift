@@ -19,6 +19,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let trash: TrashMonitor
     private let timer: TimerMonitor
     private let totals: TotalsMonitor
+    private let sessions: SessionsMonitor
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -39,6 +40,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onOpenNotifications: () -> Void
     private let onOpenControlCentre: () -> Void
     private let onOpenDay: () -> Void
+    private let onOpenSessions: () -> Void
 
     package init(
         registry: WindowRegistry,
@@ -46,6 +48,7 @@ package final class BarPanelHost: BarPanelHostPort {
         trash: TrashMonitor,
         timer: TimerMonitor,
         totals: TotalsMonitor,
+        sessions: SessionsMonitor,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -65,9 +68,11 @@ package final class BarPanelHost: BarPanelHostPort {
         onOpenBattery: @escaping () -> Void,
         onOpenNotifications: @escaping () -> Void,
         onOpenControlCentre: @escaping () -> Void,
-        onOpenDay: @escaping () -> Void
+        onOpenDay: @escaping () -> Void,
+        onOpenSessions: @escaping () -> Void
     ) {
         self.onOpenDay = onOpenDay
+        self.onOpenSessions = onOpenSessions
         self.onOpenNotifications = onOpenNotifications
         self.onOpenControlCentre = onOpenControlCentre
         self.onDropPin = onDropPin
@@ -79,6 +84,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.trash = trash
         self.timer = timer
         self.totals = totals
+        self.sessions = sessions
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -319,8 +325,10 @@ package final class BarPanelHost: BarPanelHostPort {
                 trash: trash,
                 timer: timer,
                 totals: totals,
+                sessions: sessions,
 
                 onOpenDay: onOpenDay,
+                onOpenSessions: onOpenSessions,
                 onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
             )
             .environment(\.middleClickCatcher) { action in
