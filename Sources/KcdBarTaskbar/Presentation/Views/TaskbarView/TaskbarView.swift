@@ -74,8 +74,8 @@ package struct TaskbarView: View {
             sessions.reading.isWorking,
             isLoud: sessions.reading.wantsAttention,
             corner: viewModel.preset.cornerRadius,
-            rimWidth: TaskbarStreakMetrics.rimWidth(for: viewModel.preset.thickness),
-            rimBlur: TaskbarStreakMetrics.rimBlur(for: viewModel.preset.thickness)
+            rimWidth: KbStreakMetrics.barRimWidth,
+            rimBlur: KbStreakMetrics.barRimBlur
         )
         .padding(TaskbarBarLayout.outsetPadding(attachment: viewModel.preset.attachment))
         .offset(x: appearOffset.width, y: appearOffset.height)

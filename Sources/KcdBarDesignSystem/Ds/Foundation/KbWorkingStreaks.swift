@@ -13,44 +13,52 @@ package struct KbWorkingStreaks: ViewModifier {
             ZStack {
                 if isWorking {
                     ZStack {
-                        ForEach(Array(colours.enumerated()), id: \.offset) { held in
-                            KbStreakRibbon(
-                                colour: held.element,
-                                lapSeconds: lap(at: held.offset),
-                                breathSeconds: breath(at: held.offset),
-                                corner: corner,
-                                rimWidth: rimWidth,
-                                rimBlur: rimBlur,
-                                brightness: brightness)
-                        }
+                        ribbon(
+                            KbStreakColours.orange,
+                            lap: KbStreakMetrics.lapOrange,
+                            phase: KbStreakMetrics.phaseOrange,
+                            breath: KbStreakMetrics.breathOrange)
+
+                        ribbon(
+                            KbStreakColours.purple,
+                            lap: KbStreakMetrics.lapPurple,
+                            phase: KbStreakMetrics.phasePurple,
+                            breath: KbStreakMetrics.breathPurple)
+
+                        ribbon(
+                            KbStreakColours.pink,
+                            lap: KbStreakMetrics.lapPink,
+                            phase: KbStreakMetrics.phasePink,
+                            breath: KbStreakMetrics.breathPink)
+
+                        ribbon(
+                            KbStreakColours.fuchsia,
+                            lap: KbStreakMetrics.lapFuchsia,
+                            phase: KbStreakMetrics.phaseFuchsia,
+                            breath: KbStreakMetrics.breathFuchsia)
                     }
                     .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
                     .transition(
                         .opacity.combined(with: .scale(scale: KbStreakMetrics.entryScale)))
                 }
             }
-            .animation(KbMotion.standard, value: isWorking)
+            .animation(KbMotion.slow, value: isWorking)
             .allowsHitTesting(false)
         }
     }
 
-    private var colours: [Color] {
-        isLoud ? Array(repeating: KbStreakColours.waiting, count: KbStreakColours.every.count)
-            : KbStreakColours.every
-    }
-
-    private var brightness: Double { isLoud ? KbStreakMetrics.waitingBrighter : 1 }
-
-    private func lap(at index: Int) -> Double {
-        let stated = KbStreakMetrics.laps[index % KbStreakMetrics.laps.count]
-
-        return isLoud ? stated * KbStreakMetrics.waitingQuicker : stated
-    }
-
-    private func breath(at index: Int) -> Double {
-        let stated = KbStreakMetrics.breaths[index % KbStreakMetrics.breaths.count]
-
-        return isLoud ? stated * KbStreakMetrics.waitingQuicker : stated
+    private func ribbon(
+        _ colour: Color, lap: Double, phase: Double, breath: Double
+    ) -> KbStreakRibbon {
+        KbStreakRibbon(
+            colour: colour,
+            lapSeconds: isLoud ? lap * KbStreakMetrics.loudQuicker : lap,
+            phase: phase,
+            breathSeconds: isLoud ? breath * KbStreakMetrics.loudQuicker : breath,
+            corner: corner,
+            rimWidth: rimWidth,
+            rimBlur: rimBlur,
+            brightness: isLoud ? KbStreakMetrics.loudBrighter : 1)
     }
 }
 

@@ -1,13 +1,9 @@
 import SwiftUI
 
-/** The four colours a surface's rim wears while an agent is working. */
+/** The four lights an agent's work is drawn in, as the console draws them on dark. */
 package enum KbStreakColours {
-    package static let orange = Color(red: 0.98, green: 0.58, blue: 0.24)
-    package static let purple = Color(red: 0.62, green: 0.44, blue: 0.98)
-    package static let pink = Color(red: 0.98, green: 0.42, blue: 0.66)
-    package static let fuchsia = Color(red: 0.85, green: 0.32, blue: 0.90)
-
-    package static let every = [orange, purple, pink, fuchsia]
-
-    package static let waiting = Color(red: 0.98, green: 0.71, blue: 0.20)
+    package static let orange = Color(hex: "FFB27A") ?? .orange
+    package static let purple = Color(hex: "B08CF0") ?? .purple
+    package static let pink = Color(hex: "F3A2C4") ?? .pink
+    package static let fuchsia = Color(hex: "E68CF5") ?? .pink
 }

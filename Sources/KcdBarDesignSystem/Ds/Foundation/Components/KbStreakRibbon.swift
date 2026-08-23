@@ -1,21 +1,21 @@
+import Foundation
 import SwiftUI
 
 /** One arc of light riding the rim, breathing as it travels. */
 package struct KbStreakRibbon: View {
     package let colour: Color
     package let lapSeconds: Double
+    package let phase: Double
     package let breathSeconds: Double
-    package let corner: CGFloat
-    package let rimWidth: CGFloat
-    package let rimBlur: CGFloat
-    package let brightness: Double
-
-    @State private var turned = false
-    @State private var breathed = false
+    package var corner: CGFloat = KbStreakMetrics.corner
+    package var rimWidth: CGFloat = KbStreakMetrics.rimWidth
+    package var rimBlur: CGFloat = KbStreakMetrics.rimBlur
+    package var brightness: Double = 1
 
     package init(
         colour: Color,
         lapSeconds: Double,
+        phase: Double,
         breathSeconds: Double,
         corner: CGFloat = KbStreakMetrics.corner,
         rimWidth: CGFloat = KbStreakMetrics.rimWidth,
@@ -24,6 +24,7 @@ package struct KbStreakRibbon: View {
     ) {
         self.colour = colour
         self.lapSeconds = lapSeconds
+        self.phase = phase
         self.breathSeconds = breathSeconds
         self.corner = corner
         self.rimWidth = rimWidth
@@ -32,33 +33,16 @@ package struct KbStreakRibbon: View {
     }
 
     package var body: some View {
-        RoundedRectangle(cornerRadius: corner, style: .continuous)
-            .strokeBorder(sweep, lineWidth: rimWidth)
-            .blur(radius: rimBlur)
-            .rotationEffect(.degrees(turned ? KbStreakMetrics.fullTurn * direction : 0))
-            .opacity(breathed ? high : low)
-            .animation(
-                .linear(duration: abs(lapSeconds)).repeatForever(autoreverses: false),
-                value: turned
-            )
-            .animation(
-                .easeInOut(duration: breathSeconds).repeatForever(autoreverses: true),
-                value: breathed
-            )
-            .onAppear {
-                turned = true
-                breathed = true
-            }
-            .allowsHitTesting(false)
+        TimelineView(.periodic(from: .now, by: KbStreakMetrics.tick)) { clock in
+            RoundedRectangle(cornerRadius: corner, style: .continuous)
+                .strokeBorder(sweep(at: clock.date), lineWidth: rimWidth)
+                .blur(radius: rimBlur)
+                .opacity(breath(at: clock.date))
+        }
+        .allowsHitTesting(false)
     }
 
-    private var direction: Double { lapSeconds < 0 ? -1 : 1 }
-
-    private var low: Double { min(1, KbStreakMetrics.breathLow * brightness) }
-
-    private var high: Double { min(1, KbStreakMetrics.breathHigh * brightness) }
-
-    private var sweep: AngularGradient {
+    private func sweep(at date: Date) -> AngularGradient {
         AngularGradient(
             stops: [
                 .init(color: colour.opacity(0), location: 0),
@@ -67,6 +51,22 @@ package struct KbStreakRibbon: View {
                 .init(color: colour.opacity(0), location: KbStreakMetrics.arcTrail),
                 .init(color: colour.opacity(0), location: 1),
             ],
-            center: .center)
+            center: .center,
+            angle: .degrees(turn(at: date) * KbStreakMetrics.fullTurn))
+    }
+
+    private func turn(at date: Date) -> Double {
+        let laps = date.timeIntervalSinceReferenceDate / lapSeconds
+
+        return (laps + phase).truncatingRemainder(dividingBy: 1)
+    }
+
+    private func breath(at date: Date) -> Double {
+        let angle = date.timeIntervalSinceReferenceDate / breathSeconds + phase
+        let swung =
+            KbStreakMetrics.breathMid
+            + KbStreakMetrics.breathSwing * sin(angle * KbStreakMetrics.wave)
+
+        return min(1, swung * brightness)
     }
 }
