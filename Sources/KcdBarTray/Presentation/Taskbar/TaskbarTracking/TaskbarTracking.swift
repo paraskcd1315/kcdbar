@@ -4,14 +4,14 @@ import SwiftUI
 package struct TaskbarTracking: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
-    package let onOpenTimer: () -> Void
+    package let onOpenDay: () -> Void
 
     @State private var isHovered = false
 
-    package init(timer: TimerMonitor, totals: TotalsMonitor, onOpenTimer: @escaping () -> Void) {
+    package init(timer: TimerMonitor, totals: TotalsMonitor, onOpenDay: @escaping () -> Void) {
         self.timer = timer
         self.totals = totals
-        self.onOpenTimer = onOpenTimer
+        self.onOpenDay = onOpenDay
     }
 
     package var body: some View {
@@ -21,7 +21,7 @@ package struct TaskbarTracking: View {
         }
         .padding(.vertical, KbSpacing.s1)
         .fixedSize(horizontal: true, vertical: false)
-        .kbTappable(in: shape, perform: onOpenTimer)
+        .kbTappable(in: shape, perform: onOpenDay)
         .glassEffect(isHovered ? .regular.interactive() : .identity, in: shape)
         .animation(KbMotion.quick, value: isHovered)
         .onHover { isHovered = $0 }

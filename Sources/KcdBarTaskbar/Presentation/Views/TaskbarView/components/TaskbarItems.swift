@@ -20,7 +20,7 @@ package struct TaskbarItems: View {
     package let trash: TrashMonitor
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
-    package let onOpenTimer: () -> Void
+    package let onOpenDay: () -> Void
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
@@ -70,7 +70,7 @@ package struct TaskbarItems: View {
                 TaskbarClock(onOpen: onOpenNotifications)
             }
             if viewModel.preset.showsTracking, timer.isAvailable {
-                TaskbarTracking(timer: timer, totals: totals, onOpenTimer: onOpenTimer)
+                TaskbarTracking(timer: timer, totals: totals, onOpenDay: onOpenDay)
             }
         }
     }

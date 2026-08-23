@@ -920,17 +920,6 @@
         }
       }
     },
-    "timer.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Running"
-          }
-        }
-      }
-    },
     "taskbar.menu.close": {
       "extractionState": "manual",
       "localizations": {

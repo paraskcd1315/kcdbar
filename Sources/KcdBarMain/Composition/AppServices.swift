@@ -28,6 +28,10 @@ package final class AppServices {
         tickets: ConsoleTicketOpener()
     )
     package let totals = TotalsMonitor(source: KcdSignalTotalsSource())
+    package let day = DayMonitor(
+        source: KcdSignalDaySource(),
+        tickets: ConsoleTicketOpener()
+    )
     package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
     package let stageManager = StageManagerState(port: WindowManagerStageManager())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
@@ -281,15 +285,15 @@ package final class AppServices {
         Task { await battery.sampleEnergy() }
     }
 
-    package func openTimerPanel() {
-        guard !popover.isPresenting(.timer) else {
+    package func openDayPanel() {
+        guard !popover.isPresenting(.day) else {
             popover.dismiss()
             return
         }
 
-        popover.present(.timer, anchor: popoverAnchor()) { [timer] presentation, arrowX in
-            TimerPanelPresentation.content(
-                monitor: timer,
+        popover.present(.day, anchor: popoverAnchor()) { [day] presentation, arrowX in
+            DayPanelPresentation.content(
+                monitor: day,
                 presentation: presentation,
                 arrowX: arrowX
             )
@@ -472,7 +476,7 @@ package final class AppServices {
                 _ = menuExtras.press(BarControlMetrics.clockIdentifier)
             },
             onOpenControlCentre: { [weak self] in self?.openControlCentre() },
-            onOpenTimer: { [weak self] in self?.openTimerPanel() }
+            onOpenDay: { [weak self] in self?.openDayPanel() }
         )
         host.present(preset: preset)
         bar = host

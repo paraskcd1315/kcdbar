@@ -15,6 +15,7 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
         services.trash.start()
         services.timer.start()
         services.totals.start()
+        services.day.start()
         Task { await services.start() }
         services.changes.startObserving { [services] in
             services.scheduleRefresh()
@@ -25,6 +26,7 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
         services.stopObserving()
         services.timer.stop()
         services.totals.stop()
+        services.day.stop()
         services.bar?.dismiss()
     }
 }

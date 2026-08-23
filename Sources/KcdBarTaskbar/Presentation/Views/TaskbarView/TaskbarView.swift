@@ -22,7 +22,7 @@ package struct TaskbarView: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
 
-    package let onOpenTimer: () -> Void
+    package let onOpenDay: () -> Void
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
     package let onBarFrameChange: (CGRect) -> Void
@@ -58,7 +58,7 @@ package struct TaskbarView: View {
                 timer: timer,
                 totals: totals,
 
-                onOpenTimer: onOpenTimer,
+                onOpenDay: onOpenDay,
                 onToggleDesktop: onToggleDesktop
             )
         }

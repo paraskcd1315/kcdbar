@@ -38,7 +38,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onOpenBattery: () -> Void
     private let onOpenNotifications: () -> Void
     private let onOpenControlCentre: () -> Void
-    private let onOpenTimer: () -> Void
+    private let onOpenDay: () -> Void
 
     package init(
         registry: WindowRegistry,
@@ -65,9 +65,9 @@ package final class BarPanelHost: BarPanelHostPort {
         onOpenBattery: @escaping () -> Void,
         onOpenNotifications: @escaping () -> Void,
         onOpenControlCentre: @escaping () -> Void,
-        onOpenTimer: @escaping () -> Void
+        onOpenDay: @escaping () -> Void
     ) {
-        self.onOpenTimer = onOpenTimer
+        self.onOpenDay = onOpenDay
         self.onOpenNotifications = onOpenNotifications
         self.onOpenControlCentre = onOpenControlCentre
         self.onDropPin = onDropPin
@@ -320,7 +320,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 timer: timer,
                 totals: totals,
 
-                onOpenTimer: onOpenTimer,
+                onOpenDay: onOpenDay,
                 onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
             )
             .environment(\.middleClickCatcher) { action in
