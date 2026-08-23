@@ -16,13 +16,6 @@ package struct TaskbarSessions: View {
             wantsAttention: monitor.reading.wantsAttention
         )
         .padding(SessionsReadoutMetrics.padding)
-        .kbWorkingStreaks(
-            monitor.reading.isWorking,
-            isLoud: monitor.reading.wantsAttention,
-            corner: SessionsReadoutMetrics.corner,
-            rimWidth: SessionsReadoutMetrics.rimWidth,
-            rimBlur: SessionsReadoutMetrics.rimBlur
-        )
         .kbTappable(in: shape, perform: onOpen)
     }
 

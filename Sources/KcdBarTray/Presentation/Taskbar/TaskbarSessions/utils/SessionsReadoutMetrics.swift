@@ -3,8 +3,6 @@ import CoreGraphics
 package enum SessionsReadoutMetrics {
     package static let glyphSymbol = "sparkles"
     package static let waitingSymbol = "hand.raised.fill"
-    package static let rimWidth: CGFloat = 10
-    package static let rimBlur: CGFloat = 7
     package static let corner: CGFloat = 8
     package static let padding: CGFloat = 5
     package static let panelWidth: CGFloat = 320

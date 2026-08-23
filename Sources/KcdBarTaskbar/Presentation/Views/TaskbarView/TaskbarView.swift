@@ -70,6 +70,13 @@ package struct TaskbarView: View {
             width: viewModel.preset.edge.isVertical ? viewModel.preset.thickness : nil,
             height: viewModel.preset.edge.isVertical ? nil : viewModel.preset.thickness
         )
+        .kbWorkingStreaks(
+            sessions.reading.isWorking,
+            isLoud: sessions.reading.wantsAttention,
+            corner: viewModel.preset.cornerRadius,
+            rimWidth: TaskbarStreakMetrics.rimWidth(for: viewModel.preset.thickness),
+            rimBlur: TaskbarStreakMetrics.rimBlur(for: viewModel.preset.thickness)
+        )
         .padding(TaskbarBarLayout.outsetPadding(attachment: viewModel.preset.attachment))
         .offset(x: appearOffset.width, y: appearOffset.height)
         .opacity(hasAppeared ? 1 : 0)
