@@ -10,9 +10,8 @@ package final class BarPanelHost: BarPanelHostPort {
     private var pointerMonitor: Any?
     private var clickThroughMonitors: [Any] = []
     private var hitRegions: [Int: BarHitRegion] = [:]
-    private var hiddenDisplays: Set<Int> = []
-    private var revealedDisplays: Set<Int> = []
-    private var shown: [Int: Bool] = [:]
+    private var visibility = BarPanelVisibilityState()
+    private var notedReasons: [Int: String] = [:]
     private let presetState = BarPresetState(preset: BarPresetCatalogue.default)
 
     private let registry: WindowRegistry
@@ -116,32 +115,45 @@ package final class BarPanelHost: BarPanelHostPort {
     }
 
     package func syncVisibility() {
-        hiddenDisplays = Set(
-            panels.keys.filter { id in
-                BarVisibilityPolicy.isHidden(
-                    preset: presetState.preset,
-                    onDisplay: id,
-                    windows: registry.windows,
-                    displays: registry.displays
-                )
-            }
-        )
-        revealedDisplays.formIntersection(hiddenDisplays)
+        var hidden: Set<Int> = []
 
         for id in panels.keys {
-            apply(showing: !hiddenDisplays.contains(id) || revealedDisplays.contains(id), to: id)
+            let reason = BarVisibilityPolicy.reason(
+                preset: presetState.preset,
+                onDisplay: id,
+                windows: registry.windows,
+                displays: registry.displays
+            )
+            if reason != nil {
+                hidden.insert(id)
+            }
+            note(reason: reason, for: id)
+        }
+        visibility.setHidden(hidden)
+
+        for id in panels.keys {
+            apply(showing: visibility.wantsShown(id), to: id)
         }
         updatePointerMonitor()
     }
 
+    private func note(reason: BarVisibilityReason?, for id: Int) {
+        let text = reason?.rawValue ?? "visible"
+        guard notedReasons[id] != text else { return }
+
+        notedReasons[id] = text
+        BarLog.bar.notice("visibility display=\(id) reason=\(text, privacy: .public)")
+    }
+
     private func apply(showing: Bool, to id: Int) {
-        guard shown[id] != showing else { return }
+        guard !visibility.isSettled(showing: showing, for: id) else { return }
         guard let panel = panels[id],
               let display = registry.displays.first(where: { $0.id == id })
         else {
             return
         }
-        shown[id] = showing
+        visibility.record(showing: showing, for: id)
+        BarLog.bar.notice("panel display=\(id) showing=\(showing)")
 
         let settled = BarFrameCalculator.panelFrame(for: presetState.preset, on: display)
         let offEdge = BarRevealPolicy.concealedFrame(settled, edge: presetState.preset.edge)
@@ -151,8 +163,10 @@ package final class BarPanelHost: BarPanelHostPort {
             panel.alphaValue = 0
             panel.orderFrontRegardless()
         }
-        animate(panel, to: showing ? settled : offEdge, alpha: showing ? 1 : 0) {
+        animate(panel, to: showing ? settled : offEdge, alpha: showing ? 1 : 0) { [weak self] in
             guard !showing else { return }
+            guard self?.visibility.isSettled(showing: false, for: id) == true else { return }
+
             panel.orderOut(nil)
             panel.setFrame(settled, display: false)
             panel.alphaValue = 1
@@ -163,7 +177,7 @@ package final class BarPanelHost: BarPanelHostPort {
         _ panel: BarPanel,
         to frame: NSRect,
         alpha: CGFloat,
-        completion: @escaping () -> Void
+        completion: @MainActor @escaping () -> Void
     ) {
         NSAnimationContext.runAnimationGroup { context in
             context.duration = KbMotion.standardDuration
@@ -178,7 +192,7 @@ package final class BarPanelHost: BarPanelHostPort {
     }
 
     private func updatePointerMonitor() {
-        if hiddenDisplays.isEmpty {
+        if visibility.monitored(among: Set(panels.keys)).isEmpty {
             stopPointerMonitor()
             return
         }
@@ -231,7 +245,7 @@ package final class BarPanelHost: BarPanelHostPort {
     }
 
     private func pointerMoved(to location: NSPoint) {
-        for id in hiddenDisplays {
+        for id in visibility.monitored(among: Set(panels.keys)) {
             guard let display = registry.displays.first(where: { $0.id == id }) else { continue }
 
             let reveal = BarRevealPolicy.shouldReveal(
@@ -240,23 +254,17 @@ package final class BarPanelHost: BarPanelHostPort {
                 display: display,
                 edge: presetState.preset.edge
             )
-            guard reveal != revealedDisplays.contains(id) else { continue }
-
-            if reveal {
-                revealedDisplays.insert(id)
-            } else {
-                revealedDisplays.remove(id)
-            }
-            apply(showing: reveal, to: id)
+            visibility.setRevealed(reveal, for: id)
+            apply(showing: visibility.wantsShown(id), to: id)
         }
+        updatePointerMonitor()
     }
 
     package func dismiss() {
         stopPointerMonitor()
         stopClickThroughMonitors()
-        hiddenDisplays = []
-        revealedDisplays = []
-        shown = [:]
+        visibility.reset()
+        notedReasons = [:]
         hitRegions = [:]
         panels.values.forEach { $0.orderOut(nil) }
         panels = [:]
@@ -273,7 +281,8 @@ package final class BarPanelHost: BarPanelHostPort {
         for (id, panel) in panels where !wanted.contains(id) {
             panel.orderOut(nil)
             panels.removeValue(forKey: id)
-            shown.removeValue(forKey: id)
+            visibility.forget(id)
+            notedReasons.removeValue(forKey: id)
         }
 
         for display in displays {
@@ -322,7 +331,7 @@ package final class BarPanelHost: BarPanelHostPort {
             panel.contentView = BarHostingView(rootView: root)
             panel.orderFrontRegardless()
             panels[display.id] = panel
-            shown[display.id] = true
+            visibility.record(showing: true, for: display.id)
         }
     }
 

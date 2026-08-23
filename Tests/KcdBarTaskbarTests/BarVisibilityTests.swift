@@ -144,4 +144,71 @@ struct BarVisibilityTests {
     @Test func anEmptyDisplayKeepsItsBar() {
         #expect(BarVisibilityPolicy.isHidden(preset: BarPresetCatalogue.default, onDisplay: 1, windows: [], displays: displays) == false)
     }
+
+    @Test func aFullScreenWindowNamesItselfAsTheReason() {
+        let windows = [window(id: 10, bounds: displays[0].frame, isFullScreen: true)]
+
+        #expect(
+            BarVisibilityPolicy.reason(
+                preset: BarPresetCatalogue.default,
+                onDisplay: 1,
+                windows: windows,
+                displays: displays
+            ) == .fullScreenWindow
+        )
+    }
+
+    @Test func anAlwaysHiddenBarNamesItsPresetAsTheReason() {
+        var preset = BarPresetCatalogue.default
+        preset.autoHide = .always
+
+        #expect(
+            BarVisibilityPolicy.reason(
+                preset: preset,
+                onDisplay: 1,
+                windows: [],
+                displays: displays
+            ) == .alwaysHidden
+        )
+    }
+
+    @Test func aWindowOverTheBarNamesTheOverlapAsTheReason() {
+        let real = window(id: 11, bounds: displays[0].frame, isFullScreen: false)
+
+        #expect(
+            BarVisibilityPolicy.reason(
+                preset: overlapping,
+                onDisplay: 1,
+                windows: [real],
+                displays: displays
+            ) == .overlappingWindow
+        )
+    }
+
+    @Test func aBarThatNeverHidesHasNoReason() {
+        var preset = BarPresetCatalogue.default
+        preset.autoHide = .never
+
+        let real = window(id: 11, bounds: displays[0].frame, isFullScreen: false)
+
+        #expect(
+            BarVisibilityPolicy.reason(
+                preset: preset,
+                onDisplay: 1,
+                windows: [real],
+                displays: displays
+            ) == nil
+        )
+    }
+
+    @Test func anEmptyDisplayHasNoReasonToHide() {
+        #expect(
+            BarVisibilityPolicy.reason(
+                preset: overlapping,
+                onDisplay: 1,
+                windows: [],
+                displays: displays
+            ) == nil
+        )
+    }
 }

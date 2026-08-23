@@ -8,23 +8,34 @@ package enum BarVisibilityPolicy {
         windows: [ManagedWindow],
         displays: [DisplayGeometry]
     ) -> Bool {
+        reason(preset: preset, onDisplay: displayId, windows: windows, displays: displays) != nil
+    }
+
+    package static func reason(
+        preset: BarPreset,
+        onDisplay displayId: Int,
+        windows: [ManagedWindow],
+        displays: [DisplayGeometry]
+    ) -> BarVisibilityReason? {
         let confirmed = WindowPresentationPolicy.taskbarEntries(from: windows)
 
         if frontmost(onDisplay: displayId, windows: confirmed, displays: displays)?.isFullScreen == true {
-            return true
+            return .fullScreenWindow
         }
         switch preset.autoHide {
         case .never:
-            return false
+            return nil
         case .always:
-            return true
+            return .alwaysHidden
         case .whenOverlapped:
-            return isOverlapped(
+            let overlapped = isOverlapped(
                 preset: preset,
                 onDisplay: displayId,
                 windows: confirmed,
                 displays: displays
             )
+
+            return overlapped ? .overlappingWindow : nil
         }
     }
 
