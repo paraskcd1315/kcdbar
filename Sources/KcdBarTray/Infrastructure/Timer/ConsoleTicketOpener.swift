@@ -2,16 +2,20 @@ import Foundation
 
 /** Asks cc-console, over its loopback server, to open one ticket's window. */
 package struct ConsoleTicketOpener: TicketOpenerPort {
-    private let server: ConsoleServer?
+    private let read: @Sendable () -> ConsoleServer?
 
-    package init(server: ConsoleServer? = ConsoleConfigReader.server()) {
-        self.server = server
+    package init(read: @escaping @Sendable () -> ConsoleServer? = { ConsoleConfigReader.server() }) {
+        self.read = read
     }
 
-    package var isAvailable: Bool { server?.ticketUrl != nil }
+    package var isAvailable: Bool { read()?.ticketUrl != nil }
 
     package func open(contextPath: String, key: String) async -> Bool {
-        guard let server, let url = server.ticketUrl else { return false }
+        guard let server = read(), let url = server.ticketUrl else {
+            BarLog.bar.notice("ticket key=\(key, privacy: .public) refused=noConsole")
+
+            return false
+        }
 
         var request = URLRequest(url: url, timeoutInterval: ConsoleServerMetrics.timeout)
         request.httpMethod = "POST"
@@ -24,8 +28,13 @@ package struct ConsoleTicketOpener: TicketOpenerPort {
         guard let (_, response) = try? await URLSession.shared.data(for: request),
               let http = response as? HTTPURLResponse
         else {
+            BarLog.bar.notice("ticket key=\(key, privacy: .public) refused=unreachable")
+
             return false
         }
+
+        BarLog.bar.notice(
+            "ticket key=\(key, privacy: .public) status=\(http.statusCode, privacy: .public)")
 
         return http.statusCode == 200
     }
