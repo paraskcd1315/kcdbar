@@ -8,9 +8,19 @@ package final class DayMonitor {
     package private(set) var problem: ChannelProblem?
 
     private let source: any DaySignalPort
+    private let tickets: any TicketOpenerPort
 
-    package init(source: any DaySignalPort) {
+    package init(source: any DaySignalPort, tickets: any TicketOpenerPort) {
         self.source = source
+        self.tickets = tickets
+    }
+
+    package func open(_ entry: DayEntry) {
+        guard let contextPath = entry.contextPath, let key = entry.jiraKey else { return }
+
+        Task { [tickets] in
+            _ = await tickets.open(contextPath: contextPath, key: key)
+        }
     }
 
     package func start() {

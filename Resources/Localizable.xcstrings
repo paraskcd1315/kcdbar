@@ -865,6 +865,50 @@
         }
       }
     },
+    "day.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        }
+      }
+    },
+    "day.absent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No time tracking is publishing."
+          }
+        }
+      }
+    },
+    "day.stale": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The last day published was not today."
+          }
+        }
+      }
+    },
+    "day.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing tracked today."
+          }
+        }
+      }
+    },
     "timer.running.count %lld": {
       "extractionState": "manual",
       "localizations": {
