@@ -15,9 +15,7 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
         services.trash.start()
         services.timer.start()
         services.totals.start()
-        services.startBar(preset: BarPresetCatalogue.default)
-        services.refreshAndEnforce()
-        Task { await services.loadPreferences() }
+        Task { await services.start() }
         services.changes.startObserving { [services] in
             services.scheduleRefresh()
         }

@@ -212,13 +212,15 @@ package final class AppServices {
         )
     }
 
-    package func loadPreferences() async {
+    /** Loads what the bar is drawn from, then raises it. */
+    package func start() async {
         settings.observe { [weak self] preset in self?.apply(preset: preset) }
         await settings.load()
         await pins.load()
         await startPins.load()
         await usage.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
+        startBar(preset: settings.preset)
         refreshAndEnforce()
     }
 
