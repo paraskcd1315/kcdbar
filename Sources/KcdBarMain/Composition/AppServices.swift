@@ -125,7 +125,7 @@ package final class AppServices {
             now: now
         )
         for decision in lastWindow.enforce(
-            windows: registry.windows, applications: registry.applications, now: now)
+            windows: registry.taskbarEntries, applications: registry.applications, now: now)
         {
             BarLog.bar.notice("""
                 lastWindow bundle=\(decision.application.bundleIdentifier ?? "?", privacy: .public) \
