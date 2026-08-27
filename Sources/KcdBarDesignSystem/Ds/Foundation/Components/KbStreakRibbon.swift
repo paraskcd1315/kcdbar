@@ -1,9 +1,10 @@
 import Foundation
 import SwiftUI
 
-/** One arc of light riding the rim, breathing as it travels. */
+/** One arc of light on the rim at one moment; the clock that moves it belongs to the stack. */
 package struct KbStreakRibbon: View {
     package let colour: Color
+    package let date: Date
     package let lapSeconds: Double
     package let phase: Double
     package let breathSeconds: Double
@@ -14,6 +15,7 @@ package struct KbStreakRibbon: View {
 
     package init(
         colour: Color,
+        date: Date,
         lapSeconds: Double,
         phase: Double,
         breathSeconds: Double,
@@ -23,6 +25,7 @@ package struct KbStreakRibbon: View {
         brightness: Double = 1
     ) {
         self.colour = colour
+        self.date = date
         self.lapSeconds = lapSeconds
         self.phase = phase
         self.breathSeconds = breathSeconds
@@ -33,13 +36,11 @@ package struct KbStreakRibbon: View {
     }
 
     package var body: some View {
-        TimelineView(.periodic(from: .now, by: KbStreakMetrics.tick)) { clock in
-            RoundedRectangle(cornerRadius: corner, style: .continuous)
-                .strokeBorder(sweep(at: clock.date), lineWidth: rimWidth)
-                .blur(radius: rimBlur)
-                .opacity(breath(at: clock.date))
-        }
-        .allowsHitTesting(false)
+        RoundedRectangle(cornerRadius: corner, style: .continuous)
+            .strokeBorder(sweep(at: date), lineWidth: rimWidth)
+            .blur(radius: rimBlur)
+            .opacity(breath(at: date))
+            .allowsHitTesting(false)
     }
 
     private func sweep(at date: Date) -> AngularGradient {

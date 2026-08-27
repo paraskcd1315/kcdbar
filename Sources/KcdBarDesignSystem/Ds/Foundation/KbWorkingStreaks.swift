@@ -12,30 +12,37 @@ package struct KbWorkingStreaks: ViewModifier {
         content.overlay {
             ZStack {
                 if isWorking {
-                    ZStack {
-                        ribbon(
-                            KbStreakColours.orange,
-                            lap: KbStreakMetrics.lapOrange,
-                            phase: KbStreakMetrics.phaseOrange,
-                            breath: KbStreakMetrics.breathOrange)
+                    TimelineView(.periodic(from: .now, by: KbStreakMetrics.tick)) { clock in
+                        ZStack {
+                            ribbon(
+                                KbStreakColours.orange,
+                                at: clock.date,
+                                lap: KbStreakMetrics.lapOrange,
+                                phase: KbStreakMetrics.phaseOrange,
+                                breath: KbStreakMetrics.breathOrange)
 
-                        ribbon(
-                            KbStreakColours.purple,
-                            lap: KbStreakMetrics.lapPurple,
-                            phase: KbStreakMetrics.phasePurple,
-                            breath: KbStreakMetrics.breathPurple)
+                            ribbon(
+                                KbStreakColours.purple,
+                                at: clock.date,
+                                lap: KbStreakMetrics.lapPurple,
+                                phase: KbStreakMetrics.phasePurple,
+                                breath: KbStreakMetrics.breathPurple)
 
-                        ribbon(
-                            KbStreakColours.pink,
-                            lap: KbStreakMetrics.lapPink,
-                            phase: KbStreakMetrics.phasePink,
-                            breath: KbStreakMetrics.breathPink)
+                            ribbon(
+                                KbStreakColours.pink,
+                                at: clock.date,
+                                lap: KbStreakMetrics.lapPink,
+                                phase: KbStreakMetrics.phasePink,
+                                breath: KbStreakMetrics.breathPink)
 
-                        ribbon(
-                            KbStreakColours.fuchsia,
-                            lap: KbStreakMetrics.lapFuchsia,
-                            phase: KbStreakMetrics.phaseFuchsia,
-                            breath: KbStreakMetrics.breathFuchsia)
+                            ribbon(
+                                KbStreakColours.fuchsia,
+                                at: clock.date,
+                                lap: KbStreakMetrics.lapFuchsia,
+                                phase: KbStreakMetrics.phaseFuchsia,
+                                breath: KbStreakMetrics.breathFuchsia)
+                        }
+                        .drawingGroup()
                     }
                     .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
                     .transition(
@@ -48,10 +55,11 @@ package struct KbWorkingStreaks: ViewModifier {
     }
 
     private func ribbon(
-        _ colour: Color, lap: Double, phase: Double, breath: Double
+        _ colour: Color, at date: Date, lap: Double, phase: Double, breath: Double
     ) -> KbStreakRibbon {
         KbStreakRibbon(
             colour: colour,
+            date: date,
             lapSeconds: isLoud ? lap * KbStreakMetrics.loudQuicker : lap,
             phase: phase,
             breathSeconds: isLoud ? breath * KbStreakMetrics.loudQuicker : breath,
