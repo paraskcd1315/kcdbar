@@ -16,9 +16,13 @@ package enum ScreenCoordinateConverter {
     }
 
     private static func flip(_ rect: CGRect) -> CGRect {
+        flipped(rect, against: flipReference)
+    }
+
+    nonisolated package static func flipped(_ rect: CGRect, against reference: CGFloat) -> CGRect {
         CGRect(
             x: rect.origin.x,
-            y: flipReference - rect.origin.y - rect.height,
+            y: reference - rect.origin.y - rect.height,
             width: rect.width,
             height: rect.height
         )

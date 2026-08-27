@@ -1,3 +1,5 @@
+import CoreGraphics
+
 package protocol CgWindowSourcePort: Sendable {
-    func currentWindows() -> [CgWindowRecord]
+    func currentWindows(flipReference: CGFloat) -> [CgWindowRecord]
 }

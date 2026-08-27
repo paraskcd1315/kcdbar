@@ -71,7 +71,7 @@ package final class AppServices {
     private lazy var coalesced = CoalescedTrigger(
         interval: WindowOverlapMetrics.coalesceInterval
     ) { [weak self] in
-        self?.refreshAndEnforce()
+        self?.requestRefresh()
     }
 
     package private(set) var bar: (any BarPanelHostPort)?
@@ -97,8 +97,13 @@ package final class AppServices {
             """)
     }
 
-    package func refreshAndEnforce(now: Date = Date()) {
-        registry.refresh()
+    package func requestRefresh() {
+        Task { await refreshAndEnforce() }
+    }
+
+    package func refreshAndEnforce() async {
+        await registry.refresh()
+        let now = Date()
         battery.refresh()
         overlap.enforce(
             preset: activePreset,
@@ -153,7 +158,7 @@ package final class AppServices {
         } else {
             hideToDesktop()
         }
-        refreshAndEnforce()
+        requestRefresh()
     }
 
     private func hideToDesktop() {
@@ -194,7 +199,7 @@ package final class AppServices {
             among: registry.windows
         )
         _ = control.perform(action, on: window)
-        refreshAndEnforce()
+        requestRefresh()
     }
 
     package init() {
@@ -229,7 +234,7 @@ package final class AppServices {
         await usage.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
         startBar(preset: settings.preset)
-        refreshAndEnforce()
+        await refreshAndEnforce()
     }
 
     package func activate(entry: TaskbarEntryModel, onDisplay displayId: Int) {
@@ -252,7 +257,7 @@ package final class AppServices {
         }
 
         _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
-        refreshAndEnforce()
+        requestRefresh()
     }
 
     private func pids(of bundleIdentifier: String) -> Set<pid_t> {
@@ -457,7 +462,7 @@ package final class AppServices {
 
         activePreset = preset
         bar?.present(preset: preset)
-        refreshAndEnforce()
+        requestRefresh()
     }
 
     package func startBar(preset: BarPreset) {

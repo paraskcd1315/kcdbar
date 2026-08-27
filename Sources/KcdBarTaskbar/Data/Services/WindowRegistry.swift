@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 import Observation
 
@@ -41,14 +42,34 @@ package final class WindowRegistry {
         self.authorization = authorization
     }
 
-    private func pidsWorthAsking(in coreGraphics: [CgWindowRecord]) -> [pid_t] {
+    private var generation = 0
+
+    nonisolated package static func pidsWorthAsking(
+        in coreGraphics: [CgWindowRecord], previousOwners: Set<pid_t>
+    ) -> [pid_t] {
         let owners = Set(coreGraphics.filter(WindowReconciler.isManageable).map(\.ownerPid))
 
-        return Array(owners.union(windows.map(\.ownerPid)))
+        return Array(owners.union(previousOwners))
     }
 
-    package func refresh() {
+    nonisolated private static func read(
+        coreGraphics source: any CgWindowSourcePort,
+        accessibility axSource: any AxWindowSourcePort,
+        flipReference: CGFloat,
+        previousOwners: Set<pid_t>
+    ) async -> WindowRead {
+        await Task.detached(priority: .userInitiated) {
+            let coreGraphics = source.currentWindows(flipReference: flipReference)
+            let pids = pidsWorthAsking(in: coreGraphics, previousOwners: previousOwners)
+
+            return WindowRead(coreGraphics: coreGraphics, accessibility: axSource.windows(forPids: pids))
+        }.value
+    }
+
+    package func refresh() async {
         let started = Date()
+        generation += 1
+        let mine = generation
         hasAccessibility = authorization.isTrusted
         displays = displaySource.currentDisplays()
         frontmostPid = applicationsSource.frontmostPid
@@ -57,8 +78,17 @@ package final class WindowRegistry {
         let byPid = Dictionary(uniqueKeysWithValues: applications.map { ($0.pid, $0) })
         self.applications = applications
         bundleIdentifiers = byPid.compactMapValues(\.bundleIdentifier)
-        let coreGraphics = coreGraphicsSource.currentWindows()
-        let accessibility = accessibilitySource.windows(forPids: pidsWorthAsking(in: coreGraphics))
+
+        let read = await Self.read(
+            coreGraphics: coreGraphicsSource,
+            accessibility: accessibilitySource,
+            flipReference: DisplayFlipReference.of(displays),
+            previousOwners: Set(windows.map(\.ownerPid))
+        )
+        guard mine == generation else { return }
+
+        let coreGraphics = read.coreGraphics
+        let accessibility = read.accessibility
 
         lastScanCounts = WindowScanCounts(
             applications: applications.count,
