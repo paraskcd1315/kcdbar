@@ -9,7 +9,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private var screenObserver: NSObjectProtocol?
     private var pointerMonitor: Any?
     private var clickThroughMonitors: [Any] = []
-    private var hitRegions: [Int: BarHitRegion] = [:]
+    private var frames: [Int: BarFrameState] = [:]
     private var visibility = BarPanelVisibilityState()
     private var notedReasons: [Int: String] = [:]
     private let presetState = BarPresetState(preset: BarPresetCatalogue.default)
@@ -237,7 +237,7 @@ package final class BarPanelHost: BarPanelHostPort {
         for (id, panel) in panels {
             panel.ignoresMouseEvents = BarHitTesting.passesThrough(
                 point,
-                barRect: hitRegions[id]?.rect,
+                barRect: frames[id]?.frame,
                 panelFrame: panel.frame
             )
         }
@@ -271,7 +271,7 @@ package final class BarPanelHost: BarPanelHostPort {
         stopClickThroughMonitors()
         visibility.reset()
         notedReasons = [:]
-        hitRegions = [:]
+        frames = [:]
         panels.values.forEach { $0.orderOut(nil) }
         panels = [:]
         if let screenObserver {
@@ -297,8 +297,8 @@ package final class BarPanelHost: BarPanelHostPort {
                 existing.setFrame(frame, display: true)
                 continue
             }
-            let hitRegion = hitRegions[display.id] ?? BarHitRegion()
-            hitRegions[display.id] = hitRegion
+            let frameState = frames[display.id] ?? BarFrameState()
+            frames[display.id] = frameState
             let root = TaskbarRootView(
                 registry: registry,
                 pins: pins,
@@ -329,14 +329,22 @@ package final class BarPanelHost: BarPanelHostPort {
 
                 onOpenDay: onOpenDay,
                 onOpenSessions: onOpenSessions,
-                onBarFrameChange: { [hitRegion] in hitRegion.rect = $0 }
+                onBarFrameChange: { [frameState] in frameState.frame = $0 }
             )
             .environment(\.middleClickCatcher) { action in
                 AnyView(MiddleClickView(action: action))
             }
 
             let panel = BarPanel(contentRect: frame)
-            panel.contentView = BarHostingView(rootView: root)
+            let host = BarHostingView(rootView: root)
+            let rim = BarRimHostingView(
+                rootView: TaskbarRimLayer(
+                    presetState: presetState, frame: frameState, sessions: sessions))
+            rim.sizingOptions = []
+            rim.frame = host.bounds
+            rim.autoresizingMask = [.width, .height]
+            host.addSubview(rim)
+            panel.contentView = host
             panel.orderFrontRegardless()
             panels[display.id] = panel
             visibility.record(showing: true, for: display.id)
