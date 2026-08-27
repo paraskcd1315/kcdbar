@@ -13,6 +13,16 @@ struct BarPresetDecodingTests {
         #expect(preset.entryCornerRadius == BarPresetCatalogue.default.entryCornerRadius)
         #expect(preset.iconSize == BarPresetCatalogue.default.iconSize)
         #expect(preset.startMark == BarPresetCatalogue.default.startMark)
+        #expect(preset.quitsOnLastWindow == BarPresetCatalogue.default.quitsOnLastWindow)
+    }
+
+    @Test func aStoredPresetFromBeforeTheQuitAxisQuitsOnLastWindowByDefault() throws {
+        let payload = Data(#"{"name":"KCD copy","showsTrash":false}"#.utf8)
+
+        let preset = try JSONDecoder().decode(BarPreset.self, from: payload)
+
+        #expect(preset.quitsOnLastWindow)
+        #expect(!preset.showsTrash)
     }
 
     @Test func aPayloadWithoutANameFails() throws {

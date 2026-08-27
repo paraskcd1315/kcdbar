@@ -43,6 +43,7 @@ package final class AppServices {
     package let brightness = BrightnessMonitor(source: DisplayServicesBrightness())
     package let settings: BarSettingsState
     package let pins: PinnedAppState
+    package let exclusions: QuitExclusionState
     package let startPins: PinnedAppState
     package let startGroups: StartGroupState
     package let panelEditor: any PanelTextEditingPort = AppKitPanelTextEditing()
@@ -66,6 +67,12 @@ package final class AppServices {
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
     private lazy var overlap = WindowOverlapEnforcer(control: control)
     private lazy var solo = SoloWindowEnforcer(control: control)
+    private lazy var lastWindow = LastWindowQuitEnforcer(
+        terminator: terminator,
+        menuExtras: AccessibilityMenuExtraOwnership(),
+        isEnabled: { [weak self] in self?.activePreset.quitsOnLastWindow ?? false },
+        excluded: { [weak self] in self?.exclusions.bundleIdentifiers ?? [] }
+    )
     private var activePreset = BarPresetCatalogue.default
     private var lastReading: BarRefreshReading?
     private lazy var coalesced = CoalescedTrigger(
@@ -117,6 +124,14 @@ package final class AppServices {
             displays: registry.displays,
             now: now
         )
+        for decision in lastWindow.enforce(
+            windows: registry.windows, applications: registry.applications, now: now)
+        {
+            BarLog.bar.notice("""
+                lastWindow bundle=\(decision.application.bundleIdentifier ?? "?", privacy: .public) \
+                verdict=\(decision.verdict.rawValue, privacy: .public)
+                """)
+        }
         order.note(keys: orderingKeys)
         noteRefresh()
         bar?.syncVisibility()
@@ -214,6 +229,7 @@ package final class AppServices {
         store = opened
         settings = BarSettingsState(store: opened)
         pins = PinnedAppState(store: opened)
+        exclusions = QuitExclusionState(store: opened)
         startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
         startGroups = StartGroupState(store: opened)
         usage = ApplicationUsageState(store: opened)
@@ -230,6 +246,7 @@ package final class AppServices {
         settings.observe { [weak self] preset in self?.apply(preset: preset) }
         await settings.load()
         await pins.load()
+        await exclusions.load()
         await startPins.load()
         await usage.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
@@ -422,6 +439,7 @@ package final class AppServices {
 
     package func quit(entry: TaskbarEntryModel) {
         guard let bundleIdentifier = entry.bundleIdentifier,
+              ApplicationQuitPolicy.canQuit(bundleIdentifier: bundleIdentifier),
               terminator.quit(bundleIdentifier: bundleIdentifier)
         else {
             return
@@ -443,11 +461,13 @@ package final class AppServices {
     }
 
     package func openSettings() {
-        settingsWindow.present { [settings, loginItem, stageManager, timer] in
+        settingsWindow.present { [settings, loginItem, stageManager, exclusions, registry, timer] in
             SettingsRootView(
                 settings: settings,
                 loginItem: loginItem,
                 stageManager: stageManager,
+                exclusions: exclusions,
+                runningApplications: registry.applications,
                 isTrackingAvailable: timer.isAvailable
             )
         }

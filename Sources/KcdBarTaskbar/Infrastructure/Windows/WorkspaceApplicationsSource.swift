@@ -10,7 +10,8 @@ package struct WorkspaceApplicationsSource: RunningApplicationsPort {
                 RunningApplication(
                     pid: $0.processIdentifier,
                     bundleIdentifier: $0.bundleIdentifier,
-                    localizedName: $0.localizedName
+                    localizedName: $0.localizedName,
+                    launchedAt: $0.launchDate
                 )
             }
     }

@@ -31,7 +31,8 @@ package enum BarPresetCatalogue {
         showsControlCentre: true,
         showsClock: true,
         showsTracking: true,
-        showsDesktopButton: true
+        showsDesktopButton: true,
+        quitsOnLastWindow: true
     )
 
     package static let windows10 = BarPreset(
@@ -63,7 +64,8 @@ package enum BarPresetCatalogue {
         showsControlCentre: true,
         showsClock: true,
         showsTracking: true,
-        showsDesktopButton: true
+        showsDesktopButton: true,
+        quitsOnLastWindow: true
     )
 
     package static let dock = BarPreset(
@@ -95,7 +97,8 @@ package enum BarPresetCatalogue {
         showsControlCentre: false,
         showsClock: false,
         showsTracking: false,
-        showsDesktopButton: false
+        showsDesktopButton: false,
+        quitsOnLastWindow: true
     )
 
     package static let minimal = BarPreset(
@@ -127,7 +130,8 @@ package enum BarPresetCatalogue {
         showsControlCentre: false,
         showsClock: false,
         showsTracking: false,
-        showsDesktopButton: false
+        showsDesktopButton: false,
+        quitsOnLastWindow: true
     )
 
     package static let kcd = BarPreset(
@@ -159,7 +163,8 @@ package enum BarPresetCatalogue {
         showsControlCentre: true,
         showsClock: true,
         showsTracking: true,
-        showsDesktopButton: true
+        showsDesktopButton: true,
+        quitsOnLastWindow: true
     )
 
     package static let all: [BarPreset] = [kcd, windows11, windows10, dock, minimal]

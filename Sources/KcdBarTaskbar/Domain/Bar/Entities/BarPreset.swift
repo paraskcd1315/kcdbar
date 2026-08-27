@@ -30,6 +30,7 @@ package struct BarPreset: Codable, Equatable, Sendable {
     package var showsClock: Bool
     package var showsTracking: Bool
     package var showsDesktopButton: Bool
+    package var quitsOnLastWindow: Bool
 }
 
 extension BarPreset {
@@ -79,5 +80,7 @@ extension BarPreset {
             ?? statusArea ?? fallback.showsTracking
         showsDesktopButton = try container.decodeIfPresent(Bool.self, forKey: .showsDesktopButton)
             ?? fallback.showsDesktopButton
+        quitsOnLastWindow = try container.decodeIfPresent(Bool.self, forKey: .quitsOnLastWindow)
+            ?? fallback.quitsOnLastWindow
     }
 }

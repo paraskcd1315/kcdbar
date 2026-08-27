@@ -10,7 +10,8 @@ actor KcdBarStore:
     PinnedAppStorePort,
     StartPinStorePort,
     StartGroupStorePort,
-    ApplicationUsageStorePort {
+    ApplicationUsageStorePort,
+    QuitExclusionStorePort {
     package static let fileName = "kcdbar.store"
 
     static func container(at url: URL? = nil, inMemory: Bool = false) throws -> ModelContainer {
@@ -22,7 +23,8 @@ actor KcdBarStore:
             StoredStartPin.self,
             StoredStartGroup.self,
             StoredStartGroupMembership.self,
-            StoredApplicationUsage.self
+            StoredApplicationUsage.self,
+            StoredQuitExclusion.self
         ])
         let configuration = inMemory
             ? ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -312,6 +314,44 @@ actor KcdBarStore:
             )
         }
         try? modelContext.save()
+    }
+
+    func quitExclusions() async -> [QuitExclusion] {
+        let stored = (try? modelContext.fetch(FetchDescriptor<StoredQuitExclusion>())) ?? []
+
+        return stored
+            .sorted { $0.displayName < $1.displayName }
+            .map { QuitExclusion(bundleIdentifier: $0.bundleIdentifier, displayName: $0.displayName) }
+    }
+
+    func exclude(_ exclusion: QuitExclusion) async {
+        if let held = storedExclusion(bundleIdentifier: exclusion.bundleIdentifier) {
+            held.displayName = exclusion.displayName
+        } else {
+            modelContext.insert(
+                StoredQuitExclusion(
+                    bundleIdentifier: exclusion.bundleIdentifier,
+                    displayName: exclusion.displayName
+                )
+            )
+        }
+        try? modelContext.save()
+    }
+
+    func include(bundleIdentifier: String) async {
+        guard let held = storedExclusion(bundleIdentifier: bundleIdentifier) else { return }
+
+        modelContext.delete(held)
+        try? modelContext.save()
+    }
+
+    private func storedExclusion(bundleIdentifier: String) -> StoredQuitExclusion? {
+        var query = FetchDescriptor<StoredQuitExclusion>(
+            predicate: #Predicate { $0.bundleIdentifier == bundleIdentifier }
+        )
+        query.fetchLimit = 1
+
+        return try? modelContext.fetch(query).first
     }
 
     private func storedUsage(bundleIdentifier: String) -> StoredApplicationUsage? {

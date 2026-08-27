@@ -4,17 +4,23 @@ package struct BehaviourPane: View {
     package let settings: BarSettingsState
     package let loginItem: LoginItemState
     package let stageManager: StageManagerState
+    package let exclusions: QuitExclusionState
+    package let runningApplications: [RunningApplication]
     package let isTrackingAvailable: Bool
 
     package init(
         settings: BarSettingsState,
         loginItem: LoginItemState,
         stageManager: StageManagerState,
+        exclusions: QuitExclusionState,
+        runningApplications: [RunningApplication],
         isTrackingAvailable: Bool
     ) {
         self.settings = settings
         self.loginItem = loginItem
         self.stageManager = stageManager
+        self.exclusions = exclusions
+        self.runningApplications = runningApplications
         self.isTrackingAvailable = isTrackingAvailable
     }
 
@@ -37,6 +43,11 @@ package struct BehaviourPane: View {
                     selection: settings.binding(\.overlap)
                 )
                 Toggle("settings.behaviour.soloWindows", isOn: soloWindows)
+            }
+
+            Section("settings.behaviour.quitting") {
+                Toggle("settings.behaviour.quitsOnLastWindow", isOn: settings.binding(\.quitsOnLastWindow))
+                QuitExclusionEditor(exclusions: exclusions, candidates: runningApplications)
             }
 
             Section("settings.behaviour.displays") {
@@ -73,6 +84,7 @@ package struct BehaviourPane: View {
             loginItem.refresh()
             stageManager.refresh()
         }
+        .task { await exclusions.load() }
     }
 
     private var stageManagerEnabled: Binding<Bool> {

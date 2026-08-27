@@ -7,8 +7,24 @@ package actor EphemeralPinnedAppStore:
     StartPinStorePort,
     StartGroupStorePort,
     ApplicationUsageStorePort,
-    PresetStorePort {
+    PresetStorePort,
+    QuitExclusionStorePort {
     package init() {}
+
+    private var exclusions: [QuitExclusion] = []
+
+    package func quitExclusions() async -> [QuitExclusion] {
+        exclusions.sorted { $0.displayName < $1.displayName }
+    }
+
+    package func exclude(_ exclusion: QuitExclusion) async {
+        exclusions.removeAll { $0.bundleIdentifier == exclusion.bundleIdentifier }
+        exclusions.append(exclusion)
+    }
+
+    package func include(bundleIdentifier: String) async {
+        exclusions.removeAll { $0.bundleIdentifier == bundleIdentifier }
+    }
 
     private var savedPresets: [BarPreset] = []
     private var activePresetName = BarPresetCatalogue.default.name

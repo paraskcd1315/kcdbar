@@ -4,6 +4,8 @@ package struct SettingsRootView: View {
     package let settings: BarSettingsState
     package let loginItem: LoginItemState
     package let stageManager: StageManagerState
+    package let exclusions: QuitExclusionState
+    package let runningApplications: [RunningApplication]
     package let isTrackingAvailable: Bool
 
     @State private var pane: SettingsPane = .appearance
@@ -12,11 +14,15 @@ package struct SettingsRootView: View {
         settings: BarSettingsState,
         loginItem: LoginItemState,
         stageManager: StageManagerState,
+        exclusions: QuitExclusionState,
+        runningApplications: [RunningApplication],
         isTrackingAvailable: Bool
     ) {
         self.settings = settings
         self.loginItem = loginItem
         self.stageManager = stageManager
+        self.exclusions = exclusions
+        self.runningApplications = runningApplications
         self.isTrackingAvailable = isTrackingAvailable
     }
 
@@ -38,6 +44,8 @@ package struct SettingsRootView: View {
                 settings: settings,
                 loginItem: loginItem,
                 stageManager: stageManager,
+                exclusions: exclusions,
+                runningApplications: runningApplications,
                 isTrackingAvailable: isTrackingAvailable
             )
                 .navigationTitle(pane.title)
