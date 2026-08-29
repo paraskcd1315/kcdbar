@@ -4,7 +4,7 @@ import Testing
 @testable import KcdBarTaskbar
 
 struct WindowSpacePolicyTests {
-    private func window(zOrder: Int?) -> ManagedWindow {
+    private func window(zOrder: Int?, source: WindowRecordSource = .both) -> ManagedWindow {
         ManagedWindow(
             identity: WindowIdentity(ownerPid: 1, cgWindowId: 1, fallbackKey: "1"),
             ownerPid: 1,
@@ -15,8 +15,12 @@ struct WindowSpacePolicyTests {
             isFullScreen: false,
             isOnScreen: true,
             zOrder: zOrder,
-            source: .both
+            source: source
         )
+    }
+
+    @Test func aPromotedWindowIsNotOnTheActiveSpaceWhateverItsRank() {
+        #expect(WindowSpacePolicy.isOnActiveSpace(window(zOrder: 3, source: .inactiveSpace)) == false)
     }
 
     @Test func aRankedWindowIsOnTheActiveSpace() {
