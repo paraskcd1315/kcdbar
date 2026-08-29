@@ -17,7 +17,7 @@ struct TaskbarEntryGroupingTests {
             isRunning: true,
             instanceCount: 1,
             instancesOnThisDisplay: 1,
-            previewWindowIds: []
+            previewWindows: []
         )
     }
 

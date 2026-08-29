@@ -5,12 +5,16 @@ import Testing
 
 @MainActor
 struct TaskbarPreviewStateTests {
+    private func windows(_ ids: [CGWindowID]) -> [TaskbarPreviewWindow] {
+        ids.map { TaskbarPreviewWindow(id: $0, size: CGSize(width: 1200, height: 800)) }
+    }
+
     @Test func restingOnAnEntryAsksForEveryWindowItHolds() async {
         let port = StubWindowPreviews()
         port.capturable = [10, 11]
         let state = TaskbarPreviewState(port: port)
 
-        await state.load([10, 11])
+        await state.load(windows([10, 11]))
 
         #expect(port.asked == [10, 11])
     }
@@ -20,7 +24,7 @@ struct TaskbarPreviewStateTests {
         port.capturable = [10]
         let state = TaskbarPreviewState(port: port)
 
-        await state.load([10, 11])
+        await state.load(windows([10, 11]))
 
         #expect(state.previews[10] != nil)
         #expect(state.previews[11] == nil)
@@ -30,7 +34,7 @@ struct TaskbarPreviewStateTests {
         let port = StubWindowPreviews()
         let state = TaskbarPreviewState(port: port)
 
-        await state.load([10])
+        await state.load(windows([10]))
 
         #expect(port.asked == [10])
         #expect(state.previews.isEmpty)
@@ -40,7 +44,7 @@ struct TaskbarPreviewStateTests {
         let port = StubWindowPreviews()
         let state = TaskbarPreviewState(port: port)
 
-        await state.load([10, 11, 12, 13, 14, 15])
+        await state.load(windows([10, 11, 12, 13, 14, 15]))
 
         #expect(port.asked.count == TaskbarPreviewMetrics.maximumThumbnails)
     }
@@ -50,8 +54,8 @@ struct TaskbarPreviewStateTests {
         port.capturable = [10, 11]
         let state = TaskbarPreviewState(port: port)
 
-        await state.load([10])
-        await state.load([11])
+        await state.load(windows([10]))
+        await state.load(windows([11]))
 
         #expect(state.previews[10] == nil)
         #expect(state.previews[11] != nil)
@@ -62,8 +66,8 @@ struct TaskbarPreviewStateTests {
         port.capturable = [10]
         let state = TaskbarPreviewState(port: port)
 
-        await state.load([10])
-        await state.load([10])
+        await state.load(windows([10]))
+        await state.load(windows([10]))
 
         #expect(port.asked == [10])
     }
@@ -72,7 +76,7 @@ struct TaskbarPreviewStateTests {
         let port = StubWindowPreviews()
         port.capturable = [10]
         let state = TaskbarPreviewState(port: port)
-        await state.load([10])
+        await state.load(windows([10]))
 
         state.clear()
 
@@ -83,7 +87,7 @@ struct TaskbarPreviewStateTests {
         let port = StubWindowPreviews()
         let state = TaskbarPreviewState(port: port)
 
-        await state.load([])
+        await state.load(windows([]))
 
         #expect(port.asked.isEmpty)
     }

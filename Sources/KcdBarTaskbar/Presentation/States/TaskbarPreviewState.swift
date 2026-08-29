@@ -15,20 +15,21 @@ package final class TaskbarPreviewState {
         self.port = port
     }
 
-    package func load(_ windowIds: [CGWindowID]) async {
-        let wanted = Array(windowIds.prefix(TaskbarPreviewMetrics.maximumThumbnails))
-        requested = Set(wanted)
+    package func load(_ windows: [TaskbarPreviewWindow]) async {
+        let wanted = Array(windows.prefix(TaskbarPreviewMetrics.maximumThumbnails))
+        requested = Set(wanted.map(\.id))
         previews = previews.filter { requested.contains($0.key) }
 
-        for windowId in wanted where previews[windowId] == nil {
+        for window in wanted where previews[window.id] == nil {
+            let tile = TaskbarPreviewFit.size(of: window.size, within: TaskbarPreviewMetrics.thumbnailSize)
             let image = await port.preview(
-                forWindowId: windowId,
-                fitting: TaskbarPreviewMetrics.captureSize
+                forWindowId: window.id,
+                fitting: TaskbarPreviewMetrics.captureSize(for: tile)
             )
-            guard requested.contains(windowId) else { return }
+            guard requested.contains(window.id) else { return }
             guard let image else { continue }
 
-            previews[windowId] = image
+            previews[window.id] = image
         }
     }
 

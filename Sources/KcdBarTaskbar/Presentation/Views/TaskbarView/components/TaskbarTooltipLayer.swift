@@ -15,7 +15,7 @@ package struct TaskbarTooltipLayer: View {
                     applicationName: entry.applicationName,
                     windowTitle: entry.title,
                     thumbnails: TaskbarPreviewThumbnail.thumbnails(
-                        for: entry.previewWindowIds,
+                        for: entry.previewWindows,
                         previews: previews.previews
                     ),
                     icon: entry.icon
@@ -48,7 +48,7 @@ package struct TaskbarTooltipLayer: View {
                 previews.clear()
                 return
             }
-            await previews.load(entry.previewWindowIds)
+            await previews.load(entry.previewWindows)
         }
     }
 

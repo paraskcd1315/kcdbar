@@ -3,14 +3,21 @@ import SwiftUI
 
 package struct TaskbarPreviewThumbnail: Identifiable, Equatable {
     package let id: CGWindowID
+    package let size: CGSize
     package let image: Image?
 
     package static func thumbnails(
-        for windowIds: [CGWindowID],
+        for windows: [TaskbarPreviewWindow],
         previews: [CGWindowID: Image]
     ) -> [TaskbarPreviewThumbnail] {
-        windowIds
+        windows
             .prefix(TaskbarPreviewMetrics.maximumThumbnails)
-            .map { TaskbarPreviewThumbnail(id: $0, image: previews[$0]) }
+            .map { window in
+                TaskbarPreviewThumbnail(
+                    id: window.id,
+                    size: TaskbarPreviewFit.size(of: window.size, within: TaskbarPreviewMetrics.thumbnailSize),
+                    image: previews[window.id]
+                )
+            }
     }
 }

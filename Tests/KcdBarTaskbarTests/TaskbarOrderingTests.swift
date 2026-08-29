@@ -17,7 +17,7 @@ struct TaskbarOrderingTests {
             isRunning: true,
             instanceCount: 1,
             instancesOnThisDisplay: 1,
-            previewWindowIds: []
+            previewWindows: []
         )
     }
 

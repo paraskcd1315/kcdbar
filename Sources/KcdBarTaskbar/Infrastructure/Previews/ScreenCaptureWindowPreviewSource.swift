@@ -13,7 +13,7 @@ package final class ScreenCaptureWindowPreviewSource: WindowPreviewPort {
         do {
             let content = try await SCShareableContent.excludingDesktopWindows(
                 true,
-                onScreenWindowsOnly: true
+                onScreenWindowsOnly: false
             )
             guard let window = content.windows.first(where: { $0.windowID == windowId }) else {
                 report("absent")

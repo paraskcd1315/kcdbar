@@ -26,7 +26,7 @@ struct TaskbarEntryFoldingTests {
             isRunning: true,
             instanceCount: 2,
             instancesOnThisDisplay: 2,
-            previewWindowIds: windowIds
+            previewWindows: windowIds.map { TaskbarPreviewWindow(id: $0, size: CGSize(width: 800, height: 600)) }
         )
     }
 
@@ -89,7 +89,7 @@ struct TaskbarEntryFoldingTests {
 
         let folded = TaskbarEntryFolding.folded(entries, grouping: .perApplication)
 
-        #expect(folded.first?.previewWindowIds == [10, 11])
+        #expect(folded.first?.previewWindows.map(\.id) == [10, 11])
     }
 
     @Test func anUnfoldedEntryKeepsOnlyItsOwnWindow() {
@@ -100,6 +100,6 @@ struct TaskbarEntryFoldingTests {
 
         let folded = TaskbarEntryFolding.folded(entries, grouping: .perWindow)
 
-        #expect(folded.map(\.previewWindowIds) == [[10], [11]])
+        #expect(folded.map { $0.previewWindows.map(\.id) } == [[10], [11]])
     }
 }

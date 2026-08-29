@@ -13,8 +13,8 @@ package enum TaskbarPreviewMetrics {
         CGSize(width: thumbnailWidth, height: thumbnailHeight)
     }
 
-    package static var captureSize: CGSize {
-        CGSize(width: thumbnailWidth * captureScale, height: thumbnailHeight * captureScale)
+    package static func captureSize(for tile: CGSize) -> CGSize {
+        CGSize(width: tile.width * captureScale, height: tile.height * captureScale)
     }
 
     package static var panelAllowance: CGFloat {

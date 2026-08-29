@@ -14,7 +14,7 @@ package struct TaskbarEntryModel: Identifiable, Equatable {
     package let isRunning: Bool
     package let instanceCount: Int
     package let instancesOnThisDisplay: Int
-    package let previewWindowIds: [CGWindowID]
+    package let previewWindows: [TaskbarPreviewWindow]
 
     package var orderingKey: String {
         TaskbarOrdering.orderingKey(bundleIdentifier: bundleIdentifier, entryId: id)
@@ -32,6 +32,6 @@ package struct TaskbarEntryModel: Identifiable, Equatable {
             && lhs.isRunning == rhs.isRunning
             && lhs.instanceCount == rhs.instanceCount
             && lhs.instancesOnThisDisplay == rhs.instancesOnThisDisplay
-            && lhs.previewWindowIds == rhs.previewWindowIds
+            && lhs.previewWindows == rhs.previewWindows
     }
 }

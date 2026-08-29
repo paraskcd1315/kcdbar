@@ -35,7 +35,11 @@ struct TaskbarPreviewAllowanceTests {
     }
 
     @Test func theCaptureIsAskedForMorePixelsThanTheTileDraws() {
-        #expect(TaskbarPreviewMetrics.captureSize.width > TaskbarPreviewMetrics.thumbnailWidth)
-        #expect(TaskbarPreviewMetrics.captureSize.height > TaskbarPreviewMetrics.thumbnailHeight)
+        let tile = CGSize(width: 168, height: 90)
+        let capture = TaskbarPreviewMetrics.captureSize(for: tile)
+
+        #expect(capture.width > tile.width)
+        #expect(capture.height > tile.height)
+        #expect(capture.width / capture.height == tile.width / tile.height)
     }
 }
