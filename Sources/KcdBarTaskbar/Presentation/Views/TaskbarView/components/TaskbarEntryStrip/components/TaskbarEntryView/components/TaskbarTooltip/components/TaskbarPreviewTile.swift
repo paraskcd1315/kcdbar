@@ -42,7 +42,7 @@ package struct TaskbarPreviewTile: View {
         .overlay(alignment: .topTrailing) {
             if isHovered {
                 TaskbarPreviewClose(onClose: onClose)
-                    .padding(KbSpacing.s1)
+                    .padding(KbSpacing.s2)
             }
         }
         .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
