@@ -31,9 +31,9 @@ version that is not three integers, so a malformed one can never reach a binary.
 
 | Version | Commit | Date |
 |---|---|---|
-| `0.3.1` | `51ea191` (cut as `0f5491e`) | 2026-08-29 |
-| `0.3.2` | `a10e100` (cut as `31527a6`) | 2026-08-29 |
+| `0.3.1` | `fdc9633` (cut as `0f5491e`) | 2026-08-29 |
+| `0.3.2` | `b86d1c5` (cut as `31527a6`) | 2026-08-29 |
 
-The history was rewritten on 2026-08-29 so that every commit carries one author identity; the ids
-changed and the trees did not. A dmg keeps the id of the tree it was cut from, so
-`KCDBar-0.3.2-31527a6.dmg` is the build of what is now `a10e100`.
+The history was rewritten on 2026-08-29 so that every commit carries one author identity and no
+co-author trailer; the ids changed and the trees did not. A dmg keeps the id of the tree it was cut
+from, so `KCDBar-0.3.2-31527a6.dmg` is the build of what is now `b86d1c5`.
