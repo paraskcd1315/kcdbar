@@ -39,16 +39,16 @@ package struct TaskbarPreviewTile: View {
                     lineWidth: isHovered ? TaskbarMetrics.openBorderHeight : TaskbarMetrics.separatorThickness
                 )
         }
-        .scaleEffect(isHovered ? TaskbarMetrics.previewHoverScale : 1)
-        .animation(KbMotion.quick, value: isHovered)
-        .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
-        .onHover { isHovered = $0 }
-        .onTapGesture(perform: onTap)
         .overlay(alignment: .topTrailing) {
             if isHovered {
                 TaskbarPreviewClose(onClose: onClose)
                     .padding(KbSpacing.s1)
             }
         }
+        .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
+        .onTapGesture(perform: onTap)
+        .onHover { isHovered = $0 }
+        .scaleEffect(isHovered ? TaskbarMetrics.previewHoverScale : 1)
+        .animation(KbMotion.quick, value: isHovered)
     }
 }
