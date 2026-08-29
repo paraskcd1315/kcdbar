@@ -71,6 +71,9 @@
     "settings.behaviour.autoHide": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Auto-hide" } } } },
     "settings.behaviour.contents": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Contents" } } } },
     "settings.behaviour.desktopButton": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Show desktop button" } } } },
+    "settings.behaviour.dock": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Dock" } } } },
+    "settings.behaviour.dockHandling": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "The macOS Dock" } } } },
+    "settings.behaviour.dockHandling.note": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "KCDBar puts the Dock back exactly as it found it when you quit." } } } },
     "settings.behaviour.system": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "System" } } } },
     "settings.behaviour.launchAtLogin": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Launch at login" } } } },
     "taskbar.menu.settings": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Settings…" } } } },
@@ -112,6 +115,9 @@
     "bar.autoHide.never": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Never" } } } },
     "bar.autoHide.always": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Always" } } } },
     "bar.autoHide.whenOverlapped": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "When a window is underneath" } } } },
+    "bar.dockHandling.hide": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Hide it" } } } },
+    "bar.dockHandling.borrowReservation": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Keep it, and sit in its space" } } } },
+    "bar.dockHandling.leaveAlone": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Leave it alone" } } } },
     "wifi.title": {
       "extractionState": "manual",
       "localizations": {

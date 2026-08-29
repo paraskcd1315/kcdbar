@@ -74,6 +74,16 @@ package struct BehaviourPane: View {
                 Toggle("settings.behaviour.desktopButton", isOn: settings.binding(\.showsDesktopButton))
             }
 
+            Section("settings.behaviour.dock") {
+                SettingsEnumPicker(
+                    title: "settings.behaviour.dockHandling",
+                    keyPrefix: "bar.dockHandling",
+                    selection: settings.binding(\.dockHandling)
+                )
+                Text("settings.behaviour.dockHandling.note")
+                    .foregroundStyle(.secondary)
+            }
+
             Section("settings.behaviour.system") {
                 Toggle("settings.behaviour.launchAtLogin", isOn: launchAtLogin)
                 Toggle("settings.behaviour.stageManager", isOn: stageManagerEnabled)
