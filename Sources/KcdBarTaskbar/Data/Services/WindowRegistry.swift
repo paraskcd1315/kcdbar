@@ -27,19 +27,22 @@ package final class WindowRegistry {
     private let applicationsSource: RunningApplicationsPort
     private let displaySource: any DisplayGeometryPort
     private let authorization: any AccessibilityAuthorizationPort
+    private let spaces: (any WindowSpaceSourcePort)?
 
     package init(
         coreGraphicsSource: CgWindowSourcePort,
         accessibilitySource: AxWindowSourcePort,
         applicationsSource: RunningApplicationsPort,
         displaySource: any DisplayGeometryPort,
-        authorization: any AccessibilityAuthorizationPort
+        authorization: any AccessibilityAuthorizationPort,
+        spaces: (any WindowSpaceSourcePort)? = nil
     ) {
         self.coreGraphicsSource = coreGraphicsSource
         self.accessibilitySource = accessibilitySource
         self.applicationsSource = applicationsSource
         self.displaySource = displaySource
         self.authorization = authorization
+        self.spaces = spaces
     }
 
     private var generation = 0
@@ -117,6 +120,13 @@ package final class WindowRegistry {
                     accessibilityTitle: window.accessibilityTitle
                 )
             }
+        if let spaces {
+            windows = InactiveSpacePromotion.promote(
+                windows,
+                onInactiveSpaces: spaces.windowsOnInactiveSpaces(among: InactiveSpacePromotion.candidates(among: windows)),
+                displays: displays
+            )
+        }
         lastRefreshDuration = Date().timeIntervalSince(started)
     }
 }

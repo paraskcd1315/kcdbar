@@ -24,6 +24,17 @@ let ids = [NSNumber(value: windowId)] as CFArray
 let found = spaces(connection, 7, ids)?.takeRetainedValue() as? [UInt64] ?? []
 print("window \(windowId) spaces=\(found)")
 
+if arguments.contains("current"), let space = found.first,
+   let displaySymbol = dlsym(skylight, "CGSCopyManagedDisplayForSpace"),
+   let currentSymbol = dlsym(skylight, "CGSManagedDisplayGetCurrentSpace") {
+    typealias CurrentSpace = @convention(c) (Int32, CFString) -> UInt64
+    let display = unsafeBitCast(displaySymbol, to: CopyManagedDisplayForSpace.self)(connection, space)?.takeRetainedValue()
+    if let display {
+        let current = unsafeBitCast(currentSymbol, to: CurrentSpace.self)(connection, display)
+        print("space \(space) display=\(display as String) current=\(current) onInactiveSpace=\(current != space)")
+    }
+}
+
 if arguments.contains("switch"), let space = found.first,
    let displaySymbol = dlsym(skylight, "CGSCopyManagedDisplayForSpace"),
    let switchSymbol = dlsym(skylight, "CGSManagedDisplaySetCurrentSpace") {

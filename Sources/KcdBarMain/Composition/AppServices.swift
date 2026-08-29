@@ -226,7 +226,8 @@ package final class AppServices {
             accessibilitySource: AccessibilityWindowSource(),
             applicationsSource: WorkspaceApplicationsSource(),
             displaySource: ScreenGeometrySource(),
-            authorization: AccessibilityAuthorization()
+            authorization: AccessibilityAuthorization(),
+            spaces: SkyLightWindowSpaces()
         )
         let opened = PreferencesStore.opened()
         store = opened
