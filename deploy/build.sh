@@ -30,9 +30,10 @@ if ! printf '%s' "$MARKETING" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
   echo "VERSION is '$MARKETING' — must be milestone.feature.fix, three numbers" >&2
   exit 1
 fi
-# The fix digit starts at 1: a feature or milestone bump lands as x.y.1, never x.y.0.
-if [ "${MARKETING##*.}" = "0" ]; then
-  echo "VERSION is '$MARKETING' — the fix digit is never 0, it starts at 1" >&2
+# The fix digit is 0 only when the milestone changes: a milestone lands as x.0.0, a feature as x.y.1.
+FEATURE_DIGIT=$(printf '%s' "$MARKETING" | cut -d. -f2)
+if [ "${MARKETING##*.}" = "0" ] && [ "$FEATURE_DIGIT" != "0" ]; then
+  echo "VERSION is '$MARKETING' — the fix digit is 0 only for a milestone release (x.0.0); a feature release is x.y.1" >&2
   exit 1
 fi
 
