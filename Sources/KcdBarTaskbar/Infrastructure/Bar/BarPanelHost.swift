@@ -258,7 +258,8 @@ package final class BarPanelHost: BarPanelHostPort {
                 pointer: location,
                 barFrame: BarFrameCalculator.frame(for: presetState.preset, on: display),
                 display: display,
-                edge: presetState.preset.edge
+                edge: presetState.preset.edge,
+                revealed: visibility.revealed.contains(id)
             )
             visibility.setRevealed(reveal, for: id)
             apply(showing: visibility.wantsShown(id), to: id)

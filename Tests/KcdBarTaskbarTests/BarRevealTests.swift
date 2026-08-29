@@ -10,40 +10,38 @@ struct BarRevealTests {
     )
     private let barFrame = CGRect(x: 400, y: 0, width: 1120, height: 52)
 
-    @Test func pointerAtTheBottomEdgeRevealsABottomBar() {
-        let atEdge = CGPoint(x: 960, y: 0)
+    private func reveals(_ pointer: CGPoint, edge: BarEdge = .bottom, revealed: Bool = false) -> Bool {
+        BarRevealPolicy.shouldReveal(
+            pointer: pointer, barFrame: barFrame, display: display, edge: edge, revealed: revealed)
+    }
 
-        #expect(BarRevealPolicy.shouldReveal(pointer: atEdge, barFrame: barFrame, display: display, edge: .bottom))
+    @Test func pointerAtTheBottomEdgeRevealsABottomBar() {
+        #expect(reveals(CGPoint(x: 960, y: 0)))
     }
 
     @Test func pointerInTheMiddleOfTheScreenDoesNotReveal() {
-        let middle = CGPoint(x: 960, y: 540)
-
-        #expect(
-            BarRevealPolicy.shouldReveal(pointer: middle, barFrame: barFrame, display: display, edge: .bottom) == false
-        )
+        #expect(reveals(CGPoint(x: 960, y: 540)) == false)
     }
 
     @Test func pointerOverTheRevealedBarKeepsItRevealed() {
-        let overBar = CGPoint(x: 960, y: 30)
+        #expect(reveals(CGPoint(x: 960, y: 30), revealed: true))
+    }
 
-        #expect(BarRevealPolicy.shouldReveal(pointer: overBar, barFrame: barFrame, display: display, edge: .bottom))
+    @Test func pointerOverTheStripOfAConcealedBarDoesNotRevealIt() {
+        #expect(reveals(CGPoint(x: 960, y: 30)) == false)
+    }
+
+    @Test func pointerAtTheEdgeRevealsAConcealedBarWhateverTheStrip() {
+        #expect(reveals(CGPoint(x: 960, y: 1)))
     }
 
     @Test func theEdgeAwayFromTheBarDoesNotReveal() {
-        let topEdge = CGPoint(x: 960, y: 1080)
-
-        #expect(
-            BarRevealPolicy.shouldReveal(pointer: topEdge, barFrame: barFrame, display: display, edge: .bottom) == false
-        )
+        #expect(reveals(CGPoint(x: 960, y: 1080)) == false)
     }
 
     @Test func pointerOnAnotherDisplayDoesNotReveal() {
-        let elsewhere = CGPoint(x: 2500, y: 0)
-
-        #expect(
-            BarRevealPolicy.shouldReveal(pointer: elsewhere, barFrame: barFrame, display: display, edge: .bottom) == false
-        )
+        #expect(reveals(CGPoint(x: 2500, y: 0)) == false)
+        #expect(reveals(CGPoint(x: 2500, y: 0), revealed: true) == false)
     }
 
     @Test func aConcealedBarSitsJustOffItsOwnEdge() {
@@ -62,29 +60,8 @@ struct BarRevealTests {
     }
 
     @Test func eachEdgeRevealsFromItsOwnSide() {
-        #expect(
-            BarRevealPolicy.shouldReveal(
-                pointer: CGPoint(x: 960, y: 1080),
-                barFrame: barFrame,
-                display: display,
-                edge: .top
-            )
-        )
-        #expect(
-            BarRevealPolicy.shouldReveal(
-                pointer: CGPoint(x: 0, y: 540),
-                barFrame: barFrame,
-                display: display,
-                edge: .leading
-            )
-        )
-        #expect(
-            BarRevealPolicy.shouldReveal(
-                pointer: CGPoint(x: 1920, y: 540),
-                barFrame: barFrame,
-                display: display,
-                edge: .trailing
-            )
-        )
+        #expect(reveals(CGPoint(x: 960, y: 1080), edge: .top))
+        #expect(reveals(CGPoint(x: 0, y: 540), edge: .leading))
+        #expect(reveals(CGPoint(x: 1920, y: 540), edge: .trailing))
     }
 }

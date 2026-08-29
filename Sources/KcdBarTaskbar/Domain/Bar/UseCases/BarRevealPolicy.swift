@@ -6,10 +6,11 @@ package enum BarRevealPolicy {
         pointer: CGPoint,
         barFrame: CGRect,
         display: DisplayGeometry,
-        edge: BarEdge
+        edge: BarEdge,
+        revealed: Bool
     ) -> Bool {
         guard contains(display.frame, pointer) else { return false }
-        guard !contains(barFrame, pointer) else { return true }
+        if revealed, contains(barFrame, pointer) { return true }
 
         let screen = display.frame
         let threshold = BarRevealMetrics.edgeThreshold
