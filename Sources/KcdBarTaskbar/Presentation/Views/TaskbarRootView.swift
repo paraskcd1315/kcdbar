@@ -28,6 +28,7 @@ package struct TaskbarRootView: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
     package let sessions: SessionsMonitor
+    package let previews: TaskbarPreviewState
 
     package let onOpenDay: () -> Void
     package let onOpenSessions: () -> Void
@@ -54,6 +55,7 @@ package struct TaskbarRootView: View {
             timer: timer,
             totals: totals,
             sessions: sessions,
+            previews: previews,
 
             onOpenDay: onOpenDay,
             onOpenSessions: onOpenSessions,

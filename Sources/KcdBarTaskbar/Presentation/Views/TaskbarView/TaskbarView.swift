@@ -22,6 +22,7 @@ package struct TaskbarView: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
     package let sessions: SessionsMonitor
+    package let previews: TaskbarPreviewState
 
     package let onOpenDay: () -> Void
     package let onOpenSessions: () -> Void
@@ -83,7 +84,13 @@ package struct TaskbarView: View {
         )
         .coordinateSpace(.named(TaskbarBarLayout.coordinateSpace))
         .environment(\.taskbarHover, hover)
-        .overlay { TaskbarTooltipLayer(hover: hover, edge: viewModel.preset.edge) }
+        .overlay {
+            TaskbarTooltipLayer(
+                hover: hover,
+                previews: previews,
+                edge: viewModel.preset.edge
+            )
+        }
         .onAppear {
             withAnimation(KbMotion.slow) { hasAppeared = true }
         }

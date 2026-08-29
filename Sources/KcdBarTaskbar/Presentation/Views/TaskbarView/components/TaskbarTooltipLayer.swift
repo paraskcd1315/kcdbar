@@ -3,6 +3,7 @@ import SwiftUI
 
 package struct TaskbarTooltipLayer: View {
     package let hover: TaskbarHoverState
+    package let previews: TaskbarPreviewState
     package let edge: BarEdge
 
     @State private var size: CGSize = .zero
@@ -10,7 +11,15 @@ package struct TaskbarTooltipLayer: View {
     package var body: some View {
         GeometryReader { proxy in
             if let entry = hover.entry {
-                TaskbarTooltip(applicationName: entry.applicationName, windowTitle: entry.title)
+                TaskbarTooltip(
+                    applicationName: entry.applicationName,
+                    windowTitle: entry.title,
+                    thumbnails: TaskbarPreviewThumbnail.thumbnails(
+                        for: entry.previewWindowIds,
+                        previews: previews.previews
+                    ),
+                    icon: entry.icon
+                )
                     .onGeometryChange(for: CGSize.self) { $0.size } action: { size = $0 }
                     .position(
                         x: TaskbarTooltipPlacement.x(
@@ -34,6 +43,13 @@ package struct TaskbarTooltipLayer: View {
         }
         .allowsHitTesting(false)
         .animation(KbMotion.quick, value: hover.entry?.id)
+        .task(id: hover.entry?.id) {
+            guard let entry = hover.entry else {
+                previews.clear()
+                return
+            }
+            await previews.load(entry.previewWindowIds)
+        }
     }
 
     private var measured: CGSize {

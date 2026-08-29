@@ -55,7 +55,8 @@ package struct TaskbarViewModel {
                 isLauncher: false,
                 isRunning: true,
                 instanceCount: bundleIdentifier.flatMap { windowsPerApplication[$0] } ?? 1,
-                instancesOnThisDisplay: bundleIdentifier.flatMap { windowsHerePerApplication[$0] } ?? 1
+                instancesOnThisDisplay: bundleIdentifier.flatMap { windowsHerePerApplication[$0] } ?? 1,
+                previewWindowIds: window.identity.cgWindowId.map { [$0] } ?? []
             )
         }
 
@@ -76,7 +77,8 @@ package struct TaskbarViewModel {
                     isLauncher: true,
                     isRunning: runningIdentifiers.contains(app.bundleIdentifier),
                     instanceCount: windowsPerApplication[app.bundleIdentifier] ?? 0,
-                    instancesOnThisDisplay: 0
+                    instancesOnThisDisplay: 0,
+                    previewWindowIds: []
                 )
             }
 
@@ -101,7 +103,8 @@ package struct TaskbarViewModel {
                     isLauncher: true,
                     isRunning: true,
                     instanceCount: 0,
-                    instancesOnThisDisplay: 0
+                    instancesOnThisDisplay: 0,
+                    previewWindowIds: []
                 )
             }
 

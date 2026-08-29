@@ -3,7 +3,7 @@ import CoreGraphics
 package enum BarFrameCalculator {
     package static func panelFrame(for preset: BarPreset, on display: DisplayGeometry) -> CGRect {
         let bar = frame(for: preset, on: display)
-        let allowance = TaskbarMetrics.tooltipAllowance
+        let allowance = TaskbarPreviewMetrics.panelAllowance
 
         switch preset.edge {
         case .bottom:
