@@ -32,3 +32,4 @@ version that is not three integers, so a malformed one can never reach a binary.
 | Version | Commit | Date |
 |---|---|---|
 | `0.3.1` | `0f5491e` | 2026-08-29 |
+| `0.3.2` | `31527a6` | 2026-08-29 |
