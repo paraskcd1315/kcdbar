@@ -28,7 +28,9 @@ package struct TaskbarView: View {
     package let onOpenSessions: () -> Void
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
+    package let onRaiseWindow: (CGWindowID) -> Void
     package let onBarFrameChange: (CGRect) -> Void
+    package let onTooltipFrameChange: (CGRect?) -> Void
 
     @State private var hasAppeared = false
     @State private var hover = TaskbarHoverState()
@@ -88,7 +90,9 @@ package struct TaskbarView: View {
             TaskbarTooltipLayer(
                 hover: hover,
                 previews: previews,
-                edge: viewModel.preset.edge
+                edge: viewModel.preset.edge,
+                onRaiseWindow: onRaiseWindow,
+                onFrameChange: onTooltipFrameChange
             )
         }
         .onAppear {

@@ -6,11 +6,12 @@ package struct TaskbarTooltip: View {
     package let windowTitle: String
     package let thumbnails: [TaskbarPreviewThumbnail]
     package let icon: Image?
+    package let onRaiseWindow: (CGWindowID) -> Void
 
     package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             if !thumbnails.isEmpty {
-                TaskbarPreviewStrip(thumbnails: thumbnails, icon: icon)
+                TaskbarPreviewStrip(thumbnails: thumbnails, icon: icon, onRaiseWindow: onRaiseWindow)
             }
             VStack(alignment: .leading, spacing: KbSpacing.s1) {
                 Text(applicationName)
@@ -34,7 +35,6 @@ package struct TaskbarTooltip: View {
             radius: TaskbarMetrics.tooltipShadowRadius,
             y: TaskbarMetrics.tooltipShadowOffset
         )
-        .allowsHitTesting(false)
     }
 
     private var showsWindowTitle: Bool {

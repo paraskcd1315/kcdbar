@@ -79,7 +79,9 @@ package struct TaskbarEntryView: View {
             hover?.leave(entry)
             return
         }
-        try? await Task.sleep(for: TaskbarMetrics.tooltipDelay)
+        if hover?.isShowing(entry) != true {
+            try? await Task.sleep(for: TaskbarMetrics.tooltipDelay)
+        }
         guard !Task.isCancelled else { return }
 
         hover?.enter(entry, at: frame)

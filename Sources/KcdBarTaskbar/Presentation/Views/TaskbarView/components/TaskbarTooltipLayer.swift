@@ -5,6 +5,8 @@ package struct TaskbarTooltipLayer: View {
     package let hover: TaskbarHoverState
     package let previews: TaskbarPreviewState
     package let edge: BarEdge
+    package let onRaiseWindow: (CGWindowID) -> Void
+    package let onFrameChange: (CGRect?) -> Void
 
     @State private var size: CGSize = .zero
 
@@ -18,9 +20,21 @@ package struct TaskbarTooltipLayer: View {
                         for: entry.previewWindows,
                         previews: previews.previews
                     ),
-                    icon: entry.icon
+                    icon: entry.icon,
+                    onRaiseWindow: onRaiseWindow
                 )
                     .onGeometryChange(for: CGSize.self) { $0.size } action: { size = $0 }
+                    .onGeometryChange(for: CGRect.self) {
+                        $0.frame(in: .named(TaskbarBarLayout.coordinateSpace))
+                    } action: { onFrameChange($0) }
+                    .onHover { hovering in
+                        if hovering {
+                            hover.holdOverTooltip()
+                        } else {
+                            hover.releaseTooltip()
+                        }
+                    }
+                    .onDisappear { onFrameChange(nil) }
                     .position(
                         x: TaskbarTooltipPlacement.x(
                             over: hover.frame,
@@ -41,7 +55,6 @@ package struct TaskbarTooltipLayer: View {
                     )
             }
         }
-        .allowsHitTesting(false)
         .animation(KbMotion.quick, value: hover.entry?.id)
         .task(id: hover.entry?.id) {
             guard let entry = hover.entry else {

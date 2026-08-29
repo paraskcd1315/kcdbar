@@ -4,6 +4,7 @@ import SwiftUI
 package struct TaskbarPreviewTile: View {
     package let thumbnail: TaskbarPreviewThumbnail
     package let icon: Image?
+    package let onTap: () -> Void
 
     package var body: some View {
         ZStack {
@@ -27,5 +28,7 @@ package struct TaskbarPreviewTile: View {
             RoundedRectangle(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius)
                 .strokeBorder(KbColors.separator, lineWidth: TaskbarMetrics.separatorThickness)
         }
+        .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
+        .onTapGesture(perform: onTap)
     }
 }

@@ -42,6 +42,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onOpenControlCentre: () -> Void
     private let onOpenDay: () -> Void
     private let onOpenSessions: () -> Void
+    private let onRaiseWindow: (CGWindowID) -> Void
 
     package init(
         registry: WindowRegistry,
@@ -71,10 +72,12 @@ package final class BarPanelHost: BarPanelHostPort {
         onOpenNotifications: @escaping () -> Void,
         onOpenControlCentre: @escaping () -> Void,
         onOpenDay: @escaping () -> Void,
-        onOpenSessions: @escaping () -> Void
+        onOpenSessions: @escaping () -> Void,
+        onRaiseWindow: @escaping (CGWindowID) -> Void
     ) {
         self.onOpenDay = onOpenDay
         self.onOpenSessions = onOpenSessions
+        self.onRaiseWindow = onRaiseWindow
         self.onOpenNotifications = onOpenNotifications
         self.onOpenControlCentre = onOpenControlCentre
         self.onDropPin = onDropPin
@@ -241,6 +244,7 @@ package final class BarPanelHost: BarPanelHostPort {
             panel.ignoresMouseEvents = BarHitTesting.passesThrough(
                 point,
                 barRect: frames[id]?.frame,
+                tooltipRect: frames[id]?.tooltipFrame,
                 panelFrame: panel.frame
             )
         }
@@ -334,7 +338,9 @@ package final class BarPanelHost: BarPanelHostPort {
 
                 onOpenDay: onOpenDay,
                 onOpenSessions: onOpenSessions,
-                onBarFrameChange: { [frameState] in frameState.frame = $0 }
+                onRaiseWindow: onRaiseWindow,
+                onBarFrameChange: { [frameState] in frameState.frame = $0 },
+                onTooltipFrameChange: { [frameState] in frameState.tooltipFrame = $0 }
             )
             .environment(\.middleClickCatcher) { action in
                 AnyView(MiddleClickView(action: action))

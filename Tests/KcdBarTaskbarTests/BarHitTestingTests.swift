@@ -28,6 +28,23 @@ struct BarHitTestingTests {
         #expect(BarHitTesting.passesThrough(CGPoint(x: 1800, y: 20), barRect: island, panelFrame: panel))
     }
 
+    @Test func aPointOnTheTooltipAboveTheIslandDoesNotPassThrough() {
+        let tooltip = CGRect(x: 800, y: 0, width: 300, height: 40)
+
+        #expect(
+            !BarHitTesting.passesThrough(
+                CGPoint(x: 900, y: 70), barRect: island, tooltipRect: tooltip, panelFrame: panel))
+        #expect(
+            BarHitTesting.passesThrough(
+                CGPoint(x: 120, y: 70), barRect: island, tooltipRect: tooltip, panelFrame: panel))
+    }
+
+    @Test func aPointAboveTheIslandPassesThroughWhenNoTooltipShows() {
+        #expect(
+            BarHitTesting.passesThrough(
+                CGPoint(x: 900, y: 70), barRect: island, tooltipRect: nil, panelFrame: panel))
+    }
+
     @Test func anUnmeasuredBarKeepsItsClicks() {
         #expect(!BarHitTesting.passesThrough(CGPoint(x: 120, y: 20), barRect: nil, panelFrame: panel))
     }

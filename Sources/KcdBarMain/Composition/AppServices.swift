@@ -537,10 +537,19 @@ package final class AppServices {
             },
             onOpenControlCentre: { [weak self] in self?.openControlCentre() },
             onOpenDay: { [weak self] in self?.openDayPanel() },
-            onOpenSessions: { [weak self] in self?.openSessionsPanel() }
+            onOpenSessions: { [weak self] in self?.openSessionsPanel() },
+            onRaiseWindow: { [weak self] windowId in self?.raise(windowId: windowId) }
         )
         host.present(preset: preset)
         bar = host
+    }
+
+    package func raise(windowId: CGWindowID) {
+        guard let window = registry.windows.first(where: { $0.identity.cgWindowId == windowId }) else {
+            return
+        }
+        _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
+        requestRefresh()
     }
 
     private let store: any PinnedAppStorePort
