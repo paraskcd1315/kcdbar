@@ -113,7 +113,8 @@ package final class WindowRegistry {
                     isFullScreen: window.isFullScreen,
                     isOnScreen: window.isOnScreen,
                     zOrder: window.zOrder,
-                    source: window.source
+                    source: window.source,
+                    accessibilityTitle: window.accessibilityTitle
                 )
             }
         lastRefreshDuration = Date().timeIntervalSince(started)

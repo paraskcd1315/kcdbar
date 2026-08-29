@@ -88,7 +88,8 @@ package enum WindowReconciler {
             isFullScreen: match?.isFullScreen ?? earlier?.isFullScreen ?? false,
             isOnScreen: record.isOnScreen,
             zOrder: record.zOrder,
-            source: match == nil && !wasConfirmed ? .coreGraphicsOnly : .both
+            source: match == nil && !wasConfirmed ? .coreGraphicsOnly : .both,
+            accessibilityTitle: match?.title ?? earlier?.accessibilityTitle
         )
     }
 
@@ -104,7 +105,8 @@ package enum WindowReconciler {
             isFullScreen: false,
             isOnScreen: false,
             zOrder: nil,
-            source: .accessibilityOnly
+            source: .accessibilityOnly,
+            accessibilityTitle: record.title
         )
     }
 

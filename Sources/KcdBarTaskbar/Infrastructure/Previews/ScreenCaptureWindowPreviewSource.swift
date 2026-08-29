@@ -9,7 +9,7 @@ package final class ScreenCaptureWindowPreviewSource: WindowPreviewPort {
 
     package init() {}
 
-    package func preview(forWindowId windowId: CGWindowID, fitting size: CGSize) async -> Image? {
+    package func preview(forWindowId windowId: CGWindowID, fitting size: CGSize) async -> WindowPreview? {
         do {
             let content = try await SCShareableContent.excludingDesktopWindows(
                 true,
@@ -25,7 +25,10 @@ package final class ScreenCaptureWindowPreviewSource: WindowPreviewPort {
             )
             report("captured")
 
-            return Image(decorative: image, scale: 1)
+            return WindowPreview(
+                image: Image(decorative: image, scale: 1),
+                pixelSize: CGSize(width: image.width, height: image.height)
+            )
         } catch {
             report("refused code=\((error as NSError).code)")
 

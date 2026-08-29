@@ -6,11 +6,22 @@ package struct TaskbarPreviewWindow: Identifiable, Equatable, Sendable {
     package let size: CGSize
     package var displayName: String? = nil
     package var isFullScreen: Bool = false
+    package var title: String? = nil
+    package var profile: String? = nil
 
-    package init(id: CGWindowID, size: CGSize, displayName: String? = nil, isFullScreen: Bool = false) {
+    package init(
+        id: CGWindowID,
+        size: CGSize,
+        displayName: String? = nil,
+        isFullScreen: Bool = false,
+        title: String? = nil,
+        profile: String? = nil
+    ) {
         self.id = id
         self.size = size
         self.displayName = displayName
         self.isFullScreen = isFullScreen
+        self.title = title
+        self.profile = profile
     }
 }

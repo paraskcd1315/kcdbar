@@ -6,7 +6,7 @@ import SwiftUI
 @MainActor
 @Observable
 package final class TaskbarPreviewState {
-    package private(set) var previews: [CGWindowID: Image] = [:]
+    package private(set) var previews: [CGWindowID: WindowPreview] = [:]
 
     @ObservationIgnored private let port: any WindowPreviewPort
     @ObservationIgnored private var requested: Set<CGWindowID> = []

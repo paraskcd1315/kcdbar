@@ -49,7 +49,7 @@ struct TaskbarPreviewFitTests {
         #expect(thumbnails.first?.hasCaption == true)
     }
 
-    @Test func aThumbnailOnThisDisplayInAWindowHasNoCaption() {
+    @Test func aThumbnailOnThisDisplayInAWindowWithNoTitleHasNoCaption() {
         let thumbnails = TaskbarPreviewThumbnail.thumbnails(
             for: [TaskbarPreviewWindow(id: 10, size: CGSize(width: 800, height: 600))],
             previews: [:]

@@ -6,6 +6,8 @@ package struct TaskbarPreviewTile: View {
     package let icon: Image?
     package let onTap: () -> Void
 
+    @State private var isHovered = false
+
     package var body: some View {
         ZStack {
             KbColors.bandFill
@@ -31,9 +33,15 @@ package struct TaskbarPreviewTile: View {
         .clipShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
         .overlay {
             RoundedRectangle(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius)
-                .strokeBorder(KbColors.separator, lineWidth: TaskbarMetrics.separatorThickness)
+                .strokeBorder(
+                    isHovered ? KbColors.activeIndicator : KbColors.separator,
+                    lineWidth: isHovered ? TaskbarMetrics.openBorderHeight : TaskbarMetrics.separatorThickness
+                )
         }
+        .scaleEffect(isHovered ? TaskbarMetrics.previewHoverScale : 1)
+        .animation(KbMotion.quick, value: isHovered)
         .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
+        .onHover { isHovered = $0 }
         .onTapGesture(perform: onTap)
     }
 }

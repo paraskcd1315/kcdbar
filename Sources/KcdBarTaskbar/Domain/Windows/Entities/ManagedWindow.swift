@@ -11,4 +11,5 @@ package struct ManagedWindow: Equatable, Sendable {
     package let isOnScreen: Bool
     package let zOrder: Int?
     package let source: WindowRecordSource
+    package var accessibilityTitle: String? = nil
 }

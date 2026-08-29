@@ -32,10 +32,12 @@ package struct TaskbarEntryView: View {
             TaskbarEntryStyle.magnification(sizing: preset.entrySizing, isHovered: isHovered),
             anchor: TaskbarEntryStyle.magnificationAnchor(edge: preset.edge)
         )
-        .background {
+        .overlay(alignment: preset.edge.isVertical ? .bottom : .trailing) {
             if TaskbarEntryStyle.isStacked(entry, grouping: preset.grouping) {
-                TaskbarEntryStack(shape: shape, isVertical: preset.edge.isVertical)
+                TaskbarEntryStack(isVertical: preset.edge.isVertical, cornerRadius: preset.entryCornerRadius)
             }
+        }
+        .background {
             shape.fill(
                 TaskbarEntryStyle.fill(
                     sizing: preset.entrySizing,

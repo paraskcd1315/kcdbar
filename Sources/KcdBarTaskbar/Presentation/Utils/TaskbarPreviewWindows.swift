@@ -14,7 +14,9 @@ package enum TaskbarPreviewWindows {
             id: id,
             size: window.bounds?.size ?? .zero,
             displayName: displayName(of: window, awayFrom: displayId, displays: displays),
-            isFullScreen: window.isFullScreen
+            isFullScreen: window.isFullScreen,
+            title: window.title,
+            profile: ChromeWindowTitle.profile(of: window.accessibilityTitle)
         )
     }
 

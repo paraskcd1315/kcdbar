@@ -2,23 +2,26 @@ import KcdBarDesignSystem
 import SwiftUI
 
 package struct TaskbarEntryStack: View {
-    package let shape: AnyShape
     package let isVertical: Bool
+    package let cornerRadius: CGFloat
 
     package var body: some View {
-        shape
-            .fill(KbColors.bandFill.opacity(TaskbarMetrics.stackOpacity))
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .fill(KbColors.bandFill)
+            .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
             .overlay {
-                shape.stroke(KbColors.separator, lineWidth: TaskbarMetrics.separatorThickness)
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .strokeBorder(KbColors.glassEdgeBright.opacity(0.35), lineWidth: TaskbarMetrics.separatorThickness)
             }
-            .padding(inset, TaskbarMetrics.stackInset)
-            .offset(
-                x: isVertical ? 0 : TaskbarMetrics.stackOffset,
-                y: isVertical ? TaskbarMetrics.stackOffset : -TaskbarMetrics.stackOffset
+            .frame(
+                width: isVertical ? nil : TaskbarMetrics.stackWidth,
+                height: isVertical ? TaskbarMetrics.stackWidth : nil
             )
-    }
-
-    private var inset: Edge.Set {
-        isVertical ? .vertical : .horizontal
+            .padding(isVertical ? .horizontal : .vertical, TaskbarMetrics.stackInset)
+            .offset(
+                x: isVertical ? 0 : TaskbarMetrics.stackPeek,
+                y: isVertical ? TaskbarMetrics.stackPeek : 0
+            )
+            .allowsHitTesting(false)
     }
 }
