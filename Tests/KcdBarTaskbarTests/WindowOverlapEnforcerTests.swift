@@ -12,12 +12,26 @@ struct WindowOverlapEnforcerTests {
         isPrimary: true
     )
 
-    private func zoomedWindow() -> ManagedWindow {
+    private func zoomedWindow(isOnScreen: Bool = true) -> ManagedWindow {
         let bounds = CGRect(x: 0, y: 0, width: 1920, height: 1080)
-        let cg = WindowFixtures.cgRecord(windowId: 1, pid: 1, title: "W", bounds: bounds)
+        let cg = WindowFixtures.cgRecord(windowId: 1, pid: 1, title: "W", bounds: bounds, isOnScreen: isOnScreen)
         let ax = WindowFixtures.axRecord(pid: 1, cgWindowId: 1, title: "W", bounds: bounds)
 
         return WindowReconciler.reconcile(coreGraphics: [cg], accessibility: .answered([ax]), previous: [])[0]
+    }
+
+    @Test func aWindowCoreGraphicsReportsOffScreenIsLeftAlone() {
+        let control = RecordingWindowControl()
+        let enforcer = WindowOverlapEnforcer(control: control)
+
+        enforcer.enforce(
+            preset: BarPresetCatalogue.windows11,
+            windows: [zoomedWindow(isOnScreen: false)],
+            displays: [display],
+            now: Date(timeIntervalSince1970: 0)
+        )
+
+        #expect(control.framed.isEmpty)
     }
 
     @Test func theSamePresetTwiceInsideTheIntervalCorrectsOnce() {

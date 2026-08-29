@@ -19,7 +19,7 @@ package final class WindowOverlapEnforcer {
         guard preset.overlap == .pushDisplayFillingWindows else { return }
 
         for window in windows {
-            guard WindowSpacePolicy.isOnActiveSpace(window) else { continue }
+            guard window.isOnScreen, WindowSpacePolicy.isOnActiveSpace(window) else { continue }
             guard let displayId = WindowDisplayResolver.displayId(for: window, in: displays),
                   let display = displays.first(where: { $0.id == displayId })
             else {
