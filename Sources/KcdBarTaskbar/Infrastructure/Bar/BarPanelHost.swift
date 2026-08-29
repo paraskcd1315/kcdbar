@@ -267,6 +267,7 @@ package final class BarPanelHost: BarPanelHostPort {
             let reveal = BarRevealPolicy.shouldReveal(
                 pointer: location,
                 barFrame: BarFrameCalculator.frame(for: presetState.preset, on: display),
+                previewFrame: previewScreenFrame(on: id),
                 display: display,
                 edge: presetState.preset.edge,
                 revealed: visibility.revealed.contains(id)
@@ -275,6 +276,11 @@ package final class BarPanelHost: BarPanelHostPort {
             apply(showing: visibility.wantsShown(id), to: id)
         }
         updatePointerMonitor()
+    }
+
+    private func previewScreenFrame(on id: Int) -> CGRect? {
+        guard let tooltipFrame = frames[id]?.tooltipFrame, let panel = panels[id] else { return nil }
+        return BarHitTesting.screenRect(ofView: tooltipFrame, inPanel: panel.frame)
     }
 
     package func dismiss() {
