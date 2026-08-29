@@ -1,3 +1,4 @@
+import CoreGraphics
 import Testing
 
 @testable import KcdBarTaskbar
@@ -9,7 +10,8 @@ struct TaskbarEntryFoldingTests {
         bundle: String?,
         frontmost: Bool = false,
         minimized: Bool = false,
-        launcher: Bool = false
+        launcher: Bool = false,
+        windowIds: [CGWindowID] = []
     ) -> TaskbarEntryModel {
         TaskbarEntryModel(
             id: id,
@@ -23,7 +25,8 @@ struct TaskbarEntryFoldingTests {
             isLauncher: launcher,
             isRunning: true,
             instanceCount: 2,
-            instancesOnThisDisplay: 2
+            instancesOnThisDisplay: 2,
+            previewWindowIds: windowIds
         )
     }
 
@@ -76,5 +79,27 @@ struct TaskbarEntryFoldingTests {
         let entries = [entry("w1", bundle: nil), entry("w2", bundle: nil)]
 
         #expect(TaskbarEntryFolding.folded(entries, grouping: .perApplication).count == 2)
+    }
+
+    @Test func aFoldedEntryCarriesEveryWindowItsSiblingsCouldPreview() {
+        let entries = [
+            entry("a1", bundle: "app", frontmost: true, windowIds: [10]),
+            entry("a2", bundle: "app", windowIds: [11])
+        ]
+
+        let folded = TaskbarEntryFolding.folded(entries, grouping: .perApplication)
+
+        #expect(folded.first?.previewWindowIds == [10, 11])
+    }
+
+    @Test func anUnfoldedEntryKeepsOnlyItsOwnWindow() {
+        let entries = [
+            entry("a1", bundle: "app", windowIds: [10]),
+            entry("b1", bundle: "other", windowIds: [11])
+        ]
+
+        let folded = TaskbarEntryFolding.folded(entries, grouping: .perWindow)
+
+        #expect(folded.map(\.previewWindowIds) == [[10], [11]])
     }
 }
