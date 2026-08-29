@@ -440,9 +440,14 @@ package final class AppServices {
     }
 
     package func closeWindow(entry: TaskbarEntryModel) {
-        guard let window = registry.window(withEntryId: entry.id), control.close(window) else {
-            return
-        }
+        guard let window = registry.window(withEntryId: entry.id) else { return }
+        close(window)
+    }
+
+    private func close(_ window: ManagedWindow) {
+        let closed = control.close(window)
+        BarLog.bar.notice("close window=\(window.identity.cgWindowId ?? 0) closed=\(closed)")
+        guard closed else { return }
         scheduleRefresh()
     }
 
@@ -560,8 +565,7 @@ package final class AppServices {
         guard let window = registry.windows.first(where: { $0.identity.cgWindowId == windowId }) else {
             return
         }
-        _ = control.close(window)
-        requestRefresh()
+        close(window)
     }
 
     private let store: any PinnedAppStorePort

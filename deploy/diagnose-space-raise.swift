@@ -77,6 +77,26 @@ case "hold":
     let main = AXUIElementSetAttributeValue(element, kAXMainAttribute as CFString, kCFBooleanTrue)
     Thread.sleep(forTimeInterval: 1.5)
     print("activate=\(activated) raise=\(raised.rawValue) main=\(main.rawValue) onScreen=\(onScreen(wanted)) listed=\(listedWindows().map { windowId(of: $0) })")
+case "close":
+    guard let wanted = arguments.dropFirst(2).first.flatMap({ CGWindowID($0) }) else {
+        print("usage: close <windowId>")
+        exit(1)
+    }
+    guard let element = listedWindows().first(where: { windowId(of: $0) == wanted }) else {
+        print("window \(wanted) is not listed now")
+        exit(1)
+    }
+    guard let button = attribute(element, kAXCloseButtonAttribute) else {
+        print("window \(wanted) has no close button")
+        exit(1)
+    }
+    let pressed = AXUIElementPerformAction(button as! AXUIElement, kAXPressAction as CFString)
+    Thread.sleep(forTimeInterval: 2)
+    let cgLists = (CGWindowListCopyWindowInfo([.optionAll], kCGNullWindowID) as? [[String: Any]] ?? [])
+        .contains { ($0[kCGWindowNumber as String] as? CGWindowID) == wanted }
+    let role = attribute(element, kAXRoleAttribute) as? String
+    let minimized = attribute(element, kAXMinimizedAttribute) as? Bool
+    print("pressed=\(pressed.rawValue) heldRole=\(role ?? "none") heldWindowId=\(windowId(of: element)) heldMinimized=\(minimized.map(String.init) ?? "none") listed=\(listedWindows().map { windowId(of: $0) }) cgLists=\(cgLists) onScreen=\(onScreen(wanted)) appRunning=\(!app.isTerminated)")
 default:
-    print("usage: diagnose-space-raise.swift <bundle> list | hold <windowId> [seconds]")
+    print("usage: diagnose-space-raise.swift <bundle> list | hold <windowId> [seconds] | close <windowId>")
 }

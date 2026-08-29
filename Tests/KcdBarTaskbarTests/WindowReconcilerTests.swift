@@ -67,7 +67,7 @@ struct WindowReconcilerTests {
     }
 
     @Test func dropsAConfirmedWindowWhenItsApplicationAnswersWithoutIt() {
-        let closed = WindowFixtures.cgRecord(windowId: 30, pid: 8, title: "Closed", zOrder: 0)
+        let closed = WindowFixtures.cgRecord(windowId: 30, pid: 8, title: "Closed", isOnScreen: false, zOrder: 0)
         let open = WindowFixtures.cgRecord(windowId: 31, pid: 8, title: "Open", zOrder: 1)
         let confirmed = WindowReconciler.reconcile(
             coreGraphics: [closed, open],
@@ -98,8 +98,26 @@ struct WindowReconcilerTests {
         #expect(result[0].source == .coreGraphicsOnly)
     }
 
+    @Test func keepsAConfirmedWindowTheApplicationOmittedWhileCoreGraphicsShowsItOnScreen() {
+        let shown = WindowFixtures.cgRecord(windowId: 34, pid: 9, title: "Shown", isOnScreen: true)
+        let confirmed = WindowReconciler.reconcile(
+            coreGraphics: [shown],
+            accessibility: .answered([WindowFixtures.axRecord(pid: 9, cgWindowId: 34, title: "Shown")]),
+            previous: []
+        )
+
+        let omitted = WindowReconciler.reconcile(
+            coreGraphics: [shown],
+            accessibility: AxWindowScan(records: [], answeredPids: [9]),
+            previous: confirmed
+        )
+
+        #expect(omitted[0].source == .both)
+        #expect(WindowPresentationPolicy.isTaskbarEntry(omitted[0]))
+    }
+
     @Test func dropsEveryConfirmedWindowWhenTheApplicationAnswersWithNone() {
-        let cg = WindowFixtures.cgRecord(windowId: 32, pid: 9, title: "Closed")
+        let cg = WindowFixtures.cgRecord(windowId: 32, pid: 9, title: "Closed", isOnScreen: false)
         let confirmed = WindowReconciler.reconcile(
             coreGraphics: [cg],
             accessibility: .answered([WindowFixtures.axRecord(pid: 9, cgWindowId: 32, title: "Closed")]),

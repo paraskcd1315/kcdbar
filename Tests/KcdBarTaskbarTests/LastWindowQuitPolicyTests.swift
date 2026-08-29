@@ -26,30 +26,20 @@ struct LastWindowQuitPolicyTests {
 
     @Test func countsAreTakenPerOwner() {
         let windows = [window(1, pid: 10), window(2, pid: 10), window(3, pid: 20)]
-        let confirmed = LastWindowQuitPolicy.confirmed(among: windows, previously: [])
 
-        #expect(LastWindowQuitPolicy.windowCounts(of: windows, confirmed: confirmed) == [10: 2, 20: 1])
+        #expect(LastWindowQuitPolicy.windowCounts(of: windows) == [10: 2, 20: 1])
     }
 
-    @Test func aConfirmedWindowStaysConfirmedWhileCoreGraphicsReportsIt() {
-        let confirmed = LastWindowQuitPolicy.confirmed(
-            among: [window(1, pid: 10, source: .coreGraphicsOnly)], previously: [1])
-
-        #expect(confirmed == [1])
-    }
-
-    @Test func aConfirmedWindowCoreGraphicsStoppedReportingIsForgotten() {
-        let confirmed = LastWindowQuitPolicy.confirmed(among: [], previously: [1])
-
-        #expect(confirmed.isEmpty)
-    }
-
-    @Test func aWindowAccessibilityNeverConfirmedIsNeitherConfirmedNorCounted() {
+    @Test func aCoreGraphicsOnlyWindowIsNotCounted() {
         let windows = [window(1, pid: 10, source: .coreGraphicsOnly)]
-        let confirmed = LastWindowQuitPolicy.confirmed(among: windows, previously: [])
 
-        #expect(confirmed.isEmpty)
-        #expect(LastWindowQuitPolicy.windowCounts(of: windows, confirmed: confirmed).isEmpty)
+        #expect(LastWindowQuitPolicy.windowCounts(of: windows).isEmpty)
+    }
+
+    @Test func aWindowOnAnInactiveSpaceIsCounted() {
+        let windows = [window(1, pid: 10, source: .inactiveSpace)]
+
+        #expect(LastWindowQuitPolicy.windowCounts(of: windows) == [10: 1])
     }
 
     @Test func aWindowAccessibilityListsWithoutACoreGraphicsIdIsCounted() {
@@ -59,7 +49,7 @@ struct LastWindowQuitPolicyTests {
             bounds: nil, isMinimized: true, isFullScreen: false, isOnScreen: false,
             zOrder: nil, source: .accessibilityOnly)
 
-        #expect(LastWindowQuitPolicy.windowCounts(of: [minimized], confirmed: []) == [10: 1])
+        #expect(LastWindowQuitPolicy.windowCounts(of: [minimized]) == [10: 1])
     }
 
     @Test func onlyAnApplicationWhoseCountFellToZeroIsClosedOut() {

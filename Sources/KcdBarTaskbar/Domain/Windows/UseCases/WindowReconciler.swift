@@ -76,7 +76,7 @@ package enum WindowReconciler {
             fallbackKey: fallbackKey(pid: record.ownerPid, bounds: record.bounds)
         )
         let earlier = previous.first { $0.identity == identity }
-        let wasConfirmed = earlier?.source == .both && (!answered || liveOmitted)
+        let wasConfirmed = earlier?.source == .both && (!answered || liveOmitted || record.isOnScreen)
 
         return ManagedWindow(
             identity: identity,

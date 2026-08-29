@@ -45,18 +45,30 @@ struct LastWindowQuitEnforcerTests {
         #expect(decisions.map(\.verdict) == [.quit])
     }
 
-    @Test func aWindowAccessibilityStopsListingStillCountsWhileCoreGraphicsReportsIt() {
+    @Test func aWindowTheRegistryDemotedToCoreGraphicsOnlyIsAHiddenWindowAndTheApplicationIsQuit() {
         let terminator = RecordingApplicationTerminator()
         let enforcer = enforcer(terminator)
 
         enforcer.enforce(windows: [window(1, pid: 10)], applications: [editor], now: now)
-        let dip = enforcer.enforce(
+        let hidden = enforcer.enforce(
             windows: [window(1, pid: 10, source: .coreGraphicsOnly)], applications: [editor], now: now)
         let gone = enforcer.enforce(windows: [], applications: [editor], now: now)
 
-        #expect(dip.isEmpty)
-        #expect(gone.map(\.verdict) == [.quit])
+        #expect(hidden.map(\.verdict) == [.quit])
+        #expect(gone.isEmpty)
         #expect(terminator.quit == ["com.example.editor"])
+    }
+
+    @Test func aWindowThatMovedToAnInactiveSpaceStillCounts() {
+        let terminator = RecordingApplicationTerminator()
+        let enforcer = enforcer(terminator)
+
+        enforcer.enforce(windows: [window(1, pid: 10)], applications: [editor], now: now)
+        let moved = enforcer.enforce(
+            windows: [window(1, pid: 10, source: .inactiveSpace)], applications: [editor], now: now)
+
+        #expect(moved.isEmpty)
+        #expect(terminator.quit.isEmpty)
     }
 
     @Test func aWindowAccessibilityNeverConfirmedIsNotCounted() {

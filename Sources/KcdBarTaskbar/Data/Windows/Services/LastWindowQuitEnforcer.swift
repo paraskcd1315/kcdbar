@@ -9,7 +9,6 @@ package final class LastWindowQuitEnforcer {
     private let isEnabled: () -> Bool
     private let excluded: () -> Set<String>
     private var previous: [pid_t: Int] = [:]
-    private var confirmed: Set<CGWindowID> = []
 
     package init(
         terminator: any ApplicationTerminationPort,
@@ -29,8 +28,7 @@ package final class LastWindowQuitEnforcer {
         applications: [RunningApplication],
         now: Date = Date()
     ) -> [LastWindowQuitDecision] {
-        confirmed = LastWindowQuitPolicy.confirmed(among: windows, previously: confirmed)
-        let current = LastWindowQuitPolicy.windowCounts(of: windows, confirmed: confirmed)
+        let current = LastWindowQuitPolicy.windowCounts(of: windows)
         defer { previous = current }
         guard isEnabled() else { return [] }
 
