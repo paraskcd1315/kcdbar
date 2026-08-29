@@ -68,8 +68,7 @@ package struct TaskbarViewModel {
                 isRunning: true,
                 instanceCount: bundleIdentifier.flatMap { windowsPerApplication[$0] } ?? 1,
                 instancesOnThisDisplay: bundleIdentifier.flatMap { windowsHerePerApplication[$0] } ?? 1,
-                previewWindows: previews,
-                isFullScreen: window.isFullScreen
+                previewWindows: previews
             )
         }
 
@@ -91,8 +90,7 @@ package struct TaskbarViewModel {
                     isRunning: runningIdentifiers.contains(app.bundleIdentifier),
                     instanceCount: windowsPerApplication[app.bundleIdentifier] ?? 0,
                     instancesOnThisDisplay: 0,
-                    previewWindows: previewsOf(app.bundleIdentifier),
-                    isFullScreen: previewsOf(app.bundleIdentifier).contains(where: \.isFullScreen)
+                    previewWindows: previewsOf(app.bundleIdentifier)
                 )
             }
 
@@ -118,9 +116,7 @@ package struct TaskbarViewModel {
                     isRunning: true,
                     instanceCount: 0,
                     instancesOnThisDisplay: 0,
-                    previewWindows: application.bundleIdentifier.map(previewsOf) ?? [],
-                    isFullScreen: application.bundleIdentifier.map(previewsOf)?
-                        .contains(where: \.isFullScreen) ?? false
+                    previewWindows: application.bundleIdentifier.map(previewsOf) ?? []
                 )
             }
 

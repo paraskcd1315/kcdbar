@@ -19,7 +19,7 @@ package struct TaskbarEntryLabel: View {
                 }
                 .overlay(alignment: .bottomTrailing) {
                     if entry.isFullScreen {
-                        TaskbarEntryBadge()
+                        TaskbarEntryBadge(count: entry.fullScreenCount)
                             .padding(TaskbarMetrics.instanceDotInset)
                     }
                 }

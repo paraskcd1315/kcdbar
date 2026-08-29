@@ -15,7 +15,14 @@ package struct TaskbarEntryModel: Identifiable, Equatable {
     package let instanceCount: Int
     package let instancesOnThisDisplay: Int
     package let previewWindows: [TaskbarPreviewWindow]
-    package var isFullScreen: Bool = false
+
+    package var fullScreenCount: Int {
+        previewWindows.filter(\.isFullScreen).count
+    }
+
+    package var isFullScreen: Bool {
+        fullScreenCount > 0
+    }
 
     package var orderingKey: String {
         TaskbarOrdering.orderingKey(bundleIdentifier: bundleIdentifier, entryId: id)
@@ -34,6 +41,5 @@ package struct TaskbarEntryModel: Identifiable, Equatable {
             && lhs.instanceCount == rhs.instanceCount
             && lhs.instancesOnThisDisplay == rhs.instancesOnThisDisplay
             && lhs.previewWindows == rhs.previewWindows
-            && lhs.isFullScreen == rhs.isFullScreen
     }
 }
