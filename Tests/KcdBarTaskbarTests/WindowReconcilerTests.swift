@@ -256,4 +256,74 @@ struct WindowReconcilerTests {
         #expect(result.filter { $0.source == .both }.count == 1)
         #expect(result.filter { $0.source == .coreGraphicsOnly }.count == 1)
     }
+
+    @Test func keepsTheEntryOfAWindowTheApplicationOmittedWhileItsElementStillAnswers() {
+        let cg = WindowFixtures.cgRecord(windowId: 40, pid: 20, title: "Another Space")
+        let confirmed = WindowReconciler.reconcile(
+            coreGraphics: [cg],
+            accessibility: .answered([WindowFixtures.axRecord(pid: 20, cgWindowId: 40, title: "Another Space")]),
+            previous: []
+        )
+
+        let now = WindowReconciler.reconcile(
+            coreGraphics: [cg],
+            accessibility: AxWindowScan(records: [], answeredPids: [20], liveOmittedIds: [40]),
+            previous: confirmed
+        )
+
+        #expect(now[0].source == .both)
+        #expect(WindowPresentationPolicy.isTaskbarEntry(now[0]))
+    }
+
+    @Test func dropsTheEntryOfAClosedWindowCoreGraphicsStillReports() {
+        let cg = WindowFixtures.cgRecord(windowId: 41, pid: 21, title: "Closed Scene")
+        let confirmed = WindowReconciler.reconcile(
+            coreGraphics: [cg],
+            accessibility: .answered([WindowFixtures.axRecord(pid: 21, cgWindowId: 41, title: "Closed Scene")]),
+            previous: []
+        )
+
+        let now = WindowReconciler.reconcile(
+            coreGraphics: [cg],
+            accessibility: AxWindowScan(records: [], answeredPids: [21], liveOmittedIds: []),
+            previous: confirmed
+        )
+
+        #expect(now[0].source == .coreGraphicsOnly)
+        #expect(WindowPresentationPolicy.taskbarEntries(from: now).isEmpty)
+    }
+
+    @Test func keepsOnlyTheOmittedWindowsWhoseElementAnswered() {
+        let onAnotherSpace = WindowFixtures.cgRecord(windowId: 42, pid: 22, title: "Desktop", zOrder: 0)
+        let closed = WindowFixtures.cgRecord(windowId: 43, pid: 22, title: "Closed", zOrder: 1)
+        let confirmed = WindowReconciler.reconcile(
+            coreGraphics: [onAnotherSpace, closed],
+            accessibility: .answered([
+                WindowFixtures.axRecord(pid: 22, cgWindowId: 42, title: "Desktop"),
+                WindowFixtures.axRecord(pid: 22, cgWindowId: 43, title: "Closed", indexInApplication: 1)
+            ]),
+            previous: []
+        )
+
+        let now = WindowReconciler.reconcile(
+            coreGraphics: [onAnotherSpace, closed],
+            accessibility: AxWindowScan(records: [], answeredPids: [22], liveOmittedIds: [42]),
+            previous: confirmed
+        )
+
+        #expect(WindowPresentationPolicy.taskbarEntries(from: now).map(\.identity.cgWindowId) == [42])
+    }
+
+    @Test func neverMakesAnEntryOfAWindowAccessibilityHasNotConfirmed() {
+        let cg = WindowFixtures.cgRecord(windowId: 44, pid: 23, title: "Helper")
+
+        let now = WindowReconciler.reconcile(
+            coreGraphics: [cg],
+            accessibility: AxWindowScan(records: [], answeredPids: [23], liveOmittedIds: [44]),
+            previous: []
+        )
+
+        #expect(now[0].source == .coreGraphicsOnly)
+        #expect(WindowPresentationPolicy.taskbarEntries(from: now).isEmpty)
+    }
 }
