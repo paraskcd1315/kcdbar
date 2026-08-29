@@ -7,10 +7,16 @@ package struct TaskbarEntryLabel: View {
     package let iconSize: CGFloat
     package let isVertical: Bool
     package let side: CGFloat?
+    package var isStacked: Bool = false
 
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
             TaskbarEntryIcon(icon: entry.icon, size: iconSize)
+                .background {
+                    if isStacked {
+                        TaskbarEntryStack(side: iconSize)
+                    }
+                }
                 .overlay(alignment: .bottomTrailing) {
                     if entry.isFullScreen {
                         TaskbarEntryBadge()

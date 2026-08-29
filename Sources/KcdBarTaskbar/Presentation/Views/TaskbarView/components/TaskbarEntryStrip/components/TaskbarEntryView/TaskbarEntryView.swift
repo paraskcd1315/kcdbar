@@ -26,17 +26,13 @@ package struct TaskbarEntryView: View {
             ),
             iconSize: BarEntryMetrics.iconSize(for: preset),
             isVertical: preset.edge.isVertical,
-            side: BarEntryMetrics.itemSide(for: preset)
+            side: BarEntryMetrics.itemSide(for: preset),
+            isStacked: TaskbarEntryStyle.isStacked(entry, grouping: preset.grouping)
         )
         .scaleEffect(
             TaskbarEntryStyle.magnification(sizing: preset.entrySizing, isHovered: isHovered),
             anchor: TaskbarEntryStyle.magnificationAnchor(edge: preset.edge)
         )
-        .overlay(alignment: preset.edge.isVertical ? .bottom : .trailing) {
-            if TaskbarEntryStyle.isStacked(entry, grouping: preset.grouping) {
-                TaskbarEntryStack(isVertical: preset.edge.isVertical, cornerRadius: preset.entryCornerRadius)
-            }
-        }
         .background {
             shape.fill(
                 TaskbarEntryStyle.fill(

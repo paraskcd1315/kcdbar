@@ -2,26 +2,29 @@ import KcdBarDesignSystem
 import SwiftUI
 
 package struct TaskbarEntryStack: View {
-    package let isVertical: Bool
-    package let cornerRadius: CGFloat
+    package let side: CGFloat
 
     package var body: some View {
-        RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(KbColors.bandFill)
-            .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
-            .overlay {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .strokeBorder(KbColors.glassEdgeBright.opacity(0.35), lineWidth: TaskbarMetrics.separatorThickness)
+        ZStack {
+            ForEach((1...TaskbarMetrics.stackSheets).reversed(), id: \.self) { sheet in
+                RoundedRectangle(cornerRadius: TaskbarMetrics.stackCornerRadius)
+                    .fill(KbColors.surfaceRaised.opacity(TaskbarMetrics.stackFillOpacity))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: TaskbarMetrics.stackCornerRadius)
+                            .strokeBorder(KbColors.onSurfaceMuted, lineWidth: TaskbarMetrics.separatorThickness)
+                    }
+                    .frame(width: sheetSide, height: sheetSide)
+                    .offset(
+                        x: TaskbarMetrics.stackStep * CGFloat(sheet),
+                        y: -TaskbarMetrics.stackStep * CGFloat(sheet)
+                    )
             }
-            .frame(
-                width: isVertical ? nil : TaskbarMetrics.stackWidth,
-                height: isVertical ? TaskbarMetrics.stackWidth : nil
-            )
-            .padding(isVertical ? .horizontal : .vertical, TaskbarMetrics.stackInset)
-            .offset(
-                x: isVertical ? 0 : TaskbarMetrics.stackPeek,
-                y: isVertical ? TaskbarMetrics.stackPeek : 0
-            )
-            .allowsHitTesting(false)
+        }
+        .frame(width: side, height: side)
+        .allowsHitTesting(false)
+    }
+
+    private var sheetSide: CGFloat {
+        side - TaskbarMetrics.stackInset * 2
     }
 }
