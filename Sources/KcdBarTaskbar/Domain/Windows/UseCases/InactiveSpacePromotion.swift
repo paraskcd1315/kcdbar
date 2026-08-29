@@ -4,8 +4,15 @@ import CoreGraphics
 package enum InactiveSpacePromotion {
     package static func candidates(among windows: [ManagedWindow]) -> [CGWindowID] {
         windows
-            .filter { $0.source == .coreGraphicsOnly }
+            .filter { $0.source == .coreGraphicsOnly && isWindowSized($0.bounds) }
             .compactMap(\.identity.cgWindowId)
+    }
+
+    package static func isWindowSized(_ bounds: CGRect?) -> Bool {
+        guard let bounds else { return false }
+
+        return bounds.width >= InactiveSpaceMetrics.minimumSide
+            && bounds.height >= InactiveSpaceMetrics.minimumSide
     }
 
     package static func promote(

@@ -35,6 +35,26 @@ if arguments.contains("current"), let space = found.first,
     }
 }
 
+if arguments.contains("show"), let space = found.first,
+   let displaySymbol = dlsym(skylight, "CGSCopyManagedDisplayForSpace"),
+   let currentSymbol = dlsym(skylight, "CGSManagedDisplayGetCurrentSpace"),
+   let showSymbol = dlsym(skylight, "CGSShowSpaces"),
+   let hideSymbol = dlsym(skylight, "CGSHideSpaces"),
+   let switchSymbol = dlsym(skylight, "CGSManagedDisplaySetCurrentSpace") {
+    typealias CurrentSpace = @convention(c) (Int32, CFString) -> UInt64
+    typealias SpacesCall = @convention(c) (Int32, CFArray) -> Void
+    guard let display = unsafeBitCast(displaySymbol, to: CopyManagedDisplayForSpace.self)(connection, space)?.takeRetainedValue() else {
+        print("no display for space \(space)")
+        exit(1)
+    }
+    let current = unsafeBitCast(currentSymbol, to: CurrentSpace.self)(connection, display)
+    print("show \(space) hide \(current) on \(display as String)")
+    unsafeBitCast(showSymbol, to: SpacesCall.self)(connection, [NSNumber(value: space)] as CFArray)
+    unsafeBitCast(hideSymbol, to: SpacesCall.self)(connection, [NSNumber(value: current)] as CFArray)
+    unsafeBitCast(switchSymbol, to: SetCurrentSpace.self)(connection, display, space)
+    print("switched with show/hide")
+}
+
 if arguments.contains("switch"), let space = found.first,
    let displaySymbol = dlsym(skylight, "CGSCopyManagedDisplayForSpace"),
    let switchSymbol = dlsym(skylight, "CGSManagedDisplaySetCurrentSpace") {

@@ -23,6 +23,15 @@ struct InactiveSpacePromotionTests {
         #expect(ids == [10, 12])
     }
 
+    @Test func aStripIsNeverACandidate() {
+        let ids = InactiveSpacePromotion.candidates(among: [
+            window(10, source: .coreGraphicsOnly, size: CGSize(width: 1920, height: 68)),
+            window(11, source: .coreGraphicsOnly, size: CGSize(width: 1920, height: 1080)),
+        ])
+
+        #expect(ids == [11])
+    }
+
     @Test func aWindowOnAnInactiveSpaceBecomesAnEntry() {
         let promoted = InactiveSpacePromotion.promote(
             [window(10, source: .coreGraphicsOnly)], onInactiveSpaces: [10], displays: [display])
