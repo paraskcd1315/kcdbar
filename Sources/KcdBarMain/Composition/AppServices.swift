@@ -44,6 +44,7 @@ package final class AppServices {
     package let settings: BarSettingsState
     package let pins: PinnedAppState
     package let exclusions: QuitExclusionState
+    package let dock: DockSuppressionState
     package let startPins: PinnedAppState
     package let startGroups: StartGroupState
     package let panelEditor: any PanelTextEditingPort = AppKitPanelTextEditing()
@@ -230,6 +231,10 @@ package final class AppServices {
         settings = BarSettingsState(store: opened)
         pins = PinnedAppState(store: opened)
         exclusions = QuitExclusionState(store: opened)
+        dock = DockSuppressionState(
+            control: UserDefaultsDockControl(dryRun: DockDryRunPreference.isEnabled),
+            store: opened
+        )
         startPins = PinnedAppState(store: StartPinStoreAdapter(store: opened))
         startGroups = StartGroupState(store: opened)
         usage = ApplicationUsageState(store: opened)
@@ -249,8 +254,10 @@ package final class AppServices {
         await exclusions.load()
         await startPins.load()
         await usage.load()
+        await dock.load()
         order.seed(keys: pins.apps.map { TaskbarOrdering.applicationKey($0.bundleIdentifier) })
         startBar(preset: settings.preset)
+        await dock.apply(handling: settings.preset.dockHandling)
         await refreshAndEnforce()
     }
 
@@ -480,9 +487,15 @@ package final class AppServices {
     package func apply(preset: BarPreset) {
         guard preset != activePreset else { return }
 
+        let handling = preset.dockHandling
         activePreset = preset
         bar?.present(preset: preset)
         requestRefresh()
+        Task { [dock] in await dock.apply(handling: handling) }
+    }
+
+    package func restoreDock() async {
+        await dock.restore()
     }
 
     package func startBar(preset: BarPreset) {

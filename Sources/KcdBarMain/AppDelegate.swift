@@ -23,6 +23,17 @@ package final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    package func applicationShouldTerminate(
+        _ sender: NSApplication
+    ) -> NSApplication.TerminateReply {
+        Task { [services] in
+            await services.restoreDock()
+            NSApp.reply(toApplicationShouldTerminate: true)
+        }
+
+        return .terminateLater
+    }
+
     package func applicationWillTerminate(_ notification: Notification) {
         services.stopObserving()
         services.timer.stop()
