@@ -6,15 +6,14 @@ package enum PrivateFrameworks {
 
     package static let coreDockSendNotification = "CoreDockSendNotification"
     package static let axUIElementGetWindow = "_AXUIElementGetWindow"
+    package static let axUIElementCreateWithRemoteToken = "_AXUIElementCreateWithRemoteToken"
+    package static let axRemoteTokenMagic: Int32 = 0x636F_636F
 
     package static let skyLight = "/System/Library/PrivateFrameworks/SkyLight.framework/SkyLight"
     package static let cgsMainConnectionID = "CGSMainConnectionID"
     package static let cgsCopySpacesForWindows = "CGSCopySpacesForWindows"
     package static let cgsCopyManagedDisplayForSpace = "CGSCopyManagedDisplayForSpace"
-    package static let cgsManagedDisplaySetCurrentSpace = "CGSManagedDisplaySetCurrentSpace"
     package static let cgsManagedDisplayGetCurrentSpace = "CGSManagedDisplayGetCurrentSpace"
-    package static let cgsShowSpaces = "CGSShowSpaces"
-    package static let cgsHideSpaces = "CGSHideSpaces"
     package static let cgsHWCaptureWindowList = "CGSHWCaptureWindowList"
     package static let cgsAllSpacesMask: Int32 = 7
     package static let cgsCaptureIgnoreGlobalClipShape: UInt32 = 1 << 11

@@ -8,4 +8,5 @@ package enum WindowMatchingMetrics {
     package static let windowRole = "AXWindow"
     package static let switchableSubroles: Set<String> = ["AXStandardWindow", "AXDialog"]
     package static let accessibilityTimeout: Float = 0.2
+    package static let remoteElementBudget: Double = 0.25
 }

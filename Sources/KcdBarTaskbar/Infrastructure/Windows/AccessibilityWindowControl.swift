@@ -59,12 +59,14 @@ package struct AccessibilityWindowControl: WindowControlPort {
 
     private func element(for window: ManagedWindow) -> AXUIElement? {
         let application = AXUIElementCreateApplication(window.ownerPid)
-        guard let elements = copyValue(from: application, attribute: kAXWindowsAttribute) as? [AXUIElement] else {
-            return nil
-        }
+        let elements = copyValue(from: application, attribute: kAXWindowsAttribute) as? [AXUIElement] ?? []
         if let windowId = window.identity.cgWindowId,
            let match = elements.first(where: { AxWindowIdBridge.windowId(of: $0) == windowId }) {
             return match
+        }
+        if let windowId = window.identity.cgWindowId,
+           let swept = AxRemoteWindowElement.element(pid: window.ownerPid, windowId: windowId) {
+            return swept
         }
         if let title = window.title, !title.isEmpty,
            let match = elements.first(where: { copyValue(from: $0, attribute: kAXTitleAttribute) as? String == title }) {

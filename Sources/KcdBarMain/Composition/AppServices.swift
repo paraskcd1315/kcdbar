@@ -66,7 +66,6 @@ package final class AppServices {
     package let aboutWindow = AboutWindowHost()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
-    package let spaces: any WindowSpaceFocusPort = SkyLightSpaceFocus()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
     private lazy var overlap = WindowOverlapEnforcer(control: control)
     private lazy var solo = SoloWindowEnforcer(control: control)
@@ -552,10 +551,8 @@ package final class AppServices {
             BarLog.bar.notice("raise window=\(windowId) refused=unknown")
             return
         }
-        let elsewhere = !window.isMinimized && !WindowSpacePolicy.isOnActiveSpace(window)
-        let shown = elsewhere ? spaces.showSpace(ofWindowId: windowId) : false
         let raised = control.perform(window.isMinimized ? .restore : .raise, on: window)
-        BarLog.bar.notice("raise window=\(windowId) elsewhere=\(elsewhere) shown=\(shown) raised=\(raised)")
+        BarLog.bar.notice("raise window=\(windowId) raised=\(raised)")
         requestRefresh()
     }
 
