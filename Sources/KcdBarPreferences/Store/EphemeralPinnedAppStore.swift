@@ -8,8 +8,23 @@ package actor EphemeralPinnedAppStore:
     StartGroupStorePort,
     ApplicationUsageStorePort,
     PresetStorePort,
-    QuitExclusionStorePort {
+    QuitExclusionStorePort,
+    DockSnapshotStorePort {
     package init() {}
+
+    private var dockSnapshot: DockSettingsSnapshot?
+
+    package func snapshot() async -> DockSettingsSnapshot? {
+        dockSnapshot
+    }
+
+    package func remember(_ snapshot: DockSettingsSnapshot) async {
+        dockSnapshot = snapshot
+    }
+
+    package func clear() async {
+        dockSnapshot = nil
+    }
 
     private var exclusions: [QuitExclusion] = []
 
