@@ -557,8 +557,15 @@ package final class AppServices {
             return
         }
         let raised = control.perform(window.isMinimized ? .restore : .raise, on: window)
-        BarLog.bar.notice("raise window=\(windowId) raised=\(raised)")
+        let reopened = !raised && reopen(pid: window.ownerPid)
+        BarLog.bar.notice("raise window=\(windowId) raised=\(raised) reopened=\(reopened)")
         requestRefresh()
+    }
+
+    private func reopen(pid: pid_t) -> Bool {
+        guard let bundleIdentifier = registry.bundleIdentifiers[pid] else { return false }
+        launcher.launch(bundleIdentifier: bundleIdentifier)
+        return true
     }
 
     package func close(windowId: CGWindowID) {
