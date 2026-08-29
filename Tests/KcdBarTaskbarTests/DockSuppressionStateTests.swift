@@ -111,6 +111,28 @@ struct DockSuppressionStateTests {
         #expect(await store.snapshot() == theirs)
     }
 
+    @Test func quittingGivesTheDockBackEvenInsideTheFloor() async {
+        let store = RememberingDockSnapshotStore()
+        let (dock, control) = state(store: store)
+
+        await dock.apply(handling: .hide, now: now)
+        await dock.restore(now: now.addingTimeInterval(1))
+
+        #expect(dock.verdict == .restored)
+        #expect(control.restarts == 2)
+        #expect(await store.snapshot() == nil)
+    }
+
+    @Test func quittingWithoutHavingChangedAnythingStillTouchesNothing() async {
+        let store = RememberingDockSnapshotStore()
+        let (dock, control) = state(store: store)
+
+        await dock.restore(now: now)
+
+        #expect(dock.verdict == .leftAlone)
+        #expect(control.restarts == 0)
+    }
+
     @Test func aChangeInsideTheFloorWritesNothingAndKeepsTheOlderState() async {
         let store = RememberingDockSnapshotStore()
         let (dock, control) = state(store: store)

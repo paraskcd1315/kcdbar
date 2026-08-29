@@ -39,7 +39,15 @@ package final class DockSuppressionState {
     }
 
     package func restore(now: Date = Date()) async {
-        await apply(handling: .leaveAlone, now: now)
+        let decision = DockSuppressionPolicy.decide(
+            handling: .leaveAlone,
+            captured: captured,
+            lastRestart: nil,
+            now: now,
+            current: { control.settings() }
+        )
+
+        await carry(out: decision, at: now)
     }
 
     private func carry(out decision: DockDecision, at now: Date) async {
