@@ -14,20 +14,52 @@ struct LastWindowQuitPolicyTests {
             launchedAt: now.addingTimeInterval(-launchedAgo))
     }
 
-    private func window(_ id: CGWindowID, pid: pid_t) -> ManagedWindow {
+    private func window(
+        _ id: CGWindowID, pid: pid_t, source: WindowRecordSource = .both
+    ) -> ManagedWindow {
         ManagedWindow(
             identity: WindowIdentity(ownerPid: pid, cgWindowId: id, fallbackKey: "\(pid):\(id)"),
             ownerPid: pid, ownerName: "Editor", title: "Doc",
             bounds: .zero, isMinimized: false, isFullScreen: false, isOnScreen: true,
-            zOrder: 0, source: .both)
+            zOrder: 0, source: source)
     }
 
     @Test func countsAreTakenPerOwner() {
-        let counts = LastWindowQuitPolicy.windowCounts(of: [
-            window(1, pid: 10), window(2, pid: 10), window(3, pid: 20),
-        ])
+        let windows = [window(1, pid: 10), window(2, pid: 10), window(3, pid: 20)]
+        let confirmed = LastWindowQuitPolicy.confirmed(among: windows, previously: [])
 
-        #expect(counts == [10: 2, 20: 1])
+        #expect(LastWindowQuitPolicy.windowCounts(of: windows, confirmed: confirmed) == [10: 2, 20: 1])
+    }
+
+    @Test func aConfirmedWindowStaysConfirmedWhileCoreGraphicsReportsIt() {
+        let confirmed = LastWindowQuitPolicy.confirmed(
+            among: [window(1, pid: 10, source: .coreGraphicsOnly)], previously: [1])
+
+        #expect(confirmed == [1])
+    }
+
+    @Test func aConfirmedWindowCoreGraphicsStoppedReportingIsForgotten() {
+        let confirmed = LastWindowQuitPolicy.confirmed(among: [], previously: [1])
+
+        #expect(confirmed.isEmpty)
+    }
+
+    @Test func aWindowAccessibilityNeverConfirmedIsNeitherConfirmedNorCounted() {
+        let windows = [window(1, pid: 10, source: .coreGraphicsOnly)]
+        let confirmed = LastWindowQuitPolicy.confirmed(among: windows, previously: [])
+
+        #expect(confirmed.isEmpty)
+        #expect(LastWindowQuitPolicy.windowCounts(of: windows, confirmed: confirmed).isEmpty)
+    }
+
+    @Test func aWindowAccessibilityListsWithoutACoreGraphicsIdIsCounted() {
+        let minimized = ManagedWindow(
+            identity: WindowIdentity(ownerPid: 10, cgWindowId: nil, fallbackKey: "10:ax0"),
+            ownerPid: 10, ownerName: "Editor", title: "Doc",
+            bounds: nil, isMinimized: true, isFullScreen: false, isOnScreen: false,
+            zOrder: nil, source: .accessibilityOnly)
+
+        #expect(LastWindowQuitPolicy.windowCounts(of: [minimized], confirmed: []) == [10: 1])
     }
 
     @Test func onlyAnApplicationWhoseCountFellToZeroIsClosedOut() {

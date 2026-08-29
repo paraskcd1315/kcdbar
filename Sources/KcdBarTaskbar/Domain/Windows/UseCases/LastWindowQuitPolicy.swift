@@ -1,9 +1,25 @@
+import CoreGraphics
 import Foundation
 
 /** The verdict on an application whose last window closed. */
 package enum LastWindowQuitPolicy {
-    package static func windowCounts(of windows: [ManagedWindow]) -> [pid_t: Int] {
+    package static func confirmed(
+        among windows: [ManagedWindow],
+        previously: Set<CGWindowID>
+    ) -> Set<CGWindowID> {
+        let reported = Set(windows.compactMap(\.identity.cgWindowId))
+        let confirmedNow = windows
+            .filter { $0.source != .coreGraphicsOnly }
+            .compactMap(\.identity.cgWindowId)
+        return previously.intersection(reported).union(confirmedNow)
+    }
+
+    package static func windowCounts(
+        of windows: [ManagedWindow],
+        confirmed: Set<CGWindowID>
+    ) -> [pid_t: Int] {
         windows.reduce(into: [:]) { counts, window in
+            guard isCounted(window, confirmed: confirmed) else { return }
             counts[window.ownerPid, default: 0] += 1
         }
     }
@@ -42,5 +58,11 @@ package enum LastWindowQuitPolicy {
         case true?: return .menuExtra
         case false?: return .quit
         }
+    }
+
+    private static func isCounted(_ window: ManagedWindow, confirmed: Set<CGWindowID>) -> Bool {
+        if window.source != .coreGraphicsOnly { return true }
+        guard let id = window.identity.cgWindowId else { return false }
+        return confirmed.contains(id)
     }
 }

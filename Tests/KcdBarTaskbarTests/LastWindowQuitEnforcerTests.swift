@@ -10,12 +10,14 @@ struct LastWindowQuitEnforcerTests {
         pid: 10, bundleIdentifier: "com.example.editor", localizedName: "Editor",
         launchedAt: Date(timeIntervalSinceReferenceDate: 800_000_000 - 60))
 
-    private func window(_ id: CGWindowID, pid: pid_t) -> ManagedWindow {
+    private func window(
+        _ id: CGWindowID, pid: pid_t, source: WindowRecordSource = .both
+    ) -> ManagedWindow {
         ManagedWindow(
             identity: WindowIdentity(ownerPid: pid, cgWindowId: id, fallbackKey: "\(pid):\(id)"),
             ownerPid: pid, ownerName: "Editor", title: "Doc",
             bounds: .zero, isMinimized: false, isFullScreen: false, isOnScreen: true,
-            zOrder: 0, source: .both)
+            zOrder: 0, source: source)
     }
 
     private func enforcer(
@@ -32,7 +34,7 @@ struct LastWindowQuitEnforcerTests {
         )
     }
 
-    @Test func theLastWindowClosingQuitsTheApplicationOnTheNextRefresh() {
+    @Test func theLastWindowLeavingCoreGraphicsQuitsTheApplicationOnTheNextRefresh() {
         let terminator = RecordingApplicationTerminator()
         let enforcer = enforcer(terminator)
 
@@ -41,6 +43,32 @@ struct LastWindowQuitEnforcerTests {
 
         #expect(terminator.quit == ["com.example.editor"])
         #expect(decisions.map(\.verdict) == [.quit])
+    }
+
+    @Test func aWindowAccessibilityStopsListingStillCountsWhileCoreGraphicsReportsIt() {
+        let terminator = RecordingApplicationTerminator()
+        let enforcer = enforcer(terminator)
+
+        enforcer.enforce(windows: [window(1, pid: 10)], applications: [editor], now: now)
+        let dip = enforcer.enforce(
+            windows: [window(1, pid: 10, source: .coreGraphicsOnly)], applications: [editor], now: now)
+        let gone = enforcer.enforce(windows: [], applications: [editor], now: now)
+
+        #expect(dip.isEmpty)
+        #expect(gone.map(\.verdict) == [.quit])
+        #expect(terminator.quit == ["com.example.editor"])
+    }
+
+    @Test func aWindowAccessibilityNeverConfirmedIsNotCounted() {
+        let terminator = RecordingApplicationTerminator()
+        let enforcer = enforcer(terminator)
+
+        enforcer.enforce(
+            windows: [window(1, pid: 10, source: .coreGraphicsOnly)], applications: [editor], now: now)
+        let decisions = enforcer.enforce(windows: [], applications: [editor], now: now)
+
+        #expect(decisions.isEmpty)
+        #expect(terminator.quit.isEmpty)
     }
 
     @Test func aWindowClosingWhileAnotherStaysQuitsNothing() {

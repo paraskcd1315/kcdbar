@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 /** Quits an application whose last window closed since the previous refresh. */
@@ -8,6 +9,7 @@ package final class LastWindowQuitEnforcer {
     private let isEnabled: () -> Bool
     private let excluded: () -> Set<String>
     private var previous: [pid_t: Int] = [:]
+    private var confirmed: Set<CGWindowID> = []
 
     package init(
         terminator: any ApplicationTerminationPort,
@@ -27,7 +29,8 @@ package final class LastWindowQuitEnforcer {
         applications: [RunningApplication],
         now: Date = Date()
     ) -> [LastWindowQuitDecision] {
-        let current = LastWindowQuitPolicy.windowCounts(of: windows)
+        confirmed = LastWindowQuitPolicy.confirmed(among: windows, previously: confirmed)
+        let current = LastWindowQuitPolicy.windowCounts(of: windows, confirmed: confirmed)
         defer { previous = current }
         guard isEnabled() else { return [] }
 
