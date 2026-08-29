@@ -3,10 +3,12 @@ import SwiftUI
 
 package struct TaskbarEntryStack: View {
     package let side: CGFloat
+    package let sheets: Int
 
     package var body: some View {
         ZStack {
-            ForEach((1...TaskbarMetrics.stackSheets).reversed(), id: \.self) { sheet in
+            ForEach((0..<sheets).reversed(), id: \.self) { index in
+                let sheet = index + 1
                 RoundedRectangle(cornerRadius: TaskbarMetrics.stackCornerRadius)
                     .fill(KbColors.surfaceRaised.opacity(TaskbarMetrics.stackFillOpacity))
                     .overlay {

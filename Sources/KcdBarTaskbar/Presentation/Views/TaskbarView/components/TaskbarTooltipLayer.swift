@@ -6,6 +6,7 @@ package struct TaskbarTooltipLayer: View {
     package let previews: TaskbarPreviewState
     package let edge: BarEdge
     package let onRaiseWindow: (CGWindowID) -> Void
+    package let onCloseWindow: (CGWindowID) -> Void
     package let onFrameChange: (CGRect?) -> Void
 
     @State private var size: CGSize = .zero
@@ -21,7 +22,8 @@ package struct TaskbarTooltipLayer: View {
                         previews: previews.previews
                     ),
                     icon: entry.icon,
-                    onRaiseWindow: onRaiseWindow
+                    onRaiseWindow: onRaiseWindow,
+                    onCloseWindow: onCloseWindow
                 )
                     .onGeometryChange(for: CGSize.self) { $0.size } action: { size = $0 }
                     .onGeometryChange(for: CGRect.self) {

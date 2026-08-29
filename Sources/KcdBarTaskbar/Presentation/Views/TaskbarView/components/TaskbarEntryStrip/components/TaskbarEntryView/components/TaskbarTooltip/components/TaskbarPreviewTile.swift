@@ -5,6 +5,7 @@ package struct TaskbarPreviewTile: View {
     package let thumbnail: TaskbarPreviewThumbnail
     package let icon: Image?
     package let onTap: () -> Void
+    package let onClose: () -> Void
 
     @State private var isHovered = false
 
@@ -43,5 +44,11 @@ package struct TaskbarPreviewTile: View {
         .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
         .onHover { isHovered = $0 }
         .onTapGesture(perform: onTap)
+        .overlay(alignment: .topTrailing) {
+            if isHovered {
+                TaskbarPreviewClose(onClose: onClose)
+                    .padding(KbSpacing.s1)
+            }
+        }
     }
 }

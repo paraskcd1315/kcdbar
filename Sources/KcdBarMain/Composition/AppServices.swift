@@ -538,7 +538,8 @@ package final class AppServices {
             onOpenControlCentre: { [weak self] in self?.openControlCentre() },
             onOpenDay: { [weak self] in self?.openDayPanel() },
             onOpenSessions: { [weak self] in self?.openSessionsPanel() },
-            onRaiseWindow: { [weak self] windowId in self?.raise(windowId: windowId) }
+            onRaiseWindow: { [weak self] windowId in self?.raise(windowId: windowId) },
+            onCloseWindowId: { [weak self] windowId in self?.close(windowId: windowId) }
         )
         host.present(preset: preset)
         bar = host
@@ -549,6 +550,14 @@ package final class AppServices {
             return
         }
         _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
+        requestRefresh()
+    }
+
+    package func close(windowId: CGWindowID) {
+        guard let window = registry.windows.first(where: { $0.identity.cgWindowId == windowId }) else {
+            return
+        }
+        _ = control.close(window)
         requestRefresh()
     }
 

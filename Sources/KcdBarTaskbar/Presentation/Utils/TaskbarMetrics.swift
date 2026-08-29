@@ -38,12 +38,15 @@ package enum TaskbarMetrics {
     package static let tooltipGap: CGFloat = 8
     package static let tooltipDelay: Duration = .milliseconds(400)
     package static let tooltipLinger: Duration = .milliseconds(150)
-    package static let stackSheets = 2
-    package static let stackStep: CGFloat = 3
+    package static let stackMaxSheets = 4
+    package static let stackStep: CGFloat = 2
     package static let stackInset: CGFloat = 4
     package static let stackCornerRadius: CGFloat = 5
     package static let stackFillOpacity: Double = 0.9
     package static let previewHoverScale: CGFloat = 1.04
+    package static let previewCloseSide: CGFloat = 18
+    package static let previewCloseGlyph: CGFloat = 8
+    package static let previewCloseSymbol = "xmark"
     package static let fullScreenBadgeSide: CGFloat = 13
     package static let fullScreenBadgeGlyph: CGFloat = 7
     package static let fullScreenBadgeSymbol = "arrow.up.left.and.arrow.down.right"

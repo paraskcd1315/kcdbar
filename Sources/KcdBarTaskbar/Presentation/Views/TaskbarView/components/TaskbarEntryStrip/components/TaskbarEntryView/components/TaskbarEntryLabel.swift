@@ -7,14 +7,14 @@ package struct TaskbarEntryLabel: View {
     package let iconSize: CGFloat
     package let isVertical: Bool
     package let side: CGFloat?
-    package var isStacked: Bool = false
+    package var stackSheets: Int = 0
 
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
             TaskbarEntryIcon(icon: entry.icon, size: iconSize)
                 .background {
-                    if isStacked {
-                        TaskbarEntryStack(side: iconSize)
+                    if stackSheets > 0 {
+                        TaskbarEntryStack(side: iconSize, sheets: stackSheets)
                     }
                 }
                 .overlay(alignment: .bottomTrailing) {

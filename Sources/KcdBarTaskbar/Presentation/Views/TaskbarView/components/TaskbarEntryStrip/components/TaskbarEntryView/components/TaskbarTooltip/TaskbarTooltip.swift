@@ -7,11 +7,17 @@ package struct TaskbarTooltip: View {
     package let thumbnails: [TaskbarPreviewThumbnail]
     package let icon: Image?
     package let onRaiseWindow: (CGWindowID) -> Void
+    package let onCloseWindow: (CGWindowID) -> Void
 
     package var body: some View {
         VStack(alignment: .leading, spacing: KbSpacing.s3) {
             if !thumbnails.isEmpty {
-                TaskbarPreviewStrip(thumbnails: thumbnails, icon: icon, onRaiseWindow: onRaiseWindow)
+                TaskbarPreviewStrip(
+                    thumbnails: thumbnails,
+                    icon: icon,
+                    onRaiseWindow: onRaiseWindow,
+                    onCloseWindow: onCloseWindow
+                )
             }
             VStack(alignment: .leading, spacing: KbSpacing.s1) {
                 Text(applicationName)

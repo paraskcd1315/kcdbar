@@ -43,6 +43,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onOpenDay: () -> Void
     private let onOpenSessions: () -> Void
     private let onRaiseWindow: (CGWindowID) -> Void
+    private let onCloseWindowId: (CGWindowID) -> Void
 
     package init(
         registry: WindowRegistry,
@@ -73,11 +74,13 @@ package final class BarPanelHost: BarPanelHostPort {
         onOpenControlCentre: @escaping () -> Void,
         onOpenDay: @escaping () -> Void,
         onOpenSessions: @escaping () -> Void,
-        onRaiseWindow: @escaping (CGWindowID) -> Void
+        onRaiseWindow: @escaping (CGWindowID) -> Void,
+        onCloseWindowId: @escaping (CGWindowID) -> Void
     ) {
         self.onOpenDay = onOpenDay
         self.onOpenSessions = onOpenSessions
         self.onRaiseWindow = onRaiseWindow
+        self.onCloseWindowId = onCloseWindowId
         self.onOpenNotifications = onOpenNotifications
         self.onOpenControlCentre = onOpenControlCentre
         self.onDropPin = onDropPin
@@ -339,6 +342,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 onOpenDay: onOpenDay,
                 onOpenSessions: onOpenSessions,
                 onRaiseWindow: onRaiseWindow,
+                onCloseWindowId: onCloseWindowId,
                 onBarFrameChange: { [frameState] in frameState.frame = $0 },
                 onTooltipFrameChange: { [frameState] in frameState.tooltipFrame = $0 }
             )

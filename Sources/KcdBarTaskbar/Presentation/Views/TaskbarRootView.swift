@@ -33,6 +33,7 @@ package struct TaskbarRootView: View {
     package let onOpenDay: () -> Void
     package let onOpenSessions: () -> Void
     package let onRaiseWindow: (CGWindowID) -> Void
+    package let onCloseWindowId: (CGWindowID) -> Void
     package let onBarFrameChange: (CGRect) -> Void
     package let onTooltipFrameChange: (CGRect?) -> Void
 
@@ -64,6 +65,7 @@ package struct TaskbarRootView: View {
             isShowingDesktop: desktop.isShowingDesktop,
             onToggleDesktop: onToggleDesktop,
             onRaiseWindow: onRaiseWindow,
+            onCloseWindowId: onCloseWindowId,
             onBarFrameChange: onBarFrameChange,
             onTooltipFrameChange: onTooltipFrameChange
         )

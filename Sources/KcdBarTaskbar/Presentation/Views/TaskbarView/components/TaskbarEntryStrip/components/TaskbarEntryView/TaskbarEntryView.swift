@@ -27,7 +27,7 @@ package struct TaskbarEntryView: View {
             iconSize: BarEntryMetrics.iconSize(for: preset),
             isVertical: preset.edge.isVertical,
             side: BarEntryMetrics.itemSide(for: preset),
-            isStacked: TaskbarEntryStyle.isStacked(entry, grouping: preset.grouping)
+            stackSheets: TaskbarEntryStyle.stackSheets(entry, grouping: preset.grouping)
         )
         .scaleEffect(
             TaskbarEntryStyle.magnification(sizing: preset.entrySizing, isHovered: isHovered),

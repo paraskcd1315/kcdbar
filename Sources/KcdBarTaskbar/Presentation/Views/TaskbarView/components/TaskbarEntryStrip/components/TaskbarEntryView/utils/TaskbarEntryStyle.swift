@@ -38,8 +38,10 @@ package enum TaskbarEntryStyle {
         }
     }
 
-    package static func isStacked(_ entry: TaskbarEntryModel, grouping: BarGrouping) -> Bool {
-        grouping == .perApplication && entry.instanceCount > 1
+    package static func stackSheets(_ entry: TaskbarEntryModel, grouping: BarGrouping) -> Int {
+        guard grouping == .perApplication else { return 0 }
+
+        return min(max(entry.instanceCount - 1, 0), TaskbarMetrics.stackMaxSheets)
     }
 
     package static func showsTitle(content: BarEntryContent, isLauncher: Bool) -> Bool {

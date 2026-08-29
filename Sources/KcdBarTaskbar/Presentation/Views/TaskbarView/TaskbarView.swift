@@ -29,6 +29,7 @@ package struct TaskbarView: View {
     package let isShowingDesktop: Bool
     package let onToggleDesktop: () -> Void
     package let onRaiseWindow: (CGWindowID) -> Void
+    package let onCloseWindowId: (CGWindowID) -> Void
     package let onBarFrameChange: (CGRect) -> Void
     package let onTooltipFrameChange: (CGRect?) -> Void
 
@@ -92,6 +93,7 @@ package struct TaskbarView: View {
                 previews: previews,
                 edge: viewModel.preset.edge,
                 onRaiseWindow: onRaiseWindow,
+                onCloseWindow: onCloseWindowId,
                 onFrameChange: onTooltipFrameChange
             )
         }
