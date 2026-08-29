@@ -9,10 +9,38 @@ struct BarRevealTests {
         isPrimary: true
     )
     private let barFrame = CGRect(x: 400, y: 0, width: 1120, height: 52)
+    private let previewFrame = CGRect(x: 800, y: 60, width: 360, height: 150)
 
-    private func reveals(_ pointer: CGPoint, edge: BarEdge = .bottom, revealed: Bool = false) -> Bool {
+    private func reveals(
+        _ pointer: CGPoint, edge: BarEdge = .bottom, revealed: Bool = false, preview: CGRect? = nil
+    ) -> Bool {
         BarRevealPolicy.shouldReveal(
-            pointer: pointer, barFrame: barFrame, display: display, edge: edge, revealed: revealed)
+            pointer: pointer, barFrame: barFrame, previewFrame: preview, display: display, edge: edge,
+            revealed: revealed)
+    }
+
+    @Test func pointerOverThePreviewOfARevealedBarKeepsIt() {
+        #expect(reveals(CGPoint(x: 960, y: 150), revealed: true, preview: previewFrame))
+    }
+
+    @Test func pointerInTheGapBetweenTheBarAndItsPreviewKeepsIt() {
+        #expect(reveals(CGPoint(x: 960, y: 56), revealed: true, preview: previewFrame))
+    }
+
+    @Test func pointerBesideThePreviewOfARevealedBarDoesNotKeepIt() {
+        #expect(reveals(CGPoint(x: 500, y: 150), revealed: true, preview: previewFrame) == false)
+    }
+
+    @Test func pointerAboveThePreviewOfARevealedBarDoesNotKeepIt() {
+        #expect(reveals(CGPoint(x: 960, y: 300), revealed: true, preview: previewFrame) == false)
+    }
+
+    @Test func pointerOverThePreviewsPlaceDoesNotRevealAConcealedBar() {
+        #expect(reveals(CGPoint(x: 960, y: 150), preview: previewFrame) == false)
+    }
+
+    @Test func aRevealedBarWithNoPreviewHidesAboveItself() {
+        #expect(reveals(CGPoint(x: 960, y: 150), revealed: true) == false)
     }
 
     @Test func pointerAtTheBottomEdgeRevealsABottomBar() {
