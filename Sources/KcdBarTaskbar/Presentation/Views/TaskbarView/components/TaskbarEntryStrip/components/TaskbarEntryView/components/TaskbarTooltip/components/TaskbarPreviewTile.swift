@@ -48,7 +48,6 @@ package struct TaskbarPreviewTile: View {
         .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
         .onTapGesture(perform: onTap)
         .onHover { isHovered = $0 }
-        .scaleEffect(isHovered ? TaskbarMetrics.previewHoverScale : 1)
         .animation(KbMotion.quick, value: isHovered)
     }
 }
