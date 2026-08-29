@@ -30,6 +30,11 @@ if ! printf '%s' "$MARKETING" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
   echo "VERSION is '$MARKETING' — must be milestone.feature.fix, three numbers" >&2
   exit 1
 fi
+# The fix digit starts at 1: a feature or milestone bump lands as x.y.1, never x.y.0.
+if [ "${MARKETING##*.}" = "0" ]; then
+  echo "VERSION is '$MARKETING' — the fix digit is never 0, it starts at 1" >&2
+  exit 1
+fi
 
 BUILD=$(git -C "$ROOT" rev-list --count HEAD 2>/dev/null || echo 0)
 COMMIT=$(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo unknown)

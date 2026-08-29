@@ -11,9 +11,13 @@ milestone . feature . fix
 
 | Part | Bumped when | Resets |
 |---|---|---|
-| **milestone** | a milestone lands — the epics in `Backlog.md` (M1 the founding interaction, M2 the Dock replacement, M3 the Start menu, M4 customization, M5 polish) | feature and fix to 0 |
-| **feature** | a major feature ships within the current milestone | fix to 0 |
+| **milestone** | a milestone lands — the epics in `Backlog.md` (M1 the founding interaction, M2 the Dock replacement, M3 the Start menu, M4 customization, M5 polish) | feature to 0, fix to 1 |
+| **feature** | a major feature ships within the current milestone — one digit per feature that stands without cc-console | fix to 1 |
 | **fix** | bugs are fixed, in that feature or in an earlier one | — |
+
+**The fix digit is never `0`; it starts at `1`** (Paras, 29-08-2026: *"the last number is never 0, always
+starts from 1"*). `0.0.1` was the first cut, and `0.3.1` follows it after three features. `deploy/build.sh`
+refuses a `0` there.
 
 **A `0` milestone means nothing has landed yet**, which is why `0.0.1` is an alpha and the app says
 so: `AppVersion.isPrerelease` is true while the first number is zero, and the About window draws the
