@@ -1,5 +1,6 @@
 import CoreGraphics
 import Foundation
+import KcdBarTray
 import Observation
 
 @MainActor
@@ -16,6 +17,16 @@ package final class WindowRegistry {
 
     package var taskbarEntries: [ManagedWindow] {
         WindowPresentationPolicy.taskbarEntries(from: windows)
+    }
+
+    private var notedPromotion: String?
+
+    private func notePromotion(candidates: [CGWindowID], promoted: Set<CGWindowID>) {
+        let text = "candidates=\(candidates.sorted()) promoted=\(promoted.sorted())"
+        guard notedPromotion != text else { return }
+
+        notedPromotion = text
+        BarLog.bar.notice("spaces \(text, privacy: .public)")
     }
 
     package func window(withEntryId entryId: String) -> ManagedWindow? {
@@ -121,11 +132,10 @@ package final class WindowRegistry {
                 )
             }
         if let spaces {
-            windows = InactiveSpacePromotion.promote(
-                windows,
-                onInactiveSpaces: spaces.windowsOnInactiveSpaces(among: InactiveSpacePromotion.candidates(among: windows)),
-                displays: displays
-            )
+            let candidates = InactiveSpacePromotion.candidates(among: windows)
+            let promoted = spaces.windowsOnInactiveSpaces(among: candidates)
+            notePromotion(candidates: candidates, promoted: promoted)
+            windows = InactiveSpacePromotion.promote(windows, onInactiveSpaces: promoted, displays: displays)
         }
         lastRefreshDuration = Date().timeIntervalSince(started)
     }
