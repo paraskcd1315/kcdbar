@@ -549,12 +549,13 @@ package final class AppServices {
 
     package func raise(windowId: CGWindowID) {
         guard let window = registry.windows.first(where: { $0.identity.cgWindowId == windowId }) else {
+            BarLog.bar.notice("raise window=\(windowId) refused=unknown")
             return
         }
-        if !window.isMinimized, !WindowSpacePolicy.isOnActiveSpace(window) {
-            _ = spaces.showSpace(ofWindowId: windowId)
-        }
-        _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
+        let elsewhere = !window.isMinimized && !WindowSpacePolicy.isOnActiveSpace(window)
+        let shown = elsewhere ? spaces.showSpace(ofWindowId: windowId) : false
+        let raised = control.perform(window.isMinimized ? .restore : .raise, on: window)
+        BarLog.bar.notice("raise window=\(windowId) elsewhere=\(elsewhere) shown=\(shown) raised=\(raised)")
         requestRefresh()
     }
 

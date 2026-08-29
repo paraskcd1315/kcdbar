@@ -24,7 +24,8 @@ package final class TaskbarPreviewState {
             let tile = TaskbarPreviewFit.size(of: window.size, within: TaskbarPreviewMetrics.thumbnailSize)
             let image = await port.preview(
                 forWindowId: window.id,
-                fitting: TaskbarPreviewMetrics.captureSize(for: tile)
+                fitting: TaskbarPreviewMetrics.captureSize(for: tile),
+                onInactiveSpace: window.isOnInactiveSpace
             )
             guard requested.contains(window.id) else { return }
             guard let image else { continue }

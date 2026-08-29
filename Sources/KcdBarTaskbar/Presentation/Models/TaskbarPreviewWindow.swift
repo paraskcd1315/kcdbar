@@ -8,6 +8,7 @@ package struct TaskbarPreviewWindow: Identifiable, Equatable, Sendable {
     package var isFullScreen: Bool = false
     package var title: String? = nil
     package var profile: String? = nil
+    package var isOnInactiveSpace: Bool = false
 
     package init(
         id: CGWindowID,
@@ -15,7 +16,8 @@ package struct TaskbarPreviewWindow: Identifiable, Equatable, Sendable {
         displayName: String? = nil,
         isFullScreen: Bool = false,
         title: String? = nil,
-        profile: String? = nil
+        profile: String? = nil,
+        isOnInactiveSpace: Bool = false
     ) {
         self.id = id
         self.size = size
@@ -23,5 +25,6 @@ package struct TaskbarPreviewWindow: Identifiable, Equatable, Sendable {
         self.isFullScreen = isFullScreen
         self.title = title
         self.profile = profile
+        self.isOnInactiveSpace = isOnInactiveSpace
     }
 }

@@ -10,7 +10,10 @@ package final class ScreenCaptureWindowPreviewSource: WindowPreviewPort {
 
     package init() {}
 
-    package func preview(forWindowId windowId: CGWindowID, fitting size: CGSize) async -> WindowPreview? {
+    package func preview(forWindowId windowId: CGWindowID, fitting size: CGSize, onInactiveSpace: Bool) async -> WindowPreview? {
+        if onInactiveSpace {
+            return fallbackPreview(forWindowId: windowId, fitting: size)
+        }
         do {
             let content = try await SCShareableContent.excludingDesktopWindows(
                 true,
