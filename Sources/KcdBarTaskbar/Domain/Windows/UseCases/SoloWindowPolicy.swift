@@ -17,6 +17,7 @@ package enum SoloWindowPolicy {
             guard window.identity != focused.identity else { return false }
             guard window.ownerPid != focused.ownerPid else { return false }
             guard !window.isMinimized, !window.isFullScreen else { return false }
+            guard WindowSpacePolicy.isOnActiveSpace(window) else { return false }
 
             return WindowDisplayResolver.displayId(for: window, in: displays) == display
         }
