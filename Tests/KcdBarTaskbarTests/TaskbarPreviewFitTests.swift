@@ -36,4 +36,25 @@ struct TaskbarPreviewFitTests {
 
         #expect(thumbnails.first?.size == CGSize(width: 168, height: 90))
     }
+
+    @Test func aThumbnailCarriesItsWindowsDisplayAndFullScreenState() {
+        let thumbnails = TaskbarPreviewThumbnail.thumbnails(
+            for: [TaskbarPreviewWindow(
+                id: 10, size: CGSize(width: 800, height: 600), displayName: "Left", isFullScreen: true)],
+            previews: [:]
+        )
+
+        #expect(thumbnails.first?.displayName == "Left")
+        #expect(thumbnails.first?.isFullScreen == true)
+        #expect(thumbnails.first?.hasCaption == true)
+    }
+
+    @Test func aThumbnailOnThisDisplayInAWindowHasNoCaption() {
+        let thumbnails = TaskbarPreviewThumbnail.thumbnails(
+            for: [TaskbarPreviewWindow(id: 10, size: CGSize(width: 800, height: 600))],
+            previews: [:]
+        )
+
+        #expect(thumbnails.first?.hasCaption == false)
+    }
 }

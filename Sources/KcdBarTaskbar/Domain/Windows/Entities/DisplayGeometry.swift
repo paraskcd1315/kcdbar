@@ -5,4 +5,5 @@ package struct DisplayGeometry: Equatable, Sendable, Identifiable {
     package let id: Int
     package let frame: CGRect
     package let isPrimary: Bool
+    package var name: String? = nil
 }

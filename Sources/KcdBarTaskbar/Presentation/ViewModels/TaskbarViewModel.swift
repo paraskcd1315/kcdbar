@@ -37,8 +37,20 @@ package struct TaskbarViewModel {
             by: { $0 }
         ).mapValues(\.count)
 
+        let previewsOf = { (bundleIdentifier: String) -> [TaskbarPreviewWindow] in
+            TaskbarPreviewWindows.of(
+                bundleIdentifier: bundleIdentifier,
+                among: windows,
+                bundleIdentifiers: bundleIdentifiers,
+                onDisplay: displayId,
+                displays: displays
+            )
+        }
         let windowEntries = scoped.map { window -> TaskbarEntryModel in
             let bundleIdentifier = bundleIdentifiers[window.ownerPid]
+            let previews = bundleIdentifier.map(previewsOf)
+                ?? TaskbarPreviewWindows.of(window, onDisplay: displayId, displays: displays).map { [$0] }
+                ?? []
             return TaskbarEntryModel(
                 id: WindowEntryIdentifier.text(for: window.identity),
                 title: window.title ?? window.ownerName ?? "",
@@ -56,9 +68,8 @@ package struct TaskbarViewModel {
                 isRunning: true,
                 instanceCount: bundleIdentifier.flatMap { windowsPerApplication[$0] } ?? 1,
                 instancesOnThisDisplay: bundleIdentifier.flatMap { windowsHerePerApplication[$0] } ?? 1,
-                previewWindows: window.identity.cgWindowId.map {
-                    [TaskbarPreviewWindow(id: $0, size: window.bounds?.size ?? .zero)]
-                } ?? []
+                previewWindows: previews,
+                isFullScreen: window.isFullScreen
             )
         }
 
@@ -80,7 +91,8 @@ package struct TaskbarViewModel {
                     isRunning: runningIdentifiers.contains(app.bundleIdentifier),
                     instanceCount: windowsPerApplication[app.bundleIdentifier] ?? 0,
                     instancesOnThisDisplay: 0,
-                    previewWindows: []
+                    previewWindows: previewsOf(app.bundleIdentifier),
+                    isFullScreen: previewsOf(app.bundleIdentifier).contains(where: \.isFullScreen)
                 )
             }
 
@@ -106,7 +118,9 @@ package struct TaskbarViewModel {
                     isRunning: true,
                     instanceCount: 0,
                     instancesOnThisDisplay: 0,
-                    previewWindows: []
+                    previewWindows: application.bundleIdentifier.map(previewsOf) ?? [],
+                    isFullScreen: application.bundleIdentifier.map(previewsOf)?
+                        .contains(where: \.isFullScreen) ?? false
                 )
             }
 

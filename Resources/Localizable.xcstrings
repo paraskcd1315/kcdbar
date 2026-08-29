@@ -31,6 +31,7 @@
     "bar.entryFit.inset": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Inset" } } } },
     "settings.behaviour.stageManager": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "macOS Stage Manager" } } } },
     "settings.behaviour.quitting": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Quitting" } } } },
+    "preview.fullScreen": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Full screen" } } } },
     "settings.behaviour.quitsOnLastWindow": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Quit an app when its last window closes" } } } },
     "settings.behaviour.quitExclusions": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Keep running" } } } },
     "settings.behaviour.quitExclusions.add": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Add…" } } } },

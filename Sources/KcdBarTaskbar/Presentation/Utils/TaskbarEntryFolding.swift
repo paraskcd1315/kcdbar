@@ -44,7 +44,8 @@ package enum TaskbarEntryFolding {
             isRunning: siblings.contains(where: \.isRunning),
             instanceCount: chosen.instanceCount,
             instancesOnThisDisplay: chosen.instancesOnThisDisplay,
-            previewWindows: siblings.flatMap(\.previewWindows)
+            previewWindows: TaskbarPreviewWindows.unique(siblings.flatMap(\.previewWindows)),
+            isFullScreen: siblings.contains(where: \.isFullScreen)
         )
     }
 }

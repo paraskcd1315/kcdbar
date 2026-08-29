@@ -9,7 +9,8 @@ package struct ScreenGeometrySource: DisplayGeometryPort {
             DisplayGeometry(
                 id: screen.displayNumber ?? index,
                 frame: screen.frame,
-                isPrimary: index == 0
+                isPrimary: index == 0,
+                name: screen.localizedName
             )
         }
     }

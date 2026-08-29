@@ -23,6 +23,11 @@ package struct TaskbarPreviewTile: View {
             }
         }
         .frame(width: thumbnail.size.width, height: thumbnail.size.height)
+        .overlay(alignment: .bottom) {
+            if thumbnail.hasCaption {
+                TaskbarPreviewCaption(thumbnail: thumbnail)
+            }
+        }
         .clipShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
         .overlay {
             RoundedRectangle(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius)

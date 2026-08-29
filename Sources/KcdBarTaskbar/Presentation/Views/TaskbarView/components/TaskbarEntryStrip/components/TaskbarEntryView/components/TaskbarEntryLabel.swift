@@ -11,6 +11,11 @@ package struct TaskbarEntryLabel: View {
     package var body: some View {
         HStack(spacing: KbSpacing.s3) {
             TaskbarEntryIcon(icon: entry.icon, size: iconSize)
+                .overlay(alignment: .bottomTrailing) {
+                    if entry.isFullScreen {
+                        TaskbarEntryBadge()
+                    }
+                }
             if showsTitle {
                 Text(entry.title)
                     .font(entry.isFrontmost ? KbTypography.entryTitleActive : KbTypography.entryTitle)

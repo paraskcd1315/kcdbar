@@ -92,6 +92,17 @@ struct TaskbarEntryFoldingTests {
         #expect(folded.first?.previewWindows.map(\.id) == [10, 11])
     }
 
+    @Test func siblingsCarryingTheSameWindowsFoldToOneListOfThem() {
+        let entries = [
+            entry("a1", bundle: "app", frontmost: true, windowIds: [10, 11]),
+            entry("a2", bundle: "app", windowIds: [10, 11])
+        ]
+
+        let folded = TaskbarEntryFolding.folded(entries, grouping: .perApplication)
+
+        #expect(folded.first?.previewWindows.map(\.id) == [10, 11])
+    }
+
     @Test func anUnfoldedEntryKeepsOnlyItsOwnWindow() {
         let entries = [
             entry("a1", bundle: "app", windowIds: [10]),

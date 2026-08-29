@@ -33,6 +33,9 @@ package struct TaskbarEntryView: View {
             anchor: TaskbarEntryStyle.magnificationAnchor(edge: preset.edge)
         )
         .background {
+            if TaskbarEntryStyle.isStacked(entry, grouping: preset.grouping) {
+                TaskbarEntryStack(shape: shape, isVertical: preset.edge.isVertical)
+            }
             shape.fill(
                 TaskbarEntryStyle.fill(
                     sizing: preset.entrySizing,
