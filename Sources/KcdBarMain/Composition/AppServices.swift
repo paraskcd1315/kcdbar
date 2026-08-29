@@ -215,8 +215,7 @@ package final class AppServices {
             frontmostPid: registry.frontmostPid,
             among: registry.windows
         )
-        _ = control.perform(action, on: window)
-        requestRefresh()
+        perform(action, on: window)
     }
 
     package init() {
@@ -282,8 +281,7 @@ package final class AppServices {
             return
         }
 
-        _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
-        requestRefresh()
+        perform(window.isMinimized ? .restore : .raise, on: window)
     }
 
     private func pids(of bundleIdentifier: String) -> Set<pid_t> {
@@ -556,9 +554,16 @@ package final class AppServices {
             BarLog.bar.notice("raise window=\(windowId) refused=unknown")
             return
         }
-        let raised = control.perform(window.isMinimized ? .restore : .raise, on: window)
-        let reopened = !raised && reopen(pid: window.ownerPid)
-        BarLog.bar.notice("raise window=\(windowId) raised=\(raised) reopened=\(reopened)")
+        perform(window.isMinimized ? .restore : .raise, on: window)
+    }
+
+    /** Every click that moves a window — a tile's, an entry's, a launcher's — ends here. */
+    private func perform(_ action: WindowToggleAction, on window: ManagedWindow) {
+        let performed = control.perform(action, on: window)
+        let reopened = WindowReopenPolicy.reopens(after: action, performed: performed)
+            && reopen(pid: window.ownerPid)
+        let windowId = window.identity.cgWindowId.map(String.init) ?? "-"
+        BarLog.bar.notice("\(action.rawValue) window=\(windowId) done=\(performed) reopened=\(reopened)")
         requestRefresh()
     }
 
