@@ -175,6 +175,9 @@ the app. Access is `package`, never `public`, which is why the app target is a t
 One type per file. One renderable unit per file — no `private var someView: some View`. Every
 user-facing string in the catalogue, never an inline literal and never a named `String` constant. No
 comments. Sizes are declared flexible and divided by the container, never computed and handed back.
+Every code file — Swift, shell, Python — opens with the Apache License header and the line
+`Copyright 2026 Paras Mohandas Khanchandani Chandani` (after the shebang in a script); a file without
+it is not finished.
 
 ## License
 
