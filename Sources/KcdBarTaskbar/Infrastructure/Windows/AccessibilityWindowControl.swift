@@ -6,20 +6,22 @@ package struct AccessibilityWindowControl: WindowControlPort {
     package init() {}
 
     package func perform(_ action: WindowToggleAction, on window: ManagedWindow) -> Bool {
-        guard let element = element(for: window) else { return false }
         switch action {
         case .minimize:
+            guard let element = element(for: window, reaching: false) else { return false }
             return setMinimized(true, on: element)
         case .restore:
+            guard let element = element(for: window, reaching: true) else { return false }
             guard setMinimized(false, on: element) else { return false }
             return focus(element, pid: window.ownerPid)
         case .raise:
+            guard let element = element(for: window, reaching: true) else { return false }
             return focus(element, pid: window.ownerPid)
         }
     }
 
     package func close(_ window: ManagedWindow) -> Bool {
-        guard let element = element(for: window),
+        guard let element = element(for: window, reaching: true),
               let button = copyValue(from: element, attribute: kAXCloseButtonAttribute)
         else {
             return false
@@ -28,7 +30,7 @@ package struct AccessibilityWindowControl: WindowControlPort {
     }
 
     package func setFrame(_ frame: CGRect, on window: ManagedWindow) -> Bool {
-        guard let element = element(for: window) else { return false }
+        guard let element = element(for: window, reaching: false) else { return false }
         let target = ScreenCoordinateConverter.toAccessibility(frame)
         var origin = target.origin
         var size = target.size
@@ -57,14 +59,14 @@ package struct AccessibilityWindowControl: WindowControlPort {
         ) == .success
     }
 
-    private func element(for window: ManagedWindow) -> AXUIElement? {
+    private func element(for window: ManagedWindow, reaching: Bool) -> AXUIElement? {
         let application = AXUIElementCreateApplication(window.ownerPid)
         let elements = copyValue(from: application, attribute: kAXWindowsAttribute) as? [AXUIElement] ?? []
         if let windowId = window.identity.cgWindowId,
            let match = elements.first(where: { AxWindowIdBridge.windowId(of: $0) == windowId }) {
             return match
         }
-        if let windowId = window.identity.cgWindowId,
+        if reaching, let windowId = window.identity.cgWindowId,
            let swept = AxRemoteWindowElement.element(pid: window.ownerPid, windowId: windowId) {
             return swept
         }
