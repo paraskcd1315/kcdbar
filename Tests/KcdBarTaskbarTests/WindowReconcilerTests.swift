@@ -294,7 +294,7 @@ struct WindowReconcilerTests {
     }
 
     @Test func dropsTheEntryOfAClosedWindowCoreGraphicsStillReports() {
-        let cg = WindowFixtures.cgRecord(windowId: 41, pid: 21, title: "Closed Scene")
+        let cg = WindowFixtures.cgRecord(windowId: 41, pid: 21, title: "Closed Scene", isOnScreen: false)
         let confirmed = WindowReconciler.reconcile(
             coreGraphics: [cg],
             accessibility: .answered([WindowFixtures.axRecord(pid: 21, cgWindowId: 41, title: "Closed Scene")]),
@@ -313,7 +313,7 @@ struct WindowReconcilerTests {
 
     @Test func keepsOnlyTheOmittedWindowsWhoseElementAnswered() {
         let onAnotherSpace = WindowFixtures.cgRecord(windowId: 42, pid: 22, title: "Desktop", zOrder: 0)
-        let closed = WindowFixtures.cgRecord(windowId: 43, pid: 22, title: "Closed", zOrder: 1)
+        let closed = WindowFixtures.cgRecord(windowId: 43, pid: 22, title: "Closed", isOnScreen: false, zOrder: 1)
         let confirmed = WindowReconciler.reconcile(
             coreGraphics: [onAnotherSpace, closed],
             accessibility: .answered([
