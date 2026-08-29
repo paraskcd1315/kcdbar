@@ -3,6 +3,8 @@ import CoreGraphics
 import Foundation
 
 package struct AccessibilityWindowSource: AxWindowSourcePort {
+    private let probe = AxLiveWindowProbe()
+
     package init() {}
 
     private static let attributeNames = [
@@ -22,12 +24,20 @@ package struct AccessibilityWindowSource: AxWindowSourcePort {
         for pid in pids {
             guard let elements = windowElements(forPid: pid) else { continue }
             answered.insert(pid)
-            records.append(contentsOf: elements.enumerated().compactMap { index, element in
-                record(of: element, pid: pid, index: index)
-            })
+            for (index, element) in elements.enumerated() {
+                guard let record = record(of: element, pid: pid, index: index) else { continue }
+                records.append(record)
+                if let id = record.cgWindowId, AxWindowClassification.isSwitchable(record) {
+                    probe.hold(element, id: id)
+                }
+            }
         }
 
-        return AxWindowScan(records: records, answeredPids: answered)
+        return AxWindowScan(
+            records: records,
+            answeredPids: answered,
+            liveOmittedIds: probe.liveOmittedIds(listed: Set(records.compactMap(\.cgWindowId)))
+        )
     }
 
     private func windowElements(forPid pid: pid_t) -> [AXUIElement]? {

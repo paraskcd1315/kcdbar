@@ -1,7 +1,7 @@
 /** Which windows a Show Desktop hides, and which of them come back. */
 package enum ShowDesktopPlan {
     package static func toHide(among entries: [ManagedWindow]) -> [ManagedWindow] {
-        entries.filter { !$0.isMinimized }
+        entries.filter { !$0.isMinimized && WindowSpacePolicy.isOnActiveSpace($0) }
     }
 
     package static func toRestore(among windows: [ManagedWindow], hiddenKeys: [String]) -> [ManagedWindow] {

@@ -18,6 +18,7 @@ package enum WindowReconciler {
                     coreGraphics: record,
                     accessibility: match,
                     answered: accessibility.answeredPids.contains(record.ownerPid),
+                    liveOmitted: accessibility.liveOmittedIds.contains(record.windowId),
                     previous: previous
                 )
             )
@@ -66,6 +67,7 @@ package enum WindowReconciler {
         coreGraphics record: CgWindowRecord,
         accessibility match: AxWindowRecord?,
         answered: Bool,
+        liveOmitted: Bool,
         previous: [ManagedWindow]
     ) -> ManagedWindow {
         let identity = WindowIdentity(
@@ -74,7 +76,7 @@ package enum WindowReconciler {
             fallbackKey: fallbackKey(pid: record.ownerPid, bounds: record.bounds)
         )
         let earlier = previous.first { $0.identity == identity }
-        let wasConfirmed = earlier?.source == .both && !answered
+        let wasConfirmed = earlier?.source == .both && (!answered || liveOmitted)
 
         return ManagedWindow(
             identity: identity,
