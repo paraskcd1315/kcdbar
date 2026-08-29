@@ -20,6 +20,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let timer: TimerMonitor
     private let totals: TotalsMonitor
     private let sessions: SessionsMonitor
+    private let previews: TaskbarPreviewState
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -49,6 +50,7 @@ package final class BarPanelHost: BarPanelHostPort {
         timer: TimerMonitor,
         totals: TotalsMonitor,
         sessions: SessionsMonitor,
+        previews: TaskbarPreviewState,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -85,6 +87,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.timer = timer
         self.totals = totals
         self.sessions = sessions
+        self.previews = previews
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -326,6 +329,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 timer: timer,
                 totals: totals,
                 sessions: sessions,
+                previews: previews,
 
                 onOpenDay: onOpenDay,
                 onOpenSessions: onOpenSessions,

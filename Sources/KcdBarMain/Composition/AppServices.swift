@@ -36,6 +36,7 @@ package final class AppServices {
         source: KcdSignalSessionsSource(),
         panes: TmuxPaneFocus()
     )
+    package let previews = TaskbarPreviewState(port: ScreenCaptureWindowPreviewSource())
     package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
     package let stageManager = StageManagerState(port: WindowManagerStageManager())
     package let bluetooth = BluetoothMonitor(source: IoBluetoothSource())
@@ -494,6 +495,7 @@ package final class AppServices {
             timer: timer,
             totals: totals,
             sessions: sessions,
+            previews: previews,
             pins: pins,
             order: order,
             desktop: desktop,

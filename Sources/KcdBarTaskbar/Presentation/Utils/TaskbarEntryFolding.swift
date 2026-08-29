@@ -43,7 +43,8 @@ package enum TaskbarEntryFolding {
             isLauncher: chosen.isLauncher,
             isRunning: siblings.contains(where: \.isRunning),
             instanceCount: chosen.instanceCount,
-            instancesOnThisDisplay: chosen.instancesOnThisDisplay
+            instancesOnThisDisplay: chosen.instancesOnThisDisplay,
+            previewWindowIds: siblings.flatMap(\.previewWindowIds)
         )
     }
 }

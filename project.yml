@@ -50,6 +50,7 @@ targets:
         NSHumanReadableCopyright: ""
         NSBluetoothAlwaysUsageDescription: "KCDBar shows Bluetooth in its Control Center and turns it on and off."
         NSAppleEventsUsageDescription: "KCDBar asks macOS to sleep, restart, shut down or log out from the Start menu, so the system shows its own confirmation."
+        NSScreenCaptureUsageDescription: "KCDBar draws a thumbnail of a window when you rest the pointer on its taskbar entry. Without this it shows the application icon instead."
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.paraskcd.kcdbar
