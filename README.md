@@ -175,3 +175,9 @@ the app. Access is `package`, never `public`, which is why the app target is a t
 One type per file. One renderable unit per file — no `private var someView: some View`. Every
 user-facing string in the catalogue, never an inline literal and never a named `String` constant. No
 comments. Sizes are declared flexible and divided by the container, never computed and handed back.
+
+## License
+
+Copyright 2026 Paras Mohandas Khanchandani Chandani. Licensed under the Apache License, Version 2.0 —
+see [LICENSE](LICENSE). This repository takes no contributions; fork it. A modified copy must say so in
+the files it changes (License §4b), and the KCDBar name is not granted (§6).
