@@ -66,6 +66,7 @@ package final class AppServices {
     package let aboutWindow = AboutWindowHost()
 
     package let control: any WindowControlPort = AccessibilityWindowControl()
+    package let spaces: any WindowSpaceFocusPort = SkyLightSpaceFocus()
     package let geometry: any WindowGeometryObserverPort = AccessibilityGeometryObserver()
     private lazy var overlap = WindowOverlapEnforcer(control: control)
     private lazy var solo = SoloWindowEnforcer(control: control)
@@ -548,6 +549,9 @@ package final class AppServices {
     package func raise(windowId: CGWindowID) {
         guard let window = registry.windows.first(where: { $0.identity.cgWindowId == windowId }) else {
             return
+        }
+        if !window.isMinimized, !WindowSpacePolicy.isOnActiveSpace(window) {
+            _ = spaces.showSpace(ofWindowId: windowId)
         }
         _ = control.perform(window.isMinimized ? .restore : .raise, on: window)
         requestRefresh()

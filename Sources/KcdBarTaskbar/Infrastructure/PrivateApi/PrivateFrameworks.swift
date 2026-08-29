@@ -7,5 +7,14 @@ package enum PrivateFrameworks {
     package static let coreDockSendNotification = "CoreDockSendNotification"
     package static let axUIElementGetWindow = "_AXUIElementGetWindow"
 
+    package static let skyLight = "/System/Library/PrivateFrameworks/SkyLight.framework/SkyLight"
+    package static let cgsMainConnectionID = "CGSMainConnectionID"
+    package static let cgsCopySpacesForWindows = "CGSCopySpacesForWindows"
+    package static let cgsCopyManagedDisplayForSpace = "CGSCopyManagedDisplayForSpace"
+    package static let cgsManagedDisplaySetCurrentSpace = "CGSManagedDisplaySetCurrentSpace"
+    package static let cgsHWCaptureWindowList = "CGSHWCaptureWindowList"
+    package static let cgsAllSpacesMask: Int32 = 7
+    package static let cgsCaptureIgnoreGlobalClipShape: UInt32 = 1 << 11
+
     package static let showDesktopNotification = "com.apple.showdesktop.awake"
 }

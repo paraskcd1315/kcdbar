@@ -6,6 +6,7 @@ import SwiftUI
 @MainActor
 package final class ScreenCaptureWindowPreviewSource: WindowPreviewPort {
     private var reported: String?
+    private let fallback = SkyLightWindowCapture()
 
     package init() {}
 
@@ -17,7 +18,7 @@ package final class ScreenCaptureWindowPreviewSource: WindowPreviewPort {
             )
             guard let window = content.windows.first(where: { $0.windowID == windowId }) else {
                 report("absent")
-                return nil
+                return fallbackPreview(forWindowId: windowId, fitting: size)
             }
             let image = try await SCScreenshotManager.captureImage(
                 contentFilter: SCContentFilter(desktopIndependentWindow: window),
@@ -32,8 +33,18 @@ package final class ScreenCaptureWindowPreviewSource: WindowPreviewPort {
         } catch {
             report("refused code=\((error as NSError).code)")
 
-            return nil
+            return fallbackPreview(forWindowId: windowId, fitting: size)
         }
+    }
+
+    private func fallbackPreview(forWindowId windowId: CGWindowID, fitting size: CGSize) -> WindowPreview? {
+        guard let image = fallback.capture(windowId: windowId, fitting: size) else { return nil }
+        report("captured privately")
+
+        return WindowPreview(
+            image: Image(decorative: image, scale: 1),
+            pixelSize: CGSize(width: image.width, height: image.height)
+        )
     }
 
     private func configuration(fitting size: CGSize) -> SCStreamConfiguration {
