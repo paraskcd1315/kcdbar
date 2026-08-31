@@ -33,11 +33,9 @@ package struct AccessibilityWindowSource: AxWindowSourcePort {
 
     package func windows(forPids pids: [pid_t]) -> AxWindowScan {
         var records: [AxWindowRecord] = []
-        var answered: Set<pid_t> = []
 
         for pid in pids {
             guard let elements = windowElements(forPid: pid) else { continue }
-            answered.insert(pid)
             for (index, element) in elements.enumerated() {
                 guard let record = record(of: element, pid: pid, index: index) else { continue }
                 records.append(record)
@@ -49,7 +47,6 @@ package struct AccessibilityWindowSource: AxWindowSourcePort {
 
         return AxWindowScan(
             records: records,
-            answeredPids: answered,
             liveOmittedIds: probe.liveOmittedIds(listed: Set(records.compactMap(\.cgWindowId)))
         )
     }

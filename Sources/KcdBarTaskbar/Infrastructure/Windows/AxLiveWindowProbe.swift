@@ -35,10 +35,10 @@ final class AxLiveWindowProbe: @unchecked Sendable {
         var live: Set<CGWindowID> = []
         var dead: Set<CGWindowID> = []
         for (id, element) in candidates {
-            if answers(element) {
-                live.insert(id)
-            } else {
+            if isDestroyed(element) {
                 dead.insert(id)
+            } else {
+                live.insert(id)
             }
         }
 
@@ -51,8 +51,9 @@ final class AxLiveWindowProbe: @unchecked Sendable {
         return live
     }
 
-    private func answers(_ element: AXUIElement) -> Bool {
+    private func isDestroyed(_ element: AXUIElement) -> Bool {
         var value: CFTypeRef?
-        return AXUIElementCopyAttributeValue(element, kAXRoleAttribute as CFString, &value) == .success
+        return AXUIElementCopyAttributeValue(element, kAXRoleAttribute as CFString, &value)
+            == .invalidUIElement
     }
 }

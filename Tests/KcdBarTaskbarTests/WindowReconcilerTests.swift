@@ -58,26 +58,47 @@ struct WindowReconcilerTests {
         #expect(WindowPresentationPolicy.isTaskbarEntry(result[0]) == false)
     }
 
-    @Test func keepsAConfirmedWindowWhenAccessibilityAnswersNothingThisPass() {
-        let cg = WindowFixtures.cgRecord(windowId: 20, pid: 5, title: "Console")
+    @Test func keepsAConfirmedWindowOffScreenWhileItsHeldElementStillAnswers() {
+        let cg = WindowFixtures.cgRecord(windowId: 20, pid: 5, title: "Console", isOnScreen: false)
         let ax = WindowFixtures.axRecord(pid: 5, cgWindowId: 20, title: "Console")
         let confirmed = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: .answered([ax]), previous: [])
 
-        let silent = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: .silent, previous: confirmed)
+        let silent = WindowReconciler.reconcile(
+            coreGraphics: [cg],
+            accessibility: AxWindowScan(records: [], liveOmittedIds: [20]),
+            previous: confirmed
+        )
 
         #expect(silent.count == 1)
         #expect(silent[0].source == .both)
         #expect(WindowPresentationPolicy.isTaskbarEntry(silent[0]))
     }
 
-    @Test func keepsAConfirmedWindowMinimizedWhileAccessibilityIsSilent() {
-        let cg = WindowFixtures.cgRecord(windowId: 21, pid: 6, title: "Console")
+    @Test func keepsAConfirmedWindowMinimizedWhileItsHeldElementStillAnswers() {
+        let cg = WindowFixtures.cgRecord(windowId: 21, pid: 6, title: "Console", isOnScreen: false)
         let ax = WindowFixtures.axRecord(pid: 6, cgWindowId: 21, title: "Console", isMinimized: true)
+        let confirmed = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: .answered([ax]), previous: [])
+
+        let silent = WindowReconciler.reconcile(
+            coreGraphics: [cg],
+            accessibility: AxWindowScan(records: [], liveOmittedIds: [21]),
+            previous: confirmed
+        )
+
+        #expect(silent[0].isMinimized)
+        #expect(silent[0].source == .both)
+    }
+
+    @Test func dropsAConfirmedWindowOffScreenWhenNothingAnswersForIt() {
+        let cg = WindowFixtures.cgRecord(windowId: 459, pid: 5097, title: "CcConsole", isOnScreen: false)
+        let ax = WindowFixtures.axRecord(pid: 5097, cgWindowId: 459, title: "CcConsole")
         let confirmed = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: .answered([ax]), previous: [])
 
         let silent = WindowReconciler.reconcile(coreGraphics: [cg], accessibility: .silent, previous: confirmed)
 
-        #expect(silent[0].isMinimized)
+        #expect(silent.count == 1)
+        #expect(silent[0].source == .coreGraphicsOnly)
+        #expect(WindowPresentationPolicy.taskbarEntries(from: silent).isEmpty)
     }
 
     @Test func dropsAConfirmedWindowWhenItsApplicationAnswersWithoutIt() {
@@ -122,7 +143,7 @@ struct WindowReconcilerTests {
 
         let omitted = WindowReconciler.reconcile(
             coreGraphics: [shown],
-            accessibility: AxWindowScan(records: [], answeredPids: [9]),
+            accessibility: AxWindowScan(records: []),
             previous: confirmed
         )
 
@@ -130,7 +151,7 @@ struct WindowReconcilerTests {
         #expect(WindowPresentationPolicy.isTaskbarEntry(omitted[0]))
     }
 
-    @Test func dropsEveryConfirmedWindowWhenTheApplicationAnswersWithNone() {
+    @Test func dropsAConfirmedWindowOffScreenTheApplicationNoLongerLists() {
         let cg = WindowFixtures.cgRecord(windowId: 32, pid: 9, title: "Closed", isOnScreen: false)
         let confirmed = WindowReconciler.reconcile(
             coreGraphics: [cg],
@@ -140,30 +161,12 @@ struct WindowReconcilerTests {
 
         let now = WindowReconciler.reconcile(
             coreGraphics: [cg],
-            accessibility: AxWindowScan(records: [], answeredPids: [9]),
+            accessibility: AxWindowScan(records: []),
             previous: confirmed
         )
 
         #expect(now[0].source == .coreGraphicsOnly)
         #expect(WindowPresentationPolicy.taskbarEntries(from: now).isEmpty)
-    }
-
-    @Test func anotherApplicationAnsweringDoesNotDropASilentApplicationsEntry() {
-        let cg = WindowFixtures.cgRecord(windowId: 33, pid: 10, title: "Busy")
-        let confirmed = WindowReconciler.reconcile(
-            coreGraphics: [cg],
-            accessibility: .answered([WindowFixtures.axRecord(pid: 10, cgWindowId: 33, title: "Busy")]),
-            previous: []
-        )
-
-        let now = WindowReconciler.reconcile(
-            coreGraphics: [cg],
-            accessibility: AxWindowScan(records: [], answeredPids: [11]),
-            previous: confirmed
-        )
-
-        #expect(now[0].source == .both)
-        #expect(WindowPresentationPolicy.isTaskbarEntry(now[0]))
     }
 
     @Test func stillReportsCoreGraphicsOnlyForAWindowAccessibilityNeverConfirmed() {
@@ -299,7 +302,7 @@ struct WindowReconcilerTests {
 
         let now = WindowReconciler.reconcile(
             coreGraphics: [cg],
-            accessibility: AxWindowScan(records: [], answeredPids: [20], liveOmittedIds: [40]),
+            accessibility: AxWindowScan(records: [], liveOmittedIds: [40]),
             previous: confirmed
         )
 
@@ -317,7 +320,7 @@ struct WindowReconcilerTests {
 
         let now = WindowReconciler.reconcile(
             coreGraphics: [cg],
-            accessibility: AxWindowScan(records: [], answeredPids: [21], liveOmittedIds: []),
+            accessibility: AxWindowScan(records: [], liveOmittedIds: []),
             previous: confirmed
         )
 
@@ -339,7 +342,7 @@ struct WindowReconcilerTests {
 
         let now = WindowReconciler.reconcile(
             coreGraphics: [onAnotherSpace, closed],
-            accessibility: AxWindowScan(records: [], answeredPids: [22], liveOmittedIds: [42]),
+            accessibility: AxWindowScan(records: [], liveOmittedIds: [42]),
             previous: confirmed
         )
 
@@ -351,7 +354,7 @@ struct WindowReconcilerTests {
 
         let now = WindowReconciler.reconcile(
             coreGraphics: [cg],
-            accessibility: AxWindowScan(records: [], answeredPids: [23], liveOmittedIds: [44]),
+            accessibility: AxWindowScan(records: [], liveOmittedIds: [44]),
             previous: []
         )
 

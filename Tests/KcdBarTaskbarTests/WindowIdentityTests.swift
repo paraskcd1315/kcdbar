@@ -77,7 +77,7 @@ struct WindowIdentityTests {
         )
         let now = WindowReconciler.reconcile(
             coreGraphics: [moved],
-            accessibility: AxWindowScan(records: [], answeredPids: [30], liveOmittedIds: [50]),
+            accessibility: AxWindowScan(records: [], liveOmittedIds: [50]),
             previous: confirmed
         )
 
