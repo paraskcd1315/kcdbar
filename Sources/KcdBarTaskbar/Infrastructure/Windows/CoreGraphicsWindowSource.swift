@@ -29,7 +29,12 @@ package struct CoreGraphicsWindowSource: CgWindowSourcePort {
         return entries.compactMap { entry in
             guard let windowId = entry[kCGWindowNumber as String] as? CGWindowID else { return nil }
 
-            return record(from: entry, zOrder: ranks[windowId] ?? Int.max, flipReference: flipReference)
+            return record(
+                from: entry,
+                zOrder: ranks[windowId] ?? Int.max,
+                isOnScreen: ranks[windowId] != nil,
+                flipReference: flipReference
+            )
         }
     }
 
@@ -45,7 +50,7 @@ package struct CoreGraphicsWindowSource: CgWindowSourcePort {
     }
 
     private func record(
-        from entry: [String: Any], zOrder: Int, flipReference: CGFloat
+        from entry: [String: Any], zOrder: Int, isOnScreen: Bool, flipReference: CGFloat
     ) -> CgWindowRecord? {
         guard let windowId = entry[kCGWindowNumber as String] as? CGWindowID,
               let ownerPid = entry[kCGWindowOwnerPID as String] as? pid_t,
@@ -61,7 +66,7 @@ package struct CoreGraphicsWindowSource: CgWindowSourcePort {
             title: entry[kCGWindowName as String] as? String,
             bounds: ScreenCoordinateConverter.flipped(bounds, against: flipReference),
             layer: entry[kCGWindowLayer as String] as? Int ?? WindowMatchingMetrics.normalWindowLayer,
-            isOnScreen: entry[kCGWindowIsOnscreen as String] as? Bool ?? true,
+            isOnScreen: isOnScreen,
             zOrder: zOrder
         )
     }
