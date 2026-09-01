@@ -278,7 +278,7 @@ package final class AppServices {
 
     package func activate(entry: TaskbarEntryModel, onDisplay displayId: Int) {
         guard entry.isLauncher else {
-            toggle(entryId: entry.id)
+            toggleGroup(entry: entry, onDisplay: displayId)
             return
         }
         guard let bundleIdentifier = entry.bundleIdentifier else { return }
@@ -296,6 +296,35 @@ package final class AppServices {
         }
 
         perform(window.isMinimized ? .restore : .raise, on: window)
+    }
+
+    private func toggleGroup(entry: TaskbarEntryModel, onDisplay displayId: Int) {
+        guard entry.cyclesWindows, let bundleIdentifier = entry.bundleIdentifier else {
+            toggle(entryId: entry.id)
+            return
+        }
+        let owned = pids(of: bundleIdentifier)
+        let group = registry.taskbarEntries
+            .filter { owned.contains($0.ownerPid) && WindowSpacePolicy.isOnActiveSpace($0) }
+        let action = WindowGroupToggleDecider.action(
+            for: group,
+            frontmostPid: registry.frontmostPid,
+            among: registry.windows
+        )
+        BarLog.bar.notice(
+            """
+            group bundle=\(bundleIdentifier, privacy: .public) \
+            windows=\(group.count) action=\(action.rawValue, privacy: .public)
+            """
+        )
+        switch action {
+        case .minimizeAll:
+            group.forEach { perform(.minimize, on: $0) }
+        case .restoreAll:
+            group.forEach { perform(.restore, on: $0) }
+        case .raise:
+            cycle(entry: entry, onDisplay: displayId)
+        }
     }
 
     package func cycle(entry: TaskbarEntryModel, onDisplay displayId: Int) {
