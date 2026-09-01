@@ -26,6 +26,7 @@ package struct TaskbarLaunchGroup: View {
     package let onQuit: (TaskbarEntryModel) -> Void
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let onCycle: (TaskbarEntryModel) -> Void
 
     package var body: some View {
         KbAxisStack(isVertical: viewModel.preset.edge.isVertical, spacing: viewModel.preset.entrySpacing) {
@@ -49,7 +50,8 @@ package struct TaskbarLaunchGroup: View {
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,
                 onDropPin: onDropPin,
-                onMiddleClick: onMiddleClick
+                onMiddleClick: onMiddleClick,
+                onCycle: onCycle
             )
         }
         .frame(

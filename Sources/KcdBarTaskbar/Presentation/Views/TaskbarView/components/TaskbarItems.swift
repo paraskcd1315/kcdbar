@@ -27,6 +27,7 @@ package struct TaskbarItems: View {
     package let onQuit: (TaskbarEntryModel) -> Void
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let onCycle: (TaskbarEntryModel) -> Void
     package let battery: BatteryState
     package let onOpenBattery: () -> Void
     package let onOpenNotifications: () -> Void
@@ -62,7 +63,8 @@ package struct TaskbarItems: View {
                 onCloseWindow: onCloseWindow,
                 onQuit: onQuit,
                 onDropPin: onDropPin,
-                onMiddleClick: onMiddleClick
+                onMiddleClick: onMiddleClick,
+                onCycle: onCycle
             )
             if viewModel.preset.showsTrash {
                 TaskbarSeparator(isVertical: viewModel.preset.edge.isVertical)

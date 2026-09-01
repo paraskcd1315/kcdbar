@@ -34,6 +34,7 @@ package struct TaskbarRootView: View {
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onToggleDesktop: () -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let onCycle: (TaskbarEntryModel) -> Void
     package let battery: BatteryMonitor
     package let onOpenBattery: () -> Void
     package let onOpenNotifications: () -> Void
@@ -64,6 +65,7 @@ package struct TaskbarRootView: View {
             onQuit: onQuit,
             onDropPin: onDropPin,
             onMiddleClick: onMiddleClick,
+            onCycle: onCycle,
             battery: battery.state,
             onOpenBattery: onOpenBattery,
             onOpenNotifications: onOpenNotifications,

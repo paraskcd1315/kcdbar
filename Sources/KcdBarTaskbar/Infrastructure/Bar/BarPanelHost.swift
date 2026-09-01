@@ -51,6 +51,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onDropPin: (String, TaskbarEntryModel) -> Void
     private let onToggleDesktop: () -> Void
     private let onMiddleClick: (TaskbarEntryModel, Int) -> Void
+    private let onCycle: (TaskbarEntryModel, Int) -> Void
     private let onOpenBattery: () -> Void
     private let onOpenNotifications: () -> Void
     private let onOpenControlCentre: () -> Void
@@ -83,6 +84,7 @@ package final class BarPanelHost: BarPanelHostPort {
         onDropPin: @escaping (String, TaskbarEntryModel) -> Void,
         onToggleDesktop: @escaping () -> Void,
         onMiddleClick: @escaping (TaskbarEntryModel, Int) -> Void,
+        onCycle: @escaping (TaskbarEntryModel, Int) -> Void,
         onOpenBattery: @escaping () -> Void,
         onOpenNotifications: @escaping () -> Void,
         onOpenControlCentre: @escaping () -> Void,
@@ -100,6 +102,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.onDropPin = onDropPin
         self.onToggleDesktop = onToggleDesktop
         self.onMiddleClick = onMiddleClick
+        self.onCycle = onCycle
         self.onOpenBattery = onOpenBattery
         self.registry = registry
         self.battery = battery
@@ -349,6 +352,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 onDropPin: onDropPin,
                 onToggleDesktop: onToggleDesktop,
                 onMiddleClick: { [onMiddleClick] in onMiddleClick($0, display.id) },
+                onCycle: { [onCycle] in onCycle($0, display.id) },
                 battery: battery,
                 onOpenBattery: onOpenBattery,
                 onOpenNotifications: onOpenNotifications,

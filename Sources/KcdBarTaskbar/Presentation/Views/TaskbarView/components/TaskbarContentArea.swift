@@ -28,6 +28,7 @@ package struct TaskbarContentArea: View {
     package let onQuit: (TaskbarEntryModel) -> Void
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let onCycle: (TaskbarEntryModel) -> Void
     package let battery: BatteryState
     package let onOpenBattery: () -> Void
     package let onOpenNotifications: () -> Void
@@ -55,6 +56,7 @@ package struct TaskbarContentArea: View {
                     onQuit: onQuit,
                     onDropPin: onDropPin,
                     onMiddleClick: onMiddleClick,
+                    onCycle: onCycle,
                     battery: battery,
                     onOpenBattery: onOpenBattery,
                     onOpenNotifications: onOpenNotifications,

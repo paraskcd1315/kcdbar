@@ -24,6 +24,7 @@ package struct TaskbarEntryStrip: View {
     package let onQuit: (TaskbarEntryModel) -> Void
     package let onDropPin: (String, TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let onCycle: (TaskbarEntryModel) -> Void
 
     @State private var slots: [String: CGRect] = [:]
     @State private var dragSlots: [String: CGRect] = [:]
@@ -41,7 +42,8 @@ package struct TaskbarEntryStrip: View {
                     onTogglePin: onTogglePin,
                     onCloseWindow: onCloseWindow,
                     onQuit: onQuit,
-                    onMiddleClick: onMiddleClick
+                    onMiddleClick: onMiddleClick,
+                    onCycle: onCycle
                 )
                 .onGeometryChange(for: CGRect.self) { proxy in
                     proxy.frame(in: .named(TaskbarStripLayout.coordinateSpace))

@@ -298,6 +298,26 @@ package final class AppServices {
         perform(window.isMinimized ? .restore : .raise, on: window)
     }
 
+    package func cycle(entry: TaskbarEntryModel, onDisplay displayId: Int) {
+        guard entry.cyclesWindows, let bundleIdentifier = entry.bundleIdentifier else {
+            activate(entry: entry, onDisplay: displayId)
+            return
+        }
+        guard let window = LauncherWindowCycle.next(
+            pids: pids(of: bundleIdentifier),
+            onDisplay: displayId,
+            among: registry.taskbarEntries,
+            displays: registry.displays,
+            frontmostPid: registry.frontmostPid
+        )
+        else {
+            activate(entry: entry, onDisplay: displayId)
+            return
+        }
+
+        perform(window.isMinimized ? .restore : .raise, on: window)
+    }
+
     private func pids(of bundleIdentifier: String) -> Set<pid_t> {
         Set(registry.bundleIdentifiers.filter { $0.value == bundleIdentifier }.map(\.key))
     }
@@ -548,6 +568,9 @@ package final class AppServices {
             onToggleDesktop: { [weak self] in self?.toggleShowDesktop() },
             onMiddleClick: { [weak self] entry, displayId in
                 self?.openNewInstance(entry: entry, onDisplay: displayId)
+            },
+            onCycle: { [weak self] entry, displayId in
+                self?.cycle(entry: entry, onDisplay: displayId)
             },
             onOpenBattery: { [weak self] in self?.openBatteryPanel() },
             onOpenNotifications: { [menuExtras] in

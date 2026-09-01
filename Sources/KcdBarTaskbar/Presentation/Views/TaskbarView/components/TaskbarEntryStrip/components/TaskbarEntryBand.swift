@@ -24,6 +24,7 @@ package struct TaskbarEntryBand: View {
     package let onCloseWindow: (TaskbarEntryModel) -> Void
     package let onQuit: (TaskbarEntryModel) -> Void
     package let onMiddleClick: (TaskbarEntryModel) -> Void
+    package let onCycle: (TaskbarEntryModel) -> Void
 
     package var body: some View {
         KbAxisStack(isVertical: preset.edge.isVertical, spacing: TaskbarMetrics.bandSpacing) {
@@ -36,7 +37,8 @@ package struct TaskbarEntryBand: View {
                     onTogglePin: { onTogglePin(entry) },
                     onCloseWindow: { onCloseWindow(entry) },
                     onQuit: { onQuit(entry) },
-                    onMiddleClick: { onMiddleClick(entry) }
+                    onMiddleClick: { onMiddleClick(entry) },
+                    onCycle: { onCycle(entry) }
                 )
             }
         }

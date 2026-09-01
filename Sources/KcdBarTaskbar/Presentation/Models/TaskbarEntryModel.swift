@@ -38,6 +38,10 @@ package struct TaskbarEntryModel: Identifiable, Equatable {
         fullScreenCount > 0
     }
 
+    package var cyclesWindows: Bool {
+        previewWindows.count > 1
+    }
+
     package var orderingKey: String {
         TaskbarOrdering.orderingKey(bundleIdentifier: bundleIdentifier, entryId: id)
     }
