@@ -37,3 +37,4 @@ version that is not three integers, so a malformed one can never reach a binary.
 The history was rewritten on 2026-08-29 so that every commit carries one author identity and no
 co-author trailer; the ids changed and the trees did not. A dmg keeps the id of the tree it was cut
 from, so `KCDBar-0.3.2-31527a6.dmg` is the build of what is now `b86d1c5`.
+| `0.4.1` | `03f9514` | 2026-09-03 |
