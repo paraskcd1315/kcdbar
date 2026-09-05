@@ -39,3 +39,4 @@ co-author trailer; the ids changed and the trees did not. A dmg keeps the id of 
 from, so `KCDBar-0.3.2-31527a6.dmg` is the build of what is now `b86d1c5`.
 | `0.4.1` | `03f9514` | 2026-09-03 |
 | `0.5.1` | `c4d18fb` | 2026-09-05 |
+| `0.5.2` | `442cce9` | 2026-09-05 |
