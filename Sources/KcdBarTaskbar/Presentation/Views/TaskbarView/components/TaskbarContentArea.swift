@@ -37,8 +37,10 @@ package struct TaskbarContentArea: View {
     package let timer: TimerMonitor
     package let totals: TotalsMonitor
     package let sessions: SessionsMonitor
+    package let console: any ConsolePopoverPort
     package let onOpenDay: () -> Void
     package let onOpenSessions: () -> Void
+    package let onOpenConsole: () -> Void
 
     package var body: some View {
         Group {
@@ -65,9 +67,10 @@ package struct TaskbarContentArea: View {
                     timer: timer,
                     totals: totals,
                     sessions: sessions,
-
+                    console: console,
                     onOpenDay: onOpenDay,
-                    onOpenSessions: onOpenSessions
+                    onOpenSessions: onOpenSessions,
+                    onOpenConsole: onOpenConsole
                 )
             }
         }

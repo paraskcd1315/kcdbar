@@ -13,25 +13,28 @@
 // limitations under the License.
 
 import AppKit
+import KcdBarDesignSystem
+import SwiftUI
 
-package final class MiddleClickCatchingView: NSView {
-    package var action: (() -> Void)?
+package struct ClickCatcherView: NSViewRepresentable {
+    package let click: KbClick
+    package let action: () -> Void
 
-    package override func otherMouseUp(with event: NSEvent) {
-        guard event.buttonNumber == MiddleClickMetrics.buttonNumber,
-              bounds.contains(convert(event.locationInWindow, from: nil))
-        else {
-            super.otherMouseUp(with: event)
-            return
-        }
-        action?()
+    package init(click: KbClick, action: @escaping () -> Void) {
+        self.click = click
+        self.action = action
     }
 
-    package override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
-        true
+    package func makeNSView(context: Context) -> ClickCatchingView {
+        let view = ClickCatchingView()
+        view.click = click
+        view.action = action
+
+        return view
     }
 
-    package override var acceptsFirstResponder: Bool {
-        false
+    package func updateNSView(_ view: ClickCatchingView, context: Context) {
+        view.click = click
+        view.action = action
     }
 }

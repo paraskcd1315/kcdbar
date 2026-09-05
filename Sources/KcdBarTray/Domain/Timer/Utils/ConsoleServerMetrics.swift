@@ -20,6 +20,8 @@ package enum ConsoleServerMetrics {
     package static let tokenKey = "token"
     package static let host = "127.0.0.1"
     package static let ticketPath = "/ticket"
+    package static let popoverPath = "/popover"
+    package static let popoverEdge = "below"
     package static let localSuffix = ".local"
     package static let timeout: Double = 3
 }

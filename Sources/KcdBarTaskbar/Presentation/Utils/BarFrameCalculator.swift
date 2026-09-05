@@ -41,6 +41,22 @@ package enum BarFrameCalculator {
         }
     }
 
+    package static func itemAnchor(
+        for preset: BarPreset,
+        on display: DisplayGeometry,
+        at pointer: CGPoint
+    ) -> CGRect {
+        let bar = frame(for: preset, on: display)
+        let side = BarEntryMetrics.itemSide(for: preset)
+
+        switch preset.edge {
+        case .bottom, .top:
+            return CGRect(x: pointer.x - side / 2, y: bar.minY, width: side, height: bar.height)
+        case .leading, .trailing:
+            return CGRect(x: bar.minX, y: pointer.y - side / 2, width: bar.width, height: side)
+        }
+    }
+
     package static func frame(for preset: BarPreset, on display: DisplayGeometry) -> CGRect {
         let screen = display.frame
         let thickness = preset.thickness + (preset.attachment == .floating ? TaskbarMetrics.islandOutset * 2 : 0)
