@@ -14,9 +14,9 @@
 
 import SwiftUI
 
-/** Builds the platform view that reports a middle click. */
-package struct MiddleClickCatcherKey: EnvironmentKey {
-    package static let defaultValue: @MainActor (@escaping () -> Void) -> AnyView = { _ in
+/** Builds the platform view that reports one click SwiftUI does not deliver. */
+package struct ClickCatcherKey: EnvironmentKey {
+    package static let defaultValue: @MainActor (KbClick, @escaping () -> Void) -> AnyView = { _, _ in
         AnyView(EmptyView())
     }
 }

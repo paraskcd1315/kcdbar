@@ -12,23 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Foundation
+import CoreGraphics
 
-/** Where this machine's cc-console listens, and what it needs to be told. */
-package struct ConsoleServer: Equatable, Sendable {
-    package let port: Int
-    package let token: String
-
-    package init(port: Int, token: String) {
-        self.port = port
-        self.token = token
-    }
-
-    package var ticketUrl: URL? {
-        URL(string: "http://\(ConsoleServerMetrics.host):\(port)\(ConsoleServerMetrics.ticketPath)")
-    }
-
-    package var popoverUrl: URL? {
-        URL(string: "http://\(ConsoleServerMetrics.host):\(port)\(ConsoleServerMetrics.popoverPath)")
-    }
+package enum ConsoleReadoutMetrics {
+    package static let glyphSymbol = "square.stack.3d.up.fill"
+    package static let corner: CGFloat = 8
+    package static let padding: CGFloat = 5
 }

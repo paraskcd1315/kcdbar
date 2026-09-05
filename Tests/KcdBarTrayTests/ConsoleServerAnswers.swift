@@ -12,11 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import SwiftUI
+import Foundation
 
-package extension EnvironmentValues {
-    var middleClickCatcher: @MainActor (@escaping () -> Void) -> AnyView {
-        get { self[MiddleClickCatcherKey.self] }
-        set { self[MiddleClickCatcherKey.self] = newValue }
+@testable import KcdBarTray
+
+final class ConsoleServerAnswers: @unchecked Sendable {
+    private let lock = NSLock()
+    private var values: [ConsoleServer?]
+    private var index = 0
+
+    init(values: [ConsoleServer?]) {
+        self.values = values
+    }
+
+    var taken: Int { lock.withLock { index } }
+
+    func next() -> ConsoleServer? {
+        lock.withLock {
+            guard index < values.count else { return nil }
+
+            defer { index += 1 }
+
+            return values[index]
+        }
     }
 }

@@ -12,23 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Foundation
-
-/** Where this machine's cc-console listens, and what it needs to be told. */
-package struct ConsoleServer: Equatable, Sendable {
-    package let port: Int
-    package let token: String
-
-    package init(port: Int, token: String) {
-        self.port = port
-        self.token = token
-    }
-
-    package var ticketUrl: URL? {
-        URL(string: "http://\(ConsoleServerMetrics.host):\(port)\(ConsoleServerMetrics.ticketPath)")
-    }
-
-    package var popoverUrl: URL? {
-        URL(string: "http://\(ConsoleServerMetrics.host):\(port)\(ConsoleServerMetrics.popoverPath)")
-    }
+/** A click SwiftUI does not deliver on its own, so a platform view has to report it. */
+package enum KbClick: Sendable, CaseIterable {
+    case middle
+    case secondary
 }

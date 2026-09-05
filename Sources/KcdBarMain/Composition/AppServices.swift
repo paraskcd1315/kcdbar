@@ -50,6 +50,7 @@ package final class AppServices {
         source: KcdSignalSessionsSource(),
         panes: TmuxPaneFocus()
     )
+    package let consolePopover: any ConsolePopoverPort = ConsolePopoverOpener()
     package let previews = TaskbarPreviewState(port: ScreenCaptureWindowPreviewSource())
     package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
     package let stageManager = StageManagerState(port: WindowManagerStageManager())
@@ -488,9 +489,21 @@ package final class AppServices {
         }
     }
 
+    package func openConsolePopover() {
+        let anchor = popoverAnchorRect()
+
+        guard !anchor.isEmpty else {
+            BarLog.bar.notice("popover refused=noAnchor")
+
+            return
+        }
+
+        Task { [consolePopover] in _ = await consolePopover.open(anchor: anchor) }
+    }
+
     private func popoverAnchor() -> NSPoint {
         let pointer = NSEvent.mouseLocation
-        guard let display = registry.displays.first(where: { $0.frame.contains(pointer) }) else {
+        guard let display = pointerDisplay(at: pointer) else {
             return pointer
         }
 
@@ -498,6 +511,19 @@ package final class AppServices {
             x: pointer.x,
             y: BarFrameCalculator.frame(for: activePreset, on: display).maxY
         )
+    }
+
+    private func popoverAnchorRect() -> CGRect {
+        let pointer = NSEvent.mouseLocation
+        guard let display = pointerDisplay(at: pointer) else {
+            return .zero
+        }
+
+        return BarFrameCalculator.itemAnchor(for: activePreset, on: display, at: pointer)
+    }
+
+    private func pointerDisplay(at pointer: NSPoint) -> DisplayGeometry? {
+        registry.displays.first { $0.frame.contains(pointer) }
     }
 
     package func closeWindow(entry: TaskbarEntryModel) {
@@ -576,6 +602,7 @@ package final class AppServices {
             totals: totals,
             sessions: sessions,
             previews: previews,
+            console: consolePopover,
             pins: pins,
             order: order,
             desktop: desktop,
@@ -608,6 +635,7 @@ package final class AppServices {
             onOpenControlCentre: { [weak self] in self?.openControlCentre() },
             onOpenDay: { [weak self] in self?.openDayPanel() },
             onOpenSessions: { [weak self] in self?.openSessionsPanel() },
+            onOpenConsole: { [weak self] in self?.openConsolePopover() },
             onRaiseWindow: { [weak self] windowId in self?.raise(windowId: windowId) },
             onCloseWindowId: { [weak self] windowId in self?.close(windowId: windowId) }
         )

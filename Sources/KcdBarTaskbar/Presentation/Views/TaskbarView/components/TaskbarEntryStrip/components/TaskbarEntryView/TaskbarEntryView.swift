@@ -26,7 +26,7 @@ package struct TaskbarEntryView: View {
     package let onMiddleClick: () -> Void
     package let onCycle: () -> Void
 
-    @Environment(\.middleClickCatcher) private var middleClickCatcher
+    @Environment(\.clickCatcher) private var clickCatcher
     @Environment(\.taskbarHover) private var hover
 
     @State private var isHovered = false
@@ -59,7 +59,7 @@ package struct TaskbarEntryView: View {
         }
         .overlay(alignment: .bottom) { TaskbarEntryIndicator(entry: entry) }
         .contentShape(shape)
-        .overlay { middleClickCatcher(onMiddleClick) }
+        .overlay { clickCatcher(.middle, onMiddleClick) }
         .highPriorityGesture(TapGesture().modifiers(.command).onEnded(onCycle))
         .onTapGesture(perform: onActivate)
         .opacity(isDragging ? TaskbarMetrics.draggingOpacity : 1)

@@ -44,9 +44,11 @@ package struct TaskbarRootView: View {
     package let totals: TotalsMonitor
     package let sessions: SessionsMonitor
     package let previews: TaskbarPreviewState
+    package let console: any ConsolePopoverPort
 
     package let onOpenDay: () -> Void
     package let onOpenSessions: () -> Void
+    package let onOpenConsole: () -> Void
     package let onRaiseWindow: (CGWindowID) -> Void
     package let onCloseWindowId: (CGWindowID) -> Void
     package let onBarFrameChange: (CGRect) -> Void
@@ -75,9 +77,10 @@ package struct TaskbarRootView: View {
             totals: totals,
             sessions: sessions,
             previews: previews,
-
+            console: console,
             onOpenDay: onOpenDay,
             onOpenSessions: onOpenSessions,
+            onOpenConsole: onOpenConsole,
             isShowingDesktop: desktop.isShowingDesktop,
             onToggleDesktop: onToggleDesktop,
             onRaiseWindow: onRaiseWindow,

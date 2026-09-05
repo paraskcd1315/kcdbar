@@ -35,6 +35,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let totals: TotalsMonitor
     private let sessions: SessionsMonitor
     private let previews: TaskbarPreviewState
+    private let console: any ConsolePopoverPort
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -57,6 +58,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let onOpenControlCentre: () -> Void
     private let onOpenDay: () -> Void
     private let onOpenSessions: () -> Void
+    private let onOpenConsole: () -> Void
     private let onRaiseWindow: (CGWindowID) -> Void
     private let onCloseWindowId: (CGWindowID) -> Void
 
@@ -68,6 +70,7 @@ package final class BarPanelHost: BarPanelHostPort {
         totals: TotalsMonitor,
         sessions: SessionsMonitor,
         previews: TaskbarPreviewState,
+        console: any ConsolePopoverPort,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -90,11 +93,13 @@ package final class BarPanelHost: BarPanelHostPort {
         onOpenControlCentre: @escaping () -> Void,
         onOpenDay: @escaping () -> Void,
         onOpenSessions: @escaping () -> Void,
+        onOpenConsole: @escaping () -> Void,
         onRaiseWindow: @escaping (CGWindowID) -> Void,
         onCloseWindowId: @escaping (CGWindowID) -> Void
     ) {
         self.onOpenDay = onOpenDay
         self.onOpenSessions = onOpenSessions
+        self.onOpenConsole = onOpenConsole
         self.onRaiseWindow = onRaiseWindow
         self.onCloseWindowId = onCloseWindowId
         self.onOpenNotifications = onOpenNotifications
@@ -111,6 +116,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.totals = totals
         self.sessions = sessions
         self.previews = previews
+        self.console = console
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -362,16 +368,17 @@ package final class BarPanelHost: BarPanelHostPort {
                 totals: totals,
                 sessions: sessions,
                 previews: previews,
-
+                console: console,
                 onOpenDay: onOpenDay,
                 onOpenSessions: onOpenSessions,
+                onOpenConsole: onOpenConsole,
                 onRaiseWindow: onRaiseWindow,
                 onCloseWindowId: onCloseWindowId,
                 onBarFrameChange: { [frameState] in frameState.frame = $0 },
                 onTooltipFrameChange: { [frameState] in frameState.tooltipFrame = $0 }
             )
-            .environment(\.middleClickCatcher) { action in
-                AnyView(MiddleClickView(action: action))
+            .environment(\.clickCatcher) { click, action in
+                AnyView(ClickCatcherView(click: click, action: action))
             }
 
             let panel = BarPanel(contentRect: frame)

@@ -12,20 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import AppKit
 import SwiftUI
 
-package struct MiddleClickView: NSViewRepresentable {
-    package let action: () -> Void
-
-    package func makeNSView(context: Context) -> MiddleClickCatchingView {
-        let view = MiddleClickCatchingView()
-        view.action = action
-
-        return view
-    }
-
-    package func updateNSView(_ view: MiddleClickCatchingView, context: Context) {
-        view.action = action
+package extension EnvironmentValues {
+    var clickCatcher: @MainActor (KbClick, @escaping () -> Void) -> AnyView {
+        get { self[ClickCatcherKey.self] }
+        set { self[ClickCatcherKey.self] = newValue }
     }
 }
