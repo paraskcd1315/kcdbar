@@ -83,4 +83,56 @@ struct ConsoleConfigReaderTests {
 
         #expect(server.ticketUrl?.absoluteString == "http://127.0.0.1:62882/ticket")
     }
+
+    @Test func aCasePreservedKeyIsFoundFromALoweredLocalHost() throws {
+        let url = try written(
+            """
+            {"machines":{"MacBook-Air-de-ParasKCD":\
+            {"server":{"port":62882,"token":"secret"}}}}
+            """)
+
+        let server = ConsoleConfigReader.server(
+            hostName: "macbook-air-de-paraskcd.local", localHostName: nil, at: url)
+
+        #expect(server == ConsoleServer(port: 62882, token: "secret"))
+    }
+
+    @Test func aDashDigitSuffixedKeyIsFolded() throws {
+        let url = try written(
+            """
+            {"machines":{"MacBook-Air-de-ParasKCD-1":\
+            {"server":{"port":62882,"token":"secret"}}}}
+            """)
+
+        let server = ConsoleConfigReader.server(
+            hostName: "macbook-air-de-paraskcd", localHostName: nil, at: url)
+
+        #expect(server == ConsoleServer(port: 62882, token: "secret"))
+    }
+
+    @Test func anExactKeyIsStillFoundDirectly() throws {
+        let url = try written(
+            """
+            {"machines":{"macbook-air-de-paraskcd.local":\
+            {"server":{"port":62882,"token":"secret"}}}}
+            """)
+
+        let server = ConsoleConfigReader.server(
+            hostName: "MacBook-Air-de-ParasKCD.local", localHostName: nil, at: url)
+
+        #expect(server == ConsoleServer(port: 62882, token: "secret"))
+    }
+
+    @Test func noKeyAtAllAnswersNil() throws {
+        let url = try written(
+            """
+            {"machines":{"KCDMACHINE-1":\
+            {"server":{"port":1234,"token":"theirs"}}}}
+            """)
+
+        let server = ConsoleConfigReader.server(
+            hostName: "macbook-air-de-paraskcd.local", localHostName: nil, at: url)
+
+        #expect(server == nil)
+    }
 }
