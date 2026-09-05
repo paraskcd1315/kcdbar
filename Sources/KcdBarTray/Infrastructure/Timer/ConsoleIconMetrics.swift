@@ -12,11 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import CoreGraphics
-
-package enum ConsoleReadoutMetrics {
-    package static let glyphSymbol = "square.stack.3d.up.fill"
-    package static let corner: CGFloat = 8
-    package static let padding: CGFloat = 5
-    package static let iconSide: CGFloat = 16
+package enum ConsoleIconMetrics {
+    package static let bundleIdentifier = "com.paraskcd.ccconsole"
 }

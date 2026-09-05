@@ -16,18 +16,18 @@ import KcdBarDesignSystem
 import SwiftUI
 
 package struct TaskbarConsole: View {
+    package let icon: any ConsoleIconPort
     package let onOpen: () -> Void
 
     @Environment(\.clickCatcher) private var clickCatcher
 
-    package init(onOpen: @escaping () -> Void) {
+    package init(icon: any ConsoleIconPort, onOpen: @escaping () -> Void) {
+        self.icon = icon
         self.onOpen = onOpen
     }
 
     package var body: some View {
-        Image(systemName: ConsoleReadoutMetrics.glyphSymbol)
-            .font(KbTypography.controlCentreGlyph)
-            .foregroundStyle(KbColors.brand)
+        ConsoleGlyph(image: icon.image())
             .padding(ConsoleReadoutMetrics.padding)
             .contentShape(shape)
             .overlay { clickCatcher(.secondary, onOpen) }

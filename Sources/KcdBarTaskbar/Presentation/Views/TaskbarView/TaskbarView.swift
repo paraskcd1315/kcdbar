@@ -39,6 +39,7 @@ package struct TaskbarView: View {
     package let sessions: SessionsMonitor
     package let previews: TaskbarPreviewState
     package let console: any ConsolePopoverPort
+    package let icon: any ConsoleIconPort
 
     package let onOpenDay: () -> Void
     package let onOpenSessions: () -> Void
@@ -83,6 +84,7 @@ package struct TaskbarView: View {
                 totals: totals,
                 sessions: sessions,
                 console: console,
+                icon: icon,
                 onOpenDay: onOpenDay,
                 onOpenSessions: onOpenSessions,
                 onOpenConsole: onOpenConsole,

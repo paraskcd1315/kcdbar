@@ -51,6 +51,7 @@ package final class AppServices {
         panes: TmuxPaneFocus()
     )
     package let consolePopover: any ConsolePopoverPort = ConsolePopoverOpener()
+    package let consoleIcon: any ConsoleIconPort = ConsoleIconReader()
     package let previews = TaskbarPreviewState(port: ScreenCaptureWindowPreviewSource())
     package let loginItem = LoginItemState(port: ServiceManagementLoginItem())
     package let stageManager = StageManagerState(port: WindowManagerStageManager())
@@ -603,6 +604,7 @@ package final class AppServices {
             sessions: sessions,
             previews: previews,
             console: consolePopover,
+            icon: consoleIcon,
             pins: pins,
             order: order,
             desktop: desktop,

@@ -37,6 +37,7 @@ package struct TaskbarItems: View {
     package let totals: TotalsMonitor
     package let sessions: SessionsMonitor
     package let console: any ConsolePopoverPort
+    package let icon: any ConsoleIconPort
     package let onOpenDay: () -> Void
     package let onOpenSessions: () -> Void
     package let onOpenConsole: () -> Void
@@ -90,7 +91,7 @@ package struct TaskbarItems: View {
                 TaskbarClock(onOpen: onOpenNotifications)
             }
             if viewModel.preset.showsTracking, console.isAvailable {
-                TaskbarConsole(onOpen: onOpenConsole)
+                TaskbarConsole(icon: icon, onOpen: onOpenConsole)
             }
             if viewModel.preset.showsTracking, sessions.isAvailable {
                 TaskbarSessions(monitor: sessions, onOpen: onOpenSessions)

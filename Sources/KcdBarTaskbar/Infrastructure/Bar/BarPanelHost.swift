@@ -36,6 +36,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let sessions: SessionsMonitor
     private let previews: TaskbarPreviewState
     private let console: any ConsolePopoverPort
+    private let icon: any ConsoleIconPort
     private let pins: PinnedAppState
     private let order: EntryOrderMemory
     private let desktop: ShowDesktopState
@@ -71,6 +72,7 @@ package final class BarPanelHost: BarPanelHostPort {
         sessions: SessionsMonitor,
         previews: TaskbarPreviewState,
         console: any ConsolePopoverPort,
+        icon: any ConsoleIconPort,
         pins: PinnedAppState,
         order: EntryOrderMemory,
         desktop: ShowDesktopState,
@@ -117,6 +119,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.sessions = sessions
         self.previews = previews
         self.console = console
+        self.icon = icon
         self.pins = pins
         self.order = order
         self.desktop = desktop
@@ -369,6 +372,7 @@ package final class BarPanelHost: BarPanelHostPort {
                 sessions: sessions,
                 previews: previews,
                 console: console,
+                icon: icon,
                 onOpenDay: onOpenDay,
                 onOpenSessions: onOpenSessions,
                 onOpenConsole: onOpenConsole,
