@@ -14,6 +14,7 @@
 
 import AppKit
 import ApplicationServices
+import KcdBarTray
 
 /** Presses one of Control Center's own menu bar items by its stable identifier. */
 @MainActor
@@ -21,9 +22,39 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
     package init() {}
 
     package func press(_ identifier: String) -> Bool {
-        guard let item = item(withIdentifier: identifier) else { return false }
+        let extras = extras()
+        guard let item = extras.first(where: { self.identifier(of: $0) == identifier }) else {
+            BarLog.bar.notice(
+                "menuExtra press id=\(identifier, privacy: .public) outcome=missing extras=\(describe(extras), privacy: .public)"
+            )
+            return false
+        }
 
-        return AXUIElementPerformAction(item, kAXPressAction as CFString) == .success
+        let result = AXUIElementPerformAction(item, kAXPressAction as CFString)
+        BarLog.bar.notice(
+            "menuExtra press id=\(identifier, privacy: .public) outcome=\(result.rawValue) actions=\(actions(of: item).joined(separator: ","), privacy: .public)"
+        )
+
+        return result == .success
+    }
+
+    private func describe(_ extras: [AXUIElement]) -> String {
+        extras.map { element in
+            let description = copyValue(from: element, attribute: kAXDescriptionAttribute) as? String ?? ""
+            return "\(identifier(of: element) ?? "nil")|\(description)|\(actions(of: element).joined(separator: ","))"
+        }
+        .joined(separator: ";")
+    }
+
+    private func identifier(of element: AXUIElement) -> String? {
+        copyValue(from: element, attribute: BarControlMetrics.identifierAttribute) as? String
+    }
+
+    private func actions(of element: AXUIElement) -> [String] {
+        var names: CFArray?
+        guard AXUIElementCopyActionNames(element, &names) == .success else { return [] }
+
+        return names as? [String] ?? []
     }
 
     private func extras() -> [AXUIElement] {
@@ -44,13 +75,6 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
         let element = unsafeBitCast(bar, to: AXUIElement.self)
 
         return copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
-    }
-
-    private func item(withIdentifier identifier: String) -> AXUIElement? {
-        extras().first { element in
-            copyValue(from: element, attribute: BarControlMetrics.identifierAttribute) as? String
-                == identifier
-        }
     }
 
     private func copyValue(from element: AXUIElement, attribute: String) -> CFTypeRef? {
