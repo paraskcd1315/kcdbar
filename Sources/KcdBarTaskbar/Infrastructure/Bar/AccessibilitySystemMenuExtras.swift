@@ -22,80 +22,49 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
     package init() {}
 
     package func press(_ identifier: String) -> Bool {
-        let extras = extras()
-        guard let item = extras.first(where: { self.identifier(of: $0) == identifier }) else {
+        let items = items()
+        guard let item = items.first(where: { self.identifier(of: $0) == identifier }) else {
+            let seen = items.map { self.identifier(of: $0) ?? "nil" }.joined(separator: ",")
             BarLog.bar.notice(
-                "menuExtra press id=\(identifier, privacy: .public) outcome=missing count=\(extras.count)"
+                "menuExtra press id=\(identifier, privacy: .public) outcome=missing extras=\(extras().count) items=\(seen, privacy: .public)"
             )
-            for (index, extra) in extras.enumerated() {
-                logTree(extra, path: "\(index)", depth: 0)
-            }
             return false
         }
 
         let result = AXUIElementPerformAction(item, kAXPressAction as CFString)
-        BarLog.bar.notice(
-            "menuExtra press id=\(identifier, privacy: .public) outcome=\(result.rawValue) actions=\(actions(of: item).joined(separator: ","), privacy: .public)"
-        )
+        BarLog.bar.notice("menuExtra press id=\(identifier, privacy: .public) outcome=\(result.rawValue)")
 
         return result == .success
     }
 
-    private func logTree(_ element: AXUIElement, path: String, depth: Int) {
-        let attributes = attributeNames(of: element)
-            .filter { ![kAXParentAttribute, kAXTopLevelUIElementAttribute, kAXWindowAttribute, "AXChildrenInNavigationOrder", kAXChildrenAttribute].contains($0) }
-            .map { name in
-                "\(name)=\(String(describing: copyValue(from: element, attribute: name) ?? "nil" as CFString).replacingOccurrences(of: "\n", with: " ").prefix(40))"
-            }
-        BarLog.bar.notice(
-            "menuExtra node=\(path, privacy: .public) \(attributes.joined(separator: ","), privacy: .public) actions=\(actions(of: element).joined(separator: ","), privacy: .public)"
-        )
-        guard depth < 4 else { return }
-
-        let children = copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
-        for (index, child) in children.enumerated() where !CFEqual(child, element) {
-            logTree(child, path: "\(path).\(index)", depth: depth + 1)
-        }
-    }
-
-    private func attributeNames(of element: AXUIElement) -> [String] {
-        var names: CFArray?
-        guard AXUIElementCopyAttributeNames(element, &names) == .success else { return [] }
-
-        return names as? [String] ?? []
-    }
-
-    private func identifier(of element: AXUIElement) -> String? {
-        copyValue(from: element, attribute: BarControlMetrics.identifierAttribute) as? String
-    }
-
-    private func actions(of element: AXUIElement) -> [String] {
-        var names: CFArray?
-        guard AXUIElementCopyActionNames(element, &names) == .success else { return [] }
-
-        return names as? [String] ?? []
-    }
-
-    private func owners() -> [NSRunningApplication] {
-        NSWorkspace.shared.runningApplications
-            .filter { BarControlMetrics.extrasOwnerBundleIdentifiers.contains($0.bundleIdentifier ?? "") }
+    private func items() -> [AXUIElement] {
+        extras().flatMap { [$0] + children(of: $0) }
     }
 
     private func extras() -> [AXUIElement] {
-        owners().flatMap { extras(of: $0.processIdentifier) }
-    }
+        guard let controlCentre = NSWorkspace.shared.runningApplications.first(where: {
+            $0.bundleIdentifier == BarControlMetrics.controlCentreBundleIdentifier
+        })
+        else {
+            return []
+        }
 
-    private func extras(of processIdentifier: pid_t) -> [AXUIElement] {
-        let application = AXUIElementCreateApplication(processIdentifier)
+        let application = AXUIElementCreateApplication(controlCentre.processIdentifier)
         guard let bar = copyValue(from: application, attribute: BarControlMetrics.extrasMenuBar),
               CFGetTypeID(bar) == AXUIElementGetTypeID()
         else {
             return []
         }
 
-        let element = unsafeBitCast(bar, to: AXUIElement.self)
+        return children(of: unsafeDowncast(bar, to: AXUIElement.self))
+    }
 
-        return copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
+    private func children(of element: AXUIElement) -> [AXUIElement] {
+        copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
+    }
+
+    private func identifier(of element: AXUIElement) -> String? {
+        copyValue(from: element, attribute: BarControlMetrics.identifierAttribute) as? String
     }
 
     private func copyValue(from element: AXUIElement, attribute: String) -> CFTypeRef? {
