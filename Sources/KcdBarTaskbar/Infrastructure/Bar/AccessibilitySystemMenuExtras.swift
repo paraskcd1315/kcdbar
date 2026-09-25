@@ -27,6 +27,12 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
             BarLog.bar.notice(
                 "menuExtra press id=\(identifier, privacy: .public) outcome=missing extras=\(describe(extras), privacy: .public)"
             )
+            for owner in owners() {
+                let application = AXUIElementCreateApplication(owner.processIdentifier)
+                BarLog.bar.notice(
+                    "menuExtra owner=\(owner.bundleIdentifier ?? "", privacy: .public) attributes=\(attributeNames(of: application).joined(separator: ","), privacy: .public)"
+                )
+            }
             return false
         }
 
@@ -38,12 +44,23 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
         return result == .success
     }
 
-    private func describe(_ extras: [AXUIElement]) -> String {
+    private func describe(_ extras: [AXUIElement], depth: Int = 0) -> String {
         extras.map { element in
-            let description = copyValue(from: element, attribute: kAXDescriptionAttribute) as? String ?? ""
-            return "\(identifier(of: element) ?? "nil")|\(description)|\(actions(of: element).joined(separator: ","))"
+            let attributes = attributeNames(of: element).map { name in
+                "\(name)=\(String(describing: copyValue(from: element, attribute: name) ?? "nil" as CFString).prefix(60))"
+            }
+            let children = copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
+            let nested = depth < 2 && !children.isEmpty ? " children[\(describe(children, depth: depth + 1))]" : ""
+            return "{\(attributes.joined(separator: ",")) actions=\(actions(of: element).joined(separator: ","))\(nested)}"
         }
         .joined(separator: ";")
+    }
+
+    private func attributeNames(of element: AXUIElement) -> [String] {
+        var names: CFArray?
+        guard AXUIElementCopyAttributeNames(element, &names) == .success else { return [] }
+
+        return names as? [String] ?? []
     }
 
     private func identifier(of element: AXUIElement) -> String? {
@@ -57,10 +74,13 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
         return names as? [String] ?? []
     }
 
-    private func extras() -> [AXUIElement] {
+    private func owners() -> [NSRunningApplication] {
         NSWorkspace.shared.runningApplications
             .filter { BarControlMetrics.extrasOwnerBundleIdentifiers.contains($0.bundleIdentifier ?? "") }
-            .flatMap { extras(of: $0.processIdentifier) }
+    }
+
+    private func extras() -> [AXUIElement] {
+        owners().flatMap { extras(of: $0.processIdentifier) }
     }
 
     private func extras(of processIdentifier: pid_t) -> [AXUIElement] {
