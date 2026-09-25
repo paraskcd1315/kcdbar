@@ -58,14 +58,13 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
     }
 
     private func extras() -> [AXUIElement] {
-        guard let controlCentre = NSWorkspace.shared.runningApplications.first(where: {
-            $0.bundleIdentifier == BarControlMetrics.controlCentreBundleIdentifier
-        })
-        else {
-            return []
-        }
+        NSWorkspace.shared.runningApplications
+            .filter { BarControlMetrics.extrasOwnerBundleIdentifiers.contains($0.bundleIdentifier ?? "") }
+            .flatMap { extras(of: $0.processIdentifier) }
+    }
 
-        let application = AXUIElementCreateApplication(controlCentre.processIdentifier)
+    private func extras(of processIdentifier: pid_t) -> [AXUIElement] {
+        let application = AXUIElementCreateApplication(processIdentifier)
         guard let bar = copyValue(from: application, attribute: BarControlMetrics.extrasMenuBar),
               CFGetTypeID(bar) == AXUIElementGetTypeID()
         else {
