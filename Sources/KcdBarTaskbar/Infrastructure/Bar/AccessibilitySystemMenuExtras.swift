@@ -25,12 +25,11 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
         let extras = extras()
         guard let item = extras.first(where: { self.identifier(of: $0) == identifier }) else {
             BarLog.bar.notice(
-                "menuExtra press id=\(identifier, privacy: .public) outcome=missing extras=\(describe(extras), privacy: .public)"
+                "menuExtra press id=\(identifier, privacy: .public) outcome=missing count=\(extras.count)"
             )
-            for owner in owners() {
-                let application = AXUIElementCreateApplication(owner.processIdentifier)
+            for (index, extra) in extras.enumerated() {
                 BarLog.bar.notice(
-                    "menuExtra owner=\(owner.bundleIdentifier ?? "", privacy: .public) attributes=\(attributeNames(of: application).joined(separator: ","), privacy: .public)"
+                    "menuExtra extra=\(index) \(describe([extra], depth: 2), privacy: .public)"
                 )
             }
             return false
@@ -47,7 +46,7 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
     private func describe(_ extras: [AXUIElement], depth: Int = 0) -> String {
         extras.map { element in
             let attributes = attributeNames(of: element).map { name in
-                "\(name)=\(String(describing: copyValue(from: element, attribute: name) ?? "nil" as CFString).prefix(60))"
+                "\(name)=\(String(describing: copyValue(from: element, attribute: name) ?? "nil" as CFString).replacingOccurrences(of: "\n", with: " ").prefix(50))"
             }
             let children = copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
             let nested = depth < 2 && !children.isEmpty ? " children[\(describe(children, depth: depth + 1))]" : ""
