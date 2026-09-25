@@ -28,9 +28,7 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
                 "menuExtra press id=\(identifier, privacy: .public) outcome=missing count=\(extras.count)"
             )
             for (index, extra) in extras.enumerated() {
-                BarLog.bar.notice(
-                    "menuExtra extra=\(index) \(describe([extra], depth: 2), privacy: .public)"
-                )
+                logTree(extra, path: "\(index)", depth: 0)
             }
             return false
         }
@@ -43,16 +41,21 @@ package struct AccessibilitySystemMenuExtras: SystemMenuExtraPort {
         return result == .success
     }
 
-    private func describe(_ extras: [AXUIElement], depth: Int = 0) -> String {
-        extras.map { element in
-            let attributes = attributeNames(of: element).map { name in
-                "\(name)=\(String(describing: copyValue(from: element, attribute: name) ?? "nil" as CFString).replacingOccurrences(of: "\n", with: " ").prefix(50))"
+    private func logTree(_ element: AXUIElement, path: String, depth: Int) {
+        let attributes = attributeNames(of: element)
+            .filter { ![kAXParentAttribute, kAXTopLevelUIElementAttribute, kAXWindowAttribute, "AXChildrenInNavigationOrder", kAXChildrenAttribute].contains($0) }
+            .map { name in
+                "\(name)=\(String(describing: copyValue(from: element, attribute: name) ?? "nil" as CFString).replacingOccurrences(of: "\n", with: " ").prefix(40))"
             }
-            let children = copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
-            let nested = depth < 2 && !children.isEmpty ? " children[\(describe(children, depth: depth + 1))]" : ""
-            return "{\(attributes.joined(separator: ",")) actions=\(actions(of: element).joined(separator: ","))\(nested)}"
+        BarLog.bar.notice(
+            "menuExtra node=\(path, privacy: .public) \(attributes.joined(separator: ","), privacy: .public) actions=\(actions(of: element).joined(separator: ","), privacy: .public)"
+        )
+        guard depth < 4 else { return }
+
+        let children = copyValue(from: element, attribute: kAXChildrenAttribute) as? [AXUIElement] ?? []
+        for (index, child) in children.enumerated() where !CFEqual(child, element) {
+            logTree(child, path: "\(path).\(index)", depth: depth + 1)
         }
-        .joined(separator: ";")
     }
 
     private func attributeNames(of element: AXUIElement) -> [String] {
