@@ -51,7 +51,7 @@ package final class LastWindowQuitEnforcer {
 
         return closed.map { application in
             let verdict = LastWindowQuitPolicy.decide(application, excluded: exclusions, now: now) {
-                menuExtras.hasMenuExtra(pid: application.pid)
+                menuExtras.hasMenuExtra(of: application)
             }
             if verdict == .quit, let bundleIdentifier = application.bundleIdentifier {
                 _ = terminator.quit(bundleIdentifier: bundleIdentifier)

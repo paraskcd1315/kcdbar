@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import AppKit
 import ApplicationServices
 import Foundation
 
@@ -19,7 +20,20 @@ import Foundation
 package struct AccessibilityMenuExtraOwnership: MenuExtraOwnershipPort {
     package init() {}
 
-    package func hasMenuExtra(pid: pid_t) -> Bool? {
+    package func hasMenuExtra(of application: RunningApplication) -> Bool? {
+        MenuExtraOwnershipPolicy.merged(processes(of: application).map(hasMenuExtra(pid:)))
+    }
+
+    private func processes(of application: RunningApplication) -> [pid_t] {
+        guard let bundleIdentifier = application.bundleIdentifier else { return [application.pid] }
+        let siblings = NSRunningApplication
+            .runningApplications(withBundleIdentifier: bundleIdentifier)
+            .map(\.processIdentifier)
+            .filter { $0 != application.pid }
+        return [application.pid] + siblings
+    }
+
+    private func hasMenuExtra(pid: pid_t) -> Bool? {
         let application = AXUIElementCreateApplication(pid)
         AXUIElementSetMessagingTimeout(application, LastWindowQuitMetrics.menuExtraTimeout)
         var value: CFTypeRef?

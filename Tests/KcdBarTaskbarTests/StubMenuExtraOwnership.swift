@@ -19,7 +19,7 @@ import Foundation
 struct StubMenuExtraOwnership: MenuExtraOwnershipPort {
     let answer: Bool?
 
-    func hasMenuExtra(pid: pid_t) -> Bool? {
+    func hasMenuExtra(of application: RunningApplication) -> Bool? {
         answer
     }
 }
