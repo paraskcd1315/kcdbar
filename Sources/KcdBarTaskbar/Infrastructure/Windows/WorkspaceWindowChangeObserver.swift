@@ -21,7 +21,7 @@ package final class WorkspaceWindowChangeObserver: WindowChangeObserverPort {
     private var tokens: [NSObjectProtocol] = []
     private var sweep: Timer?
 
-    package func startObserving(onChange: @escaping () -> Void) {
+    package func startObserving(onChange: @escaping @MainActor () -> Void) {
         stopObserving()
         let center = NSWorkspace.shared.notificationCenter
         let names: [Notification.Name] = [

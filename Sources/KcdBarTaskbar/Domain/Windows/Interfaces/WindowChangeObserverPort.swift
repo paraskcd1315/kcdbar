@@ -14,6 +14,6 @@
 
 @MainActor
 package protocol WindowChangeObserverPort: AnyObject {
-    func startObserving(onChange: @escaping () -> Void)
+    func startObserving(onChange: @escaping @MainActor () -> Void)
     func stopObserving()
 }
