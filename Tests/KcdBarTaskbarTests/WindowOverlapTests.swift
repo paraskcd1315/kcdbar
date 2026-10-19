@@ -119,6 +119,54 @@ struct WindowOverlapTests {
         #expect(usable == display.frame)
     }
 
+    private let builtIn = DisplayGeometry(
+        id: 2,
+        frame: CGRect(x: 0, y: 0, width: 1512, height: 982),
+        isPrimary: true,
+        menuBarHeight: 32
+    )
+    private let builtInBar = CGRect(x: 0, y: 0, width: 1512, height: 50)
+
+    @Test func aTiledWindowUnderTheMenuBarShrinksRatherThanMovingIntoIt() {
+        let tiled = window(CGRect(x: 0, y: 0, width: 752, height: 950))
+
+        let corrected = WindowOverlapPolicy.correctedFrame(for: tiled, barFrame: builtInBar, display: builtIn)
+
+        #expect(corrected == CGRect(x: 0, y: 50, width: 752, height: 900))
+    }
+
+    @Test func aShortWindowUnderTheMenuBarStillMovesUpAndKeepsItsSize() {
+        let small = window(CGRect(x: 100, y: 20, width: 600, height: 400))
+
+        let corrected = WindowOverlapPolicy.correctedFrame(for: small, barFrame: builtInBar, display: builtIn)
+
+        #expect(corrected == CGRect(x: 100, y: 50, width: 600, height: 400))
+    }
+
+    @Test func usableAreaStopsBelowTheMenuBar() {
+        let usable = WindowOverlapPolicy.usableArea(of: builtIn, excluding: builtInBar)
+
+        #expect(usable == CGRect(x: 0, y: 50, width: 1512, height: 900))
+    }
+
+    @Test func aTopBarKeepsItsAreaUnderAMenuBar() {
+        let topBar = CGRect(x: 0, y: 932, width: 1512, height: 50)
+
+        let usable = WindowOverlapPolicy.usableArea(of: builtIn, excluding: topBar)
+
+        #expect(usable == CGRect(x: 0, y: 0, width: 1512, height: 932))
+    }
+
+    @Test func aCorrectedTiledWindowIsNotCorrectedAgain() {
+        let first = WindowOverlapPolicy.correctedFrame(
+            for: window(CGRect(x: 0, y: 0, width: 752, height: 950)),
+            barFrame: builtInBar,
+            display: builtIn
+        )
+
+        #expect(WindowOverlapPolicy.correctedFrame(for: window(first!), barFrame: builtInBar, display: builtIn) == nil)
+    }
+
     @Test func aWindowAlreadyCorrectedIsNotCorrectedAgain() {
         let corrected = WindowOverlapPolicy.correctedFrame(
             for: window(CGRect(x: 0, y: 0, width: 1920, height: 1080)),

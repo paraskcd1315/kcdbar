@@ -47,8 +47,8 @@ package enum WindowOverlapPolicy {
     }
 
     package static func usableArea(of display: DisplayGeometry, excluding barFrame: CGRect) -> CGRect {
-        let screen = display.frame
-        guard screen.intersects(barFrame) else { return screen }
+        let screen = display.windowArea
+        guard display.frame.intersects(barFrame) else { return screen }
 
         let tolerance = WindowMatchingMetrics.boundsTolerance
 

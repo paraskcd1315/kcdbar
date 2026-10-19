@@ -24,7 +24,8 @@ package struct ScreenGeometrySource: DisplayGeometryPort {
                 id: screen.displayNumber ?? index,
                 frame: screen.frame,
                 isPrimary: index == 0,
-                name: screen.localizedName
+                name: screen.localizedName,
+                menuBarHeight: max(0, screen.frame.maxY - screen.visibleFrame.maxY)
             )
         }
     }

@@ -20,4 +20,9 @@ package struct DisplayGeometry: Equatable, Sendable, Identifiable {
     package let frame: CGRect
     package let isPrimary: Bool
     package var name: String? = nil
+    package var menuBarHeight: CGFloat = 0
+
+    package var windowArea: CGRect {
+        CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height - menuBarHeight)
+    }
 }
