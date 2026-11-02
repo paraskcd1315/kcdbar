@@ -26,4 +26,20 @@ package struct ManagedWindow: Equatable, Sendable {
     package let zOrder: Int?
     package let source: WindowRecordSource
     package var accessibilityTitle: String? = nil
+
+    package func placed(at frame: CGRect) -> ManagedWindow {
+        ManagedWindow(
+            identity: identity,
+            ownerPid: ownerPid,
+            ownerName: ownerName,
+            title: title,
+            bounds: frame,
+            isMinimized: isMinimized,
+            isFullScreen: isFullScreen,
+            isOnScreen: isOnScreen,
+            zOrder: zOrder,
+            source: source,
+            accessibilityTitle: accessibilityTitle
+        )
+    }
 }

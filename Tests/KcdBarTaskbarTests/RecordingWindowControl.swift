@@ -21,6 +21,8 @@ final class RecordingWindowControl: WindowControlPort {
     private(set) var performed: [(WindowToggleAction, WindowIdentity)] = []
     private(set) var closed: [WindowIdentity] = []
     private(set) var framed: [(CGRect, WindowIdentity)] = []
+    var actualFrames: [WindowIdentity: CGRect] = [:]
+    var framesReadable = true
 
     func perform(_ action: WindowToggleAction, on window: ManagedWindow) -> Bool {
         performed.append((action, window.identity))
@@ -38,5 +40,10 @@ final class RecordingWindowControl: WindowControlPort {
         framed.append((frame, window.identity))
 
         return true
+    }
+
+    func frame(of window: ManagedWindow) -> CGRect? {
+        guard framesReadable else { return nil }
+        return actualFrames[window.identity] ?? window.bounds
     }
 }

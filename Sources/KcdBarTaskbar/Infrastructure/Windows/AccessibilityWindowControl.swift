@@ -58,6 +58,25 @@ package struct AccessibilityWindowControl: WindowControlPort {
         return movedOk && sizedOk
     }
 
+    package func frame(of window: ManagedWindow) -> CGRect? {
+        guard let element = element(for: window, reaching: false),
+              let position = copyValue(from: element, attribute: kAXPositionAttribute),
+              let size = copyValue(from: element, attribute: kAXSizeAttribute),
+              CFGetTypeID(position) == AXValueGetTypeID(),
+              CFGetTypeID(size) == AXValueGetTypeID()
+        else {
+            return nil
+        }
+        var origin = CGPoint.zero
+        var extent = CGSize.zero
+        guard AXValueGetValue(position as! AXValue, .cgPoint, &origin),
+              AXValueGetValue(size as! AXValue, .cgSize, &extent)
+        else {
+            return nil
+        }
+        return ScreenCoordinateConverter.toCocoa(CGRect(origin: origin, size: extent))
+    }
+
     private func focus(_ element: AXUIElement, pid: pid_t) -> Bool {
         NSRunningApplication(processIdentifier: pid)?.activate()
         let raised = AXUIElementPerformAction(element, kAXRaiseAction as CFString) == .success

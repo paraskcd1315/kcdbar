@@ -85,4 +85,55 @@ struct WindowOverlapEnforcerTests {
         #expect(control.framed.count == 2)
         #expect(control.framed.last?.0.minY == thicker.thickness)
     }
+
+    private func animatedWindow() -> ManagedWindow {
+        let thumbnail = CGRect(x: 100, y: 20, width: 800, height: 500)
+        let cg = WindowFixtures.cgRecord(windowId: 7, pid: 7, title: "T", bounds: thumbnail)
+        let ax = WindowFixtures.axRecord(pid: 7, cgWindowId: 7, title: "T", bounds: thumbnail)
+
+        return WindowReconciler.reconcile(coreGraphics: [cg], accessibility: .answered([ax]), previous: [])[0]
+    }
+
+    @Test func aMissionControlThumbnailOverTheBarLeavesAWindowClearOfItAlone() {
+        let control = RecordingWindowControl()
+        let window = animatedWindow()
+        control.actualFrames[window.identity] = CGRect(x: 0, y: 200, width: 1920, height: 880)
+        let enforcer = WindowOverlapEnforcer(control: control)
+
+        enforcer.enforce(
+            preset: BarPresetCatalogue.windows11,
+            windows: [window],
+            displays: [display],
+            now: Date(timeIntervalSince1970: 0)
+        )
+
+        #expect(control.framed.isEmpty)
+    }
+
+    @Test func aWindowReallyOverTheBarIsFittedFromItsOwnFrameNotTheThumbnail() {
+        let control = RecordingWindowControl()
+        let window = animatedWindow()
+        control.actualFrames[window.identity] = CGRect(x: 300, y: 10, width: 600, height: 400)
+        let enforcer = WindowOverlapEnforcer(control: control)
+        let preset = BarPresetCatalogue.windows11
+
+        enforcer.enforce(preset: preset, windows: [window], displays: [display], now: Date(timeIntervalSince1970: 0))
+
+        #expect(control.framed.map(\.0) == [CGRect(x: 300, y: preset.thickness, width: 600, height: 400)])
+    }
+
+    @Test func aWindowWhoseOwnFrameCannotBeReadIsLeftAlone() {
+        let control = RecordingWindowControl()
+        control.framesReadable = false
+        let enforcer = WindowOverlapEnforcer(control: control)
+
+        enforcer.enforce(
+            preset: BarPresetCatalogue.windows11,
+            windows: [zoomedWindow()],
+            displays: [display],
+            now: Date(timeIntervalSince1970: 0)
+        )
+
+        #expect(control.framed.isEmpty)
+    }
 }

@@ -34,24 +34,30 @@ package final class WindowOverlapEnforcer {
 
         for window in windows {
             guard window.isOnScreen, WindowSpacePolicy.isOnActiveSpace(window) else { continue }
-            guard let displayId = WindowDisplayResolver.displayId(for: window, in: displays),
-                  let display = displays.first(where: { $0.id == displayId })
+            guard correction(for: window, preset: preset, displays: displays) != nil else { continue }
+            let key = WindowEntryIdentifier.text(for: window.identity)
+            guard shouldCorrect(key: key, now: now),
+                  let actual = control.frame(of: window),
+                  let corrected = correction(for: window.placed(at: actual), preset: preset, displays: displays)
             else {
                 continue
             }
-            let barFrame = BarFrameCalculator.frame(for: preset, on: display)
-            guard let corrected = WindowOverlapPolicy.correctedFrame(
-                for: window,
-                barFrame: barFrame,
-                display: display
-            ) else {
-                continue
-            }
-            let key = WindowEntryIdentifier.text(for: window.identity)
-            guard shouldCorrect(key: key, now: now) else { continue }
             lastCorrection[key] = now
             _ = control.setFrame(corrected, on: window)
         }
+    }
+
+    private func correction(for window: ManagedWindow, preset: BarPreset, displays: [DisplayGeometry]) -> CGRect? {
+        guard let displayId = WindowDisplayResolver.displayId(for: window, in: displays),
+              let display = displays.first(where: { $0.id == displayId })
+        else {
+            return nil
+        }
+        return WindowOverlapPolicy.correctedFrame(
+            for: window,
+            barFrame: BarFrameCalculator.frame(for: preset, on: display),
+            display: display
+        )
     }
 
     private func shouldCorrect(key: String, now: Date) -> Bool {
