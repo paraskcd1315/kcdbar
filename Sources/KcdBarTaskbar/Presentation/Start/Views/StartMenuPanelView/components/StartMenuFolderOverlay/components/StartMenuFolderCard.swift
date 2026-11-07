@@ -61,7 +61,7 @@ package struct StartMenuFolderCard: View {
             onLaunch: onLaunch,
             onTogglePin: onTogglePin
         )
-        .padding(.vertical, KbSpacing.s5)
+        .padding(.bottom, KbSpacing.s5)
     }
 
     private var shape: RoundedRectangle {

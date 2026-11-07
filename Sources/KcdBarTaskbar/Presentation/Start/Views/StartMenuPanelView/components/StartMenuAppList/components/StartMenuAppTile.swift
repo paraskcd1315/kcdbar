@@ -44,7 +44,7 @@ package struct StartMenuAppTile: View {
         }
         .padding(StartMenuMetrics.pinnedTilePadding)
         .frame(maxWidth: .infinity)
-        .frame(height: StartMenuMetrics.gridTileHeight)
+        .frame(height: StartMenuMetrics.gridTileHeight, alignment: .top)
         .background(
             isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear,
             in: shape
