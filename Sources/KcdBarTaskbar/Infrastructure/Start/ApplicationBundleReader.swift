@@ -28,7 +28,8 @@ package enum ApplicationBundleReader {
         guard ApplicationBundleFilter.isListable(path: url.path, underRoots: roots),
               let bundle = Bundle(url: url),
               let identifier = bundle.bundleIdentifier,
-              !ApplicationBundleFilter.isBackgroundOnly(bundle)
+              !ApplicationBundleFilter.isBackgroundOnly(bundle),
+              ApplicationBundleFilter.isOffered(bundle, inRegion: Locale.current.region?.identifier)
         else {
             return nil
         }

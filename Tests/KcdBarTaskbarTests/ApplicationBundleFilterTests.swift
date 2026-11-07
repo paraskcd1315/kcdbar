@@ -53,6 +53,18 @@ struct ApplicationBundleFilterTests {
         }
     }
 
+    @Test func anApplicationNotOfferedInThisRegionStaysOutOfTheList() {
+        let news = ["US", "GB", "AU", "CA"]
+
+        #expect(!ApplicationBundleFilter.isOffered(supportedRegions: news, inRegion: "ES"))
+        #expect(ApplicationBundleFilter.isOffered(supportedRegions: news, inRegion: "GB"))
+    }
+
+    @Test func anApplicationThatNamesNoRegionsIsOfferedEverywhere() {
+        #expect(ApplicationBundleFilter.isOffered(supportedRegions: nil, inRegion: "ES"))
+        #expect(ApplicationBundleFilter.isOffered(supportedRegions: ["US"], inRegion: nil))
+    }
+
     @Test func aRootIsNotItsOwnPrefixTwin() {
         #expect(!ApplicationBundleFilter.isListable(path: "/ApplicationsOld/Thing.app", underRoots: roots))
     }

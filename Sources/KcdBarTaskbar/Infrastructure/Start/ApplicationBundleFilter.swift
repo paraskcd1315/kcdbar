@@ -28,6 +28,19 @@ package enum ApplicationBundleFilter {
         }
     }
 
+    package static func isOffered(_ bundle: Bundle, inRegion region: String?) -> Bool {
+        isOffered(
+            supportedRegions: bundle.object(forInfoDictionaryKey: ApplicationBundleMetrics.supportedRegionsKey) as? [String],
+            inRegion: region
+        )
+    }
+
+    package static func isOffered(supportedRegions: [String]?, inRegion region: String?) -> Bool {
+        guard let supportedRegions, let region else { return true }
+
+        return supportedRegions.contains(region)
+    }
+
     package static func isTrue(_ value: Any?) -> Bool {
         if let flag = value as? Bool { return flag }
         if let number = value as? NSNumber { return number.boolValue }
