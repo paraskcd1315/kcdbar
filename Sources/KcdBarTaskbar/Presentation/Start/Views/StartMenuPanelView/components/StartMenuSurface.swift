@@ -107,6 +107,21 @@ package struct StartMenuSurface: View {
                 )
             }
         }
+        .blur(radius: catalogue.openedSection == nil ? 0 : StartMenuMetrics.folderBackdropBlur)
+        .overlay {
+            StartMenuFolderOverlay(
+                section: catalogue.openedSection,
+                pinnedIdentifiers: Set(pinned.apps.map(\.bundleIdentifier)),
+                icons: icons,
+                onLaunch: { identifier in
+                    catalogue.closeCategory()
+                    onLaunch(identifier)
+                },
+                onTogglePin: onTogglePin,
+                onClose: catalogue.closeCategory
+            )
+        }
+        .animation(KbMotion.standard, value: catalogue.openedCategory)
         .frame(width: width, alignment: .leading)
         .clipShape(KbPopoverShape(arrowX: arrowX))
         .glassEffect(.regular.interactive(), in: KbPopoverShape(arrowX: arrowX))

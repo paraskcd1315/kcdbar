@@ -36,11 +36,10 @@ package struct StartMenuCatalogueContent: View {
                 onOpen: onOpenCategory
             )
         } else {
-            ForEach(catalogue.visibleSections) { section in
+            ForEach(catalogue.sections) { section in
                 StartMenuAppBand(
                     section: section,
                     layout: catalogue.layout,
-                    showsHeading: catalogue.openedSection == nil,
                     onIndex: onIndex,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,

@@ -68,8 +68,7 @@ package struct StartMenuSections: View {
                     iconNamespace: iconNamespace,
                     onLaunch: onLaunch,
                     onTogglePin: onTogglePin,
-                    onIndex: onIndex,
-                    onScrollTop: onScrollTop
+                    onIndex: onIndex
                 )
                 .padding(.top, KbSpacing.s5)
             } header: {

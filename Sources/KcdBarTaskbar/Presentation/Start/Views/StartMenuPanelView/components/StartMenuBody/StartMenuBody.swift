@@ -76,7 +76,6 @@ package struct StartMenuBody: View {
             }
             .animation(KbMotion.standard, value: catalogue.grouping)
             .animation(KbMotion.standard, value: catalogue.layout)
-            .animation(KbMotion.standard, value: catalogue.openedCategory)
         }
         .frame(width: StartMenuMetrics.sidebarWidth)
     }

@@ -46,6 +46,29 @@ struct ApplicationCatalogueStateTests {
         func stopWatching() { isWatching = false }
     }
 
+    @Test func openingAFolderKeepsTheFolderGridBehindIt() async {
+        let state = ApplicationCatalogueState(catalogue: CountingCatalogue())
+        await state.load()
+        state.choose(.category)
+        let key = state.sections[0].key
+
+        state.open(category: key)
+
+        #expect(state.showsFolders)
+        #expect(state.openedSection?.key == key)
+    }
+
+    @Test func choosingAnotherGroupingClosesTheOpenFolder() async {
+        let state = ApplicationCatalogueState(catalogue: CountingCatalogue())
+        await state.load()
+        state.choose(.category)
+        state.open(category: state.sections[0].key)
+
+        state.choose(.alphabetical)
+
+        #expect(state.openedSection == nil)
+    }
+
     @Test func theFirstOpenScansAndTheNextOneDoesNot() async {
         let catalogue = CountingCatalogue()
         let state = ApplicationCatalogueState(catalogue: catalogue)

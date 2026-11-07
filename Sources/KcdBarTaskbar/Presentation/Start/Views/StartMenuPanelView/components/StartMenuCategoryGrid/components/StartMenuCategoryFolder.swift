@@ -47,6 +47,7 @@ package struct StartMenuCategoryFolder: View {
                 ),
                 in: shape
             )
+            .background(KbVibrancyBackdrop().clipShape(shape))
             .kbTappable(in: shape, perform: onOpen)
             Text(LocalizedStringKey(section.titleKey ?? section.key))
                 .font(KbTypography.entryTitle)

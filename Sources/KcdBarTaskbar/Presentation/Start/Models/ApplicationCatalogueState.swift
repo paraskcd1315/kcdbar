@@ -85,12 +85,8 @@ package final class ApplicationCatalogueState {
         return sections.first { $0.key == openedCategory }
     }
 
-    package var visibleSections: [ApplicationSection] {
-        openedSection.map { [$0] } ?? sections
-    }
-
     package var showsFolders: Bool {
-        grouping == .category && layout == .grid && openedCategory == nil && !isLoading
+        grouping == .category && layout == .grid && !isLoading
     }
 
     package func choose(_ grouping: StartMenuGrouping) {

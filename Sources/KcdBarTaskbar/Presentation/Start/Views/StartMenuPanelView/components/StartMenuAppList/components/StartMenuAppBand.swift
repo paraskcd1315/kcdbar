@@ -18,7 +18,6 @@ import SwiftUI
 package struct StartMenuAppBand: View {
     package let section: ApplicationSection
     package let layout: StartMenuLayout
-    package let showsHeading: Bool
     package let onIndex: () -> Void
     package let pinnedIdentifiers: Set<String>
     package let icons: any ApplicationIconPort
@@ -31,7 +30,6 @@ package struct StartMenuAppBand: View {
             if layout == .list {
                 StartMenuAppSection(
                     section: section,
-                    showsHeading: showsHeading,
                     onIndex: onIndex,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,
@@ -42,7 +40,6 @@ package struct StartMenuAppBand: View {
             } else {
                 StartMenuAppGridSection(
                     section: section,
-                    showsHeading: showsHeading,
                     onIndex: onIndex,
                     pinnedIdentifiers: pinnedIdentifiers,
                     icons: icons,

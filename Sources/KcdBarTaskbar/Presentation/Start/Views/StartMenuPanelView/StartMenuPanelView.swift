@@ -88,5 +88,8 @@ package struct StartMenuPanelView: View {
             anchor: .bottom
         )
         .opacity(presentation.isExpanded ? 1 : 0)
+        .onChange(of: presentation.isExpanded) { _, isExpanded in
+            if !isExpanded { catalogue.closeCategory() }
+        }
     }
 }

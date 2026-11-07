@@ -106,7 +106,9 @@ package enum StartMenuMetrics {
     package static let folderIconSize: CGFloat = 32
     package static let folderMiniIconSize: CGFloat = 14
     package static let folderInnerSpacing: CGFloat = 8
-    package static let backGlyph = "chevron.left"
+    package static let folderBackdropBlur: CGFloat = 18
+    package static let folderOpenScale: CGFloat = 0.85
+    package static let folderCardMaxWidth: CGFloat = 300
     package static let kebabGlyph = "ellipsis"
     package static let disclosureGlyph = "chevron.right"
     package static let disclosureSize: CGFloat = 11
