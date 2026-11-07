@@ -16,9 +16,12 @@ import KcdBarDesignSystem
 import SwiftUI
 
 package struct StartMenuDivider: View {
+    @Environment(\.displayScale) private var displayScale
+
     package var body: some View {
         Rectangle()
             .fill(KbColors.separator)
-            .frame(height: KbPopoverMetrics.dividerHeight)
+            .frame(height: KbEdgeMetrics.width / displayScale)
+            .frame(maxWidth: .infinity)
     }
 }

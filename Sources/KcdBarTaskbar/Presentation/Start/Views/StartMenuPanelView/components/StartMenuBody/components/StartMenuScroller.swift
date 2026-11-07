@@ -97,6 +97,7 @@ package struct StartMenuScroller: View {
                 .padding(.bottom, KbSpacing.s5 + KbPopoverMetrics.arrowSize.height)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(KbVibrancyBackdrop())
+                .overlay(alignment: .top) { StartMenuDivider() }
         }
         .scrollBounceBehavior(.basedOnSize)
     }

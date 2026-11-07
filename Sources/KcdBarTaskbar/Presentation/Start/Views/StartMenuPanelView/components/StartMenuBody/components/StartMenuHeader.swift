@@ -36,5 +36,6 @@ package struct StartMenuHeader: View {
         .padding(.vertical, KbSpacing.s5)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(KbVibrancyBackdrop())
+        .overlay(alignment: .bottom) { StartMenuDivider() }
     }
 }

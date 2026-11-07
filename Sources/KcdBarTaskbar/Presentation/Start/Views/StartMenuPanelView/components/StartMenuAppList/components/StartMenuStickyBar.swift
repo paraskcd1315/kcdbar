@@ -46,6 +46,8 @@ package struct StartMenuStickyBar: View {
             isHovered ? KbColors.onSurface.opacity(StartMenuMetrics.hoverFillOpacity) : .clear
         )
         .background(KbVibrancyBackdrop())
+        .overlay(alignment: .top) { StartMenuDivider() }
+        .overlay(alignment: .bottom) { StartMenuDivider() }
         .contentShape(Rectangle())
         .onTapGesture { onToggle?() }
         .onHover { isHovered = onToggle != nil && $0 }
