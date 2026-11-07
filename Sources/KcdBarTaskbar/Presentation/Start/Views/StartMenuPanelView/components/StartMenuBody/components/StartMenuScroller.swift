@@ -96,7 +96,7 @@ package struct StartMenuScroller: View {
                 .padding(.top, KbSpacing.s5)
                 .padding(.bottom, KbSpacing.s5 + KbPopoverMetrics.arrowSize.height)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .glassEffect(.regular.interactive(), in: Rectangle())
+                .background(KbVibrancyBackdrop())
         }
         .scrollBounceBehavior(.basedOnSize)
     }

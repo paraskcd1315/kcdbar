@@ -35,6 +35,6 @@ package struct StartMenuHeader: View {
         .padding(.horizontal, KbSpacing.s6)
         .padding(.vertical, KbSpacing.s5)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassEffect(.regular.interactive(), in: Rectangle())
+        .background(KbVibrancyBackdrop())
     }
 }
