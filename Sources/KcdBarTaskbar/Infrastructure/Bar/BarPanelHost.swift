@@ -35,6 +35,7 @@ package final class BarPanelHost: BarPanelHostPort {
     private let totals: TotalsMonitor
     private let sessions: SessionsMonitor
     private let previews: TaskbarPreviewState
+    private let peek: WindowPeekState
     private let console: any ConsolePopoverPort
     private let icon: any ConsoleIconPort
     private let pins: PinnedAppState
@@ -71,6 +72,7 @@ package final class BarPanelHost: BarPanelHostPort {
         totals: TotalsMonitor,
         sessions: SessionsMonitor,
         previews: TaskbarPreviewState,
+        peek: WindowPeekState,
         console: any ConsolePopoverPort,
         icon: any ConsoleIconPort,
         pins: PinnedAppState,
@@ -118,6 +120,7 @@ package final class BarPanelHost: BarPanelHostPort {
         self.totals = totals
         self.sessions = sessions
         self.previews = previews
+        self.peek = peek
         self.console = console
         self.icon = icon
         self.pins = pins
@@ -384,6 +387,7 @@ package final class BarPanelHost: BarPanelHostPort {
             .environment(\.clickCatcher) { click, action in
                 AnyView(ClickCatcherView(click: click, action: action))
             }
+            .environment(\.windowPeek, peek)
 
             let panel = BarPanel(contentRect: frame)
             let host = BarHostingView(rootView: root)

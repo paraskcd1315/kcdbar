@@ -20,6 +20,7 @@ package struct TaskbarShowDesktopButton: View {
     package let shape: AnyShape
     package let onToggle: () -> Void
 
+    @Environment(\.windowPeek) private var peek
     @State private var isHovered = false
 
     package var body: some View {
@@ -33,10 +34,21 @@ package struct TaskbarShowDesktopButton: View {
                     .frame(width: TaskbarMetrics.showDesktopDividerWidth)
             }
             .background(shape.fill(fill))
-            .kbTappable(in: shape, perform: onToggle)
+            .kbTappable(in: shape) {
+                peek?.end()
+                onToggle()
+            }
             .animation(KbMotion.quick, value: isHovered)
             .animation(KbMotion.quick, value: isShowingDesktop)
-            .onHover { isHovered = $0 }
+            .onHover { hovering in
+                isHovered = hovering
+                if hovering && !isShowingDesktop {
+                    peek?.enter(.desktop)
+                } else {
+                    peek?.leave(.desktop)
+                }
+            }
+            .onDisappear { peek?.leave(.desktop) }
     }
 
     private var fill: Color {

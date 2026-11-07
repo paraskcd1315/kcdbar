@@ -21,6 +21,7 @@ package struct TaskbarPreviewTile: View {
     package let onTap: () -> Void
     package let onClose: () -> Void
 
+    @Environment(\.windowPeek) private var peek
     @State private var isHovered = false
 
     package var body: some View {
@@ -55,13 +56,31 @@ package struct TaskbarPreviewTile: View {
         }
         .overlay(alignment: .topTrailing) {
             if isHovered {
-                TaskbarPreviewClose(onClose: onClose)
+                TaskbarPreviewClose(onClose: {
+                    peek?.end()
+                    onClose()
+                })
                     .padding(KbSpacing.s2)
             }
         }
         .contentShape(.rect(cornerRadius: TaskbarPreviewMetrics.thumbnailCornerRadius))
-        .onTapGesture(perform: onTap)
-        .onHover { isHovered = $0 }
+        .onTapGesture {
+            peek?.end()
+            onTap()
+        }
+        .onHover { hovering in
+            isHovered = hovering
+            if hovering {
+                peek?.enter(peekTarget)
+            } else {
+                peek?.leave(peekTarget)
+            }
+        }
+        .onDisappear { peek?.leave(peekTarget) }
         .animation(KbMotion.quick, value: isHovered)
+    }
+
+    private var peekTarget: WindowPeekTarget {
+        .window(thumbnail.id)
     }
 }

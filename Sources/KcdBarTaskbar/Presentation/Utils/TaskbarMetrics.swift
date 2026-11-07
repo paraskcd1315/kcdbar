@@ -52,6 +52,8 @@ package enum TaskbarMetrics {
     package static let tooltipGap: CGFloat = 8
     package static let tooltipDelay: Duration = .milliseconds(400)
     package static let tooltipLinger: Duration = .milliseconds(150)
+    package static let peekDelay: Duration = .milliseconds(500)
+    package static let peekGrace: Duration = .milliseconds(100)
     package static let stackMaxSheets = 4
     package static let stackStep: CGFloat = 2
     package static let stackInset: CGFloat = 4

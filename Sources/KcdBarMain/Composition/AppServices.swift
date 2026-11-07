@@ -70,6 +70,8 @@ package final class AppServices {
     package let order = EntryOrderMemory()
     package let desktop = ShowDesktopState()
     package let showDesktop: any ShowDesktopPort = CoreDockShowDesktop()
+    package let peeker: any WindowPeekPort = ScreenCaptureWindowPeek()
+    package lazy var peek = WindowPeekState { [weak self] target in self?.applyPeek(target) }
     package let launcher: any ApplicationLaunchPort = WorkspaceApplicationLauncher()
     package let terminator: any ApplicationTerminationPort = WorkspaceApplicationTerminator()
     package let spotlight: any SpotlightPort = CgEventSpotlight()
@@ -192,6 +194,24 @@ package final class AppServices {
             hideToDesktop()
         }
         requestRefresh()
+    }
+
+    private func applyPeek(_ target: WindowPeekTarget?) {
+        guard let target else {
+            peeker.hide()
+            return
+        }
+        let displayIds = WindowPeekPolicy.displayIds(
+            for: target,
+            windows: registry.windows,
+            displays: registry.displays
+        )
+        guard !displayIds.isEmpty else {
+            peeker.hide()
+            BarLog.bar.notice("peek refused=notOnADesktop")
+            return
+        }
+        Task { [peeker] in await peeker.show(target, onDisplays: displayIds) }
     }
 
     private func hideToDesktop() {
@@ -603,6 +623,7 @@ package final class AppServices {
             totals: totals,
             sessions: sessions,
             previews: previews,
+            peek: peek,
             console: consolePopover,
             icon: consoleIcon,
             pins: pins,
