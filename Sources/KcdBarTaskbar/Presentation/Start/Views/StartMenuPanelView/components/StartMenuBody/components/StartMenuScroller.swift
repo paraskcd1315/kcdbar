@@ -104,7 +104,10 @@ package struct StartMenuScroller: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .onScrollGeometryChange(for: Bool.self) { geometry in
-            geometry.contentOffset.y + geometry.contentInsets.top > 0
+            StartMenuScrollReading.isScrolled(
+                offsetY: geometry.contentOffset.y,
+                topInset: geometry.contentInsets.top
+            )
         } action: { _, scrolled in
             isScrolled = scrolled
         }

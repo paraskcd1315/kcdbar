@@ -23,6 +23,7 @@ package struct StartMenuFolderCard: View {
     package let onTogglePin: (String) -> Void
 
     @State private var isScrolled = false
+    @State private var position = ScrollPosition(edge: .top)
 
     package var body: some View {
         ViewThatFits(in: .vertical) {
@@ -35,10 +36,19 @@ package struct StartMenuFolderCard: View {
                 .safeAreaBar(edge: .top) {
                     StartMenuFolderTitleBar(titleKey: titleKey, showsDivider: isScrolled)
                 }
+                .scrollPosition($position)
                 .onScrollGeometryChange(for: Bool.self) { geometry in
-                    geometry.contentOffset.y + geometry.contentInsets.top > 0
+                    StartMenuScrollReading.isScrolled(
+                        offsetY: geometry.contentOffset.y,
+                        topInset: geometry.contentInsets.top
+                    )
                 } action: { _, scrolled in
                     isScrolled = scrolled
+                }
+                .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                    geometry.contentInsets.top
+                } action: { _, _ in
+                    position.scrollTo(edge: .top)
                 }
         }
         .frame(maxWidth: StartMenuMetrics.folderCardMaxWidth)
