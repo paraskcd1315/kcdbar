@@ -33,6 +33,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 Paras Mohandas Khanchandani Chandani</string>
 	<key>NSScreenCaptureUsageDescription</key>
-	<string>KCDBar draws a thumbnail of a window when you rest the pointer on its taskbar entry. Without this it shows the application icon instead.</string>
+	<string>KCDBar draws a thumbnail of a window when you rest the pointer on its taskbar entry, and peeks at a window or the desktop when you rest on a thumbnail or on Show Desktop. Without this it shows the application icon and does not peek.</string>
 </dict>
 </plist>
