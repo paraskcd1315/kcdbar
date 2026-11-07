@@ -13,12 +13,15 @@
 // limitations under the License.
 
 import AppKit
+import IOSurface
 
-/** A click-through panel that covers one display with a peek's picture. */
+/** A click-through panel that covers one display with a live peek and its window outlines. */
 package final class WindowPeekOverlayPanel: NSPanel {
     package override var canBecomeKey: Bool { false }
     package override var canBecomeMain: Bool { false }
 
+    private let outlines = CALayer()
+    private var scene: WindowPeekScene?
     private var isDismissing = false
 
     package init(frame: NSRect) {
@@ -40,14 +43,21 @@ package final class WindowPeekOverlayPanel: NSPanel {
         let view = NSView(frame: NSRect(origin: .zero, size: frame.size))
         view.wantsLayer = true
         view.layer?.contentsGravity = .resize
+        view.layer?.addSublayer(outlines)
         view.autoresizingMask = [.width, .height]
         contentView = view
     }
 
-    package func present(_ image: CGImage, on frame: NSRect) {
+    package func display(_ surface: IOSurfaceRef, scene: WindowPeekScene, on frame: NSRect) {
+        if self.scene != scene || self.frame != frame {
+            setFrame(frame, display: false)
+            draw(scene, in: frame)
+            self.scene = scene
+        }
+        contentView?.layer?.contents = surface
+        guard isDismissing || !isVisible else { return }
+
         isDismissing = false
-        setFrame(frame, display: false)
-        contentView?.layer?.contents = image
         orderFrontRegardless()
         NSAnimationContext.runAnimationGroup { context in
             context.duration = WindowPeekMetrics.fadeIn
@@ -66,7 +76,46 @@ package final class WindowPeekOverlayPanel: NSPanel {
 
                 self.orderOut(nil)
                 self.contentView?.layer?.contents = nil
+                self.scene = nil
             }
         }
+    }
+
+    private func draw(_ scene: WindowPeekScene, in frame: NSRect) {
+        let bounds = CGRect(origin: .zero, size: frame.size)
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        outlines.frame = bounds
+        outlines.sublayers = scene.outlines.map { outline(local($0, in: frame)) }
+        outlines.mask = scene.peeked.map { hole(local($0, in: frame), in: bounds) }
+        CATransaction.commit()
+    }
+
+    private func local(_ rect: CGRect, in frame: NSRect) -> CGRect {
+        rect.offsetBy(dx: -frame.minX, dy: -frame.minY)
+    }
+
+    private func outline(_ rect: CGRect) -> CALayer {
+        let layer = CALayer()
+        layer.frame = rect
+        layer.cornerRadius = WindowPeekMetrics.outlineCornerRadius
+        layer.cornerCurve = .continuous
+        layer.borderWidth = WindowPeekMetrics.outlineBorderWidth
+        layer.borderColor = WindowPeekMetrics.outlineBorder
+        layer.backgroundColor = WindowPeekMetrics.outlineFill
+
+        return layer
+    }
+
+    private func hole(_ rect: CGRect, in bounds: CGRect) -> CALayer {
+        let path = CGMutablePath()
+        path.addRect(bounds)
+        path.addRect(rect)
+        let mask = CAShapeLayer()
+        mask.frame = bounds
+        mask.path = path
+        mask.fillRule = .evenOdd
+
+        return mask
     }
 }

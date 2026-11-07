@@ -14,31 +14,59 @@
 
 import CoreGraphics
 
-/** The displays a peek covers. */
+/** The scene a peek draws on each display it covers. */
 package enum WindowPeekPolicy {
-    package static func displayIds(
+    package static func scenes(
         for target: WindowPeekTarget,
         windows: [ManagedWindow],
         displays: [DisplayGeometry]
-    ) -> [Int] {
-        let desktops = displays
-            .map(\.id)
-            .filter { !FullScreenDisplayPolicy.isFullScreen(onDisplay: $0, windows: windows, displays: displays) }
+    ) -> [WindowPeekScene] {
+        let desktops = displays.filter {
+            !FullScreenDisplayPolicy.isFullScreen(onDisplay: $0.id, windows: windows, displays: displays)
+        }
+        let peeked: ManagedWindow?
 
         switch target {
         case .desktop:
-            return desktops
+            peeked = nil
         case .window(let windowId):
             guard let window = windows.first(where: { $0.identity.cgWindowId == windowId }),
                   isPeekable(window),
                   let displayId = WindowDisplayResolver.displayId(for: window, in: displays),
-                  desktops.contains(displayId)
+                  desktops.contains(where: { $0.id == displayId })
             else {
                 return []
             }
-
-            return desktops
+            peeked = window
         }
+
+        let confirmed = WindowPresentationPolicy.taskbarEntries(from: windows)
+
+        return desktops.map { display in
+            WindowPeekScene(
+                displayId: display.id,
+                peeked: peeked.flatMap { window in
+                    WindowDisplayResolver.displayId(for: window, in: displays) == display.id ? window.bounds : nil
+                },
+                outlines: outlines(onDisplay: display.id, excluding: peeked, among: confirmed, displays: displays)
+            )
+        }
+    }
+
+    private static func outlines(
+        onDisplay displayId: Int,
+        excluding peeked: ManagedWindow?,
+        among windows: [ManagedWindow],
+        displays: [DisplayGeometry]
+    ) -> [CGRect] {
+        windows
+            .filter { window in
+                isPeekable(window)
+                    && window.identity != peeked?.identity
+                    && WindowDisplayResolver.displayId(for: window, in: displays) == displayId
+            }
+            .sorted { ($0.zOrder ?? Int.max) > ($1.zOrder ?? Int.max) }
+            .compactMap(\.bounds)
     }
 
     private static func isPeekable(_ window: ManagedWindow) -> Bool {

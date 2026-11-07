@@ -201,17 +201,17 @@ package final class AppServices {
             peeker.hide()
             return
         }
-        let displayIds = WindowPeekPolicy.displayIds(
+        let scenes = WindowPeekPolicy.scenes(
             for: target,
             windows: registry.windows,
             displays: registry.displays
         )
-        guard !displayIds.isEmpty else {
+        guard !scenes.isEmpty else {
             peeker.hide()
             BarLog.bar.notice("peek refused=notOnADesktop")
             return
         }
-        Task { [peeker] in await peeker.show(target, onDisplays: displayIds) }
+        Task { [peeker] in await peeker.show(target, in: scenes) }
     }
 
     private func hideToDesktop() {

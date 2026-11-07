@@ -14,6 +14,6 @@
 
 @MainActor
 package protocol WindowPeekPort {
-    func show(_ target: WindowPeekTarget, onDisplays displayIds: [Int]) async
+    func show(_ target: WindowPeekTarget, in scenes: [WindowPeekScene]) async
     func hide()
 }

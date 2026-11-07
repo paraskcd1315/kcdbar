@@ -13,10 +13,17 @@
 // limitations under the License.
 
 import AppKit
+import CoreMedia
 
 package enum WindowPeekMetrics {
     package static let fadeIn: TimeInterval = 0.15
     package static let fadeOut: TimeInterval = 0.12
     package static let overlayLevel = NSWindow.Level(rawValue: NSWindow.Level.mainMenu.rawValue - 1)
     package static let desktopLayerCeiling = Int(CGWindowLevelForKey(.normalWindow))
+    package static let frameInterval = CMTime(value: 1, timescale: 60)
+    package static let queueDepth = 3
+    package static let outlineCornerRadius: CGFloat = 12
+    package static let outlineBorderWidth: CGFloat = 1
+    package static let outlineBorder = CGColor(gray: 1, alpha: 0.45)
+    package static let outlineFill = CGColor(gray: 1, alpha: 0.10)
 }
