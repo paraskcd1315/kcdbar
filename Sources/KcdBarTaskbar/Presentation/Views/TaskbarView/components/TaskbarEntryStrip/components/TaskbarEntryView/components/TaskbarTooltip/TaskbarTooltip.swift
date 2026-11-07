@@ -44,7 +44,11 @@ package struct TaskbarTooltip: View {
                 }
             }
             .lineLimit(1)
-            .frame(maxWidth: TaskbarMetrics.tooltipMaxWidth, alignment: .leading)
+            .frame(
+                idealWidth: textIdealWidth,
+                maxWidth: TaskbarMetrics.tooltipMaxWidth,
+                alignment: .leading
+            )
         }
         .padding(.horizontal, KbSpacing.s5)
         .padding(.vertical, KbSpacing.s3)
@@ -55,6 +59,10 @@ package struct TaskbarTooltip: View {
             radius: TaskbarMetrics.tooltipShadowRadius,
             y: TaskbarMetrics.tooltipShadowOffset
         )
+    }
+
+    private var textIdealWidth: CGFloat? {
+        thumbnails.isEmpty ? nil : .zero
     }
 
     private var showsWindowTitle: Bool {
