@@ -31,11 +31,10 @@ package enum BarVisibilityPolicy {
         windows: [ManagedWindow],
         displays: [DisplayGeometry]
     ) -> BarVisibilityReason? {
-        let confirmed = WindowPresentationPolicy.taskbarEntries(from: windows)
-
-        if frontmost(onDisplay: displayId, windows: confirmed, displays: displays)?.isFullScreen == true {
+        if FullScreenDisplayPolicy.isFullScreen(onDisplay: displayId, windows: windows, displays: displays) {
             return .fullScreenWindow
         }
+        let confirmed = WindowPresentationPolicy.taskbarEntries(from: windows)
         switch preset.autoHide {
         case .never:
             return nil
@@ -70,21 +69,5 @@ package enum BarVisibilityPolicy {
 
             return bounds.intersects(bar)
         }
-    }
-
-    private static func frontmost(
-        onDisplay displayId: Int,
-        windows: [ManagedWindow],
-        displays: [DisplayGeometry]
-    ) -> ManagedWindow? {
-        windows
-            .filter { window in
-                guard !window.isMinimized, WindowSpacePolicy.isOnActiveSpace(window) else {
-                    return false
-                }
-
-                return WindowDisplayResolver.displayId(for: window, in: displays) == displayId
-            }
-            .min { ($0.zOrder ?? Int.max) < ($1.zOrder ?? Int.max) }
     }
 }
