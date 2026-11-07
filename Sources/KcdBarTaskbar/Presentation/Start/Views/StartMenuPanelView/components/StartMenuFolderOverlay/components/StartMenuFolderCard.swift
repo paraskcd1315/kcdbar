@@ -22,23 +22,34 @@ package struct StartMenuFolderCard: View {
     package let onLaunch: (String) -> Void
     package let onTogglePin: (String) -> Void
 
+    @State private var isScrolled = false
+
     package var body: some View {
-        VStack(alignment: .leading, spacing: KbSpacing.s5) {
-            Text(LocalizedStringKey(section.titleKey ?? section.key))
-                .font(KbTypography.menuHeading)
-                .foregroundStyle(KbColors.onSurface)
-                .padding(.horizontal, KbSpacing.s6)
-            ViewThatFits(in: .vertical) {
+        ViewThatFits(in: .vertical) {
+            VStack(spacing: 0) {
+                StartMenuFolderTitleBar(titleKey: titleKey, showsDivider: false)
                 grid
-                ScrollView { grid }
-                    .scrollIndicators(.never)
             }
+            ScrollView { grid }
+                .scrollIndicators(.never)
+                .safeAreaBar(edge: .top) {
+                    StartMenuFolderTitleBar(titleKey: titleKey, showsDivider: isScrolled)
+                }
+                .onScrollGeometryChange(for: Bool.self) { geometry in
+                    geometry.contentOffset.y + geometry.contentInsets.top > 0
+                } action: { _, scrolled in
+                    isScrolled = scrolled
+                }
         }
-        .padding(.vertical, KbSpacing.s6)
         .frame(maxWidth: StartMenuMetrics.folderCardMaxWidth)
-        .background(KbVibrancyBackdrop().clipShape(shape))
+        .background(KbVibrancyBackdrop())
+        .clipShape(shape)
         .overlay(shape.strokeBorder(KbColors.separator, lineWidth: KbEdgeMetrics.width))
         .contentShape(shape)
+    }
+
+    private var titleKey: LocalizedStringKey {
+        LocalizedStringKey(section.titleKey ?? section.key)
     }
 
     private var grid: some View {
@@ -50,6 +61,7 @@ package struct StartMenuFolderCard: View {
             onLaunch: onLaunch,
             onTogglePin: onTogglePin
         )
+        .padding(.vertical, KbSpacing.s5)
     }
 
     private var shape: RoundedRectangle {

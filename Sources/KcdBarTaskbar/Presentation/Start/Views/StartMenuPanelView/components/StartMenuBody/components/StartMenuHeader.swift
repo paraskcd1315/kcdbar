@@ -18,6 +18,7 @@ import SwiftUI
 package struct StartMenuHeader: View {
     package let grouping: StartMenuGrouping
     package let layout: StartMenuLayout
+    package let showsDivider: Bool
     package let onSearch: () -> Void
     package let onGrouping: (StartMenuGrouping) -> Void
     package let onLayout: (StartMenuLayout) -> Void
@@ -36,6 +37,10 @@ package struct StartMenuHeader: View {
         .padding(.vertical, KbSpacing.s5)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(KbVibrancyBackdrop())
-        .overlay(alignment: .bottom) { StartMenuDivider() }
+        .overlay(alignment: .bottom) {
+            StartMenuDivider()
+                .opacity(showsDivider ? 1 : 0)
+        }
+        .animation(KbMotion.quick, value: showsDivider)
     }
 }

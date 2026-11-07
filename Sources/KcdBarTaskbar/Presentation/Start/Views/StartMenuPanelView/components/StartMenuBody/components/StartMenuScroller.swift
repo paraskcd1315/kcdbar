@@ -34,6 +34,8 @@ package struct StartMenuScroller: View {
     package let onIndex: () -> Void
     package let onJump: (String) -> Void
 
+    @State private var isScrolled = false
+
     package var body: some View {
         ScrollView {
             ZStack(alignment: .top) {
@@ -79,6 +81,7 @@ package struct StartMenuScroller: View {
             StartMenuHeader(
                 grouping: catalogue.grouping,
                 layout: catalogue.layout,
+                showsDivider: isScrolled,
                 onSearch: onSearch,
                 onGrouping: {
                     catalogue.choose($0)
@@ -100,6 +103,11 @@ package struct StartMenuScroller: View {
                 .overlay(alignment: .top) { StartMenuDivider() }
         }
         .scrollBounceBehavior(.basedOnSize)
+        .onScrollGeometryChange(for: Bool.self) { geometry in
+            geometry.contentOffset.y + geometry.contentInsets.top > 0
+        } action: { _, scrolled in
+            isScrolled = scrolled
+        }
     }
 
     private var recents: [InstalledApplication] {
